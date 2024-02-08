@@ -17,9 +17,10 @@ TBD
 
 ## Features
 
-- [ ] USD and/or glTF scene loading
+- [ ] USD and/or glTF scene loading 
 - [ ] PBR shader pipeline
 - [ ] Integrate simple menu (e.g. with buttons, sliders and other widgets)
+- [ ] Skeletal animation support (**OPTIONAL**)
 
 ## Getting started
 
