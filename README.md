@@ -17,10 +17,13 @@ TBD
 
 ## Features
 
+- [ ] Ensure compilation on MacOS, Linux Ubuntu 20.04/22.04, Linux debian 11 and Windows 10/11 OS
 - [ ] USD and/or glTF scene loading 
 - [ ] PBR shader pipeline
 - [ ] Integrate simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] Skeletal animation support (**OPTIONAL**)
+- [ ] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
+- [ ] Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)
 
 ## Getting started
 
