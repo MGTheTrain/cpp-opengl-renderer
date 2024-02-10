@@ -7,6 +7,6 @@ out vec2 texCoord;
 uniform mat4 mvp;
 
 void main() {
-	gl_Position = projection * view * model * vec4(inVertexPosition, 1.0f);
+	gl_Position = mvp * vec4(inVertexPosition, 1.0f);
 	TexCoord = vec2(inVertexTextureCoord.x, inVertexTextureCoord.y)inates;
 }
