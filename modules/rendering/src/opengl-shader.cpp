@@ -15,7 +15,7 @@ Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::string& vsPath, const std
  * @brief Destructor for the OpenGL shader.
  */
 Mgtt::Rendering::OpenGlShader::~OpenGlShader() {
-    this->DeleteProgram();
+    this->Clear();
 }
 
 /**
@@ -28,7 +28,7 @@ Mgtt::Rendering::OpenGlShader::~OpenGlShader() {
  * @param fsPath The file path to the fragment shader source code.
  */
 void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std::string& fsPath) {
-    this->DeleteProgram();
+    this->Clear();
 
     if (vsPath.size() == 0) {
         throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " + vsPath);
@@ -77,6 +77,16 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std
     this->CheckCompileErrors(this->id, "PROGRAM");
     glDeleteShader(vs);
     glDeleteShader(fragment);
+}
+
+/**
+ * @brief Delete the shader program.
+ */
+void Mgtt::Rendering::OpenGlShader::Clear() {
+    if (this->id > 0) {
+        glDeleteProgram(this->id);
+        this->id = 0;
+    }
 }
 
 /**
@@ -247,15 +257,5 @@ void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader, std::strin
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
             throw std::runtime_error("PROGRAM LINKING ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################");
         }
-    }
-}
-
-/**
- * @brief Delete the shader program.
- */
-void Mgtt::Rendering::OpenGlShader::DeleteProgram() {
-    if (this->id > 0) {
-        glDeleteProgram(this->id);
-        this->id = 0;
     }
 }

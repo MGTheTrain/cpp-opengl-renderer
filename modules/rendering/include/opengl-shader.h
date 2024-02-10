@@ -70,6 +70,13 @@ namespace Mgtt::Rendering {
         void Compile(const std::string& vsPath, const std::string& fsPath) override;
 
         /**
+         * @brief Delete the shader program.
+         */
+        void Clear() override {
+
+        }
+
+        /**
          * @brief Get the ID of the shader program.
          *
          * @return The ID of the shader program.
@@ -190,11 +197,6 @@ namespace Mgtt::Rendering {
          * @param type Type of shader (vertex or fragment).
          */
         void CheckCompileErrors(GLuint shader, std::string type);
-
-        /**
-         * @brief Delete the shader program.
-         */
-        void DeleteProgram();
 
         unsigned int id; // the OpenGL program id
     };
