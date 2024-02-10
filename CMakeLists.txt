@@ -25,6 +25,9 @@ az_vcpkg_integrate()
 # find_package(imgui CONFIG REQUIRED)
 # target_link_libraries(main PRIVATE imgui::imgui)
 
+# find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
+# target_include_directories(main PRIVATE ${TINYGLTF_INCLUDE_DIRS})
+
 if(BUILD_TEST)
     include(CTestConfig)
 endif()
