@@ -53,7 +53,7 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration (
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
 
-    this->openGlShaders.push_back(Mgtt::Rendering::OpenGlShader("assets/coordinate.vert", "assets/coordinate.frag"));
+    this->openGlShaders.push_back(Mgtt::Rendering::OpenGlShader("assets/shader/coordinate.vert", "assets/shader/coordinate.frag"));
     float vertices[] = {
        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
