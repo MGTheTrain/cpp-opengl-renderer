@@ -28,4 +28,10 @@ TBD
 
 ## Getting started
 
-TBD
+### Preconditions
+
+- Install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
+
+### Debugging
+
+Open the `cpp-opengl-renderer.sln`. Modify `include and library paths` in the cpp-opengl-renderer.vcxproj. Confirm the presence of only one entry point `int main()`. Set breakpoints as needed. Initiate the debugging process.
