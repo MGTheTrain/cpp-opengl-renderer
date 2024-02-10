@@ -70,7 +70,7 @@ namespace Mgtt::Apps {
     };
 
     /**
-     * @brief Represents glm matrices
+     * @brief Represents opengl objects
      */
     struct OpenGlObjects {
         OpenGlObjects() {}
@@ -84,6 +84,20 @@ namespace Mgtt::Apps {
         }
         std::vector<unsigned int> vaos;
         std::vector<unsigned int> vbos;
+    };
+
+    /**
+     * @brief Represents texture params
+     */
+    struct TextureParams {
+        TextureParams() {
+            this->width = 0;
+            this->height = 0;
+            this->nrChannels = 0;
+        }
+        int width;
+        int height;
+        int nrChannels;
     };
 
     /**
@@ -137,6 +151,7 @@ namespace Mgtt::Apps {
         std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
         std::unique_ptr<OpenGlObjects> openGlObjects;
+        std::unique_ptr<TextureParams> textureParams;
     };
 
 } // namespace Mgtt::Apps
