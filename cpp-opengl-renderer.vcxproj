@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\c++ repos\cpp-opengl-renderer\apps\opengl-viewer\include;D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\window\include;D:\c++ repos\cpp-opengl-renderer\apps\textured-cube-with-imgui-integration\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\c++ repos\cpp-opengl-renderer\apps\opengl-viewer\include;D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\window\include;D:\c++ repos\cpp-opengl-renderer\apps\textured-cube-with-imgui-integration\include;D:\c++ repos\dependencies\vcpkg\packages\stb_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\tinygltf_x64-windows;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -135,11 +135,14 @@
   <ItemGroup>
     <ClCompile Include="apps\opengl-viewer\src\opengl-viewer.cpp" />
     <ClCompile Include="apps\textured-cube-with-imgui-integration\src\textured-cube-with-imgui-integration.cpp" />
+    <ClCompile Include="modules\rendering\src\opengl-shader.cpp" />
     <ClCompile Include="modules\window\src\glfw-window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="apps\opengl-viewer\include\opengl-viewer.h" />
     <ClInclude Include="apps\textured-cube-with-imgui-integration\include\textured-cube-with-imgui-integration.h" />
+    <ClInclude Include="modules\rendering\include\ishader.h" />
+    <ClInclude Include="modules\rendering\include\opengl-shader.h" />
     <ClInclude Include="modules\window\include\glfw-window.h" />
     <ClInclude Include="modules\window\include\iwindow.h" />
   </ItemGroup>
