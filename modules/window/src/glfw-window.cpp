@@ -26,20 +26,30 @@
 // Contributors:
 // - TBD
 
-#pragma once
+#include <glfw-window.h>
 
-namespace Mgtt::Window {
-    /**
-     * @brief Interface for defining a generic window.
-     * 
-     * This interface outlines methods for initializing and clearing a window's state.
-     */
-    class IWindow {
-    public:
-        /**
-         * @brief Virtual destructor for the window interface.
-         */
-        virtual ~IWindow() {}
-    };
+/**
+* @brief Default constructor for the GLFW window.
+*/
+Mgtt::Window::GlfwWindow::GlfwWindow() {
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+    }
 
+    GLFWwindow* window = glfwCreateWindow(800, 600, "GLFW Window", nullptr, nullptr);
+
+    if (!window) {
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return;
+    }
+
+    glfwMakeContextCurrent(window);
+}
+
+/**
+* @brief Destructor for the GLFW window.
+*/
+Mgtt::Window::GlfwWindow::~GlfwWindow() {
+    glfwTerminate();
 }

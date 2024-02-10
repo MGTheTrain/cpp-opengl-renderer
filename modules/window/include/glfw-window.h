@@ -28,6 +28,7 @@
 
 #pragma once
 #include <iwindow.h>
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 namespace Mgtt::Window {
@@ -47,22 +48,6 @@ namespace Mgtt::Window {
          * @brief Destructor for the GLFW window.
          */
         ~GlfwWindow();
-
-        /**
-         * @brief Initialize the GLFW window.
-         * 
-         * This method overrides the corresponding method in the IWindow interface.
-         * It is implemented to set up the initial state specific to a GLFW window.
-         */
-        void Init() override;
-
-        /**
-         * @brief Clear the GLFW window's state.
-         * 
-         * This method overrides the corresponding method in the IWindow interface.
-         * It is implemented to reset the internal state of the GLFW window, freeing GLFW resources.
-         */
-        void Clear() override;
     };
 
 }

@@ -28,6 +28,7 @@
 #pragma once
 
 #include <iostream>
+#include <glfw-window.h>
 
 namespace Mgtt::Apps {
     /**
@@ -69,7 +70,7 @@ namespace Mgtt::Apps {
         void Clear();
 
     private:
-        // Additional private members or methods can be documented here.
+        std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
     };
 
 } // namespace Mgtt::Apps

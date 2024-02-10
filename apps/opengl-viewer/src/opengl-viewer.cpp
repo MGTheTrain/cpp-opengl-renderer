@@ -39,7 +39,8 @@ Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
  * @brief Constructs an OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
-    std::cout << "Hi from constructor" << std::endl;
+    this->glfwWindow = 
+      std::make_unique<Mgtt::Window::GlfwWindow>();
 }
 
 /**
