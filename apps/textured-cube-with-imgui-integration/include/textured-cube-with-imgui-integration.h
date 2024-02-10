@@ -25,49 +25,38 @@
 //
 // Contributors:
 // - TBD
+#pragma once
 
-#include <GL/glew.h>
-#include <opengl-viewer.h>
+#include <iostream>
+#include <glfw-window.h>
 
-/**
- * @brief Destructs the OpenGlViewer object.
- */
-Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
-    
-}
+namespace Mgtt::Apps {
+    /**
+     * @brief The TexturedCubeWithImguiIntegration  class represents a simple OpenGL viewer.
+     *
+     * This class provides basic functionality for initializing an OpenGL context,
+     * rendering scenes, and clearing the rendering buffer.
+     */
+    class TexturedCubeWithImguiIntegration {
+    public:
+        /**
+         * @brief Constructs an TexturedCubeWithImguiIntegration  object.
+         */
+        TexturedCubeWithImguiIntegration ();
 
-/**
- * @brief Constructs an OpenGlViewer object.
- */
-Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
-    this->glfwWindow = 
-      std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
-}
+        /**
+         * @brief Destructs the TexturedCubeWithImguiIntegration  object.
+         */
+        ~TexturedCubeWithImguiIntegration ();
 
+        /**
+         * @brief Renders the scene using OpenGL.
+         *
+         * This method is responsible for rendering the contents of the scene using OpenGL.
+         */
+        void Render();
+    private:
+        std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+    };
 
-/**
- * @brief Renders the scene using OpenGL.
- *
- * This method is responsible for rendering the contents of the scene using OpenGL.
- */
-void Mgtt::Apps::OpenGlViewer::Render() {
-    while(!this->glfwWindow->WindowShouldClose()) {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->glfwWindow->SwapBuffersAndPollEvents();
-    }
-}
-
-//int main() {
-//    try {
-//        Mgtt::Apps::OpenGlViewer openGlViewer;
-//        if (glewInit() != GLEW_OK) { // reuqires glfw
-//            throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
-//        }
-//        openGlViewer.Render();
-//    } catch(const std::exception& ex) {
-//        std::cout << ex.what() << std::endl;
-//        return 1;
-//    }
-//    return 0;
-//}
+} // namespace Mgtt::Apps

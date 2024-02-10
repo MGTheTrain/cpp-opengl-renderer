@@ -27,19 +27,19 @@
 // - TBD
 
 #include <GL/glew.h>
-#include <opengl-viewer.h>
+#include <textured-cube-with-imgui-integration.h>
 
 /**
- * @brief Destructs the OpenGlViewer object.
+ * @brief Destructs the TexturedCubeWithImguiIntegration  object.
  */
-Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
+Mgtt::Apps::TexturedCubeWithImguiIntegration ::~TexturedCubeWithImguiIntegration () {
     
 }
 
 /**
- * @brief Constructs an OpenGlViewer object.
+ * @brief Constructs an TexturedCubeWithImguiIntegration  object.
  */
-Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
+Mgtt::Apps::TexturedCubeWithImguiIntegration ::TexturedCubeWithImguiIntegration () {
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
 }
@@ -50,7 +50,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
  *
  * This method is responsible for rendering the contents of the scene using OpenGL.
  */
-void Mgtt::Apps::OpenGlViewer::Render() {
+void Mgtt::Apps::TexturedCubeWithImguiIntegration ::Render() {
     while(!this->glfwWindow->WindowShouldClose()) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -58,16 +58,16 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     }
 }
 
-//int main() {
-//    try {
-//        Mgtt::Apps::OpenGlViewer openGlViewer;
-//        if (glewInit() != GLEW_OK) { // reuqires glfw
-//            throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
-//        }
-//        openGlViewer.Render();
-//    } catch(const std::exception& ex) {
-//        std::cout << ex.what() << std::endl;
-//        return 1;
-//    }
-//    return 0;
-//}
+int main() {
+    try {
+        Mgtt::Apps::TexturedCubeWithImguiIntegration  TexturedCubeWithImguiIntegration ;
+        if (glewInit() != GLEW_OK) { // reuqires glfw
+            throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+        }
+        TexturedCubeWithImguiIntegration .Render();
+    } catch(const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
