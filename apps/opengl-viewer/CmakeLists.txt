@@ -24,10 +24,10 @@
 # Contributors:
 # - TBD
 
-set(TARGET opengl-viewer)
-project(${TARGET})
-cmake_minimum_required(VERSION 3.10)
+if(BUILD_MAIN)
+    add_subdirectory(src)
+endif()
 
-include_directories(../include)
-add_executable(${TARGET} ${TARGET}.cpp)
-# target_link_libraries(${TARGET})
+if(BUILD_TEST)
+    add_subdirectory(test)
+endif()
