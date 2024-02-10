@@ -28,12 +28,41 @@
 
 #pragma once
 #include <iwindow.h>
-namespace Mgtt::Widnow {
-    class GlfwWindow: public IWindow {
-        public:
-            GlfwWindow();
-            ~GlfwWindow();
-            void Init() override;
-            void Clear() override;
+#include <GLFW/glfw3.h>
+
+namespace Mgtt::Window {
+    /**
+     * @brief Implementation of the IWindow interface using GLFW.
+     * 
+     * This class provides concrete implementation details for initializing and clearing a window using GLFW.
+     */
+    class GlfwWindow : public IWindow {
+    public:
+        /**
+         * @brief Default constructor for the GLFW window.
+         */
+        GlfwWindow();
+
+        /**
+         * @brief Destructor for the GLFW window.
+         */
+        ~GlfwWindow();
+
+        /**
+         * @brief Initialize the GLFW window.
+         * 
+         * This method overrides the corresponding method in the IWindow interface.
+         * It is implemented to set up the initial state specific to a GLFW window.
+         */
+        void Init() override;
+
+        /**
+         * @brief Clear the GLFW window's state.
+         * 
+         * This method overrides the corresponding method in the IWindow interface.
+         * It is implemented to reset the internal state of the GLFW window, freeing GLFW resources.
+         */
+        void Clear() override;
     };
-} 
+
+}

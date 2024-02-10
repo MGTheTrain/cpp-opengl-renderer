@@ -27,11 +27,33 @@
 // - TBD
 
 #pragma once
-namespace Mgtt::Widnow {
+
+namespace Mgtt::Window {
+    /**
+     * @brief Interface for defining a generic window.
+     * 
+     * This interface outlines methods for initializing and clearing a window's state.
+     */
     class IWindow {
-        public:
-            virtual ~IWindow() {}
-            virtual void Init() = 0;
-            virtual void Clear() = 0;
+    public:
+        /**
+         * @brief Virtual destructor for the window interface.
+         */
+        virtual ~IWindow() {}
+
+        /**
+         * @brief Initialize the window.
+         * 
+         * This method should be implemented to set up the initial state of the window.
+         */
+        virtual void Init() = 0;
+
+        /**
+         * @brief Clear the window's state.
+         * 
+         * This method should be implemented to reset the internal state of the window, freeing resources.
+         */
+        virtual void Clear() = 0;
     };
-} 
+
+}
