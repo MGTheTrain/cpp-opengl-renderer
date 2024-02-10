@@ -24,7 +24,7 @@
 # Contributors:
 # - TBD
 
-set(TARGET textured-cube-with-imgui-integration)
+set(TARGET rotating-textured-cube)
 project(${TARGET})
 cmake_minimum_required(VERSION 3.10)
 
