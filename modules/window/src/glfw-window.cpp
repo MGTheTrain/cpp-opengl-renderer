@@ -52,13 +52,11 @@ Mgtt::Window::GlfwWindow::GlfwWindow(const std::string& name, const unsigned int
     glfwWindowHint(GLFW_SAMPLES, 4); // enable anti-aliasing
 
     this->window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
-
     if (!this->window) {
-        throw std::runtime_error("GLFW ERROR: Failed to create GLFW window");
         glfwTerminate();
+        throw std::runtime_error("GLFW ERROR: Failed to create GLFW window");
         return;
     }
-
     glfwMakeContextCurrent(this->window);
 }
 
