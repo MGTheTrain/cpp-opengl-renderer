@@ -41,7 +41,7 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration ::~TexturedCubeWithImguiIntegration
  */
 Mgtt::Apps::TexturedCubeWithImguiIntegration ::TexturedCubeWithImguiIntegration () {
     this->glfwWindow = 
-      std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
+      std::make_unique<Mgtt::Window::GlfwWindow>("textured-cube-with-imgui-integration", 1000.0f, 1000.0f);
 }
 
 
