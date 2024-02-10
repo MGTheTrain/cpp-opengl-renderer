@@ -24,10 +24,10 @@
 # Contributors:
 # - TBD
 
-if(BUILD_APP)
-    add_subdirectory(src)
-endif()
+set(TARGET rotating-textured-cube)
+project(${TARGET})
+cmake_minimum_required(VERSION 3.10)
 
-if(BUILD_TEST)
-    add_subdirectory(test)
-endif()
+include_directories(../include)
+add_executable(${TARGET} ${TARGET}.cpp)
+# target_link_libraries(${TARGET})

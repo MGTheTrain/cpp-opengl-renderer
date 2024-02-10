@@ -26,7 +26,6 @@
 // Contributors:
 // - TBD
 
-#include <GL/glew.h>
 #include <opengl-viewer.h>
 
 /**
@@ -42,6 +41,9 @@ Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
+    if (glewInit() != GLEW_OK) {
+        throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+    }
 }
 
 
@@ -58,16 +60,13 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     }
 }
 
-int main() {
-    try {
-        Mgtt::Apps::OpenGlViewer openGlViewer;
-        if (glewInit() != GLEW_OK) { // reuqires glfw
-            throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
-        }
-        openGlViewer.Render();
-    } catch(const std::exception& ex) {
-        std::cout << ex.what() << std::endl;
-        return 1;
-    }
-    return 0;
-}
+//int main() {
+//    try {
+//        Mgtt::Apps::OpenGlViewer openGlViewer;
+//        openGlViewer.Render();
+//    } catch(const std::exception& ex) {
+//        std::cout << ex.what() << std::endl;
+//        return 1;
+//    }
+//    return 0;
+//}

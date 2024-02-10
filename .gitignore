@@ -3,3 +3,4 @@ build
 *.vs
 *x64
 vcpkg_installed
+secrets.cfg

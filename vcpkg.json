@@ -5,6 +5,8 @@
         "glfw3",
         "glew",
         "imgui",
-        "glm"
+        "glm",
+        "stb",
+        "tinygltf"
     ]
 }

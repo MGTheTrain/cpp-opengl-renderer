@@ -29,10 +29,16 @@
 #pragma once
 #include "ishader.h"  
 #include <string>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <stdexcept>
+#include <fstream>
+#include <sstream>
 
 namespace Mgtt::Rendering {
     /**
      * @brief Implementation of the IShader interface for OpenGL shaders.
+     * Essential parts from: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_m.h
      * 
      * This class provides concrete implementation details for compiling and managing
      * vertex and fragment shaders within an OpenGL rendering context.
@@ -40,9 +46,12 @@ namespace Mgtt::Rendering {
     class OpenGlShader : public IShader {
     public:
         /**
-         * @brief Default constructor for the OpenGL shader.
+         * @brief Constructor for the OpenGlShader class.
+         *
+         * @param vsPath Path to the vertex shader source file.
+         * @param fsPath Path to the fragment shader source file.
          */
-        OpenGlShader();
+        OpenGlShader(const std::string& vsPath, const std::string& fsPath);
 
         /**
          * @brief Destructor for the OpenGL shader.
@@ -51,21 +60,142 @@ namespace Mgtt::Rendering {
 
         /**
          * @brief Compile the OpenGL shader program from specified vertex and fragment shader files.
-         * 
+         *
          * This method overrides the corresponding method in the IShader interface.
          * It compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
+         *
          * @param vsPath The file path to the vertex shader source code.
          * @param fsPath The file path to the fragment shader source code.
          */
         void Compile(const std::string& vsPath, const std::string& fsPath) override;
 
         /**
-         * @brief Clear the current state of the OpenGL shader.
-         * 
-         * This method overrides the corresponding method in the IShader interface.
-         * It is used to reset the internal state of the OpenGL shader, freeing resources.
+         * @brief Delete the shader program.
          */
         void Clear() override;
+
+        /**
+         * @brief Get the ID of the shader program.
+         *
+         * @return The ID of the shader program.
+         */
+        unsigned int& GetProgramId();
+
+        /**
+         * @brief Activate the shader program.
+         */
+        void Use() const;
+
+        /**
+         * @brief Set a boolean uniform value in the shader program.
+         *
+         * @param name The name of the boolean uniform.
+         * @param value The boolean value to set.
+         */
+        void SetBool(const std::string& name, bool value) const;
+
+        /**
+         * @brief Set an integer uniform value in the shader program.
+         *
+         * @param name The name of the integer uniform.
+         * @param value The integer value to set.
+         */
+        void SetInt(const std::string& name, int value) const;
+
+        /**
+         * @brief Set a floating-point uniform value in the shader program.
+         *
+         * @param name The name of the floating-point uniform.
+         * @param value The floating-point value to set.
+         */
+        void SetFloat(const std::string& name, float value) const;
+
+        /**
+         * @brief Set a 2D vector uniform value in the shader program.
+         *
+         * @param name The name of the 2D vector uniform.
+         * @param value The glm::vec2 value to set.
+         */
+        void SetVec2(const std::string& name, const glm::vec2& value) const;
+
+        /**
+         * @brief Set a 2D vector uniform value in the shader program.
+         *
+         * @param name The name of the 2D vector uniform.
+         * @param x The x-component of the vector.
+         * @param y The y-component of the vector.
+         */
+        void SetVec2(const std::string& name, float x, float y) const;
+
+        /**
+         * @brief Set a 3D vector uniform value in the shader program.
+         *
+         * @param name The name of the 3D vector uniform.
+         * @param value The glm::vec3 value to set.
+         */
+        void SetVec3(const std::string& name, const glm::vec3& value) const;
+
+        /**
+         * @brief Set a 3D vector uniform value in the shader program.
+         *
+         * @param name The name of the 3D vector uniform.
+         * @param x The x-component of the vector.
+         * @param y The y-component of the vector.
+         * @param z The z-component of the vector.
+         */
+        void SetVec3(const std::string& name, float x, float y, float z) const;
+
+        /**
+         * @brief Set a 4D vector uniform value in the shader program.
+         *
+         * @param name The name of the 4D vector uniform.
+         * @param value The glm::vec4 value to set.
+         */
+        void SetVec4(const std::string& name, const glm::vec4& value) const;
+
+        /**
+         * @brief Set a 4D vector uniform value in the shader program.
+         *
+         * @param name The name of the 4D vector uniform.
+         * @param x The x-component of the vector.
+         * @param y The y-component of the vector.
+         * @param z The z-component of the vector.
+         * @param w The w-component of the vector.
+         */
+        void SetVec4(const std::string& name, float x, float y, float z, float w) const;
+
+        /**
+         * @brief Set a 2x2 matrix uniform value in the shader program.
+         *
+         * @param name The name of the 2x2 matrix uniform.
+         * @param mat The glm::mat2 value to set.
+         */
+        void SetMat2(const std::string& name, const glm::mat2& mat) const;
+
+        /**
+         * @brief Set a 3x3 matrix uniform value in the shader program.
+         *
+         * @param name The name of the 3x3 matrix uniform.
+         * @param mat The glm::mat3 value to set.
+         */
+        void SetMat3(const std::string& name, const glm::mat3& mat) const;
+
+        /**
+         * @brief Set a 4x4 matrix uniform value in the shader program.
+         *
+         * @param name The name of the 4x4 matrix uniform.
+         * @param mat The glm::mat4 value to set.
+         */
+        void SetMat4(const std::string& name, const glm::mat4& mat) const;
+    private:
+        /**
+         * @brief Check for compile and linking errors in the shader.
+         *
+         * @param shader Shader object (vertex or fragment).
+         * @param type Type of shader (vertex or fragment).
+         */
+        void CheckCompileErrors(GLuint shader, std::string type);
+
+        unsigned int id; // the OpenGL program id
     };
 } 
