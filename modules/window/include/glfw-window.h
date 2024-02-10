@@ -42,8 +42,12 @@ namespace Mgtt::Window {
     public:
         /**
          * @brief Default constructor for the GLFW window.
+         *
+         * @param name   The name of the window.
+         * @param width  The width of the window.
+         * @param height The height of the window.
          */
-        GlfwWindow();
+        GlfwWindow(const std::string& name, const unsigned int& width, const unsigned int& height);
 
         /**
          * @brief Destructor for the GLFW window.

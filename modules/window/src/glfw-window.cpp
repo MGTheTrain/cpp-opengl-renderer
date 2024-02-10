@@ -30,10 +30,14 @@
 
 /**
 * @brief Default constructor for the GLFW window.
+*
+* @param name   The name of the window.
+* @param width  The width of the window.
+* @param height The height of the window.
 */
-Mgtt::Window::GlfwWindow::GlfwWindow() {
+Mgtt::Window::GlfwWindow::GlfwWindow(const std::string& name, const unsigned int& width, const unsigned int& height) {
     if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
+        throw std::runtime_error("GLFW ERROR: Failed to initialize GLFW");
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -47,10 +51,10 @@ Mgtt::Window::GlfwWindow::GlfwWindow() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 4); // enable anti-aliasing
 
-    this->window = glfwCreateWindow(800, 600, "GLFW Window", nullptr, nullptr);
+    this->window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 
     if (!this->window) {
-        std::cerr << "Failed to create GLFW window" << std::endl;
+        throw std::runtime_error("GLFW ERROR: Failed to create GLFW window");
         glfwTerminate();
         return;
     }
