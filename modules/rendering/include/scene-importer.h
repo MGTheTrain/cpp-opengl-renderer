@@ -55,8 +55,9 @@ namespace Mgtt::Rendering {
          * It loads the 3D scene from the specified file path.
          * 
          * @param path The file path from which to load the 3D scene.
+         * @return An instance of the loaded 3D scene.
          */
-        void Load(const std::string& path) override;
+        IScene Load(const std::string& path) override;
 
         /**
          * @brief Clear the current state of the scene importer.
@@ -66,5 +67,4 @@ namespace Mgtt::Rendering {
          */
         void Clear() override;
     };
-
 }
