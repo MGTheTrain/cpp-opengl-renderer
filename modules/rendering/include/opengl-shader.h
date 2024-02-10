@@ -27,13 +27,45 @@
 // - TBD
 
 #pragma once
-#include <ishader>
+#include "ishader.h"  
+#include <string>
+
 namespace Mgtt::Rendering {
-    class OpenGlShader: public IShader {
-        public:
-            OpenGlShader();
-            ~OpenGlShader();
-            void Compile(const std::string& vsPath, const std::string& fsPath) override;
-            void Clear() override;
+    /**
+     * @brief Implementation of the IShader interface for OpenGL shaders.
+     * 
+     * This class provides concrete implementation details for compiling and managing
+     * vertex and fragment shaders within an OpenGL rendering context.
+     */
+    class OpenGlShader : public IShader {
+    public:
+        /**
+         * @brief Default constructor for the OpenGL shader.
+         */
+        OpenGlShader();
+
+        /**
+         * @brief Destructor for the OpenGL shader.
+         */
+        ~OpenGlShader();
+
+        /**
+         * @brief Compile the OpenGL shader program from specified vertex and fragment shader files.
+         * 
+         * This method overrides the corresponding method in the IShader interface.
+         * It compiles the vertex and fragment shaders, linking them into a shader program.
+         * 
+         * @param vsPath The file path to the vertex shader source code.
+         * @param fsPath The file path to the fragment shader source code.
+         */
+        void Compile(const std::string& vsPath, const std::string& fsPath) override;
+
+        /**
+         * @brief Clear the current state of the OpenGL shader.
+         * 
+         * This method overrides the corresponding method in the IShader interface.
+         * It is used to reset the internal state of the OpenGL shader, freeing resources.
+         */
+        void Clear() override;
     };
 } 

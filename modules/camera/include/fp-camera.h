@@ -27,37 +27,41 @@
 // - TBD
 
 #pragma once
-#include <string>
+#include <icamera.h>
 
-namespace Mgtt::Rendering {
+namespace Mgtt::Camera {
     /**
-     * @brief Interface for managing shaders in a 3D rendering context.
+     * @brief Implementation of the ICamera interface for a first-person camera.
      * 
-     * This interface defines methods for compiling shaders and clearing the shader state.
+     * This class provides concrete implementation details for initializing and clearing an FPS camera's state.
      */
-    class IShader {
+    class FpCamera : public ICamera {
     public:
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Default constructor for the FPS camera.
          */
-        virtual ~IShader() {}
+        FpCamera();
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         * 
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
+         * @brief Destructor for the FPS camera.
          */
-        virtual void Compile(const std::string& vsPath, const std::string& fsPath) = 0;
+        ~FpCamera();
 
         /**
-         * @brief Clear the current state of the shader.
+         * @brief Initialize the FPS camera.
          * 
-         * This method is used to reset the internal state of the shader, freeing resources.
+         * This method overrides the corresponding method in the ICamera interface.
+         * It is implemented to set up the initial state specific to an FPS camera.
          */
-        virtual void Clear() = 0;
+        void Init() override;
+
+        /**
+         * @brief Clear the FPS camera's state.
+         * 
+         * This method overrides the corresponding method in the ICamera interface.
+         * It is implemented to reset the internal state of the FPS camera, freeing resources.
+         */
+        void Clear() override;
     };
 
 }

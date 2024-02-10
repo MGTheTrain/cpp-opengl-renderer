@@ -27,37 +27,44 @@
 // - TBD
 
 #pragma once
+#include "iscene-importer.h"  
 #include <string>
 
 namespace Mgtt::Rendering {
     /**
-     * @brief Interface for managing shaders in a 3D rendering context.
+     * @brief Implementation of the ISceneImporter interface for importing 3D scenes.
      * 
-     * This interface defines methods for compiling shaders and clearing the shader state.
+     * This class provides concrete implementation details for loading and clearing 3D scenes.
      */
-    class IShader {
+    class SceneImporter : public ISceneImporter {
     public:
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Default constructor for the scene importer.
          */
-        virtual ~IShader() {}
+        SceneImporter();
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         * 
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
+         * @brief Destructor for the scene importer.
          */
-        virtual void Compile(const std::string& vsPath, const std::string& fsPath) = 0;
+        ~SceneImporter();
 
         /**
-         * @brief Clear the current state of the shader.
+         * @brief Load the 3D scene from a specified file path.
          * 
-         * This method is used to reset the internal state of the shader, freeing resources.
+         * This method overrides the corresponding method in the ISceneImporter interface.
+         * It loads the 3D scene from the specified file path.
+         * 
+         * @param path The file path from which to load the 3D scene.
          */
-        virtual void Clear() = 0;
+        void Load(const std::string& path) override;
+
+        /**
+         * @brief Clear the current state of the scene importer.
+         * 
+         * This method overrides the corresponding method in the ISceneImporter interface.
+         * It is used to reset the internal state of the scene importer, freeing resources.
+         */
+        void Clear() override;
     };
 
 }

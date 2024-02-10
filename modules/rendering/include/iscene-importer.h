@@ -27,14 +27,34 @@
 // - TBD
 
 #pragma once
-#include <icamera.h>
+#include <string>
 
-namespace Mgtt::Camera {
-    class FpsCamera: public ICamera {
-        public:
-            FpsCamera();
-            ~FpsCamera();
-            void Init() override;
-            void Clear() override;
+namespace Mgtt::Rendering {
+    /**
+     * @brief Interface for importing 3D scenes.
+     * 
+     * This interface defines methods for loading and clearing 3D scenes.
+     */
+    class ISceneImporter {
+    public:
+        /**
+         * @brief Virtual destructor for the interface.
+         */
+        virtual ~ISceneImporter() {}
+
+        /**
+         * @brief Load the scene from a specified file path.
+         * 
+         * @param path The file path from which to load the scene.
+         */
+        virtual void Load(const std::string& path) = 0;
+
+        /**
+         * @brief Clear the current state of the scene.
+         * 
+         * This method is used to reset the internal state of the scene.
+         */
+        virtual void Clear() = 0;
     };
-} 
+
+}

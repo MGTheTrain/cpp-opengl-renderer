@@ -27,11 +27,32 @@
 // - TBD
 
 #pragma once
+
 namespace Mgtt::Camera {
+    /**
+     * @brief Interface for defining a generic camera.
+     * 
+     * This interface outlines methods for initializing and clearing a camera's state.
+     */
     class ICamera {
-        public:
-            virtual ~ICamera() {}
-            virtual void Init() = 0;
-            virtual void Clear() = 0;
+    public:
+        /**
+         * @brief Virtual destructor for the camera interface.
+         */
+        virtual ~ICamera() {}
+
+        /**
+         * @brief Initialize the camera.
+         * 
+         * This method should be implemented to set up the initial state of the camera.
+         */
+        virtual void Init() = 0;
+
+        /**
+         * @brief Clear the camera's state.
+         * 
+         * This method should be implemented to reset the internal state of the camera, freeing resources.
+         */
+        virtual void Clear() = 0;
     };
-} 
+}
