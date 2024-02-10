@@ -28,6 +28,7 @@
 
 #pragma once
 #include <string>
+#include <memory>
 #include <model.h>
 
 namespace Mgtt::Rendering {
@@ -49,7 +50,7 @@ namespace Mgtt::Rendering {
          * @param path The file path from which to load the scene.
          * @return An instance of the loaded scene.
          */
-        virtual IScene Load(const std::string& path) = 0;
+        virtual std::unique_ptr<IScene> Load(const std::string& path) = 0;
 
         /**
          * @brief Clear the current state of the scene.
