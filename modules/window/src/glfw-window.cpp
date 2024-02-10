@@ -71,6 +71,15 @@ Mgtt::Window::GlfwWindow::~GlfwWindow() {
 }
 
 /**
+* @brief Get the GLFW window
+*
+* @return The GLFW window
+*/
+GLFWwindow* Mgtt::Window::GlfwWindow::GetWindow() {
+    return this->window;
+}
+
+/**
 * @brief Set the framebuffer size callback function for the GLFW window.
 *
 * This method sets the callback function that will be invoked when the framebuffer size of the GLFW window changes.
