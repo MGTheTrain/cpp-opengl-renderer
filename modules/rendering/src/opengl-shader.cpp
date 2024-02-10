@@ -8,6 +8,7 @@
  * @param fsPath Path to the fragment shader source file.
  */
 Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::string& vsPath, const std::string& fsPath) {
+    this->id = 0;
     this->Compile(vsPath, fsPath);
 }
 
