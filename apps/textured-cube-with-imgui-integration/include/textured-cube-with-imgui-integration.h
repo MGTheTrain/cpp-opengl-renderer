@@ -30,6 +30,8 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <glfw-window.h>
+#include <opengl-shader.h>
+#include <vector>
 
 namespace Mgtt::Apps {
     /**
@@ -56,8 +58,29 @@ namespace Mgtt::Apps {
          * This method is responsible for rendering the contents of the scene using OpenGL.
          */
         void Render();
+
+        /**
+        * @brief Process input for the GLFW window.
+        *
+        * This function processes input for the specified GLFW window. It can handle keyboard
+        * and mouse input events and update the application state accordingly.
+        */
+        void ProcessInput();
     private:
+        /**
+        * @brief Callback function for framebuffer size changes.
+        *
+        * This static callback function is invoked when the framebuffer size of the GLFW window changes.
+        * It is typically registered using `glfwSetFramebufferSizeCallback`. The function updates the
+        * viewport size based on the new width and height.
+        *
+        * @param window A pointer to the GLFW window whose framebuffer size has changed.
+        * @param width  The new width of the framebuffer.
+        * @param height The new height of the framebuffer.
+        */
+        static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+        std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
     };
 
 } // namespace Mgtt::Apps
