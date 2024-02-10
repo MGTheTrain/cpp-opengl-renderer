@@ -72,9 +72,7 @@ namespace Mgtt::Rendering {
         /**
          * @brief Delete the shader program.
          */
-        void Clear() override {
-
-        }
+        void Clear() override;
 
         /**
          * @brief Get the ID of the shader program.
