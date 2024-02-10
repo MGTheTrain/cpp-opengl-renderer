@@ -56,7 +56,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std
     }
     catch (std::ifstream::failure& ex)
     {
-        std::string errorMsg = "SHADER ERROR: " + std::string(ex.what());
+        std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + vsPath + " and fragment shader file " + fsPath + "does not exist";
         throw std::runtime_error(errorMsg.c_str());
         return;
     }
