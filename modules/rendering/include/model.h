@@ -46,6 +46,9 @@ namespace Mgtt::Rendering {
      * @brief Represents a 3D scene.
      */
     struct Scene {
+        /**
+         * @brief @brief Constructor for the Scene structure.
+         */
         Scene();
         std::string name;
         std::string path;
@@ -60,7 +63,23 @@ namespace Mgtt::Rendering {
      * @brief Represents a node in the scene hierarchy.
      */
     struct Node {
+        /**
+         * @brief @brief Constructor for the Node structure.
+         */
         Node();
+
+        /**
+         * @brief Calculates the local transformation matrix of the node.
+         * @return Local transformation matrix.
+         */
+        glm::mat4 LocalMatrix();
+
+        /**
+         * @brief Calculates the global transformation matrix of the node.
+         * @return Global transformation matrix.
+         */
+        glm::mat4 GetGlobalMatrix();
+
         std::string name;
         std::shared_ptr<Node> parent;
         std::shared_ptr<Mesh> mesh;
@@ -77,6 +96,9 @@ namespace Mgtt::Rendering {
      * @brief Represents a primitive mesh in the scene.
      */
     struct MeshPrimitive {
+        /**
+         * @brief @brief Constructor for the MeshPrimitive structure.
+         */
         MeshPrimitive();
         std::string name;
         uint32_t firstIndex;  // required for glDrawElements(...)
@@ -91,6 +113,9 @@ namespace Mgtt::Rendering {
      * @brief Represents a mesh in the scene.
      */
     struct Mesh {
+        /**
+         * @brief @brief Constructor for the Mesh structure.
+         */
         Mesh();
         std::string name;
         std::vector<MeshPrimitive> meshPrimitives;
@@ -107,34 +132,58 @@ namespace Mgtt::Rendering {
      * @brief Represents a generic material.
      */
     struct Material {
+        /**
+         * @brief @brief Constructor for the Material structure.
+         */
         Material();
         std::string name;
     };
+
+    enum class AlphaMode { NONE, OPAQE, MASK, BLEND };
 
     /**
      * @brief Represents a physically based rendering (PBR) material.
      */
     struct PbrMaterial : public Material {
+        /**
+         * @brief @brief Constructor for the PbrMaterial structure.
+         */
         PbrMaterial();
         struct NormalTexture;
         struct OcclusionTexture;
         struct EmissiveTexture;
         struct BaseColorTexture;
         struct MetallicRoughnessTexture;
+
+        float alphaCutoff;
+        bool doubleSided;
+        AlphaMode alphaMode;
     };
 
     /**
      * @brief Represents a generic texture.
      */
     struct Texture {
+        /**
+         * @brief @brief Constructor for the Texture structure.
+         */
         Texture();
         std::string name;
+        std::string path;
+        int32_t width;
+        int32_t height;
+        int32_t nrComponents;
+        unsigned char *data;
+        uint32_t sizeInBytes;
     };
 
     /**
      * @brief Represents a normal map texture.
      */
     struct NormalTexture : public Texture {
+        /**
+         * @brief @brief Constructor for the NormalTexture structure.
+         */
         NormalTexture();
         float scale;
     };
@@ -143,6 +192,9 @@ namespace Mgtt::Rendering {
      * @brief Represents an emissive map texture.
      */
     struct EmissiveTexture : public Texture {
+        /**
+         * @brief @brief Constructor for the EmissiveTexture structure.
+         */
         EmissiveTexture();
         float color;
     };
@@ -150,7 +202,10 @@ namespace Mgtt::Rendering {
     /**
      * @brief Represents a metallic and roughness map texture.
      */
-    struct MetallicRoughnessTexture : public Texture {
+    struct MetallicRoughnessTexture : public Texture {#
+        /**
+         * @brief @brief Constructor for the MetallicRoughnessTexture structure.
+         */
         MetallicRoughnessTexture();
         float metallicFactor;
         float roughnessFactor;
@@ -160,6 +215,9 @@ namespace Mgtt::Rendering {
      * @brief Represents an occlusion map texture.
      */
     struct OcclusionTexture : public Texture {
+        /**
+         * @brief @brief Constructor for the OcclusionTexture structure.
+         */
         OcclusionTexture();
         glm::vec3 color;
     };
@@ -168,8 +226,10 @@ namespace Mgtt::Rendering {
      * @brief Represents a base color map texture.
      */
     struct BaseColorTexture : public Texture {
+        /**
+         * @brief @brief Constructor for the BaseColorTexture structure.
+         */
         BaseColorTexture();
         glm::vec4 color;
     };
-
 }
