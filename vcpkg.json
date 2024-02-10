@@ -2,9 +2,21 @@
     "name": "cpp-opengl-renderer",
     "version-string": "0.1.0", 
     "dependencies": [
-        "glfw3",
-        "glew",
-        "imgui",
-        "glm"
+        {
+            "name": "glfw3",
+            "version": "3.3.9"
+        },
+        {
+            "name": "glm",
+            "version": "1.0.0"
+        },
+        {
+            "name": "glew",
+            "version": "glew-2.2.0"
+        },
+        {
+            "name": "imgui",
+            "version": "v1.90.2"
+        }
     ]
 }
