@@ -47,3 +47,10 @@ If you encounter DLL-related errors, make sure to copy the necessary dynamic lib
 ### CMake
 
 TBD
+
+## Apps
+
+Images of the rendered scenes can be viewed here:
+
+- [opengl-viewer README.md](./apps/opengl-viewer/README.md)
+- [rotating-textured-cube README.md](./apps/rotating-textured-cube/README.md)
