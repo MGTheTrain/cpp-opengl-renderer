@@ -69,7 +69,7 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
 }
 
 int main() {
-    Mgtt::Apps::OpenGlViewer openGlViewer();
+    Mgtt::Apps::OpenGlViewer openGlViewer;
 
     openGlViewer.Init();
     openGlViewer.Render();
