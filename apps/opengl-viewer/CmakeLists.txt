@@ -24,7 +24,7 @@
 # Contributors:
 # - TBD
 
-if(BUILD_MAIN)
+if(BUILD_APP)
     add_subdirectory(src)
 endif()
 
