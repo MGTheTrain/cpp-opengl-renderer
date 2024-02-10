@@ -30,7 +30,8 @@ TBD
 
 ### Preconditions
 
-- Install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
+- Download and install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
+- Download and install [CMake](https://cmake.org/download/) 
 
 ### Debugging
 
