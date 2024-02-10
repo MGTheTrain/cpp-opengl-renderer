@@ -25,16 +25,51 @@
 //
 // Contributors:
 // - TBD
-
 #pragma once
+
+#include <iostream>
+
 namespace Mgtt::Apps {
+    /**
+     * @brief The OpenGlViewer class represents a simple OpenGL viewer.
+     *
+     * This class provides basic functionality for initializing an OpenGL context,
+     * rendering scenes, and clearing the rendering buffer.
+     */
     class OpenGlViewer {
-        public:
-            OpenGlViewer();
-            ~OpenGlViewer();
-            void Init();
-            void Render();
-            void Clear();
-        private:
+    public:
+        /**
+         * @brief Constructs an OpenGlViewer object.
+         */
+        OpenGlViewer();
+
+        /**
+         * @brief Destructs the OpenGlViewer object.
+         */
+        ~OpenGlViewer();
+
+        /**
+         * @brief Initializes the OpenGL viewer, setting up the necessary resources.
+         */
+        void Init();
+
+        /**
+         * @brief Renders the scene using OpenGL.
+         *
+         * This method is responsible for rendering the contents of the scene using OpenGL.
+         */
+        void Render();
+
+        /**
+         * @brief Clears the rendering buffer and performs cleanup.
+         *
+         * This method is called to clear the rendering buffer and perform any necessary cleanup
+         * before exiting or switching to a new scene.
+         */
+        void Clear();
+
+    private:
+        // Additional private members or methods can be documented here.
     };
-}
+
+} // namespace Mgtt::Apps

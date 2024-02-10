@@ -27,26 +27,49 @@
 // - TBD
 
 #include <opengl-viewer.h>
-Mgtt::Apps::~OpenGlViewer() {
 
+/**
+ * @brief Destructs the OpenGlViewer object.
+ */
+Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
+    std::cout << "Hi from destructor" << std::endl;
 }
 
-Mgtt::Apps::OpenGlViewer() {
-
+/**
+ * @brief Constructs an OpenGlViewer object.
+ */
+Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
+    std::cout << "Hi from constructor" << std::endl;
 }
 
-void Mgtt::Apps::Init() {
-
+/**
+ * @brief Initializes the OpenGL viewer, setting up the necessary resources.
+ */
+void Mgtt::Apps::OpenGlViewer::Init() {
+    std::cout << "Hi from Init" << std::endl;
 }
-void Mgtt::Apps::Render() {
 
+/**
+ * @brief Renders the scene using OpenGL.
+ *
+ * This method is responsible for rendering the contents of the scene using OpenGL.
+ */
+void Mgtt::Apps::OpenGlViewer::Render() {
+    std::cout << "Hi from Render()" << std::endl;
 }
-void Mgtt::Apps::Clear() {
 
+/**
+ * @brief Clears the rendering buffer and performs cleanup.
+ *
+ * This method is called to clear the rendering buffer and perform any necessary cleanup
+ * before exiting or switching to a new scene.
+ */
+void Mgtt::Apps::OpenGlViewer::Clear() {
+    std::cout << "Hi from Clear()" << std::endl;
 }
 
 int main() {
-    Mgtt::Apps::OpenGlViewer openGlViewer;
+    Mgtt::Apps::OpenGlViewer openGlViewer();
 
     openGlViewer.Init();
     openGlViewer.Render();
