@@ -32,8 +32,60 @@
 #include <glfw-window.h>
 #include <opengl-shader.h>
 #include <vector>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Mgtt::Apps {
+    /**
+     * @brief Represents window params 
+     */
+    struct WindowParams {
+        WindowParams() {
+            this->name = "";
+            this->width = 0.0f;
+            this->height = 0.0f;
+        }
+        std::string name;
+        float width;
+        float height;
+    };
+
+    /**
+     * @brief Represents glm matrices
+     */
+    struct GlmMatrices {
+        GlmMatrices() {
+            this->model = glm::mat4(1.0f);
+            this->view = glm::mat4(1.0f);
+            this->projection = glm::mat4(1.0f);
+            this->mvp = glm::mat4(1.0f);
+        }
+        glm::mat4 model;
+        glm::mat4 view;
+        glm::mat4 projection;
+        glm::mat4 mvp;
+    };
+
+    /**
+     * @brief Represents glm matrices
+     */
+    struct OpenGlObjects {
+        OpenGlObjects() {}
+        ~OpenGlObjects() {
+            for (auto vao : this->vaos) {
+                glDeleteVertexArrays(1, &vao);
+            }
+            for (auto vbo : this->vbos) {
+                glDeleteBuffers(1, &vbo);
+            }
+        }
+        std::vector<unsigned int> vaos;
+        std::vector<unsigned int> vbos;
+    };
+
     /**
      * @brief The TexturedCubeWithImguiIntegration  class represents a simple OpenGL viewer.
      *
@@ -81,6 +133,10 @@ namespace Mgtt::Apps {
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
+        std::vector<unsigned int> textureMaps;
+        std::unique_ptr<WindowParams> windowParams;
+        std::unique_ptr<GlmMatrices> glmMatrices;
+        std::unique_ptr<OpenGlObjects> openGlObjects;
     };
 
 } // namespace Mgtt::Apps

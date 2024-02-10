@@ -32,19 +32,110 @@
  * @brief Destructs the TexturedCubeWithImguiIntegration  object.
  */
 Mgtt::Apps::TexturedCubeWithImguiIntegration::~TexturedCubeWithImguiIntegration () {
-    
+
 }
 
 /**
  * @brief Constructs an TexturedCubeWithImguiIntegration  object.
  */
 Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration () {
+    this->windowParams = std::make_unique<WindowParams>();
+    this->windowParams->name = "textured-cube-with-imgui-integration";
+    this->windowParams->width= 1000.0f;
+    this->windowParams->height= 1000.0f;
+
+    this->glmMatrices = std::make_unique<GlmMatrices>();
+    this->openGlObjects = std::make_unique<OpenGlObjects>();
     this->glfwWindow = 
-      std::make_unique<Mgtt::Window::GlfwWindow>("textured-cube-with-imgui-integration", 1000.0f, 1000.0f);
+      std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
     this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::TexturedCubeWithImguiIntegration::FramebufferSizeCallback);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
+
+    this->openGlShaders.push_back(Mgtt::Rendering::OpenGlShader("assets/coordinate.vert", "assets/coordinate.frag"));
+    float vertices[] = {
+       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+       -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
+    this->openGlObjects->vbos.push_back(0);
+    this->openGlObjects->vaos.push_back(0);
+    glGenVertexArrays(1, &this->openGlObjects->vaos[0]);
+    glGenBuffers(1, &this->openGlObjects->vbos[0]);
+
+    glBindVertexArray(this->openGlObjects->vaos[0]);
+
+    glBindBuffer(GL_ARRAY_BUFFER, this->openGlObjects->vbos[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+
+    this->textureMaps.push_back(0);
+    glGenTextures(1, &this->textureMaps[0]);
+    glBindTexture(GL_TEXTURE_2D, this->textureMaps[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("assets/texture/surgery.jpg", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
+    this->openGlShaders[0].Use();
+    this->openGlShaders[0].SetInt("textureMap", 0);
 }
 
 
@@ -55,8 +146,29 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration (
  */
 void Mgtt::Apps::TexturedCubeWithImguiIntegration::Render() {
     while(!this->glfwWindow->WindowShouldClose()) {
+        this->ProcessInput();
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->glfwWindow->SwapBuffersAndPollEvents();
+
+         // bind textures on corresponding texture units
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, this->textureMaps[0]);
+
+        // activate shader
+        this->openGlShaders[0].Use();
+
+        this->glmMatrices->model         = glm::mat4(1.0f);
+        this->glmMatrices->view          = glm::mat4(1.0f);
+        this->glmMatrices->projection    = glm::mat4(1.0f);
+        this->glmMatrices->model  = glm::rotate(this->glmMatrices->model , (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+        this->glmMatrices->view  = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
+        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
+        this->glmMatrices->mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
+        this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
+        glBindVertexArray(this->openGlObjects->vaos[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
 }
