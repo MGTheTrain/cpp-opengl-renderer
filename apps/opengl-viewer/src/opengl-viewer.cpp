@@ -26,7 +26,6 @@
 // Contributors:
 // - TBD
 
-#include <GL/glew.h>
 #include <opengl-viewer.h>
 
 /**
