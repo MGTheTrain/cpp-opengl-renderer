@@ -38,11 +38,13 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace Mgtt::Rendering {
-    
     // Forward declarations
     struct Mesh;
     struct Material;
 
+    /**
+     * @brief Represents a 3D scene.
+     */
     struct Scene {
         Scene();
         std::string name;
@@ -54,6 +56,9 @@ namespace Mgtt::Rendering {
         glm::mat4 matrix;
     };
 
+    /**
+     * @brief Represents a node in the scene hierarchy.
+     */
     struct Node {
         Node();
         std::string name;
@@ -68,6 +73,9 @@ namespace Mgtt::Rendering {
         uint32_t index;
     };
 
+    /**
+     * @brief Represents a primitive mesh in the scene.
+     */
     struct MeshPrimitive {
         MeshPrimitive();
         std::string name;
@@ -79,6 +87,9 @@ namespace Mgtt::Rendering {
         std::shared_ptr<Material> material;
     };
 
+    /**
+     * @brief Represents a mesh in the scene.
+     */
     struct Mesh {
         Mesh();
         std::string name;
@@ -92,11 +103,17 @@ namespace Mgtt::Rendering {
         glm::mat4 matrix;
     };
 
+    /**
+     * @brief Represents a generic material.
+     */
     struct Material {
         Material();
         std::string name;
     };
 
+    /**
+     * @brief Represents a physically based rendering (PBR) material.
+     */
     struct PbrMaterial : public Material {
         PbrMaterial();
         struct NormalTexture;
@@ -106,34 +123,53 @@ namespace Mgtt::Rendering {
         struct MetallicRoughnessTexture;
     };
 
+    /**
+     * @brief Represents a generic texture.
+     */
     struct Texture {
         Texture();
         std::string name;
     };
 
+    /**
+     * @brief Represents a normal map texture.
+     */
     struct NormalTexture : public Texture {
         NormalTexture();
         float scale;
     };
 
+    /**
+     * @brief Represents an emissive map texture.
+     */
     struct EmissiveTexture : public Texture {
         EmissiveTexture();
         float color;
     };
 
+    /**
+     * @brief Represents a metallic and roughness map texture.
+     */
     struct MetallicRoughnessTexture : public Texture {
         MetallicRoughnessTexture();
         float metallicFactor;
         float roughnessFactor;
     };
 
+    /**
+     * @brief Represents an occlusion map texture.
+     */
     struct OcclusionTexture : public Texture {
         OcclusionTexture();
         glm::vec3 color;
     };
 
+    /**
+     * @brief Represents a base color map texture.
+     */
     struct BaseColorTexture : public Texture {
         BaseColorTexture();
         glm::vec4 color;
     };
-}  // namespace Mgtt::Rendering
+
+}
