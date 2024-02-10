@@ -8,6 +8,8 @@ option(BUILD_MAIN "Compile source file of main executable and link compiled libr
 option(BUILD_PACKAGE "Build the package" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(AzureVcpkg)
+az_vcpkg_integrate()
 
 if(BUILD_TEST)
     include(CTestConfig)
