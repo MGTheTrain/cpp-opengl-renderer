@@ -61,7 +61,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 //int main() {
 //    try {
 //        Mgtt::Apps::OpenGlViewer openGlViewer;
-//        if (glewInit() != GLEW_OK) { // reuqires glfw
+//        if (glewInit() != GLEW_OK) { 
 //            throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
 //        }
 //        openGlViewer.Render();

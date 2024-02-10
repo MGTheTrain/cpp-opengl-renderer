@@ -61,7 +61,7 @@ void Mgtt::Apps::TexturedCubeWithImguiIntegration ::Render() {
 int main() {
     try {
         Mgtt::Apps::TexturedCubeWithImguiIntegration  TexturedCubeWithImguiIntegration ;
-        if (glewInit() != GLEW_OK) { // reuqires glfw
+        if (glewInit() != GLEW_OK) { 
             throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
         }
         TexturedCubeWithImguiIntegration .Render();
