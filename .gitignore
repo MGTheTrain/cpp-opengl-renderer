@@ -2,3 +2,4 @@ build
 *.exe
 *.vs
 *x64
+vcpkg_installed
