@@ -59,6 +59,16 @@ Mgtt::Window::GlfwWindow::GlfwWindow() {
 }
 
 /**
+* @brief Destructor for the GLFW window.
+*/
+Mgtt::Window::GlfwWindow::~GlfwWindow() {
+    if (this->window) {
+        glfwDestroyWindow(this->window);
+        glfwTerminate();
+    }
+}
+
+/**
 * @brief Set the framebuffer size callback function for the GLFW window.
 *
 * This method sets the callback function that will be invoked when the framebuffer size of the GLFW window changes.
@@ -114,12 +124,4 @@ Mgtt::Window::GlfwWindow::GlfwWindow() {
  */
 bool Mgtt::Window::GlfwWindow::WindowShouldClose() {
   return glfwWindowShouldClose(this->window);
-}
-
-/**
-* @brief Destructor for the GLFW window.
-*/
-Mgtt::Window::GlfwWindow::~GlfwWindow() {
-    glfwDestroyWindow(this->window);
-    glfwTerminate();
 }

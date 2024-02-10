@@ -26,13 +26,14 @@
 // Contributors:
 // - TBD
 
+#include <GL/glew.h>
 #include <opengl-viewer.h>
 
 /**
  * @brief Destructs the OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
-    std::cout << "Hi from destructor" << std::endl;
+    
 }
 
 /**
@@ -51,13 +52,17 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
  */
 void Mgtt::Apps::OpenGlViewer::Render() {
     while(!this->glfwWindow->WindowShouldClose()) {
-        
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->glfwWindow->SwapBuffersAndPollEvents();
     }
 }
 
 int main() {
     Mgtt::Apps::OpenGlViewer openGlViewer;
+    if (glewInit() != GLEW_OK) { // reuqires glfw
+        throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+    }
     openGlViewer.Render();
-    openGlViewer.~OpenGlViewer();
     return 0;
 }

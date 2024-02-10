@@ -46,6 +46,11 @@ namespace Mgtt::Window {
         GlfwWindow();
 
         /**
+         * @brief Destructor for the GLFW window.
+         */
+        ~GlfwWindow();
+
+        /**
         * @brief Set the framebuffer size callback function for the GLFW window.
         *
         * This method sets the callback function that will be invoked when the framebuffer size of the GLFW window changes.
@@ -88,11 +93,6 @@ namespace Mgtt::Window {
          * @return True if the window should close, false otherwise.
          */
         bool WindowShouldClose();
-
-        /**
-         * @brief Destructor for the GLFW window.
-         */
-        ~GlfwWindow();
     private:
         GLFWwindow* window;
     };
