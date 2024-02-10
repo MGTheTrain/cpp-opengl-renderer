@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-set(TARGET opengl-viewer)
+set(TARGET cpp-opengl-renderer)
 project(${TARGET})   
 
 option(BUILD_TEST "Compile source files for test executable" OFF)
