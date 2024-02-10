@@ -29,6 +29,7 @@
 #pragma once
 #include <iwindow.h>
 #include <iostream>
+#include <memory>
 #include <GLFW/glfw3.h>
 
 namespace Mgtt::Window {
@@ -45,9 +46,55 @@ namespace Mgtt::Window {
         GlfwWindow();
 
         /**
+        * @brief Set the framebuffer size callback function for the GLFW window.
+        *
+        * This method sets the callback function that will be invoked when the framebuffer size of the GLFW window changes.
+        *
+        * @param callbackFunc The callback function to be set.
+        */
+        void SetFramebufferSizeCallback(GLFWframebuffersizefun callbackFunc);
+
+        /**
+         * @brief Set the scroll callback function for the GLFW window.
+         *
+         * This method sets the callback function that will be invoked when scrolling events occur within the GLFW window.
+         *
+         * @param callbackFunc The callback function to be set.
+         */
+        void SetScrollCallback(GLFWscrollfun callbackFunc);
+
+        /**
+         * @brief Set the key callback function for the GLFW window.
+         *
+         * This method sets the callback function that will be invoked when key events occur within the GLFW window.
+         *
+         * @param callbackFunc The callback function to be set.
+         */
+        void SetKeyCallback(GLFWkeyfun callbackFunc);
+
+        /**
+         * @brief Swap the front and back buffers of the GLFW window and poll for events.
+         *
+         * This method swaps the front and back buffers of the GLFW window, updating the display, and then polls for any pending events.
+         */
+        void SwapBuffersAndPollEvents();
+
+
+        /**
+         * @brief Checks if the GLFW window should close.
+         *
+         * This method queries GLFW to determine if the associated window should be closed.
+         *
+         * @return True if the window should close, false otherwise.
+         */
+        bool WindowShouldClose();
+
+        /**
          * @brief Destructor for the GLFW window.
          */
         ~GlfwWindow();
+    private:
+        GLFWwindow* window;
     };
 
 }

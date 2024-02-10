@@ -50,25 +50,11 @@ namespace Mgtt::Apps {
         ~OpenGlViewer();
 
         /**
-         * @brief Initializes the OpenGL viewer, setting up the necessary resources.
-         */
-        void Init();
-
-        /**
          * @brief Renders the scene using OpenGL.
          *
          * This method is responsible for rendering the contents of the scene using OpenGL.
          */
         void Render();
-
-        /**
-         * @brief Clears the rendering buffer and performs cleanup.
-         *
-         * This method is called to clear the rendering buffer and perform any necessary cleanup
-         * before exiting or switching to a new scene.
-         */
-        void Clear();
-
     private:
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
     };

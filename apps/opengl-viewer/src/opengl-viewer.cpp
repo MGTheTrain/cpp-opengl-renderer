@@ -43,12 +43,6 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       std::make_unique<Mgtt::Window::GlfwWindow>();
 }
 
-/**
- * @brief Initializes the OpenGL viewer, setting up the necessary resources.
- */
-void Mgtt::Apps::OpenGlViewer::Init() {
-    std::cout << "Hi from Init" << std::endl;
-}
 
 /**
  * @brief Renders the scene using OpenGL.
@@ -56,24 +50,14 @@ void Mgtt::Apps::OpenGlViewer::Init() {
  * This method is responsible for rendering the contents of the scene using OpenGL.
  */
 void Mgtt::Apps::OpenGlViewer::Render() {
-    std::cout << "Hi from Render()" << std::endl;
-}
-
-/**
- * @brief Clears the rendering buffer and performs cleanup.
- *
- * This method is called to clear the rendering buffer and perform any necessary cleanup
- * before exiting or switching to a new scene.
- */
-void Mgtt::Apps::OpenGlViewer::Clear() {
-    std::cout << "Hi from Clear()" << std::endl;
+    while(!this->glfwWindow->WindowShouldClose()) {
+        
+    }
 }
 
 int main() {
     Mgtt::Apps::OpenGlViewer openGlViewer;
-
-    openGlViewer.Init();
     openGlViewer.Render();
-    openGlViewer.Clear();
+    openGlViewer.~OpenGlViewer();
     return 0;
 }
