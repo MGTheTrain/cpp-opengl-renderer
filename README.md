@@ -31,7 +31,14 @@ TBD
 ### Preconditions
 
 - Download and install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
-- Download and install [CMake](https://cmake.org/download/) 
+- Download and install [CMake from the official website](https://cmake.org/download/) 
+- Install [vcpkg](https://vcpkg.io/en/getting-started.html) or trough a package manager, e.g. on Windows 10/11 OS `choco install vcpkg`
+
+### Integrate vcpkg with Visual Studio
+
+Open a command prompt and navigate to the vcpkg directory. Run the following command to integrate vcpkg with Visual Studio: `.\vcpkg integrate install`
+Run the following command from the vcpkg directory to install the dependencies specified in the vcpkg.json file: `.\vcpkg install`
+Once the dependencies are installed, integrate vcpkg with Visual Studio using the following command: `.\vcpkg integrate install`
 
 ### Debugging
 
