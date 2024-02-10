@@ -165,13 +165,13 @@ void Mgtt::Apps::TexturedCubeWithImguiIntegration::Render() {
 
         this->openGlShaders[0].Use();
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model , (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
-        this->glmMatrices->mvp = projection * view * model;
+        this->glmMatrices->model = glm::mat4(1.0f);
+        this->glmMatrices->view = glm::mat4(1.0f);
+        this->glmMatrices->projection = glm::mat4(1.0f);
+        this->glmMatrices->model = glm::rotate(this->glmMatrices->model , (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+        this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
+        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
+        this->glmMatrices->mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
         this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
         glBindVertexArray(this->openGlObjects->vaos[0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
