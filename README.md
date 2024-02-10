@@ -36,9 +36,9 @@ TBD
 
 ### Integrate vcpkg with Visual Studio
 
-Open a command prompt and navigate to the vcpkg directory. Run the following command to integrate vcpkg with Visual Studio: `.\vcpkg integrate install`
-Run the following command from the vcpkg directory to install the dependencies specified in the vcpkg.json file: `.\vcpkg install`
-Once the dependencies are installed, integrate vcpkg with Visual Studio using the following command: `.\vcpkg integrate install`
+Open a command prompt and navigate to the vcpkg directory. Run the following command to integrate vcpkg with Visual Studio: `<vcpkg installation path>/vcpkg integrate install`
+Run the following command from the vcpkg directory to install the dependencies specified in the vcpkg.json file: `<vcpkg installation path>/vcpkg install`
+Once the dependencies are installed, integrate vcpkg with Visual Studio using the following command: `<vcpkg installation path>/vcpkg integrate install`
 
 ### Debugging
 
