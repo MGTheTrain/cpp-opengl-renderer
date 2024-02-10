@@ -51,13 +51,6 @@ namespace Mgtt::Rendering {
          * @param fsPath The file path to the fragment shader source code.
          */
         virtual void Compile(const std::string& vsPath, const std::string& fsPath) = 0;
-
-        /**
-         * @brief Clear the current state of the shader.
-         * 
-         * This method is used to reset the internal state of the shader, freeing resources.
-         */
-        virtual void Clear() = 0;
     };
 
 }
