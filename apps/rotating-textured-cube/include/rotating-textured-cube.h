@@ -101,22 +101,22 @@ namespace Mgtt::Apps {
     };
 
     /**
-     * @brief The TexturedCubeWithImguiIntegration  class represents a simple OpenGL viewer.
+     * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
      *
      * This class provides basic functionality for initializing an OpenGL context,
      * rendering scenes, and clearing the rendering buffer.
      */
-    class TexturedCubeWithImguiIntegration {
+    class RotatingTexturedCube {
     public:
         /**
-         * @brief Constructs an TexturedCubeWithImguiIntegration  object.
+         * @brief Constructs an RotatingTexturedCube  object.
          */
-        TexturedCubeWithImguiIntegration ();
+        RotatingTexturedCube ();
 
         /**
-         * @brief Destructs the TexturedCubeWithImguiIntegration  object.
+         * @brief Destructs the RotatingTexturedCube  object.
          */
-        ~TexturedCubeWithImguiIntegration ();
+        ~RotatingTexturedCube ();
 
         /**
          * @brief Renders the scene using OpenGL.

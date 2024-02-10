@@ -26,23 +26,23 @@
 // Contributors:
 // - TBD
 
-#include <textured-cube-with-imgui-integration.h>
+#include <rotating-textured-cube.h>
 
 /**
- * @brief Destructs the TexturedCubeWithImguiIntegration  object.
+ * @brief Destructs the RotatingTexturedCube  object.
  */
-Mgtt::Apps::TexturedCubeWithImguiIntegration::~TexturedCubeWithImguiIntegration () {
+Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
     for (auto textureMap : this->textureMaps) {
         glDeleteTextures(1, &textureMap);
     }
 }
 
 /**
- * @brief Constructs an TexturedCubeWithImguiIntegration  object.
+ * @brief Constructs an RotatingTexturedCube  object.
  */
-Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration () {
+Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     this->windowParams = std::make_unique<WindowParams>();
-    this->windowParams->name = "textured-cube-with-imgui-integration";
+    this->windowParams->name = "rotating-textured-cube";
     this->windowParams->width= 1000.0f;
     this->windowParams->height= 1000.0f;
 
@@ -51,7 +51,7 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration (
     this->textureParams = std::make_unique<TextureParams>();
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
-    this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::TexturedCubeWithImguiIntegration::FramebufferSizeCallback);
+    this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
@@ -154,7 +154,7 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration (
  *
  * This method is responsible for rendering the contents of the scene using OpenGL.
  */
-void Mgtt::Apps::TexturedCubeWithImguiIntegration::Render() {
+void Mgtt::Apps::RotatingTexturedCube::Render() {
     while(!this->glfwWindow->WindowShouldClose()) {
         this->ProcessInput();
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -188,7 +188,7 @@ void Mgtt::Apps::TexturedCubeWithImguiIntegration::Render() {
 *
 * @param window A pointer to the GLFW window for which input should be processed.
 */
-void Mgtt::Apps::TexturedCubeWithImguiIntegration::ProcessInput()
+void Mgtt::Apps::RotatingTexturedCube::ProcessInput()
 {
     if (glfwGetKey(this->glfwWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(this->glfwWindow->GetWindow(), true);
@@ -206,14 +206,14 @@ void Mgtt::Apps::TexturedCubeWithImguiIntegration::ProcessInput()
  * @param width  The new width of the framebuffer.
  * @param height The new height of the framebuffer.
  */
-void Mgtt::Apps::TexturedCubeWithImguiIntegration::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
 int main() {
     try {
-        Mgtt::Apps::TexturedCubeWithImguiIntegration  TexturedCubeWithImguiIntegration;
-        TexturedCubeWithImguiIntegration .Render();
+        Mgtt::Apps::RotatingTexturedCube  RotatingTexturedCube;
+        RotatingTexturedCube .Render();
     } catch(const std::exception& ex) {
         std::cout << ex.what() << std::endl;
         return 1;
