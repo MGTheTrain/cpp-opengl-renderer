@@ -35,3 +35,7 @@ TBD
 ### Debugging
 
 Open the `cpp-opengl-renderer.sln`. Modify `include and library paths` in the cpp-opengl-renderer.vcxproj. Confirm the presence of only one entry point `int main()`. Set breakpoints as needed. Initiate the debugging process.
+
+### CMake
+
+TBD
