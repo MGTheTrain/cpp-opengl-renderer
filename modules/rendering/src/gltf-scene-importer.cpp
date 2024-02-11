@@ -165,16 +165,14 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     newNode->parent = parent;
     newNode->name = node.name;
 
-    //glm::vec3 translation = (node.translation.size() == 3) ? glm::make_vec3(node.translation.data()) : glm::vec3(0.0f);
-    //newNode->pos = translation;
+    glm::vec3 translation = (node.translation.size() == 3) ? glm::vec3(glm::make_vec3(node.translation.data())) : glm::vec3(0.0f);
+    newNode->pos = translation;
 
-    //glm::mat4 rotation = glm::mat4(1.0f);
-    //if (node.rotation.size() == 4) {
-    //    glm::quat q = glm::make_quat(node.rotation.data());
-    //    newNode->rot = glm::mat4(q);
-    //}
-    //glm::vec3 scale = (node.scale.size() == 3) ? glm::make_vec3(node.scale.data()) : glm::vec3(1.0f);
-    //newNode->scale = scale;
+    glm::mat4 rotation = (node.rotation.size() == 4) ? glm::mat4(glm::quat(glm::make_quat(node.rotation.data()))) : glm::mat4(1.0f);
+    newNode->rot = rotation;
+
+    glm::vec3 scale = (node.scale.size() == 3) ? glm::vec3(glm::make_vec3(node.scale.data())) : glm::vec3(1.0f);
+    newNode->scale = scale;
 
     if (node.matrix.size() == 16) {
         newNode->matrix = glm::make_mat4x4(node.matrix.data());
@@ -246,6 +244,25 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 glm::vec2 tmpTex = bufferTexCoordSet? glm::make_vec2(&bufferTexCoordSet[v * uv0ByteStride]): glm::vec2(0.0f);
                 newMesh->vertexTextureAttribs.push_back(tmpTex);
             }
+            Mgtt::Rendering::MeshPrimitive newPrimitive;
+            newPrimitive.firstIndex = indexStart;
+            newPrimitive.indexCount = indexCount;
+            newPrimitive.hasIndices = true;
+            newPrimitive.vertexCount = vertexCount;
+            // if (primitive.material > -1) {
+            //     newPrimitive.material = scene.materials[primitive.material];
+            // }
+            // else { 
+            //     newPrimitive.material =
+            //         std::make_shared<Mgtt::Rendering::PbrMaterial>();
+            // }
         }
+        newNode->mesh = newMesh;
+    }
+    if (parent) {
+        parent->children.push_back(newNode);
+    }
+    else {
+        scene.nodes.push_back(newNode);
     }
 }
