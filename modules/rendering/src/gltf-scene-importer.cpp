@@ -11,7 +11,41 @@
  * @return An instance of the loaded 3D scene.
  */
 Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::string& path) {
+    Mgtt::Rendering::Scene scene;
+    scene.path = path;
 
+    bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
+                            path.substr(path.size() - 5, 5) == ".gltf" ||
+                            path.substr(path.size() - 4, 4) == ".GLB" ||
+                            path.substr(path.size() - 4, 4) == ".glb");
+
+    if (!hasGltfSuffix) {
+        throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " + path);
+    }
+
+    bool binary = false;
+    size_t extpos = path.rfind('.', path.size());
+    if (extpos != std::string::npos) {
+        binary = (path.substr(extpos + 1, path.length() - extpos) == "glb");
+    }
+
+    std::string error;
+    std::string warning;
+    tinygltf::Model gltfModel;
+    tinygltf::TinyGLTF gltfContext;
+    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &error, &warning, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &error, &warning, path.c_str());
+
+    if (fileLoaded) {
+        // assign values from gltfModel
+
+        Mgtt::Rendering::Node node;
+        scene.nodes.push_back(node);
+    }
+    else {
+        throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
+    }
+
+    return scene;
 }
 
 /**
@@ -21,5 +55,5 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
  * @param scene A unique pointer to the scene to clear.
  */
 void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
-    scene.~Scene();
+    scene.Clear();
 }

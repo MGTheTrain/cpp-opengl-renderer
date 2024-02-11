@@ -27,8 +27,11 @@
 // - TBD
 
 #pragma once
+#include <GL/glew.h>
 #include "iscene-importer.h"  
 #include <string>
+#include <stdexcept>
+#define TINYGLTF_IMPLEMENTATION
 #include <tiny_gltf.h>
 
 namespace Mgtt::Rendering {
