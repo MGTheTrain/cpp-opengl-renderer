@@ -19,7 +19,7 @@ void Mgtt::Rendering::Scene::Clear() {
         this->Linearize(node);
     }
     for (auto& linearNode : this->linearNodes) {
-        linearNode.Clear();
+        linearNode->Clear();
     }
 }
 
@@ -30,11 +30,11 @@ void Mgtt::Rendering::Scene::Clear() {
  *
  * @param node The starting node to linearize.
  */
-void Mgtt::Rendering::Scene::Linearize(Mgtt::Rendering::Node& node) {
+void Mgtt::Rendering::Scene::Linearize(std::shared_ptr<Mgtt::Rendering::Node> node) {
     this->linearNodes.push_back(node);
 
-    for (uint32_t i = 0; i < node.children.size(); i++) {
-        this->Linearize(node.children[i]);
+    for (uint32_t i = 0; i < node->children.size(); i++) {
+        this->Linearize(node->children[i]);
     }
 }
 
