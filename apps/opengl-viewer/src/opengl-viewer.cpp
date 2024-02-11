@@ -32,7 +32,7 @@
  * @brief Destructs the OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
-    
+
 }
 
 /**
@@ -44,6 +44,9 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
+
+    Mgtt::Rendering::GltfSceneImporter gltfSceneImporter;
+    gltfSceneImporter.Load("assets/scenes/water-bottle/WaterBottle.gltf");
 }
 
 
@@ -59,14 +62,14 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
 }
-
-//int main() {
-//    try {
-//        Mgtt::Apps::OpenGlViewer openGlViewer;
-//        openGlViewer.Render();
-//    } catch(const std::exception& ex) {
-//        std::cout << ex.what() << std::endl;
-//        return 1;
-//    }
-//    return 0;
-//}
+ 
+int main() {
+    try {
+        Mgtt::Apps::OpenGlViewer openGlViewer;
+        openGlViewer.Render();
+    } catch(const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
