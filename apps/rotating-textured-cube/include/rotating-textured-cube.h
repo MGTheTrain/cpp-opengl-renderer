@@ -37,6 +37,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// Avoid relocating the #define STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single usage.
+#include <stb_image.h>
+
 namespace Mgtt::Apps {
     /**
      * @brief Represents window params 

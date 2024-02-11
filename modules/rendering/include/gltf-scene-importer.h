@@ -31,7 +31,11 @@
 #include "iscene-importer.h"  
 #include <string>
 #include <stdexcept>
+
 #define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STBI_MSC_SECURE_CRT
 #include <tiny_gltf.h>
 
 #define GLTF_COMPONENT_TYPE_BYTE (5120)
@@ -131,5 +135,35 @@ namespace Mgtt::Rendering {
         void LoadNode(
             std::shared_ptr<Mgtt::Rendering::Node> parent, Mgtt::Rendering::Scene &scene,
             const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model);
+
+        /**
+         * @brief Clear the resources associated with the Texture object, freeing up memory.
+         *
+         * This method releases resources associated with the provided Texture object, essentially freeing up memory.
+         * It is recommended to call this method when the Texture is no longer needed.
+         *
+         * @param texture Reference to the Texture object whose resources are to be cleared.
+         */
+        void Clear(Mgtt::Rendering::Texture& texture);
+
+        /**
+         * @brief Load a texture from the specified file path and update the Texture object.
+         *
+         * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
+         *
+         * @param texturePath The file path to the texture.
+         * @param texture Reference to the Texture object to be updated with the loaded data.
+         */
+        void Load(const std::string& texturePath, Mgtt::Rendering::Texture& texture);
+
+        /**
+         * @brief Clear the RAM resources associated with the Texture object.
+         *
+         * This method releases the memory resources in RAM associated with the Texture object, freeing up memory.
+         * It is recommended to call this method when the Texture is no longer needed to avoid unnecessary memory usage.
+         *
+         * @param texture Reference to the Texture object for which RAM resources should be cleared.
+         */
+        void ClearRAM(Mgtt::Rendering::Texture& texture);
     };
 }

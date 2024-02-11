@@ -1,6 +1,5 @@
 #include <gltf-scene-importer.h>
 
-
 /**
  * @brief Load the 3D scene from a specified file path.
  * 
@@ -15,7 +14,7 @@
  */
 Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::string& path) {
     Mgtt::Rendering::Scene mgttScene;
-    scene.path = path;
+    mgttScene.path = path;
 
     bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
                             path.substr(path.size() - 5, 5) == ".gltf" ||
@@ -41,8 +40,8 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
     size_t vertexCount = 0;
     size_t indexCount = 0;
     if (fileLoaded) {
-        this->LoadTextures(scene, gltfModel);
-        this->LoadMaterials(scene, gltfModel);
+        this->LoadTextures(mgttScene, gltfModel);
+        this->LoadMaterials(mgttScene, gltfModel);
         const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
         for (size_t i = 0; i < scene.nodes.size(); i++) {
             const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
@@ -53,7 +52,7 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
         throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
     }
 
-    return scene;
+    return mgttScene;
 }
 
 /**
@@ -77,6 +76,52 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
  */
 void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
     
+}
+
+/**
+ * @brief Clear the resources associated with the Texture object, freeing up memory.
+ *
+ * This method releases resources associated with the provided Texture object, essentially freeing up memory.
+ * It is recommended to call this method when the Texture is no longer needed.
+ *
+ * @param texture Reference to the Texture object whose resources are to be cleared.
+ */
+void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Texture& texture) {
+    this->ClearRAM(texture);
+    if (texture.id > 0) {
+        glDeleteTextures(1, &texture.id);
+        texture.id = 0;
+    }
+}
+
+/**
+ * @brief Load a texture from the specified file path and update the Texture object.
+ *
+ * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
+ *
+ * @param texturePath The file path to the texture.
+ * @param texture Reference to the Texture object to be updated with the loaded data.
+ */
+void Mgtt::Rendering::GltfSceneImporter::Load(const std::string& texturePath, Mgtt::Rendering::Texture& texture) {
+    if (!texture.data) {
+        texture.data = stbi_load(texturePath.c_str(),
+            &texture.width, &texture.height, &texture.nrComponents, 0);
+    }
+}
+
+/**
+ * @brief Clear the RAM resources associated with the Texture object.
+ *
+ * This method releases the memory resources in RAM associated with the Texture object, freeing up memory.
+ * It is recommended to call this method when the Texture is no longer needed to avoid unnecessary memory usage.
+ *
+ * @param texture Reference to the Texture object for which RAM resources should be cleared.
+ */
+void Mgtt::Rendering::GltfSceneImporter::ClearRAM(Mgtt::Rendering::Texture& texture) {
+    if (texture.data) {
+        stbi_image_free(texture.data);
+        texture.data = nullptr;
+    }
 }
 
 /**
@@ -113,16 +158,16 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     newNode->parent = parent;
     newNode->name = node.name;
 
-    glm::vec3 translation = (node.translation.size() == 3) ? glm::make_vec3(node.translation.data()) : glm::vec3(0.0f);
-    newNode->pos = translation;
+    //glm::vec3 translation = (node.translation.size() == 3) ? glm::make_vec3(node.translation.data()) : glm::vec3(0.0f);
+    //newNode->pos = translation;
 
-    glm::mat4 rotation = glm::mat4(1.0f);
-    if (node.rotation.size() == 4) {
-        glm::quat q = glm::make_quat(node.rotation.data());
-        newNode->rot = glm::mat4(q);
-    }
-    glm::vec3 scale = (node.scale.size() == 3) ? glm::make_vec3(node.scale.data()) : glm::vec3(1.0f);
-    newNode->scale = scale;
+    //glm::mat4 rotation = glm::mat4(1.0f);
+    //if (node.rotation.size() == 4) {
+    //    glm::quat q = glm::make_quat(node.rotation.data());
+    //    newNode->rot = glm::mat4(q);
+    //}
+    //glm::vec3 scale = (node.scale.size() == 3) ? glm::make_vec3(node.scale.data()) : glm::vec3(1.0f);
+    //newNode->scale = scale;
 
     if (node.matrix.size() == 16) {
         newNode->matrix = glm::make_mat4x4(node.matrix.data());

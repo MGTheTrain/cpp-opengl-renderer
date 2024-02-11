@@ -1,8 +1,5 @@
 #include "model.h" 
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 /**
  * @brief Constructor for the Scene structure.
  */
@@ -184,9 +181,8 @@ void Mgtt::Rendering::PbrMaterial::Clear() {
  *
  * This constructor initializes a Texture object with the specified texture path.
  *
- * @param texturePath The file path to the texture.
  **/
-Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
+Mgtt::Rendering::Texture::Texture() {
     this->name = "";
     this->id = 0;
     this->path = "";
@@ -204,53 +200,12 @@ Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
  * It is recommended to call this method when the Texture is no longer needed.
  */
 void Mgtt::Rendering::Texture::Clear() {
-    this->ClearRAM();
     if (this->id > 0) {
         glDeleteTextures(1, &this->id);
         this->id = 0;
     }
 }
 
-/**
- * @brief Load a texture from the specified file path.
- *
- * This method loads a texture from the given file path and updates the Texture object.
- *
- * @param texturePath The file path to the texture.
- */
-void Mgtt::Rendering::Texture::Load(const std::string& texturePath) {
-    if(!this->data) {
-        this->data = stbi_load(texturePath.c_str(),
-            &this->width, &this->height, &this->nrComponents, 0);
-    }
-}
-
-/**
- * @brief Clear the Texture resources.
- *
- * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
- * It is recommended to call this method when the Texture is no longer needed.
- */
-void Mgtt::Rendering::Texture::ClearRAM() {
-    if (this->data) {
-        stbi_image_free(this->data);
-        this->data = nullptr;
-    }
-}
-
-/**
-* @brief @brief Constructor for the Texture structure
-*/
-Mgtt::Rendering::Texture::Texture() {
-    this->name = "";
-    this->id = 0;
-    this->path = "";
-    this->width = 0;
-    this->height = 0;
-    this->nrComponents = 0;
-    this->data = nullptr;
-    this->sizeInBytes = 0;
-}
 
 /**
  * @brief Constructor for the NormalTexture structure.

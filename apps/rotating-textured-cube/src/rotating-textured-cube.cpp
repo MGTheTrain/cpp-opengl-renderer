@@ -32,7 +32,7 @@
  * @brief Destructs the RotatingTexturedCube  object.
  */
 Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
-    this->mesh->Clear();
+    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->Clear();
 }
 
 /**
@@ -169,7 +169,8 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     std::string texturePath = "assets/texture/surgery.jpg";
-    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->Load(texturePath);
+    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data = stbi_load(texturePath.c_str(),
+        &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->width, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->height, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->nrComponents, 0);
     if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data) {
         if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->nrComponents == 3) {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data);
@@ -182,7 +183,10 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     else {
         throw std::runtime_error("TEXTURE ERROR: Failed to load texture " + texturePath);
     }
-    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->ClearRAM();
+    if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data) {
+        stbi_image_free(this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data);
+        this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data = nullptr;
+    }
 
     this->openGlShaders[0].Use();
     this->openGlShaders[0].SetInt("textureMap", 0);

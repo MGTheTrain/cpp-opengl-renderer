@@ -242,32 +242,6 @@ namespace Mgtt::Rendering {
          */
         void Clear();
 
-        /**
-         * @brief Constructor for the Texture structure.
-         *
-         * This constructor initializes a Texture object with the specified texture path.
-         *
-         * @param texturePath The file path to the texture.
-         */
-        Texture(const std::string& texturePath);
-
-        /**
-         * @brief Load a texture from the specified file path.
-         *
-         * This method loads a texture from the given file path and updates the Texture object.
-         *
-         * @param texturePath The file path to the texture.
-         */
-        void Load(const std::string& texturePath);
-
-        /**
-         * @brief Clear the Texture resources.
-         *
-         * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
-         * It is recommended to call this method when the Texture is no longer needed.
-         */
-        void ClearRAM();
-
         std::string name;
         uint32_t id;
         std::string path;
