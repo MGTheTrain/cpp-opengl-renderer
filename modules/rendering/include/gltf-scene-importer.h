@@ -27,15 +27,12 @@
 // - TBD
 
 #pragma once
+
 #include <GL/glew.h>
 #include "iscene-importer.h"  
 #include <string>
 #include <stdexcept>
 
-#define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#define STBI_MSC_SECURE_CRT
 #include <tiny_gltf.h>
 
 #define GLTF_COMPONENT_TYPE_BYTE (5120)

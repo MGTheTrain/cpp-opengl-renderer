@@ -1,5 +1,12 @@
 #include <gltf-scene-importer.h>
 
+// Keep MACROS in one cpp file only
+// @note https://github.com/syoyo/tinygltf/issues/175
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_IMPLEMENTATION
+#include <tiny_gltf.h>
+
 /**
  * @brief Load the 3D scene from a specified file path.
  * 
@@ -17,9 +24,9 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
     mgttScene.path = path;
 
     bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
-                            path.substr(path.size() - 5, 5) == ".gltf" ||
-                            path.substr(path.size() - 4, 4) == ".GLB" ||
-                            path.substr(path.size() - 4, 4) == ".glb");
+                          path.substr(path.size() - 5, 5) == ".gltf" ||
+                          path.substr(path.size() - 4, 4) == ".GLB" ||
+                          path.substr(path.size() - 4, 4) == ".glb");
 
     if (!hasGltfSuffix) {
         throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " + path);
