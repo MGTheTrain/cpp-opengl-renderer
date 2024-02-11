@@ -27,22 +27,28 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
     }
 
     bool binary = false;
-    size_t extpos = path.rfind('.', path.size());
-    if (extpos != std::string::npos) {
-        binary = (path.substr(extpos + 1, path.length() - extpos) == "glb");
+    size_t suffix = path.rfind('.', path.size());
+    if (suffix != std::string::npos) {
+        binary = (path.substr(suffix + 1, path.length() - suffix) == "glb");
     }
 
-    std::string error;
-    std::string warning;
+    std::string err;
+    std::string warn;
     tinygltf::Model gltfModel;
     tinygltf::TinyGLTF gltfContext;
-    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &error, &warning, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &error, &warning, path.c_str());
+    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &error, &warning, path.c_str());
 
+
+    size_t vertexCount = 0;
+    size_t indexCount = 0;
     if (fileLoaded) {
-        // assign values from gltfModel
+        this->LoadTextures(scene, gltfModel);
+        this->LoadMaterials(scene, gltfModel);
+        this->LoadNodes(scene, gltfModel);
 
-        Mgtt::Rendering::Node node;
-        scene.nodes.push_back(node);
+        // // assign values from gltfModel
+        // Mgtt::Rendering::Node node;
+        // scene.nodes.push_back(node);
     }
     else {
         throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
@@ -59,4 +65,30 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
  */
 void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
     scene.Clear();
+}
+
+/**
+ * @brief Load materials from the provided glTF model.
+ *
+ * This method loads materials from the given glTF model and updates the
+ * internal representation of the 3D scene accordingly.
+ *
+ * @param scene A reference to the updated 3D scene after loading nodes.
+ * @param gltfModel The glTF model containing node information.
+ */
+void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
+
+}
+
+/**
+ * @brief Load nodes from the provided glTF model.
+ *
+ * This method loads nodes from the given glTF model and updates the
+ * internal representation of the 3D scene accordingly.
+ *
+ * @param scene A reference to the updated 3D scene after loading nodes.
+ * @param gltfModel The glTF model containing node information.
+ */
+void Mgtt::Rendering::GltfSceneImporter::LoadNodes(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
+
 }

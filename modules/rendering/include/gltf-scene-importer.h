@@ -65,5 +65,39 @@ namespace Mgtt::Rendering {
          * @param scene A unique pointer to the scene to clear.
          */
         void Clear(Mgtt::Rendering::Scene& scene) override;
+
+    private:
+        /**
+         * @brief Load texture from the provided glTF model.
+         *
+         * This method loads texture from the given glTF model and updates the
+         * internal representation of the 3D scene accordingly.
+         *
+         * @param scene A reference to the updated 3D scene after loading nodes.
+         * @param gltfModel The glTF model containing node information.
+         */
+        void LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
+
+        /**
+         * @brief Load materials from the provided glTF model.
+         *
+         * This method loads materials from the given glTF model and updates the
+         * internal representation of the 3D scene accordingly.
+         *
+         * @param scene A reference to the updated 3D scene after loading nodes.
+         * @param gltfModel The glTF model containing node information.
+         */
+        void LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
+
+        /**
+         * @brief Load nodes from the provided glTF model.
+         *
+         * This method loads nodes from the given glTF model and updates the
+         * internal representation of the 3D scene accordingly.
+         *
+         * @param scene A reference to the updated 3D scene after loading nodes.
+         * @param gltfModel The glTF model containing node information.
+         */
+        void LoadNodes(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
     };
 }
