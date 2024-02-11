@@ -58,14 +58,25 @@ namespace Mgtt::Rendering {
          * @param path The file path from which to load the 3D scene.
          * @return An instance of the loaded 3D scene.
          */
-        std::unique_ptr<Scene> Load(const std::string& path) override;
+        Mgtt::Rendering::Scene& Load(const std::string& path) override;
 
         /**
-         * @brief Clear the current state of the scene importer.
+         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
          * 
-         * This method overrides the corresponding method in the ISceneImporter interface.
-         * It is used to reset the internal state of the scene importer, freeing resources.
+         * This method is used to reset the internal state of the scene.
+         * @param scene A unique pointer to the scene to clear.
          */
-        void Clear() override;
+        void Clear(Mgtt::Rendering::Scene& scene) override;
+
+    private:
+        /**
+         * @brief Recursively linearizes the scene hierarchy starting from the given node.
+         *
+         * This method flattens the hierarchical structure of the scene, storing nodes in a linearNodes vector.
+         *
+         * @param node The starting node to linearize.
+         * @param scene The scene where the linearized nodes will be stored.
+         */
+        void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node, Mgtt::Rendering::Scene& scene);
     };
 }

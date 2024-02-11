@@ -50,14 +50,15 @@ namespace Mgtt::Rendering {
          * @param path The file path from which to load the scene.
          * @return An instance of the loaded scene.
          */
-        virtual std::unique_ptr<Scene> Load(const std::string& path) = 0;
+        virtual Mgtt::Rendering::Scene& Load(const std::string& path) = 0;
 
         /**
-         * @brief Clear the current state of the scene.
+         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
          * 
          * This method is used to reset the internal state of the scene.
+         * @param scene A unique pointer to the scene to clear.
          */
-        virtual void Clear() = 0;
+        virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
     };
 
 }
