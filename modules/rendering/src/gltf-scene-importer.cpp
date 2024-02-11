@@ -1,13 +1,6 @@
 #include <gltf-scene-importer.h>
 
 /**
- * @brief Default constructor for the scene importer.
- */
-Mgtt::Rendering::GltfSceneImporter::GltfSceneImporter() {
-    
-}
-
-/**
  * @brief Recursively linearizes the scene hierarchy starting from the given node.
  *
  * This method flattens the hierarchical structure of the scene, storing nodes in a linearNodes vector.

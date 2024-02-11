@@ -42,7 +42,7 @@ namespace Mgtt::Rendering {
         /**
          * @brief Default constructor for the scene importer.
          */
-        GltfSceneImporter();
+        GltfSceneImporter() {}
 
         /**
          * @brief Load the 3D scene from a specified file path.
