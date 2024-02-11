@@ -36,17 +36,17 @@ namespace Mgtt::Rendering {
      * 
      * This class provides concrete implementation details for loading and clearing 3D scenes.
      */
-    class SceneImporter : public ISceneImporter {
+    class GltfSceneImporter : public ISceneImporter {
     public:
         /**
          * @brief Default constructor for the scene importer.
          */
-        SceneImporter();
+        GltfSceneImporter();
 
         /**
          * @brief Destructor for the scene importer.
          */
-        ~SceneImporter();
+        ~GltfSceneImporter();
 
         /**
          * @brief Load the 3D scene from a specified file path.
@@ -57,7 +57,7 @@ namespace Mgtt::Rendering {
          * @param path The file path from which to load the 3D scene.
          * @return An instance of the loaded 3D scene.
          */
-        std::unique_ptr<IScene> Load(const std::string& path) override;
+        std::unique_ptr<Scene> Load(const std::string& path) override;
 
         /**
          * @brief Clear the current state of the scene importer.
