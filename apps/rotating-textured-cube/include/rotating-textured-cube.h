@@ -31,9 +31,8 @@
 #include <iostream>
 #include <glfw-window.h>
 #include <opengl-shader.h>
+#include <model.h>
 #include <vector>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -87,20 +86,6 @@ namespace Mgtt::Apps {
     };
 
     /**
-     * @brief Represents texture params
-     */
-    struct TextureParams {
-        TextureParams() {
-            this->width = 0;
-            this->height = 0;
-            this->nrChannels = 0;
-        }
-        int width;
-        int height;
-        int nrChannels;
-    };
-
-    /**
      * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
      *
      * This class provides basic functionality for initializing an OpenGL context,
@@ -151,7 +136,7 @@ namespace Mgtt::Apps {
         std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
         std::unique_ptr<OpenGlObjects> openGlObjects;
-        std::unique_ptr<TextureParams> textureParams;
+        std::unique_ptr<Mgtt::Rendering::Texture> texture;
     };
 
 } // namespace Mgtt::Apps

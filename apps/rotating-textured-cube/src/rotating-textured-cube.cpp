@@ -48,7 +48,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
 
     this->glmMatrices = std::make_unique<GlmMatrices>();
     this->openGlObjects = std::make_unique<OpenGlObjects>();
-    this->textureParams = std::make_unique<TextureParams>();
+    this->texture= std::make_unique<Mgtt::Rendering::Texture>();
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
     this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
@@ -128,21 +128,20 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     std::string texturePath = "assets/texture/surgery.jpg";
-    unsigned char* data = stbi_load(texturePath.c_str(),
-        &this->textureParams->width, &this->textureParams->height, &this->textureParams->nrChannels, 0);
-    if (data) {
-        if (this->textureParams->nrChannels == 3) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->textureParams->width, this->textureParams->height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    this->texture->Load(texturePath);
+    if (this->texture->data) {
+        if (this->texture->nrComponents == 3) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->texture->width, this->texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->texture->data);
         }
-        else if (this->textureParams->nrChannels == 4) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->textureParams->width, this->textureParams->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        else if (this->texture->nrComponents == 4) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture->width, this->texture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->texture->data);
         }
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
         throw std::runtime_error("TEXTURE ERROR: Failed to load texture " + texturePath);
     }
-    stbi_image_free(data);
+    this->texture->Clear();
 
     this->openGlShaders[0].Use();
     this->openGlShaders[0].SetInt("textureMap", 0);
