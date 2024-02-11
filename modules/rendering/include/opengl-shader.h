@@ -38,10 +38,10 @@
 namespace Mgtt::Rendering {
     /**
      * @brief Implementation of the IShader interface for OpenGL shaders.
-     * Essential parts from: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_m.h
      * 
      * This class provides concrete implementation details for compiling and managing
      * vertex and fragment shaders within an OpenGL rendering context.
+     * @note Essential parts from: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_m.h
      */
     class OpenGlShader : public IShader {
     public:

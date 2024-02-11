@@ -33,7 +33,6 @@ namespace Mgtt::Rendering {
     /**
      * @brief Interface for managing shaders in a 3D rendering context.
      * 
-     * This interface defines methods for compiling shaders and clearing the shader state.
      */
     class IShader {
     public:
