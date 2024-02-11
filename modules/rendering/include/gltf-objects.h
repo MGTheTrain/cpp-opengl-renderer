@@ -61,7 +61,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for AnimationChannel.
          */
-        AnimationChannel();
+         AnimationChannel(): sampler(-1), target_node(-1) {}
         int32_t sampler;                  /**< Index of the animation sampler. */
         int32_t target_node;              /**< Index of the target node in the animation. */
         std::string target_path;          /**< Target property path of the animation channel. */
@@ -74,7 +74,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for AnimationSampler.
          */
-        AnimationSampler();
+        AnimationSampler(): input(-1), output(-1) {}
         int32_t input;                    /**< Index of the input accessor containing keyframe times. */
         int32_t output;                   /**< Index of the output accessor containing keyframe data. */
         std::string interpolation;        /**< Interpolation algorithm for the sampler. */
@@ -84,6 +84,10 @@ namespace Mgtt::Rendering::Gltf {
      * @brief Represents an animation in GLTF.
      */
     struct Animation {
+        /**
+         * @brief Represents a GLTF animation.
+         */
+        Animation(): name("") {}
         std::string name;                  /**< Name of the animation. */
         /**
          * @brief Animation channels.
@@ -102,7 +106,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Skin.
          */
-        Skin();
+        Skin(): inverseBindMatrices(-1), skeleton(-1) {}
         std::string name;                  /**< Name of the skin. */
         int32_t inverseBindMatrices;      /**< Index of the accessor containing inverse bind matrices. */
         int32_t skeleton;                  /**< Index of the skeleton node. */
@@ -116,6 +120,8 @@ namespace Mgtt::Rendering::Gltf {
      * @brief Represents a texture sampler in GLTF.
      */
     struct Sampler {
+        Sampler(): minFilter(-1), magFilter(-1), wrapS(GltfTextureWrapType::TEXTURE_WRAP_REPEAT),
+              wrapT(GltfTextureWrapType::TEXTURE_WRAP_REPEAT), wrapR(GltfTextureWrapType::TEXTURE_WRAP_REPEAT) {}
         std::string name;                  /**< Name of the sampler. */
         int32_t minFilter = -1;            /**< Minification filter. */
         int32_t magFilter = -1;            /**< Magnification filter. */
@@ -131,7 +137,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Image.
          */
-        Image();
+        Image(): width(0), height(0), component(0), bufferView(-1) {}
         std::string name;                  /**< Name of the image. */
         int32_t width;                     /**< Width of the image. */
         int32_t height;                    /**< Height of the image. */
@@ -149,7 +155,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Texture.
          */
-        Texture();
+        Texture(): sampler(-1), source(-1) {}
         std::string name;                  /**< Name of the texture. */
         int32_t sampler;                   /**< Index of the texture sampler. */
         int32_t source;                    /**< Index of the texture image source. */
@@ -162,7 +168,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for TextureInfo.
          */
-        TextureInfo();
+        TextureInfo(): index(-1), texCoord(0) {}
         int32_t index;                     /**< Index of the texture. */
         int32_t texCoord;                  /**< Texture coordinate set. */
     };
@@ -174,7 +180,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for NormalTextureInfo.
          */
-        NormalTextureInfo();
+        NormalTextureInfo(): index(-1), texCoord(0), scale(1.0) {}
         int32_t index;                     /**< Index of the normal texture. */
         int32_t texCoord;                  /**< Texture coordinate set. */
         double scale;                      /**< Scaling factor for the normal texture. */
@@ -187,7 +193,8 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for OcclusionTextureInfo.
          */
-        OcclusionTextureInfo();
+        OcclusionTextureInfo(): index(-1), texCoord(0), strength(1.0) {}
+
         int32_t index;                     /**< Index of the occlusion texture. */
         int32_t texCoord;                  /**< Texture coordinate set. */
         double strength;                   /**< Strength of the occlusion effect. */
@@ -200,7 +207,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for PbrMetallicRoughness.
          */
-        PbrMetallicRoughness();
+        PbrMetallicRoughness(): metallicFactor(1.0), roughnessFactor(1.0), baseColor(glm::vec4(1.0)), metallicRoughnessTexture(), baseColorTexture() {}
         double metallicFactor;             /**< Factor for metallic property. */
         double roughnessFactor;            /**< Factor for roughness property. */
         glm::vec4 baseColor;               /**< Base color factor. */
@@ -215,7 +222,8 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for SpecularGlossiness.
          */
-        SpecularGlossiness();
+        SpecularGlossiness(): diffuseColor(glm::vec4(1.0)), specularColor(glm::vec3(1.0)), 
+            glosinessFactor(1.0), diffuseTexture(), specularGlossinessTexture() {}
         glm::vec4 diffuseColor;            /**< Diffuse color factor. */
         glm::vec3 specularColor;           /**< Specular color factor. */
         float glosinessFactor;             /**< Glossiness factor. */
@@ -230,7 +238,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Material.
          */
-        Material();
+        Material(): alphaCutoff(0.5), doubleSided(false), pbrMetallicRoughness(), normalTexture(), occlusionTexture(), emissiveTexture(), specularGlossiness() {}
         std::string name;                  /**< Name of the material. */
         glm::vec3 emissiveColor;           /**< Emissive color factor. */
         std::string alphaMode;             /**< Alpha rendering mode. */
@@ -251,7 +259,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for BufferView.
          */
-        BufferView();
+        BufferView(): buffer(-1), byteOffset(0), byteLength(0), byteStride(0), target(-1) {}
         std::string name;                  /**< Name of the buffer view. */
         int32_t buffer;                    /**< Index of the buffer. */
         size_t byteOffset;                 /**< Byte offset into the buffer. */
@@ -267,7 +275,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Accessor.
          */
-        Accessor();
+         Accessor(): bufferView(-1), byteOffset(0), componentType(0), count(0), type(0), minValues(glm::vec3(0.0)), maxValues(glm::vec3(0.0)) {}
         std::string name;                  /**< Name of the accessor. */
         int32_t bufferView;                /**< Index of the buffer view. */
         size_t byteOffset;                 /**< Byte offset into the buffer view. */
@@ -285,7 +293,8 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Primitive.
          */
-        Primitive();
+        Primitive(): material(-1), indices(-1), mode(4) {}
+
         /**
          * @brief Attribute mappings for the primitive.
          */
@@ -306,7 +315,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Mesh.
          */
-        Mesh();
+        Mesh(): weights(glm::vec4(0.0)) {}
         std::string name;                  /**< Name of the mesh. */
         /**
          * @brief Primitives composing the mesh.
@@ -322,7 +331,8 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Node.
          */
-        Node();
+        Node(): skin(-1), mesh(-1), rotation(glm::quat(1.0, 0.0, 0.0, 0.0)), scale(glm::vec3(1.0)),
+              translation(glm::vec3(0.0)), matrix(glm::mat4(1.0)), weights(glm::vec4(0.0)) {}
         std::string name;                  /**< Name of the node. */
         int32_t skin;                      /**< Index of the skin. */
         int32_t mesh;                      /**< Index of the mesh. */
@@ -344,7 +354,7 @@ namespace Mgtt::Rendering::Gltf {
         /**
          * @brief Default constructor for Buffer.
          */
-        Buffer();
+        Buffer(): byteLength(0) {}
         int32_t byteLength;                 /**< Length of the buffer in bytes. */
         std::vector<unsigned char> data;    /**< Buffer data. */
         std::string uri;                    /**< URI of the external buffer. */
@@ -354,6 +364,7 @@ namespace Mgtt::Rendering::Gltf {
      * @brief Represents asset information in GLTF.
      */
     struct Asset {
+        Asset(): version(""), generator(""), minVersion(""), copyright("") {}
         std::string version;                /**< GLTF version. */
         std::string generator;              /**< Software that generated the GLTF. */
         std::string minVersion;             /**< Minimum supported GLTF version. */
@@ -364,6 +375,7 @@ namespace Mgtt::Rendering::Gltf {
      * @brief Represents a scene in GLTF.
      */
     struct Scene {
+        Scene(): gltfType(GltfType::ASCII) {}
         std::string name;                   /**< Name of the scene. */
         /**
          * @brief Indices of nodes in the scene.
