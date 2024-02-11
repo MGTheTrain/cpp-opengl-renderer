@@ -29,6 +29,7 @@
 #pragma once
 #include "iscene-importer.h"  
 #include <string>
+#include <tiny_gltf.h>
 
 namespace Mgtt::Rendering {
     /**

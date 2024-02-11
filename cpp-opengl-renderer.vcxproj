@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="apps\opengl-viewer\src\opengl-viewer.cpp" />
     <ClCompile Include="apps\rotating-textured-cube\src\rotating-textured-cube.cpp" />
+    <ClCompile Include="modules\rendering\src\model.cpp" />
     <ClCompile Include="modules\rendering\src\opengl-shader.cpp" />
     <ClCompile Include="modules\window\src\glfw-window.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
     <ClInclude Include="apps\opengl-viewer\include\opengl-viewer.h" />
     <ClInclude Include="apps\rotating-textured-cube\include\rotating-textured-cube.h" />
     <ClInclude Include="modules\rendering\include\ishader.h" />
+    <ClInclude Include="modules\rendering\include\model.h" />
     <ClInclude Include="modules\rendering\include\opengl-shader.h" />
     <ClInclude Include="modules\window\include\glfw-window.h" />
     <ClInclude Include="modules\window\include\iwindow.h" />
