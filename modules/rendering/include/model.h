@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include <GL/glew.h>
 #include <string>
 #include <vector>
 #include <memory>
@@ -41,8 +42,18 @@
 
 namespace Mgtt::Rendering {
     // Forward declarations
+    struct Scene;
+    struct Node;
     struct Mesh;
+    struct MeshPrimitive;
     struct Material;
+    struct PbrMaterial;
+    struct Texture;
+    struct NormalTexture;
+    struct EmissiveTexture;
+    struct MetallicRoughnessTexture;
+    struct OcclusionTexture;
+    struct BaseColorTexture;
 
     /**
      * @brief Represents a 3D scene.
@@ -258,6 +269,7 @@ namespace Mgtt::Rendering {
         void Clear();
 
         std::string name;
+        uint32_t id;
         std::string path;
         int32_t width;
         int32_t height;
