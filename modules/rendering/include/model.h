@@ -76,9 +76,12 @@ namespace Mgtt::Rendering {
         glm::mat4 mvp;
         glm::mat4 matrix;
         std::map<std::string, Mgtt::Rendering::Texture> textureMap; // case in which we want to prevent loading the same texture into RAM which is time consuming
-        std::vector<Node> nodes;
-        std::vector<Node> linearNodes; 
+        std::vector< std::shared_ptr<Node>> nodes;
+        std::vector< std::shared_ptr<Node>> linearNodes;
         std::vector<Material> materials;
+        glm::vec3 minBound;
+        glm::vec3 maxBound;
+        glm::vec3 center;
 
     private:
         /**
@@ -88,7 +91,7 @@ namespace Mgtt::Rendering {
          *
          * @param node The starting node to linearize.
          */
-        void Linearize(Mgtt::Rendering::Node& node);
+        void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node);
     };
 
     /**
@@ -120,7 +123,7 @@ namespace Mgtt::Rendering {
         std::string name;
         std::shared_ptr<Node> parent;
         std::shared_ptr<Mesh> mesh;
-        std::vector<Node> children;
+        std::vector<std::shared_ptr<Node>> children;
         glm::vec3 pos;
         glm::quat rot;
         glm::vec3 scale;
