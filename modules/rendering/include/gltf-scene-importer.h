@@ -95,9 +95,14 @@ namespace Mgtt::Rendering {
          * This method loads nodes from the given glTF model and updates the
          * internal representation of the 3D scene accordingly.
          *
-         * @param scene A reference to the updated 3D scene after loading nodes.
-         * @param gltfModel The glTF model containing node information.
+         * @param parent A shared pointer to the parent node in the 3D scene.
+         * @param scene Reference to the updated 3D scene after loading nodes.
+         * @param node Reference to the glTF node containing information.
+         * @param nodeIndex Index of the current node in the glTF model.
+         * @param model Reference to the glTF model containing node information.
          */
-        void LoadNodes(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
+        void LoadNode(
+            std::shared_ptr<Mgtt::Rendering::Node> parent, Mgtt::Rendering::Scene &scene,
+            const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model);
     };
 }

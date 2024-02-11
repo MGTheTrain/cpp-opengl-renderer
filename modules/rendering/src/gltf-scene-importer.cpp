@@ -14,7 +14,7 @@
  * https://github.com/SaschaWillems/Vulkan-glTF-PBR/blob/master/base/VulkanglTFModel.cpp
  */
 Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::string& path) {
-    Mgtt::Rendering::Scene scene;
+    Mgtt::Rendering::Scene mgttScene;
     scene.path = path;
 
     bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
@@ -36,15 +36,18 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
     std::string warn;
     tinygltf::Model gltfModel;
     tinygltf::TinyGLTF gltfContext;
-    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &error, &warning, path.c_str());
-
+    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
 
     size_t vertexCount = 0;
     size_t indexCount = 0;
     if (fileLoaded) {
         this->LoadTextures(scene, gltfModel);
         this->LoadMaterials(scene, gltfModel);
-        this->LoadNodes(scene, gltfModel);
+        const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
+        for (size_t i = 0; i < scene.nodes.size(); i++) {
+            const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
+            LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
+        }
 
         // // assign values from gltfModel
         // Mgtt::Rendering::Node node;
@@ -68,6 +71,19 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
 }
 
 /**
+ * @brief Load texture from the provided glTF model.
+ *
+ * This method loads texture from the given glTF model and updates the
+ * internal representation of the 3D scene accordingly.
+ *
+ * @param scene A reference to the updated 3D scene after loading nodes.
+ * @param gltfModel The glTF model containing node information.
+ */
+void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
+    
+}
+
+/**
  * @brief Load materials from the provided glTF model.
  *
  * This method loads materials from the given glTF model and updates the
@@ -86,9 +102,14 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
  * This method loads nodes from the given glTF model and updates the
  * internal representation of the 3D scene accordingly.
  *
- * @param scene A reference to the updated 3D scene after loading nodes.
- * @param gltfModel The glTF model containing node information.
+ * @param parent A shared pointer to the parent node in the 3D scene.
+ * @param scene Reference to the updated 3D scene after loading nodes.
+ * @param node Reference to the glTF node containing information.
+ * @param nodeIndex Index of the current node in the glTF model.
+ * @param model Reference to the glTF model containing node information.
  */
-void Mgtt::Rendering::GltfSceneImporter::LoadNodes(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
-
+void Mgtt::Rendering::GltfSceneImporter::LoadNode(
+    std::shared_ptr<Mgtt::Rendering::Node> parent, Mgtt::Rendering::Scene &scene,
+    const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model) {
+    
 }
