@@ -132,7 +132,6 @@ namespace Mgtt::Apps {
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
-        std::vector<unsigned int> textureMaps;
         std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
         std::unique_ptr<OpenGlObjects> openGlObjects;

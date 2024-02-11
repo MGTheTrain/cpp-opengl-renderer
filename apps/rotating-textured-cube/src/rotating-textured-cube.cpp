@@ -32,9 +32,7 @@
  * @brief Destructs the RotatingTexturedCube  object.
  */
 Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
-    for (auto textureMap : this->textureMaps) {
-        glDeleteTextures(1, &textureMap);
-    }
+    this->texture->~Texture();
 }
 
 /**
@@ -119,9 +117,8 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    this->textureMaps.push_back(0);
-    glGenTextures(1, &this->textureMaps[0]);
-    glBindTexture(GL_TEXTURE_2D, this->textureMaps[0]);
+    glGenTextures(1, &this->texture->id);
+    glBindTexture(GL_TEXTURE_2D, this->texture->id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -160,7 +157,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->textureMaps[0]);
+        glBindTexture(GL_TEXTURE_2D, this->texture->id);
 
         this->openGlShaders[0].Use();
 
