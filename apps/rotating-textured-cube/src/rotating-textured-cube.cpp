@@ -26,32 +26,29 @@
 // Contributors:
 // - TBD
 
-#include <textured-cube-with-imgui-integration.h>
+#include <rotating-textured-cube.h>
 
 /**
- * @brief Destructs the TexturedCubeWithImguiIntegration  object.
+ * @brief Destructs the RotatingTexturedCube  object.
  */
-Mgtt::Apps::TexturedCubeWithImguiIntegration::~TexturedCubeWithImguiIntegration () {
-    for (auto textureMap : this->textureMaps) {
-        glDeleteTextures(1, &textureMap);
-    }
+Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
+    this->mesh->Clear();
 }
 
 /**
- * @brief Constructs an TexturedCubeWithImguiIntegration  object.
+ * @brief Constructs an RotatingTexturedCube  object.
  */
-Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration () {
+Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     this->windowParams = std::make_unique<WindowParams>();
-    this->windowParams->name = "textured-cube-with-imgui-integration";
+    this->windowParams->name = "rotating-textured-cube";
     this->windowParams->width= 1000.0f;
     this->windowParams->height= 1000.0f;
 
     this->glmMatrices = std::make_unique<GlmMatrices>();
-    this->openGlObjects = std::make_unique<OpenGlObjects>();
-    this->textureParams = std::make_unique<TextureParams>();
+    this->mesh= std::make_unique<Mgtt::Rendering::Mesh>();
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
-    this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::TexturedCubeWithImguiIntegration::FramebufferSizeCallback);
+    this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
@@ -61,88 +58,131 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration (
     std::string fsPath = "assets/shader/core/coordinate.frag";
     auto shader = Mgtt::Rendering::OpenGlShader(vsPath, fsPath);
     this->openGlShaders.push_back(shader);
-    float vertices[] = {
-       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    
+    this->mesh->vertexPositionAttribs = {
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(-0.5f, 0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        glm::vec3(-0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, -0.5f, 0.5f),
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        glm::vec3(-0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, 0.5f),
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(-0.5f, -0.5f, 0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        glm::vec3(-0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, -0.5f)
     };
 
-    this->openGlObjects->vbos.push_back(0);
-    this->openGlObjects->vaos.push_back(0);
-    glGenVertexArrays(1, &this->openGlObjects->vaos[0]);
-    glBindVertexArray(this->openGlObjects->vaos[0]);
+    this->mesh->vertexTextureAttribs = {
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f)
+    };
 
-    glGenBuffers(1, &this->openGlObjects->vbos[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->openGlObjects->vbos[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glGenVertexArrays(1, &this->mesh->vao);
+    glBindVertexArray(this->mesh->vao);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glGenBuffers(1, &this->mesh->pos); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->mesh->pos);
+    glBufferData(GL_ARRAY_BUFFER, this->mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), this->mesh->vertexPositionAttribs.data(), GL_STATIC_DRAW);
+    uint32_t posLocation = glGetAttribLocation(this->openGlShaders[0].GetProgramId(), "inVertexPosition");
+    glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
 
-    this->textureMaps.push_back(0);
-    glGenTextures(1, &this->textureMaps[0]);
-    glBindTexture(GL_TEXTURE_2D, this->textureMaps[0]);
+    glGenBuffers(1, &this->mesh->tex); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->mesh->tex);
+    glBufferData(GL_ARRAY_BUFFER, this->mesh->vertexTextureAttribs.size() * sizeof(glm::vec2), this->mesh->vertexTextureAttribs.data(), GL_STATIC_DRAW);
+    uint32_t texLocation = glGetAttribLocation(this->openGlShaders[0].GetProgramId(), "inVertexTextureCoordinates");
+    glEnableVertexAttribArray(texLocation);
+    glVertexAttribPointer(texLocation, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)(0));
+
+    this->mesh->meshPrimitives.push_back(this->meshPrimitive);
+    this->mesh->meshPrimitives[0].pbrMaterial = std::make_unique<Mgtt::Rendering::PbrMaterial>();
+    glGenTextures(1, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->id);
+    glBindTexture(GL_TEXTURE_2D, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     std::string texturePath = "assets/texture/surgery.jpg";
-    unsigned char* data = stbi_load(texturePath.c_str(),
-        &this->textureParams->width, &this->textureParams->height, &this->textureParams->nrChannels, 0);
-    if (data) {
-        if (this->textureParams->nrChannels == 3) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->textureParams->width, this->textureParams->height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->Load(texturePath);
+    if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data) {
+        if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->nrComponents == 3) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data);
         }
-        else if (this->textureParams->nrChannels == 4) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->textureParams->width, this->textureParams->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        else if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->nrComponents == 4) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data);
         }
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
         throw std::runtime_error("TEXTURE ERROR: Failed to load texture " + texturePath);
     }
-    stbi_image_free(data);
+    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->ClearRAM();
 
     this->openGlShaders[0].Use();
     this->openGlShaders[0].SetInt("textureMap", 0);
@@ -154,26 +194,26 @@ Mgtt::Apps::TexturedCubeWithImguiIntegration::TexturedCubeWithImguiIntegration (
  *
  * This method is responsible for rendering the contents of the scene using OpenGL.
  */
-void Mgtt::Apps::TexturedCubeWithImguiIntegration::Render() {
+void Mgtt::Apps::RotatingTexturedCube::Render() {
     while(!this->glfwWindow->WindowShouldClose()) {
         this->ProcessInput();
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->textureMaps[0]);
+        glBindTexture(GL_TEXTURE_2D, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->id);
 
         this->openGlShaders[0].Use();
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model , (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
-        this->glmMatrices->mvp = projection * view * model;
+        this->glmMatrices->model = glm::mat4(1.0f);
+        this->glmMatrices->view = glm::mat4(1.0f);
+        this->glmMatrices->projection = glm::mat4(1.0f);
+        this->glmMatrices->model = glm::rotate(this->glmMatrices->model , (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+        this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
+        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
+        this->glmMatrices->mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
         this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
-        glBindVertexArray(this->openGlObjects->vaos[0]);
+        glBindVertexArray(this->mesh->vao);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         this->glfwWindow->SwapBuffersAndPollEvents();
@@ -188,7 +228,7 @@ void Mgtt::Apps::TexturedCubeWithImguiIntegration::Render() {
 *
 * @param window A pointer to the GLFW window for which input should be processed.
 */
-void Mgtt::Apps::TexturedCubeWithImguiIntegration::ProcessInput()
+void Mgtt::Apps::RotatingTexturedCube::ProcessInput()
 {
     if (glfwGetKey(this->glfwWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(this->glfwWindow->GetWindow(), true);
@@ -206,14 +246,14 @@ void Mgtt::Apps::TexturedCubeWithImguiIntegration::ProcessInput()
  * @param width  The new width of the framebuffer.
  * @param height The new height of the framebuffer.
  */
-void Mgtt::Apps::TexturedCubeWithImguiIntegration::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
 int main() {
     try {
-        Mgtt::Apps::TexturedCubeWithImguiIntegration  TexturedCubeWithImguiIntegration;
-        TexturedCubeWithImguiIntegration .Render();
+        Mgtt::Apps::RotatingTexturedCube  RotatingTexturedCube;
+        RotatingTexturedCube .Render();
     } catch(const std::exception& ex) {
         std::cout << ex.what() << std::endl;
         return 1;

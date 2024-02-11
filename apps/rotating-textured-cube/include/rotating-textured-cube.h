@@ -31,9 +31,8 @@
 #include <iostream>
 #include <glfw-window.h>
 #include <opengl-shader.h>
+#include <model.h>
 #include <vector>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -70,53 +69,22 @@ namespace Mgtt::Apps {
     };
 
     /**
-     * @brief Represents opengl objects
-     */
-    struct OpenGlObjects {
-        OpenGlObjects() {}
-        ~OpenGlObjects() {
-            for (auto vao : this->vaos) {
-                glDeleteVertexArrays(1, &vao);
-            }
-            for (auto vbo : this->vbos) {
-                glDeleteBuffers(1, &vbo);
-            }
-        }
-        std::vector<unsigned int> vaos;
-        std::vector<unsigned int> vbos;
-    };
-
-    /**
-     * @brief Represents texture params
-     */
-    struct TextureParams {
-        TextureParams() {
-            this->width = 0;
-            this->height = 0;
-            this->nrChannels = 0;
-        }
-        int width;
-        int height;
-        int nrChannels;
-    };
-
-    /**
-     * @brief The TexturedCubeWithImguiIntegration  class represents a simple OpenGL viewer.
+     * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
      *
      * This class provides basic functionality for initializing an OpenGL context,
      * rendering scenes, and clearing the rendering buffer.
      */
-    class TexturedCubeWithImguiIntegration {
+    class RotatingTexturedCube {
     public:
         /**
-         * @brief Constructs an TexturedCubeWithImguiIntegration  object.
+         * @brief Constructs an RotatingTexturedCube  object.
          */
-        TexturedCubeWithImguiIntegration ();
+        RotatingTexturedCube ();
 
         /**
-         * @brief Destructs the TexturedCubeWithImguiIntegration  object.
+         * @brief Destructs the RotatingTexturedCube  object.
          */
-        ~TexturedCubeWithImguiIntegration ();
+        ~RotatingTexturedCube ();
 
         /**
          * @brief Renders the scene using OpenGL.
@@ -147,11 +115,10 @@ namespace Mgtt::Apps {
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
-        std::vector<unsigned int> textureMaps;
         std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
-        std::unique_ptr<OpenGlObjects> openGlObjects;
-        std::unique_ptr<TextureParams> textureParams;
+        std::unique_ptr<Mgtt::Rendering::Mesh> mesh;
+        Mgtt::Rendering::MeshPrimitive meshPrimitive;
     };
 
 } // namespace Mgtt::Apps

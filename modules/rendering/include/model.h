@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include <GL/glew.h>
 #include <string>
 #include <vector>
 #include <memory>
@@ -35,21 +36,38 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
+#include <map>
 
 namespace Mgtt::Rendering {
     // Forward declarations
+    struct Scene;
+    struct Node;
     struct Mesh;
+    struct MeshPrimitive;
     struct Material;
+    struct PbrMaterial;
+    struct Texture;
+    struct NormalTexture;
+    struct EmissiveTexture;
+    struct MetallicRoughnessTexture;
+    struct OcclusionTexture;
+    struct BaseColorTexture;
 
     /**
      * @brief Represents a 3D scene.
      */
     struct Scene {
         /**
-         * @brief @brief Constructor for the Scene structure.
+         * @brief Constructor for the Scene structure.
          */
         Scene();
+
+        /**
+         * @brief Destructor for the scene. Releases resources.
+         */
+        ~Scene();
         std::string name;
         std::string path;
         glm::vec3 pos;
@@ -57,6 +75,20 @@ namespace Mgtt::Rendering {
         double scale;
         glm::mat4 mvp;
         glm::mat4 matrix;
+        std::map<std::string, Mgtt::Rendering::Texture> textureMap; // case in which we want to prevent loading the same texture into RAM which is time consuming
+        std::vector<std::shared_ptr<Node>> nodes;
+        std::vector<std::shared_ptr<Node>> linearNodes; 
+        std::vector<std::shared_ptr<Material>> materials;
+
+    private:
+        /**
+         * @brief Recursively linearizes the scene hierarchy starting from the given node.
+         *
+         * This method flattens the hierarchical structure of the scene, storing nodes in a linearNodes vector.
+         *
+         * @param node The starting node to linearize.
+         */
+        void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node);
     };
 
     /**
@@ -64,9 +96,14 @@ namespace Mgtt::Rendering {
      */
     struct Node {
         /**
-         * @brief @brief Constructor for the Node structure.
+         * @brief Constructor for the Node structure.
          */
         Node();
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
 
         /**
          * @brief Calculates the local transformation matrix of the node.
@@ -93,30 +130,19 @@ namespace Mgtt::Rendering {
     };
 
     /**
-     * @brief Represents a primitive mesh in the scene.
-     */
-    struct MeshPrimitive {
-        /**
-         * @brief @brief Constructor for the MeshPrimitive structure.
-         */
-        MeshPrimitive();
-        std::string name;
-        uint32_t firstIndex;  // required for glDrawElements(...)
-        uint32_t indexCount;  // required for glDrawElements(...)
-        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
-        bool hasSkin;
-        bool hasIndices;
-        std::shared_ptr<Material> material;
-    };
-
-    /**
      * @brief Represents a mesh in the scene.
      */
     struct Mesh {
         /**
-         * @brief @brief Constructor for the Mesh structure.
+         * @brief Constructor for the Mesh structure.
          */
         Mesh();
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
+
         std::string name;
         std::vector<MeshPrimitive> meshPrimitives;
         std::vector<unsigned int> indices;
@@ -126,6 +152,38 @@ namespace Mgtt::Rendering {
         std::vector<glm::ivec4> vertexJointAttribs;
         std::vector<glm::vec4> vertexWeightAttribs;
         glm::mat4 matrix;
+
+        uint32_t vao;   
+        uint32_t ebo; // On existing indices
+        uint32_t pos; 
+        uint32_t normal;
+        uint32_t tex;
+        //uint32_t joint; 
+        //uint32_t weight;
+    };
+
+    
+    /**
+     * @brief Represents a primitive mesh in the scene.
+     */
+    struct MeshPrimitive {
+        /**
+         * @brief Constructor for the MeshPrimitive structure.
+         */
+        MeshPrimitive();
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
+
+        std::string name;
+        uint32_t firstIndex;  // required for glDrawElements(...)
+        uint32_t indexCount;  // required for glDrawElements(...)
+        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
+        bool hasSkin;
+        bool hasIndices;
+        std::shared_ptr<PbrMaterial> pbrMaterial;
     };
 
     /**
@@ -133,9 +191,10 @@ namespace Mgtt::Rendering {
      */
     struct Material {
         /**
-         * @brief @brief Constructor for the Material structure.
+         * @brief Constructor for the Material structure.
          */
         Material();
+
         std::string name;
     };
 
@@ -146,14 +205,20 @@ namespace Mgtt::Rendering {
      */
     struct PbrMaterial : public Material {
         /**
-         * @brief @brief Constructor for the PbrMaterial structure.
+         * @brief Constructor for the PbrMaterial structure.
          */
         PbrMaterial();
-        struct NormalTexture;
-        struct OcclusionTexture;
-        struct EmissiveTexture;
-        struct BaseColorTexture;
-        struct MetallicRoughnessTexture;
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
+
+        std::unique_ptr<NormalTexture> normalTexture;
+        std::unique_ptr<OcclusionTexture> occlusionTexture;
+        std::unique_ptr<EmissiveTexture> emissiveTexture;
+        std::unique_ptr<BaseColorTexture> baseColorTexture;
+        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture;
 
         float alphaCutoff;
         bool doubleSided;
@@ -165,10 +230,46 @@ namespace Mgtt::Rendering {
      */
     struct Texture {
         /**
-         * @brief @brief Constructor for the Texture structure.
-         */
+        * @brief Constructor for the Texture structure
+        */
         Texture();
+
+        /**
+         * @brief Clear releases resources.
+         *
+         * This method clears the resources associated with the Texture object, freeing up memory.
+         * It is recommended to call this method when the Texture is no longer needed.
+         */
+        void Clear();
+
+        /**
+         * @brief Constructor for the Texture structure.
+         *
+         * This constructor initializes a Texture object with the specified texture path.
+         *
+         * @param texturePath The file path to the texture.
+         */
+        Texture(const std::string& texturePath);
+
+        /**
+         * @brief Load a texture from the specified file path.
+         *
+         * This method loads a texture from the given file path and updates the Texture object.
+         *
+         * @param texturePath The file path to the texture.
+         */
+        void Load(const std::string& texturePath);
+
+        /**
+         * @brief Clear the Texture resources.
+         *
+         * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
+         * It is recommended to call this method when the Texture is no longer needed.
+         */
+        void ClearRAM();
+
         std::string name;
+        uint32_t id;
         std::string path;
         int32_t width;
         int32_t height;
@@ -182,7 +283,7 @@ namespace Mgtt::Rendering {
      */
     struct NormalTexture : public Texture {
         /**
-         * @brief @brief Constructor for the NormalTexture structure.
+         * @brief Constructor for the NormalTexture structure.
          */
         NormalTexture();
         float scale;
@@ -193,18 +294,18 @@ namespace Mgtt::Rendering {
      */
     struct EmissiveTexture : public Texture {
         /**
-         * @brief @brief Constructor for the EmissiveTexture structure.
+         * @brief Constructor for the EmissiveTexture structure.
          */
         EmissiveTexture();
-        float color;
+        glm::vec3 color;
     };
 
     /**
      * @brief Represents a metallic and roughness map texture.
      */
-    struct MetallicRoughnessTexture : public Texture {#
+    struct MetallicRoughnessTexture : public Texture {
         /**
-         * @brief @brief Constructor for the MetallicRoughnessTexture structure.
+         * @brief Constructor for the MetallicRoughnessTexture structure.
          */
         MetallicRoughnessTexture();
         float metallicFactor;
@@ -216,7 +317,7 @@ namespace Mgtt::Rendering {
      */
     struct OcclusionTexture : public Texture {
         /**
-         * @brief @brief Constructor for the OcclusionTexture structure.
+         * @brief Constructor for the OcclusionTexture structure.
          */
         OcclusionTexture();
         glm::vec3 color;
@@ -227,7 +328,7 @@ namespace Mgtt::Rendering {
      */
     struct BaseColorTexture : public Texture {
         /**
-         * @brief @brief Constructor for the BaseColorTexture structure.
+         * @brief Constructor for the BaseColorTexture structure.
          */
         BaseColorTexture();
         glm::vec4 color;

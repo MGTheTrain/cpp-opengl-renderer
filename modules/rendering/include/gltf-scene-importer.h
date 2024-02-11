@@ -29,6 +29,7 @@
 #pragma once
 #include "iscene-importer.h"  
 #include <string>
+#include <tiny_gltf.h>
 
 namespace Mgtt::Rendering {
     /**
@@ -36,17 +37,12 @@ namespace Mgtt::Rendering {
      * 
      * This class provides concrete implementation details for loading and clearing 3D scenes.
      */
-    class SceneImporter : public ISceneImporter {
+    class GltfSceneImporter : public ISceneImporter {
     public:
         /**
          * @brief Default constructor for the scene importer.
          */
-        SceneImporter();
-
-        /**
-         * @brief Destructor for the scene importer.
-         */
-        ~SceneImporter();
+        GltfSceneImporter() {}
 
         /**
          * @brief Load the 3D scene from a specified file path.
@@ -57,14 +53,14 @@ namespace Mgtt::Rendering {
          * @param path The file path from which to load the 3D scene.
          * @return An instance of the loaded 3D scene.
          */
-        std::unique_ptr<IScene> Load(const std::string& path) override;
+        Mgtt::Rendering::Scene& Load(const std::string& path) override;
 
         /**
-         * @brief Clear the current state of the scene importer.
+         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
          * 
-         * This method overrides the corresponding method in the ISceneImporter interface.
-         * It is used to reset the internal state of the scene importer, freeing resources.
+         * This method is used to reset the internal state of the scene.
+         * @param scene A unique pointer to the scene to clear.
          */
-        void Clear() override;
+        void Clear(Mgtt::Rendering::Scene& scene) override;
     };
 }
