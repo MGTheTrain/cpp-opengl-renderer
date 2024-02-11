@@ -39,5 +39,5 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
     for(auto & node: scene.nodes) {
         this->Linearize(node, scene);
     }
-    this->Clear(scene);
+    scene.~Scene();
 }
