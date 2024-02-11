@@ -48,10 +48,6 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
             const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
             LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
         }
-
-        // // assign values from gltfModel
-        // Mgtt::Rendering::Node node;
-        // scene.nodes.push_back(node);
     }
     else {
         throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
@@ -111,5 +107,34 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
 void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     std::shared_ptr<Mgtt::Rendering::Node> parent, Mgtt::Rendering::Scene &scene,
     const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model) {
-    
+    std::shared_ptr<Mgtt::Rendering::Node> newNode =
+      std::make_shared<Mgtt::Rendering::Node>();
+    newNode->index = nodeIndex;
+    newNode->parent = parent;
+    newNode->name = node.name;
+
+    glm::vec3 translation = (node.translation.size() == 3) ? glm::make_vec3(node.translation.data()) : glm::vec3(0.0f);
+    newNode->pos = translation;
+
+    glm::mat4 rotation = glm::mat4(1.0f);
+    if (node.rotation.size() == 4) {
+        glm::quat q = glm::make_quat(node.rotation.data());
+        newNode->rot = glm::mat4(q);
+    }
+    glm::vec3 scale = (node.scale.size() == 3) ? glm::make_vec3(node.scale.data()) : glm::vec3(1.0f);
+    newNode->scale = scale;
+
+    if (node.matrix.size() == 16) {
+        newNode->matrix = glm::make_mat4x4(node.matrix.data());
+    }
+
+    if (node.children.size() > 0) {
+        for (uint32_t i = 0; i < node.children.size(); i++) {
+        LoadNode(newNode, scene, model.nodes[node.children[i]], node.children[i], model);
+        }
+    }
+
+    if (node.mesh > -1) {
+        // assign mesh attributes
+    }
 }
