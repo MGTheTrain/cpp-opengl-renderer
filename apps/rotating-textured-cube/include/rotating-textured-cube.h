@@ -38,7 +38,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // To prevent linking errors, refrain from relocating the #define STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single usage.
-// Tinygltf internally utilizes functions from the stb_image* library and requires macros to be set in order to use those. 
+// Tinygltf internally utilizes functions from the stb_image header and requires macros to be set in order to use those. 
 // See: https://github.com/syoyo/tinygltf/blob/release/stb_image.h
 #include <stb_image.h>
 
