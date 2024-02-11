@@ -1,9 +1,13 @@
 #pragma once
 #include <vector>
+#include <string>
+#include <map>
+#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtc/quaternion.hpp>
 
-
-namespace Mgtt::Rendering {
-    struct GltfNode;
+namespace Mgtt::Rendering::Gltf {
+    struct Node;
 
     enum GltfTextureWrapType {
         TEXTURE_WRAP_REPEAT,
@@ -13,46 +17,45 @@ namespace Mgtt::Rendering {
 
     enum class GltfType { ASCII, BINARY };
 
-    struct GltfAnimationChannel {
-        GltfAnimationChannel();
+    struct AnimationChannel {
+        AnimationChannel();
         int32_t sampler;
         int32_t target_node;
         std::string target_path;
     };
 
-    struct GltfAnimationSampler {
-        GltfAnimationSampler();
+    struct AnimationSampler {
+        AnimationSampler();
         int32_t input;
         int32_t output;
         std::string interpolation;
     };
 
-    struct GltfAnimation {
+    struct Animation {
         std::string name;
-        std::vector<GltfAnimationChannel> channels;
-        std::vector<GltfAnimationSampler> samplers;
+        std::vector<AnimationChannel> channels;
+        std::vector<AnimationSampler> samplers;
     };
 
-    struct GltfSkin {
-    GltfSkin();
+    struct Skin {
+        Skin();
         std::string name;
         int32_t inverseBindMatrices;
-        int32_t skeleton;        // The index of the node used as a skeleton root
-        std::vector<int> joints; // Indices of skeleton nodes
+        int32_t skeleton; 
+        std::vector<int> joints;
     };
 
-    struct GltfSampler {
+    struct Sampler {
         std::string name;
         int32_t minFilter =-1;
-        int32_t magFilter =
-            -1; 
+        int32_t magFilter = -1; 
         int32_t wrapS = GltfTextureWrapType::TEXTURE_WRAP_REPEAT; 
         int32_t wrapT = GltfTextureWrapType::TEXTURE_WRAP_REPEAT; 
         int32_t wrapR = GltfTextureWrapType::TEXTURE_WRAP_REPEAT;
     };
 
-    struct GltfImage {
-        GltfImage();
+    struct Image {
+        Image();
         std::string name;
         int32_t width;
         int32_t height;
@@ -63,69 +66,69 @@ namespace Mgtt::Rendering {
         std::string uri;      
     };
 
-    struct GltfTexture {
-        GltfTexture();
+    struct Texture {
+        Texture();
         std::string name;
         int32_t sampler;
         int32_t source;
     };
 
-    struct GltfTextureInfo {
-        GltfTextureInfo();
+    struct TextureInfo {
+        TextureInfo();
         int32_t index;
         int32_t texCoord; 
     };
 
-    struct GltfNormalTextureInfo {
-        GltfNormalTextureInfo();
+    struct NormalTextureInfo {
+        NormalTextureInfo();
         int32_t index;
         int32_t texCoord;
         double scale; 
     };
 
-    struct GltfOcclusionTextureInfo {
-        GltfOcclusionTextureInfo();
+    struct OcclusionTextureInfo {
+        OcclusionTextureInfo();
         int32_t index;
         int32_t texCoord; 
         double strength;  
     };
 
-    struct GltfPbrMetallicRoughness {
-        GltfPbrMetallicRoughness();
+    struct PbrMetallicRoughness {
+        PbrMetallicRoughness();
         double metallicFactor;  
         double roughnessFactor; 
         glm::vec4 baseColor;    
-        GltfTextureInfo baseColorTexture;
-        GltfTextureInfo metallicRoughnessTexture;
+        TextureInfo baseColorTexture;
+        TextureInfo metallicRoughnessTexture;
     };
 
-    struct GltfSpecularGlossiness {
-        GltfSpecularGlossiness();
+    struct SpecularGlossiness {
+        SpecularGlossiness();
         glm::vec4 diffuseColor;  
         glm::vec3 specularColor; 
         float glosinessFactor;   
-        GltfTextureInfo diffuseTexture;
-        GltfTextureInfo specularGlossinessTexture;
+        TextureInfo diffuseTexture;
+        TextureInfo specularGlossinessTexture;
     };
 
-    struct GltfMaterial {
-        GltfMaterial();
+    struct Material {
+        Material();
         std::string name;
         glm::vec3 emissiveColor; 
         std::string alphaMode;   
         double alphaCutoff;      
         bool doubleSided;        
 
-        GltfPbrMetallicRoughness pbrMetallicRoughness;
-        GltfNormalTextureInfo normalTexture;
-        GltfOcclusionTextureInfo occlusionTexture;
-        GltfTextureInfo emissiveTexture;
-        GltfSpecularGlossiness specularGlossiness;
+        PbrMetallicRoughness pbrMetallicRoughness;
+        NormalTextureInfo normalTexture;
+        OcclusionTextureInfo occlusionTexture;
+        TextureInfo emissiveTexture;
+        SpecularGlossiness specularGlossiness;
         // std::map<> extensionMap;
     };
 
-    struct GltfBufferView {
-        GltfBufferView();
+    struct BufferView {
+        BufferView();
         std::string name;
         int32_t buffer;
         size_t byteOffset;
@@ -134,8 +137,8 @@ namespace Mgtt::Rendering {
         int32_t target;
     };
 
-    struct GltfAccessor {
-        GltfAccessor();
+    struct Accessor {
+        Accessor();
         std::string name;
         int32_t bufferView; 
         size_t byteOffset; 
@@ -147,8 +150,8 @@ namespace Mgtt::Rendering {
         glm::vec3 maxValues;
     };
 
-    struct GltfPrimitive {
-        GltfPrimitive();
+    struct Primitive {
+        Primitive();
         std::map<std::string, int> attributes; 
         int32_t material; 
         int32_t indices;  
@@ -156,15 +159,15 @@ namespace Mgtt::Rendering {
         std::vector<std::map<std::string, int>> targets; 
     };
 
-    struct GltfMesh {
-        GltfMesh();
+    struct Mesh {
+        Mesh();
         std::string name;
-        std::vector<GltfPrimitive> primitives;
+        std::vector<Primitive> primitives;
         glm::vec4 weights; 
     };
 
-    struct GltfNode {
-        GltfNode();
+    struct Node {
+        Node();
         std::string name;
         int32_t skin;
         int32_t mesh;
@@ -176,21 +179,21 @@ namespace Mgtt::Rendering {
         glm::vec4 weights; 
     };
 
-    struct GltfBuffer {
-        GltfBuffer();
+    struct Buffer {
+        Buffer();
         int32_t byteLength;
         std::vector<unsigned char> data;
         std::string uri; 
     };
 
-    struct GltfAsset {
+    struct Asset {
         std::string version;
         std::string generator;
         std::string minVersion;
         std::string copyright;
     };
 
-    struct GltfScene {
+    struct Scene {
         std::string name;
         std::vector<int> nodes;
     };
