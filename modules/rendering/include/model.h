@@ -101,9 +101,9 @@ namespace Mgtt::Rendering {
         Node();
 
         /**
-         * @brief Destructor for the node. Releases resources.
+         * @brief Clear releases resources.
          */
-        ~Node();
+        void Clear();
 
         /**
          * @brief Calculates the local transformation matrix of the node.
@@ -139,9 +139,9 @@ namespace Mgtt::Rendering {
         Mesh();
 
         /**
-         * @brief Destructor for the mesh. Releases resources.
+         * @brief Clear releases resources.
          */
-        ~Mesh();
+        void Clear();
 
         std::string name;
         std::vector<MeshPrimitive> meshPrimitives;
@@ -173,9 +173,9 @@ namespace Mgtt::Rendering {
         MeshPrimitive();
 
         /**
-         * @brief Destructor for the mesh primitive. Releases resources.
+         * @brief Clear releases resources.
          */
-        ~MeshPrimitive();
+        void Clear();
 
         std::string name;
         uint32_t firstIndex;  // required for glDrawElements(...)
@@ -210,9 +210,9 @@ namespace Mgtt::Rendering {
         PbrMaterial();
 
         /**
-         * @brief Destructor for the pbr material. Releases resources.
+         * @brief Clear releases resources.
          */
-        ~PbrMaterial();
+        void Clear();
 
         std::unique_ptr<NormalTexture> normalTexture;
         std::unique_ptr<OcclusionTexture> occlusionTexture;
@@ -235,12 +235,12 @@ namespace Mgtt::Rendering {
         Texture();
 
         /**
-         * @brief Destructor for the texture. Releases resources.
+         * @brief Clear releases resources.
          *
          * This method clears the resources associated with the Texture object, freeing up memory.
          * It is recommended to call this method when the Texture is no longer needed.
          */
-        ~Texture();
+        void Clear();
 
         /**
          * @brief Constructor for the Texture structure.
@@ -263,10 +263,10 @@ namespace Mgtt::Rendering {
         /**
          * @brief Clear the Texture resources.
          *
-         * This method clears the resources associated with the Texture object, freeing up memory.
+         * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
          * It is recommended to call this method when the Texture is no longer needed.
          */
-        void Clear();
+        void ClearRAM();
 
         std::string name;
         uint32_t id;

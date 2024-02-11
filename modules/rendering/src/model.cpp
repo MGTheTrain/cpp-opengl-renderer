@@ -22,7 +22,7 @@ Mgtt::Rendering::Scene::~Scene() {
         this->Linearize(node);
     }
     for (auto& linearNode : this->linearNodes) {
-        linearNode->~Node();
+        linearNode->Clear();
     }
 }
 
@@ -53,10 +53,10 @@ Mgtt::Rendering::Node::Node() {
 }
 
 /**
- * @brief Destructor for the node. Releases resources.
+ * @brief Clear releases resources.
  */
-Mgtt::Rendering::Node::~Node() {
-    this->mesh->~Mesh();
+void Mgtt::Rendering::Node::Clear() {
+    this->mesh->Clear();
 }
 
 /**
@@ -97,9 +97,9 @@ Mgtt::Rendering::Mesh::Mesh() {
 }
 
 /**
- * @brief Destructor for the mesh. Releases resources.
+ * @brief Clear releases resources.
  */
-Mgtt::Rendering::Mesh::~Mesh() {
+void Mgtt::Rendering::Mesh::Clear() {
     if (this->pos > 0) {
         glDeleteBuffers(1, &this->pos);
         this->pos = 0;
@@ -121,7 +121,7 @@ Mgtt::Rendering::Mesh::~Mesh() {
         this->vao = 0;
     }
     for(auto mehsPrimitive: this->meshPrimitives) {
-        mehsPrimitive.~MeshPrimitive();
+        mehsPrimitive.Clear();
     }
 }
 
@@ -139,10 +139,10 @@ Mgtt::Rendering::MeshPrimitive::MeshPrimitive() {
 }
 
 /**
- * @brief Destructor for the mesh primitive. Releases resources.
+ * @brief Clear releases resources.
  */
-Mgtt::Rendering::MeshPrimitive::~MeshPrimitive() {
-    this->pbrMaterial->~PbrMaterial();
+void Mgtt::Rendering::MeshPrimitive::Clear() {
+    this->pbrMaterial->Clear();
 }
 
 
@@ -169,14 +169,14 @@ Mgtt::Rendering::PbrMaterial::PbrMaterial() {
 }
 
 /**
- * @brief Destructor for the pbr material. Releases resources.
+ * @brief Clear releases resources.
  */
-Mgtt::Rendering::PbrMaterial::~PbrMaterial() {
-    this->normalTexture->Clear();
-    this->occlusionTexture->Clear();
-    this->emissiveTexture->Clear();
+void Mgtt::Rendering::PbrMaterial::Clear() {
     this->baseColorTexture->Clear();
     this->metallicRoughnessTexture->Clear();
+    this->normalTexture->Clear();
+    this->emissiveTexture->Clear();
+    this->occlusionTexture->Clear();
 }
 
 /**
@@ -198,13 +198,13 @@ Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
 }
 
 /**
- * @brief Destructor for the texture. Releases resources.
+ * @brief Clear releases resources.
  *
  * This method clears the resources associated with the Texture object, freeing up memory.
  * It is recommended to call this method when the Texture is no longer needed.
  */
-Mgtt::Rendering::Texture::~Texture() {
-    this->Clear();
+void Mgtt::Rendering::Texture::Clear() {
+    this->ClearRAM();
     if (this->id > 0) {
         glDeleteTextures(1, &this->id);
         this->id = 0;
@@ -228,10 +228,10 @@ void Mgtt::Rendering::Texture::Load(const std::string& texturePath) {
 /**
  * @brief Clear the Texture resources.
  *
- * This method clears the resources associated with the Texture object, freeing up memory.
+ * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
  * It is recommended to call this method when the Texture is no longer needed.
  */
-void Mgtt::Rendering::Texture::Clear() {
+void Mgtt::Rendering::Texture::ClearRAM() {
     if (this->data) {
         stbi_image_free(this->data);
         this->data = nullptr;
@@ -243,6 +243,7 @@ void Mgtt::Rendering::Texture::Clear() {
 */
 Mgtt::Rendering::Texture::Texture() {
     this->name = "";
+    this->id = 0;
     this->path = "";
     this->width = 0;
     this->height = 0;

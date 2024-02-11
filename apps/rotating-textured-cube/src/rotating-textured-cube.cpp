@@ -32,7 +32,7 @@
  * @brief Destructs the RotatingTexturedCube  object.
  */
 Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
-    this->texture->~Texture();
+    this->mesh->Clear();
 }
 
 /**
@@ -45,8 +45,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     this->windowParams->height= 1000.0f;
 
     this->glmMatrices = std::make_unique<GlmMatrices>();
-    this->openGlObjects = std::make_unique<OpenGlObjects>();
-    this->texture= std::make_unique<Mgtt::Rendering::Texture>();
+    this->mesh= std::make_unique<Mgtt::Rendering::Mesh>();
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
     this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
@@ -59,86 +58,131 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     std::string fsPath = "assets/shader/core/coordinate.frag";
     auto shader = Mgtt::Rendering::OpenGlShader(vsPath, fsPath);
     this->openGlShaders.push_back(shader);
-    std::vector<float> vertices = {
-       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    
+    this->mesh->vertexPositionAttribs = {
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(-0.5f, 0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        glm::vec3(-0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, -0.5f, 0.5f),
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        glm::vec3(-0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, 0.5f),
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, -0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(0.5f, -0.5f, 0.5f),
+        glm::vec3(-0.5f, -0.5f, 0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        glm::vec3(-0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, -0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, 0.5f),
+        glm::vec3(-0.5f, 0.5f, -0.5f)
     };
 
-    this->openGlObjects->vbos.push_back(0);
-    this->openGlObjects->vaos.push_back(0);
-    glGenVertexArrays(1, &this->openGlObjects->vaos[0]);
-    glBindVertexArray(this->openGlObjects->vaos[0]);
+    this->mesh->vertexTextureAttribs = {
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f)
+    };
 
-    glGenBuffers(1, &this->openGlObjects->vbos[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->openGlObjects->vbos[0]);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glGenVertexArrays(1, &this->mesh->vao);
+    glBindVertexArray(this->mesh->vao);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glGenBuffers(1, &this->mesh->pos); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->mesh->pos);
+    glBufferData(GL_ARRAY_BUFFER, this->mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), this->mesh->vertexPositionAttribs.data(), GL_STATIC_DRAW);
+    uint32_t posLocation = glGetAttribLocation(this->openGlShaders[0].GetProgramId(), "inVertexPosition");
+    glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
 
-    glGenTextures(1, &this->texture->id);
-    glBindTexture(GL_TEXTURE_2D, this->texture->id);
+    glGenBuffers(1, &this->mesh->tex); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->mesh->tex);
+    glBufferData(GL_ARRAY_BUFFER, this->mesh->vertexTextureAttribs.size() * sizeof(glm::vec2), this->mesh->vertexTextureAttribs.data(), GL_STATIC_DRAW);
+    uint32_t texLocation = glGetAttribLocation(this->openGlShaders[0].GetProgramId(), "inVertexTextureCoordinates");
+    glEnableVertexAttribArray(texLocation);
+    glVertexAttribPointer(texLocation, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)(0));
+
+    this->mesh->meshPrimitives.push_back(this->meshPrimitive);
+    this->mesh->meshPrimitives[0].pbrMaterial = std::make_unique<Mgtt::Rendering::PbrMaterial>();
+    glGenTextures(1, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->id);
+    glBindTexture(GL_TEXTURE_2D, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     std::string texturePath = "assets/texture/surgery.jpg";
-    this->texture->Load(texturePath);
-    if (this->texture->data) {
-        if (this->texture->nrComponents == 3) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->texture->width, this->texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->texture->data);
+    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->Load(texturePath);
+    if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data) {
+        if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->nrComponents == 3) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data);
         }
-        else if (this->texture->nrComponents == 4) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture->width, this->texture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->texture->data);
+        else if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->nrComponents == 4) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->data);
         }
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
         throw std::runtime_error("TEXTURE ERROR: Failed to load texture " + texturePath);
     }
-    this->texture->Clear();
+    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->ClearRAM();
 
     this->openGlShaders[0].Use();
     this->openGlShaders[0].SetInt("textureMap", 0);
@@ -157,7 +201,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->texture->id);
+        glBindTexture(GL_TEXTURE_2D, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture->id);
 
         this->openGlShaders[0].Use();
 
@@ -169,7 +213,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
         this->glmMatrices->mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
         this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
-        glBindVertexArray(this->openGlObjects->vaos[0]);
+        glBindVertexArray(this->mesh->vao);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         this->glfwWindow->SwapBuffersAndPollEvents();

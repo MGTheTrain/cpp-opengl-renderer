@@ -69,23 +69,6 @@ namespace Mgtt::Apps {
     };
 
     /**
-     * @brief Represents opengl objects
-     */
-    struct OpenGlObjects {
-        OpenGlObjects() {}
-        ~OpenGlObjects() {
-            for (auto vao : this->vaos) {
-                glDeleteVertexArrays(1, &vao);
-            }
-            for (auto vbo : this->vbos) {
-                glDeleteBuffers(1, &vbo);
-            }
-        }
-        std::vector<unsigned int> vaos;
-        std::vector<unsigned int> vbos;
-    };
-
-    /**
      * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
      *
      * This class provides basic functionality for initializing an OpenGL context,
@@ -134,8 +117,8 @@ namespace Mgtt::Apps {
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
         std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
-        std::unique_ptr<OpenGlObjects> openGlObjects;
-        std::unique_ptr<Mgtt::Rendering::Texture> texture;
+        std::unique_ptr<Mgtt::Rendering::Mesh> mesh;
+        Mgtt::Rendering::MeshPrimitive meshPrimitive;
     };
 
 } // namespace Mgtt::Apps
