@@ -62,16 +62,5 @@ namespace Mgtt::Rendering {
          * @param scene A unique pointer to the scene to clear.
          */
         void Clear(Mgtt::Rendering::Scene& scene) override;
-
-    private:
-        /**
-         * @brief Recursively linearizes the scene hierarchy starting from the given node.
-         *
-         * This method flattens the hierarchical structure of the scene, storing nodes in a linearNodes vector.
-         *
-         * @param node The starting node to linearize.
-         * @param scene The scene where the linearized nodes will be stored.
-         */
-        void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node, Mgtt::Rendering::Scene& scene);
     };
 }

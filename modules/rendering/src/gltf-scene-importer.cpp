@@ -1,20 +1,5 @@
 #include <gltf-scene-importer.h>
 
-/**
- * @brief Recursively linearizes the scene hierarchy starting from the given node.
- *
- * This method flattens the hierarchical structure of the scene, storing nodes in a linearNodes vector.
- *
- * @param node The starting node to linearize.
- * @param scene The scene where the linearized nodes will be stored.
- */
-void Mgtt::Rendering::GltfSceneImporter::Linearize(std::shared_ptr<Mgtt::Rendering::Node> node, Mgtt::Rendering::Scene&  scene) {
-    scene.linearNodes.push_back(node);
-
-    for (uint32_t i = 0; i < node->children.size(); i++) {
-        this->Linearize(node->children[i], scene);
-    }
-}
 
 /**
  * @brief Load the 3D scene from a specified file path.
@@ -36,8 +21,5 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
  * @param scene A unique pointer to the scene to clear.
  */
 void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
-    for(auto & node: scene.nodes) {
-        this->Linearize(node, scene);
-    }
     scene.~Scene();
 }

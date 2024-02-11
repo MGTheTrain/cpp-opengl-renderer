@@ -68,6 +68,16 @@ namespace Mgtt::Rendering {
         std::vector<std::shared_ptr<Node>> nodes;
         std::vector<std::shared_ptr<Node>> linearNodes; 
         std::vector<std::shared_ptr<Material>> materials;
+
+    private:
+        /**
+         * @brief Recursively linearizes the scene hierarchy starting from the given node.
+         *
+         * This method flattens the hierarchical structure of the scene, storing nodes in a linearNodes vector.
+         *
+         * @param node The starting node to linearize.
+         */
+        void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node);
     };
 
     /**
@@ -109,29 +119,6 @@ namespace Mgtt::Rendering {
     };
 
     /**
-     * @brief Represents a primitive mesh in the scene.
-     */
-    struct MeshPrimitive {
-        /**
-         * @brief Constructor for the MeshPrimitive structure.
-         */
-        MeshPrimitive();
-
-        /**
-         * @brief Destructor for the mesh primitive. Releases resources.
-         */
-        ~MeshPrimitive();
-
-        std::string name;
-        uint32_t firstIndex;  // required for glDrawElements(...)
-        uint32_t indexCount;  // required for glDrawElements(...)
-        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
-        bool hasSkin;
-        bool hasIndices;
-        std::shared_ptr<Material> material;
-    };
-
-    /**
      * @brief Represents a mesh in the scene.
      */
     struct Mesh {
@@ -164,6 +151,30 @@ namespace Mgtt::Rendering {
         //uint32_t weight;
     };
 
+    
+    /**
+     * @brief Represents a primitive mesh in the scene.
+     */
+    struct MeshPrimitive {
+        /**
+         * @brief Constructor for the MeshPrimitive structure.
+         */
+        MeshPrimitive();
+
+        /**
+         * @brief Destructor for the mesh primitive. Releases resources.
+         */
+        ~MeshPrimitive();
+
+        std::string name;
+        uint32_t firstIndex;  // required for glDrawElements(...)
+        uint32_t indexCount;  // required for glDrawElements(...)
+        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
+        bool hasSkin;
+        bool hasIndices;
+        std::shared_ptr<PbrMaterial> pbrMaterial;
+    };
+
     /**
      * @brief Represents a generic material.
      */
@@ -172,11 +183,6 @@ namespace Mgtt::Rendering {
          * @brief Constructor for the Material structure.
          */
         Material();
-
-        /**
-         * @brief Destructor for the material. Releases resources.
-         */
-        ~Material();
 
         std::string name;
     };
