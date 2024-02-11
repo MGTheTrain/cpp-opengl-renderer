@@ -65,9 +65,9 @@ namespace Mgtt::Rendering {
         Scene();
 
         /**
-         * @brief Destructor for the scene. Releases resources.
+         * @brief Clear releases resources.
          */
-        ~Scene();
+        void Clear();
         std::string name;
         std::string path;
         glm::vec3 pos;
