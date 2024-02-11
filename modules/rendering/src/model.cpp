@@ -14,6 +14,9 @@ Mgtt::Rendering::Scene::Scene() {
   this->scale = 1.0f;
 }
 
+/**
+ * @brief Destructor for the scene. Releases resources.
+ */
 Mgtt::Rendering::Scene::~Scene() {
     for (auto& node : this->nodes) {
         this->Linearize(node);
@@ -53,7 +56,7 @@ Mgtt::Rendering::Node::Node() {
  * @brief Destructor for the node. Releases resources.
  */
 Mgtt::Rendering::Node::~Node() {
-
+    this->mesh->~Mesh();
 }
 
 /**
@@ -97,6 +100,26 @@ Mgtt::Rendering::Mesh::Mesh() {
  * @brief Destructor for the mesh. Releases resources.
  */
 Mgtt::Rendering::Mesh::~Mesh() {
+    if (this->pos > 0) {
+        glDeleteBuffers(1, &this->pos);
+        this->pos = 0;
+    }
+    if (this->normal > 0) {
+        glDeleteBuffers(1, &this->normal);
+        this->normal = 0;
+    }
+    if (this->tex > 0) {
+        glDeleteBuffers(1, &this->tex);
+        this->tex = 0;
+    }
+    if (this->ebo > 0) {
+        glDeleteBuffers(1, &this->ebo);
+        this->ebo = 0;
+    }
+    if (this->vao > 0) {
+        glDeleteVertexArrays(1, &this->vao);
+        this->vao = 0;
+    }
     for(auto mehsPrimitive: this->meshPrimitives) {
         mehsPrimitive.~MeshPrimitive();
     }
@@ -165,6 +188,7 @@ Mgtt::Rendering::PbrMaterial::~PbrMaterial() {
  **/
 Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
     this->name = "";
+    this->id = 0;
     this->path = "";
     this->width = 0;
     this->height = 0;
@@ -181,6 +205,10 @@ Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
  */
 Mgtt::Rendering::Texture::~Texture() {
     this->Clear();
+    if (this->id > 0) {
+        glDeleteTextures(1, &this->id);
+        this->id = 0;
+    }
 }
 
 /**
