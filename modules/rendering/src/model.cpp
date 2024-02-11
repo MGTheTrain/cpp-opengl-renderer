@@ -14,7 +14,11 @@ Mgtt::Rendering::Scene::Scene() {
  * @brief Constructor for the Node structure.
  */
 Mgtt::Rendering::Node::Node() {
-    
+    this->index = 0;
+    this->pos = glm::vec3(0.0f);
+    // this->rot = glm::quat();
+    this->scale = glm::vec3(1.0f);
+    this->matrix = glm::mat4(1.0f);
 }
 
 /**
@@ -22,8 +26,7 @@ Mgtt::Rendering::Node::Node() {
  * @return Local transformation matrix.
  */
 glm::mat4 Mgtt::Rendering::Node::LocalMatrix() {
-    
-    return glm::mat4(); 
+    return glm::translate(glm::mat4(1.0f), this->pos) * glm::toMat4(this->rot) * glm::scale(glm::mat4(1.0f), this->scale) * this->matrix;
 }
 
 /**
@@ -31,36 +34,56 @@ glm::mat4 Mgtt::Rendering::Node::LocalMatrix() {
  * @return Global transformation matrix.
  */
 glm::mat4 Mgtt::Rendering::Node::GetGlobalMatrix() {
-    
-    return glm::mat4();
+    glm::mat4 m = LocalMatrix();
+    std::shared_ptr<Mgtt::Rendering::Node> p = this->parent;
+    while (p) {
+        m = p->LocalMatrix() * m;
+        p = p->parent;
+    }
+    return m;
 }
 
 /**
  * @brief Constructor for the MeshPrimitive structure.
  */
 Mgtt::Rendering::MeshPrimitive::MeshPrimitive() {
-    
+    this->name = "";
+    this->hasSkin = false;
+    this->hasIndices = false;
+    this->firstIndex = 0;
+    this->indexCount = 0;
+    this->vertexCount = 0;
 }
 
 /**
  * @brief Constructor for the Mesh structure.
  */
 Mgtt::Rendering::Mesh::Mesh() {
-    
+    this->matrix = glm::mat4(1.0f);
+    this->name = "";
+    this->vao = 0;
+    this->ebo = 0;
+    this->pos = 0;
+    this->normal = 0;
+    this->tex = 0;
+    //this->joint = 0;
+    //this->weight = 0;
 }
 
 /**
  * @brief Constructor for the Material structure.
  */
 Mgtt::Rendering::Material::Material() {
-    
+    this->name = "";
 }
 
 /**
  * @brief Constructor for the PbrMaterial structure.
  */
 Mgtt::Rendering::PbrMaterial::PbrMaterial() {
-    
+    this->alphaCutoff = 0.0f;
+    this->doubleSided = false;
+    this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQE;
 }
 
 /**
@@ -71,7 +94,13 @@ Mgtt::Rendering::PbrMaterial::PbrMaterial() {
  * @param texturePath The file path to the texture.
  Mgtt::Rendering::*/
 Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
-    
+    this->name = "";
+    this->path = "";
+    this->width = 0;
+    this->height = 0;
+    this->nrComponents = 0;
+    this->data = nullptr;
+    this->sizeInBytes = 0;
 }
 
 /**
@@ -82,8 +111,10 @@ Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
  * @param texturePath The file path to the texture.
  */
 void Mgtt::Rendering::Texture::Load(const std::string& texturePath) {
-    this->data = stbi_load(texturePath.c_str(),
-        &this->width, &this->height, &this->nrComponents, 0);
+    if(!this->data) {
+        this->data = stbi_load(texturePath.c_str(),
+            &this->width, &this->height, &this->nrComponents, 0);
+    }
 }
 
 /**
@@ -93,47 +124,57 @@ void Mgtt::Rendering::Texture::Load(const std::string& texturePath) {
  * It is recommended to call this method when the Texture is no longer needed.
  */
 void Mgtt::Rendering::Texture::Clear() {
-    stbi_image_free(this->data);
+    if (this->data) {
+        stbi_image_free(this->data);
+        this->data = nullptr;
+    }
 }
 
 /**
 * @brief @brief Constructor for the Texture structure
 */
 Mgtt::Rendering::Texture::Texture() {
-
+    this->name = "";
+    this->path = "";
+    this->width = 0;
+    this->height = 0;
+    this->nrComponents = 0;
+    this->data = nullptr;
+    this->sizeInBytes = 0;
 }
 
 /**
  * @brief Constructor for the NormalTexture structure.
  */
 Mgtt::Rendering::NormalTexture::NormalTexture() {
-    
+    this->scale = 1.0f;
 }
 
 /**
  * @brief Constructor for the EmissiveTexture structure.
  */
 Mgtt::Rendering::EmissiveTexture::EmissiveTexture() {
-    
+    this->color = glm::vec3(0.0f);
 }
 
 /**
  * @brief Constructor for the MetallicRoughnessTexture structure.
  */
 Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
-    
+    this->metallicFactor = 0.0f;
+    this->roughnessFactor = 1.0f;
 }
 
 /**
  * @brief Constructor for the OcclusionTexture structure.
  */
 Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
-    // Constructor implementation
+    this->color = glm::vec3(0.0f);
 }
 
 /**
  * @brief Constructor for the BaseColorTexture structure.
  */
 Mgtt::Rendering::BaseColorTexture::BaseColorTexture() {
-    
+    this->color = glm::vec4(1.0f);
 }

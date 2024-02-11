@@ -127,6 +127,14 @@ namespace Mgtt::Rendering {
         std::vector<glm::ivec4> vertexJointAttribs;
         std::vector<glm::vec4> vertexWeightAttribs;
         glm::mat4 matrix;
+
+        uint32_t vao;   
+        uint32_t ebo; // On existing indices
+        uint32_t pos; 
+        uint32_t normal;
+        uint32_t tex;
+        //uint32_t joint; 
+        //uint32_t weight;
     };
 
     /**
@@ -224,7 +232,7 @@ namespace Mgtt::Rendering {
          * @brief @brief Constructor for the EmissiveTexture structure.
          */
         EmissiveTexture();
-        float color;
+        glm::vec3 color;
     };
 
     /**
