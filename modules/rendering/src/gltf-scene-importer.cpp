@@ -130,11 +130,70 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
 
     if (node.children.size() > 0) {
         for (uint32_t i = 0; i < node.children.size(); i++) {
-        LoadNode(newNode, scene, model.nodes[node.children[i]], node.children[i], model);
+            LoadNode(newNode, scene, model.nodes[node.children[i]], node.children[i], model);
         }
     }
 
     if (node.mesh > -1) {
-        // assign mesh attributes
+        const tinygltf::Mesh mesh = model.meshes[node.mesh];
+        std::shared_ptr<Mgtt::Rendering::Mesh> newMesh =
+            std::make_shared<Mgtt::Rendering::Mesh>();
+        for (uint32_t i = 0; i < mesh.primitives.size(); i++) {
+            const tinygltf::Primitive &primitive = mesh.primitives[i];
+            uint32_t indexStart = newMesh->indices.size();
+            uint32_t vertexStart = newMesh->vertexPositionAttribs.size();
+            uint32_t indexCount = 0;
+            uint32_t vertexCount = 0;
+
+            bool hasSkin = false;
+            bool hasIndices = primitive.indices > -1;
+            glm::vec3 posMin = glm::vec3(FLT_MAX);
+            glm::vec3 posMax = glm::vec3(-FLT_MAX);
+
+            const float *bufferPos = nullptr;
+            const float *bufferNormals = nullptr;
+            const float *bufferTexCoordSet = nullptr;
+
+            int posByteStride;
+            int normByteStride;
+            int uv0ByteStride;
+
+            // pos
+            const tinygltf::Accessor &posAccessor = model.accessors[primitive.attributes.find("POSITION")->second];
+            const tinygltf::BufferView &posView = model.bufferViews[posAccessor.bufferView];
+            bufferPos = reinterpret_cast<const float *>(&(model.buffers[posView.buffer].data[posAccessor.byteOffset + posView.byteOffset]));
+            posMin = glm::vec3(posAccessor.minValues[0], posAccessor.minValues[1], posAccessor.minValues[2]);
+            posMax = glm::vec3(posAccessor.maxValues[0], posAccessor.maxValues[1], posAccessor.maxValues[2]);
+            vertexCount = static_cast<uint32_t>(posAccessor.count);
+            posByteStride = posAccessor.ByteStride(posView) ? (posAccessor.ByteStride(posView) / sizeof(float)) : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC3);
+
+            if (primitive.attributes.find("NORMAL") != primitive.attributes.end()) {
+                const tinygltf::Accessor &normAccessor = model.accessors[primitive.attributes.find("NORMAL")->second];
+                const tinygltf::BufferView &normView = model.bufferViews[normAccessor.bufferView];
+                bufferNormals = reinterpret_cast<const float *>(&(model.buffers[normView.buffer].data[normAccessor.byteOffset + normView.byteOffset]));
+                normByteStride = normAccessor.ByteStride(normView) ? (normAccessor.ByteStride(normView) / sizeof(float)) : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC3);
+            }
+
+            // UVs
+            if (primitive.attributes.find("TEXCOORD_0") != primitive.attributes.end()) {
+                const tinygltf::Accessor &uvAccessor = model.accessors[primitive.attributes.find("TEXCOORD_0")->second];
+                const tinygltf::BufferView &uvView = model.bufferViews[uvAccessor.bufferView];
+                bufferTexCoordSet = reinterpret_cast<const float *>(&(model.buffers[uvView.buffer].data[uvAccessor.byteOffset + uvView.byteOffset]));
+                uv0ByteStride = uvAccessor.ByteStride(uvView) ? (uvAccessor.ByteStride(uvView) / sizeof(float)) : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC2);
+            }
+
+            // TBD: joints & weights for animation
+            for (size_t v = 0; v < posAccessor.count; v++) {
+                 // pos
+                newMesh->vertexPositionAttribs.push_back(glm::make_vec3(&bufferPos[v * posByteStride]));
+                 // normal
+                glm::vec3 tmpNormal = bufferNormals ? glm::make_vec3(&bufferNormals[v * normByteStride]): glm::vec3(0.0f);
+                newMesh->vertexNormalAttribs.push_back(glm::normalize(tmpNormal));
+
+                // uv
+                glm::vec2 tmpTex = bufferTexCoordSet? glm::make_vec2(&bufferTexCoordSet[v * uv0ByteStride]): glm::vec2(0.0f);
+                newMesh->vertexTextureAttribs.push_back(tmpTex);
+            }
+        }
     }
 }
