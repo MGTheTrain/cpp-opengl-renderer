@@ -9,6 +9,9 @@
  * 
  * @param path The file path from which to load the 3D scene.
  * @return An instance of the loaded 3D scene.
+ * 
+ * @note This implementation is inspired by the Vulkan glTF PBR example:
+ * https://github.com/SaschaWillems/Vulkan-glTF-PBR/blob/master/base/VulkanglTFModel.cpp
  */
 Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::string& path) {
     Mgtt::Rendering::Scene scene;
