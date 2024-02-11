@@ -61,7 +61,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     std::string fsPath = "assets/shader/core/coordinate.frag";
     auto shader = Mgtt::Rendering::OpenGlShader(vsPath, fsPath);
     this->openGlShaders.push_back(shader);
-    float vertices[] = {
+    std::vector<float> vertices = {
        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -112,7 +112,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
 
     glGenBuffers(1, &this->openGlObjects->vbos[0]);
     glBindBuffer(GL_ARRAY_BUFFER, this->openGlObjects->vbos[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
