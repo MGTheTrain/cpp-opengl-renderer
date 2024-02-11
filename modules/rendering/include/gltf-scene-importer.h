@@ -45,11 +45,6 @@ namespace Mgtt::Rendering {
         GltfSceneImporter();
 
         /**
-         * @brief Destructor for the scene importer.
-         */
-        ~GltfSceneImporter();
-
-        /**
          * @brief Load the 3D scene from a specified file path.
          * 
          * This method overrides the corresponding method in the ISceneImporter interface.
