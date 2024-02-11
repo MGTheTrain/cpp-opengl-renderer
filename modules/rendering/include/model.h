@@ -37,6 +37,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
+#include <map>
 
 namespace Mgtt::Rendering {
     // Forward declarations
@@ -48,9 +49,14 @@ namespace Mgtt::Rendering {
      */
     struct Scene {
         /**
-         * @brief @brief Constructor for the Scene structure.
+         * @brief Constructor for the Scene structure.
          */
         Scene();
+
+        /**
+         * @brief Destructor for the scene. Releases resources.
+         */
+        ~Scene();
         std::string name;
         std::string path;
         glm::vec3 pos;
@@ -58,6 +64,10 @@ namespace Mgtt::Rendering {
         double scale;
         glm::mat4 mvp;
         glm::mat4 matrix;
+        std::map<std::string, Mgtt::Rendering::Texture> textureMap; // case in which we want to prevent loading the same texture into RAM which is time consuming
+        std::vector<std::shared_ptr<Node>> nodes;
+        std::vector<std::shared_ptr<Node>> linearNodes; 
+        std::vector<std::shared_ptr<Material>> materials;
     };
 
     /**
@@ -65,9 +75,14 @@ namespace Mgtt::Rendering {
      */
     struct Node {
         /**
-         * @brief @brief Constructor for the Node structure.
+         * @brief Constructor for the Node structure.
          */
         Node();
+
+        /**
+         * @brief Destructor for the node. Releases resources.
+         */
+        ~Node();
 
         /**
          * @brief Calculates the local transformation matrix of the node.
@@ -98,9 +113,15 @@ namespace Mgtt::Rendering {
      */
     struct MeshPrimitive {
         /**
-         * @brief @brief Constructor for the MeshPrimitive structure.
+         * @brief Constructor for the MeshPrimitive structure.
          */
         MeshPrimitive();
+
+        /**
+         * @brief Destructor for the mesh primitive. Releases resources.
+         */
+        ~MeshPrimitive();
+
         std::string name;
         uint32_t firstIndex;  // required for glDrawElements(...)
         uint32_t indexCount;  // required for glDrawElements(...)
@@ -115,9 +136,15 @@ namespace Mgtt::Rendering {
      */
     struct Mesh {
         /**
-         * @brief @brief Constructor for the Mesh structure.
+         * @brief Constructor for the Mesh structure.
          */
         Mesh();
+
+        /**
+         * @brief Destructor for the mesh. Releases resources.
+         */
+        ~Mesh();
+
         std::string name;
         std::vector<MeshPrimitive> meshPrimitives;
         std::vector<unsigned int> indices;
@@ -142,9 +169,15 @@ namespace Mgtt::Rendering {
      */
     struct Material {
         /**
-         * @brief @brief Constructor for the Material structure.
+         * @brief Constructor for the Material structure.
          */
         Material();
+
+        /**
+         * @brief Destructor for the material. Releases resources.
+         */
+        ~Material();
+
         std::string name;
     };
 
@@ -155,14 +188,20 @@ namespace Mgtt::Rendering {
      */
     struct PbrMaterial : public Material {
         /**
-         * @brief @brief Constructor for the PbrMaterial structure.
+         * @brief Constructor for the PbrMaterial structure.
          */
         PbrMaterial();
-        struct NormalTexture;
-        struct OcclusionTexture;
-        struct EmissiveTexture;
-        struct BaseColorTexture;
-        struct MetallicRoughnessTexture;
+
+        /**
+         * @brief Destructor for the pbr material. Releases resources.
+         */
+        ~PbrMaterial();
+
+        std::unique_ptr<NormalTexture> normalTexture;
+        std::unique_ptr<OcclusionTexture> occlusionTexture;
+        std::unique_ptr<EmissiveTexture> emissiveTexture;
+        std::unique_ptr<BaseColorTexture> baseColorTexture;
+        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture;
 
         float alphaCutoff;
         bool doubleSided;
@@ -174,9 +213,17 @@ namespace Mgtt::Rendering {
      */
     struct Texture {
         /**
-        * @brief @brief Constructor for the Texture structure
+        * @brief Constructor for the Texture structure
         */
         Texture();
+
+        /**
+         * @brief Destructor for the texture. Releases resources.
+         *
+         * This method clears the resources associated with the Texture object, freeing up memory.
+         * It is recommended to call this method when the Texture is no longer needed.
+         */
+        ~Texture();
 
         /**
          * @brief Constructor for the Texture structure.
@@ -218,7 +265,7 @@ namespace Mgtt::Rendering {
      */
     struct NormalTexture : public Texture {
         /**
-         * @brief @brief Constructor for the NormalTexture structure.
+         * @brief Constructor for the NormalTexture structure.
          */
         NormalTexture();
         float scale;
@@ -229,7 +276,7 @@ namespace Mgtt::Rendering {
      */
     struct EmissiveTexture : public Texture {
         /**
-         * @brief @brief Constructor for the EmissiveTexture structure.
+         * @brief Constructor for the EmissiveTexture structure.
          */
         EmissiveTexture();
         glm::vec3 color;
@@ -240,7 +287,7 @@ namespace Mgtt::Rendering {
      */
     struct MetallicRoughnessTexture : public Texture {
         /**
-         * @brief @brief Constructor for the MetallicRoughnessTexture structure.
+         * @brief Constructor for the MetallicRoughnessTexture structure.
          */
         MetallicRoughnessTexture();
         float metallicFactor;
@@ -252,7 +299,7 @@ namespace Mgtt::Rendering {
      */
     struct OcclusionTexture : public Texture {
         /**
-         * @brief @brief Constructor for the OcclusionTexture structure.
+         * @brief Constructor for the OcclusionTexture structure.
          */
         OcclusionTexture();
         glm::vec3 color;
@@ -263,7 +310,7 @@ namespace Mgtt::Rendering {
      */
     struct BaseColorTexture : public Texture {
         /**
-         * @brief @brief Constructor for the BaseColorTexture structure.
+         * @brief Constructor for the BaseColorTexture structure.
          */
         BaseColorTexture();
         glm::vec4 color;

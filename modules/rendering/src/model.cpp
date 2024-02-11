@@ -7,8 +7,17 @@
  * @brief Constructor for the Scene structure.
  */
 Mgtt::Rendering::Scene::Scene() {
+  this->name = "";
+  this->path = "";
+  this->pos = glm::vec3(0.0f);
+  this->rot = glm::vec3(0.0f); 
+  this->scale = 1.0f;
+}
+
+Mgtt::Rendering::Scene::~Scene() {
     
 }
+
 
 /**
  * @brief Constructor for the Node structure.
@@ -84,6 +93,12 @@ Mgtt::Rendering::PbrMaterial::PbrMaterial() {
     this->alphaCutoff = 0.0f;
     this->doubleSided = false;
     this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQE;
+
+    this->normalTexture = std::make_unique<NormalTexture>();
+    this->occlusionTexture = std::make_unique<OcclusionTexture>();
+    this->emissiveTexture = std::make_unique<EmissiveTexture>();
+    this->baseColorTexture = std::make_unique<BaseColorTexture>();
+    this->metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>();
 }
 
 /**
