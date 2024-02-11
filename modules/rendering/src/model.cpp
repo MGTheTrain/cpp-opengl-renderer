@@ -15,9 +15,9 @@ Mgtt::Rendering::Scene::Scene() {
 }
 
 /**
- * @brief Destructor for the scene. Releases resources.
+ * @brief Clear releases resources.
  */
-Mgtt::Rendering::Scene::~Scene() {
+void Mgtt::Rendering::Scene::Clear() {
     for (auto& node : this->nodes) {
         this->Linearize(node);
     }
