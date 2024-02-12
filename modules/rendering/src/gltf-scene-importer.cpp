@@ -71,19 +71,6 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
 }
 
 /**
- * @brief Load texture from the provided glTF model.
- *
- * This method loads texture from the given glTF model and updates the
- * internal representation of the 3D scene accordingly.
- *
- * @param scene A reference to the updated 3D scene after loading nodes.
- * @param gltfModel The glTF model containing node information.
- */
-void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
-    
-}
-
-/**
  * @brief Clear the resources associated with the Texture object, freeing up memory.
  *
  * This method releases resources associated with the provided Texture object, essentially freeing up memory.
@@ -126,6 +113,31 @@ void Mgtt::Rendering::GltfSceneImporter::ClearRAM(Mgtt::Rendering::Texture& text
     if (texture.data) {
         stbi_image_free(texture.data);
         texture.data = nullptr;
+    }
+}
+
+/**
+ * @brief Load texture from the provided glTF model.
+ *
+ * This method loads texture from the given glTF model and updates the
+ * internal representation of the 3D scene accordingly.
+ *
+ * @param scene A reference to the updated 3D scene after loading nodes.
+ * @param gltfModel The glTF model containing node information.
+ */
+void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
+    for (tinygltf::Texture& tex : gltfModel.textures) {
+        Mgtt::Rendering::Texture texture;
+        tinygltf::Image image = gltfModel.images[tex.source];
+       
+        // Consider primarily gltf with non-embedded inmages
+        texture.name= image.name;
+        texture.width = image.width;
+        texture.height = image.height;
+        texture.nrComponents = image.component;
+        texture.data = stbi_load(image.uri.c_str(), &image.height, &image.height, &image.component, 0);
+
+        scene.textureMap[image.name] = texture;
     }
 }
 
