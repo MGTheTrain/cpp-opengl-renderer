@@ -232,7 +232,7 @@ namespace Mgtt::Rendering {
         std::string name;
     };
 
-    enum class AlphaMode { NONE, OPAQE, MASK, BLEND };
+    enum class AlphaMode { NONE, OPAQUE, MASK, BLEND };
 
     /**
      * @brief Represents a physically based rendering (PBR) material.
