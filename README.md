@@ -18,8 +18,8 @@ TBD
 ## Features
 
 - [ ] Compilation on MacOS, Linux Ubuntu 20.04/22.04, Linux debian 11 and Windows 10/11 OS
-- [ ] USD and/or glTF scene loading 
-- [ ] PBR shader pipeline. 
+- [ ] USD and/or glTF scene loading
+- [ ] PBR shader pipeline
 - [ ] Support mainly for metal roughness workflow
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] Skeletal animation support (**OPTIONAL**)
@@ -32,7 +32,7 @@ TBD
 
 - Download and install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
 - Download and install [CMake from the official website](https://cmake.org/download/)  or trough a package manager
-- Install [vcpkg](https://vcpkg.io/en/getting-started.html) or trough a package manager
+- Install [vcpkg from the official website](https://vcpkg.io/en/getting-started.html) or trough a package manager
 
 ### Integrate vcpkg with Visual Studio
 
