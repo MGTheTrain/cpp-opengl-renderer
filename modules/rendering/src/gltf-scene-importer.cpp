@@ -151,7 +151,20 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
  * @param gltfModel The glTF model containing node information.
  */
 void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
+    for (tinygltf::Material& material : gltfModel.materials) {
+        Mgtt::Rendering::PbrMaterial pbrMaterial;
 
+        
+        std::unique_ptr<NormalTexture> normalTexture = std::make_unique<NormalTexture>();
+        std::unique_ptr<OcclusionTexture> occlusionTexture = std::make_unique<OcclusionTexture>();
+        std::unique_ptr<EmissiveTexture> emissiveTexture = std::make_unique<EmissiveTexture>();
+        std::unique_ptr<BaseColorTexture> baseColorTexture = std::make_unique<BaseColorTexture>();
+        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>();
+
+        float alphaCutoff;
+        bool doubleSided;
+        AlphaMode alphaMode;
+    }
 }
 
 /**
