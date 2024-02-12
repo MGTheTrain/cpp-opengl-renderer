@@ -132,6 +132,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
        
         // Consider primarily gltf with non-embedded inmages
         texture.name= image.name;
+        texture.path = image.uri;
         texture.width = image.width;
         texture.height = image.height;
         texture.nrComponents = image.component;
@@ -153,17 +154,97 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
 void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
     for (tinygltf::Material& material : gltfModel.materials) {
         Mgtt::Rendering::PbrMaterial pbrMaterial;
+        pbrMaterial.alphaCutoff = material.alphaCutoff;
+        pbrMaterial.doubleSided = material.doubleSided;
+        if (material.alphaMode == "OPAQUE") {
+            pbrMaterial.alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
+        }
+        else if (material.alphaMode == "MASK") {
+            pbrMaterial.alphaMode = Mgtt::Rendering::AlphaMode::MASK;
+        }
+        else if (material.alphaMode == "BLEND") {
+            pbrMaterial.alphaMode = Mgtt::Rendering::AlphaMode::BLEND;
+        }
+        else  {
+            pbrMaterial.alphaMode = Mgtt::Rendering::AlphaMode::NONE;
+        }
 
-        
-        std::unique_ptr<NormalTexture> normalTexture = std::make_unique<NormalTexture>();
-        std::unique_ptr<OcclusionTexture> occlusionTexture = std::make_unique<OcclusionTexture>();
-        std::unique_ptr<EmissiveTexture> emissiveTexture = std::make_unique<EmissiveTexture>();
-        std::unique_ptr<BaseColorTexture> baseColorTexture = std::make_unique<BaseColorTexture>();
-        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>();
+        // Base color
+        std::unique_ptr<BaseColorTexture> baseColorTexture;
+        if (material.values.find("baseColorTexture") != material.values.end() && material.values.find("baseColorFactor") != material.values.end()) {
+            baseColorTexture = std::make_unique<BaseColorTexture>(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["baseColorTexture"].TextureIndex()].source].name],
+                glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));
+        }
+        else {
+            if (material.values.find("baseColorFactor") != material.values.end()) {
+                baseColorTexture = std::make_unique<BaseColorTexture>(
+                    Texture(),
+                    glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));
+            }
+        }
 
-        float alphaCutoff;
-        bool doubleSided;
-        AlphaMode alphaMode;
+        // Normal
+        std::unique_ptr<NormalTexture> normalTexture;
+        if (material.values.find("normalTexture") != material.values.end()) {
+            normalTexture = std::make_unique<NormalTexture>(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["normalTexture"].TextureIndex()].source].name],
+                1.0f);
+        }
+        else {
+            normalTexture = std::make_unique<NormalTexture>(
+                Texture(),
+                1.0f);
+        }
+
+        // Normal
+        std::unique_ptr<OcclusionTexture> occlusionTexture;
+        if (material.values.find("occlusionTexture") != material.values.end()) {
+            occlusionTexture = std::make_unique<OcclusionTexture>(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["occlusionTexture"].TextureIndex()].source].name],
+                glm::vec3(1.0f));
+        }
+        else {
+            occlusionTexture = std::make_unique<OcclusionTexture>(
+                Texture(),
+                glm::vec3(1.0f));
+        }
+
+        // Emissive
+        std::unique_ptr<EmissiveTexture> emissiveTexture;
+        if (material.values.find("emissiveTexture") != material.values.end()) {
+            emissiveTexture = std::make_unique<EmissiveTexture>(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["emissiveTexture"].TextureIndex()].source].name],
+                glm::vec3(0.0f));
+        }
+        else {
+            emissiveTexture = std::make_unique<EmissiveTexture>(
+                Texture(),
+                glm::vec3(0.0f));
+        }
+
+        // Metallic roughness
+        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture;
+        if (material.values.find("metallicRoughnessTexture") != material.values.end() && 
+            material.values.find("roughnessFactor") != material.values.end() && 
+            material.values.find("metallicFactor") != material.values.end()) {
+            metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["metallicRoughnessTexture"].TextureIndex()].source].name],
+                    static_cast<float>(material.values["metallicFactor"].Factor()),
+                    static_cast<float>(material.values["roughnessFactor"].Factor())
+            );
+        }
+        else {
+            if(material.values.find("roughnessFactor") != material.values.end() && 
+               material.values.find("metallicFactor") != material.values.end()) {
+                metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>(
+                    Texture(),
+                    static_cast<float>(material.values["metallicFactor"].Factor()),
+                    static_cast<float>(material.values["roughnessFactor"].Factor()));
+            }
+        }
+
+        scene.materials.push_back(pbrMaterial);
     }
 }
 
