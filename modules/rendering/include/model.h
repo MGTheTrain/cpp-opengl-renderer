@@ -111,7 +111,7 @@ namespace Mgtt::Rendering {
         std::map<std::string, Mgtt::Rendering::Texture> textureMap; // case in which we want to prevent loading the same texture into RAM which is time consuming
         std::vector< std::shared_ptr<Node>> nodes;
         std::vector< std::shared_ptr<Node>> linearNodes;
-        std::vector<Material> materials;
+        std::vector<PbrMaterial> materials;
         AABB aabb;
     private:
         /**
@@ -232,7 +232,7 @@ namespace Mgtt::Rendering {
         std::string name;
     };
 
-    enum class AlphaMode { NONE, OPAQUE, MASK, BLEND };
+    enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
 
     /**
      * @brief Represents a physically based rendering (PBR) material.
