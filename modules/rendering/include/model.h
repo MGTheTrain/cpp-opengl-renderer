@@ -54,6 +54,7 @@ namespace Mgtt::Rendering {
     struct MetallicRoughnessTexture;
     struct OcclusionTexture;
     struct BaseColorTexture;
+    struct AABB;
 
     /**
      * @brief Represents a 3D scene.
@@ -79,10 +80,7 @@ namespace Mgtt::Rendering {
         std::vector< std::shared_ptr<Node>> nodes;
         std::vector< std::shared_ptr<Node>> linearNodes;
         std::vector<Material> materials;
-        glm::vec3 minBound;
-        glm::vec3 maxBound;
-        glm::vec3 center;
-
+        AABB aabb;
     private:
         /**
          * @brief Recursively linearizes the scene hierarchy starting from the given node.
@@ -92,6 +90,39 @@ namespace Mgtt::Rendering {
          * @param node The starting node to linearize.
          */
         void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node);
+    };
+
+    
+    /**
+     * @brief Represents a collidable aabb
+     */
+    struct AABB {
+        /**
+         * @brief Constructor for the AABB structure.
+         */
+        AABB();
+        glm::vec3 min;
+        glm::vec3 max;
+        glm::vec3 center;
+
+        /**
+         * @brief CalculateBoundingBox calculates the bounding box of an object transformed by the given matrix.
+         *
+         * This function takes a 4x4 transformation matrix and calculates the bounding box
+         * of an object after being transformed by the matrix. The resulting bounding box
+         * can be used for various purposes, such as collision detection or rendering optimizations.
+         *
+         * @param m A 4x4 transformation matrix representing the object's transformation.
+         *
+         * @return void This function does not return a value. The bounding box information is typically
+         *              stored or used internally within the calling code.
+         *
+         * @note The function assumes that the object's original bounding box is defined in its local space.
+         *       The resulting bounding box is in the same coordinate space as the transformed object.
+         *
+         * @see glm::mat4 - The type of the transformation matrix.
+         */
+        void CalculateBoundingBox(const glm::mat4 &m);
     };
 
     /**
@@ -157,12 +188,14 @@ namespace Mgtt::Rendering {
         glm::mat4 matrix;
 
         uint32_t vao;   
-        uint32_t ebo; // On existing indices
+        uint32_t ebo; 
         uint32_t pos; 
         uint32_t normal;
         uint32_t tex;
         //uint32_t joint; 
         //uint32_t weight;
+
+        AABB aabb;
     };
 
     
