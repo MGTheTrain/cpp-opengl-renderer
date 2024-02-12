@@ -44,8 +44,6 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
     tinygltf::TinyGLTF gltfContext;
     bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
 
-    size_t vertexCount = 0;
-    size_t indexCount = 0;
     if (fileLoaded) {
         this->LoadTextures(mgttScene, gltfModel);
         this->LoadMaterials(mgttScene, gltfModel);
@@ -208,7 +206,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
             int normByteStride;
             int uv0ByteStride;
 
-            // pos
             const tinygltf::Accessor &posAccessor = model.accessors[primitive.attributes.find("POSITION")->second];
             const tinygltf::BufferView &posView = model.bufferViews[posAccessor.bufferView];
             bufferPos = reinterpret_cast<const float *>(&(model.buffers[posView.buffer].data[posAccessor.byteOffset + posView.byteOffset]));
@@ -224,7 +221,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 normByteStride = normAccessor.ByteStride(normView) ? (normAccessor.ByteStride(normView) / sizeof(float)) : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC3);
             }
 
-            // UVs
             if (primitive.attributes.find("TEXCOORD_0") != primitive.attributes.end()) {
                 const tinygltf::Accessor &uvAccessor = model.accessors[primitive.attributes.find("TEXCOORD_0")->second];
                 const tinygltf::BufferView &uvView = model.bufferViews[uvAccessor.bufferView];
@@ -234,13 +230,11 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
 
             // TBD: joints & weights for animation
             for (size_t v = 0; v < posAccessor.count; v++) {
-                 // pos
                 newMesh->vertexPositionAttribs.push_back(glm::make_vec3(&bufferPos[v * posByteStride]));
-                 // normal
+
                 glm::vec3 tmpNormal = bufferNormals ? glm::make_vec3(&bufferNormals[v * normByteStride]): glm::vec3(0.0f);
                 newMesh->vertexNormalAttribs.push_back(glm::normalize(tmpNormal));
-
-                // uv
+                
                 glm::vec2 tmpTex = bufferTexCoordSet? glm::make_vec2(&bufferTexCoordSet[v * uv0ByteStride]): glm::vec2(0.0f);
                 newMesh->vertexTextureAttribs.push_back(tmpTex);
             }
@@ -253,9 +247,12 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
             //     newPrimitive.material = scene.materials[primitive.material];
             // }
             // else { 
-            //     newPrimitive.material =
-            //         std::make_shared<Mgtt::Rendering::PbrMaterial>();
+            //     newPrimitive.material = std::make_shared<Mgtt::Rendering::PbrMaterial>();
             // }
+            newPrimitive.aabb.min = posMin;
+            newPrimitive.aabb.max = posMax;
+            newPrimitive.name = node.name;
+            newMesh->meshPrimitives.push_back(newPrimitive);
         }
         newNode->mesh = newMesh;
     }
