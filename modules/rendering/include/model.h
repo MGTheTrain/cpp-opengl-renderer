@@ -194,8 +194,6 @@ namespace Mgtt::Rendering {
         uint32_t tex;
         //uint32_t joint; 
         //uint32_t weight;
-
-        AABB aabb;
     };
 
     
@@ -220,6 +218,7 @@ namespace Mgtt::Rendering {
         bool hasSkin;
         bool hasIndices;
         std::shared_ptr<PbrMaterial> pbrMaterial;
+        AABB aabb;
     };
 
     /**
