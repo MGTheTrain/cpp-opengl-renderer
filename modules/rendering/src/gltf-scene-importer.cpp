@@ -135,7 +135,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
         texture.width = image.width;
         texture.height = image.height;
         texture.nrComponents = image.component;
-        texture.data = stbi_load(image.uri.c_str(), &image.height, &image.height, &image.component, 0);
+        texture.data = stbi_load(image.uri.c_str(), &image.height, &image.height, &image.component, 0); // data needs to be transferred to VRAM first and can then be freed
 
         scene.textureMap[image.name] = texture;
     }
