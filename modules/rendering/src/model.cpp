@@ -288,9 +288,7 @@ Mgtt::Rendering::NormalTexture::NormalTexture() {
 * @param texture The normal texture to be associated with this structure.
 * @param scale The scale factor applied to the normal texture.
 */
-Mgtt::Rendering::NormalTexture::NormalTexture(const Texture& texture, const float& scale): Texture(texture) {
-    this->scale = scale;
-}
+Mgtt::Rendering::NormalTexture::NormalTexture(const Texture& texture, const float& scale): Texture(texture), scale(scale) {}
 
 /**
  * @brief Constructor for the EmissiveTexture structure.
@@ -305,9 +303,7 @@ Mgtt::Rendering::EmissiveTexture::EmissiveTexture() {
 * @param texture The emissive texture to be associated with this structure.
 * @param scale The emissive color applied to the normal texture.
 */
-Mgtt::Rendering::EmissiveTexture::EmissiveTexture(const Texture& texture, const glm::vec3& color): Texture(texture) {
-    this->color = color;
-}
+Mgtt::Rendering::EmissiveTexture::EmissiveTexture(const Texture& texture, const glm::vec3& color): Texture(texture), color(color) {}
 
 /**
  * @brief Constructor for the MetallicRoughnessTexture structure.
@@ -324,10 +320,9 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
 * @param metallicFactor The metallic factor applied to the Metallic roughness texture.
 * @param roughnnessFactor The roughness factor applied to the Metallic roughness texture.
 */
-Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(const Texture& texture, const float& metallicFactor, const float& roughnessFactor): Texture(texture) {
-    this->metallicFactor = metallicFactor;
-    this->roughnessFactor = roughnessFactor;
-}
+Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(
+    const Texture& texture, const float& metallicFactor, const float& roughnessFactor): 
+    Texture(texture), metallicFactor(metallicFactor), roughnessFactor(roughnessFactor) {}
 
 /**
  * @brief Constructor for the OcclusionTexture structure.
@@ -342,9 +337,7 @@ Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
 * @param texture The occlusion texture to be associated with this structure.
 * @param scale The occlusion color applied to the occlusion texture.
 */
-Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture, const glm::vec3& color): Texture(texture) {
-    this->color = color;
-}
+Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture, const glm::vec3& color): Texture(texture), color(color) {}
 
 /**
  * @brief Constructor for the BaseColorTexture structure.
@@ -359,6 +352,4 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture() {
 * @param texture The base color texture to be associated with this structure.
 * @param scale The base color applied to the base color texture.
 */
-Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, const glm::vec4& color): Texture(texture) {
-    this->color = color;
-}
+Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, const glm::vec4& color): Texture(texture), color(color) {}
