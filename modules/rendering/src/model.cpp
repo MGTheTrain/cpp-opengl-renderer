@@ -247,6 +247,22 @@ Mgtt::Rendering::Texture::Texture() {
 }
 
 /**
+* @brief Copy Constructor for the Texture structure
+* 
+* @param texture The texture to be associated with this structure.
+*/
+Mgtt::Rendering::Texture::Texture(const Texture& texture) {
+    this->name = texture.name;
+    this->id = texture.id;
+    this->path = texture.path;
+    this->width = texture.width;
+    this->height = texture.height;
+    this->nrComponents = texture.nrComponents;
+    this->data = texture.data;
+    this->sizeInBytes = texture.sizeInBytes;
+}
+
+/**
  * @brief Clear releases resources.
  *
  * This method clears the resources associated with the Texture object, freeing up memory.
@@ -259,7 +275,6 @@ void Mgtt::Rendering::Texture::Clear() {
     }
 }
 
-
 /**
  * @brief Constructor for the NormalTexture structure.
  */
@@ -268,10 +283,30 @@ Mgtt::Rendering::NormalTexture::NormalTexture() {
 }
 
 /**
+* @brief Constructor for the NormalTexture structure.
+*
+* @param texture The normal texture to be associated with this structure.
+* @param scale The scale factor applied to the normal texture.
+*/
+Mgtt::Rendering::NormalTexture::NormalTexture(const Texture& texture, const float& scale): Texture(texture) {
+    this->scale = scale;
+}
+
+/**
  * @brief Constructor for the EmissiveTexture structure.
  */
 Mgtt::Rendering::EmissiveTexture::EmissiveTexture() {
     this->color = glm::vec3(0.0f);
+}
+
+/**
+* @brief Constructor for the Emissive Texture structure.
+*
+* @param texture The emissive texture to be associated with this structure.
+* @param scale The emissive color applied to the normal texture.
+*/
+Mgtt::Rendering::EmissiveTexture::EmissiveTexture(const Texture& texture, const glm::vec3& color): Texture(texture) {
+    this->color = color;
 }
 
 /**
@@ -283,6 +318,18 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
 }
 
 /**
+* @brief Constructor for the Metallic roughness texture.
+*
+* @param texture The Metallic roughness texture to be associated with this structure.
+* @param metallicFactor The metallic factor applied to the Metallic roughness texture.
+* @param roughnnessFactor The roughness factor applied to the Metallic roughness texture.
+*/
+Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(const Texture& texture, const float& metallicFactor, const float& roughnessFactor): Texture(texture) {
+    this->metallicFactor = metallicFactor;
+    this->roughnessFactor = roughnessFactor;
+}
+
+/**
  * @brief Constructor for the OcclusionTexture structure.
  */
 Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
@@ -290,8 +337,28 @@ Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
 }
 
 /**
+* @brief Constructor for the Occlusion Texture structure.
+*
+* @param texture The occlusion texture to be associated with this structure.
+* @param scale The occlusion color applied to the occlusion texture.
+*/
+Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture, const glm::vec3& color): Texture(texture) {
+    this->color = color;
+}
+
+/**
  * @brief Constructor for the BaseColorTexture structure.
  */
 Mgtt::Rendering::BaseColorTexture::BaseColorTexture() {
     this->color = glm::vec4(1.0f);
+}
+
+/**
+* @brief Constructor for the BaseColor Texture structure.
+*
+* @param texture The base color texture to be associated with this structure.
+* @param scale The base color applied to the base color texture.
+*/
+Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, const glm::vec4& color): Texture(texture) {
+    this->color = color;
 }
