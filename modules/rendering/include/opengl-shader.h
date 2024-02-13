@@ -19,12 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
-// Maintainers:
-// - MGTheTrain 
-//
-// Contributors:
-// - TBD
+
 
 #pragma once
 #include "ishader.h"  
@@ -38,10 +33,10 @@
 namespace Mgtt::Rendering {
     /**
      * @brief Implementation of the IShader interface for OpenGL shaders.
-     * Essential parts from: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_m.h
      * 
      * This class provides concrete implementation details for compiling and managing
      * vertex and fragment shaders within an OpenGL rendering context.
+     * @note Essential parts from: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_m.h
      */
     class OpenGlShader : public IShader {
     public:

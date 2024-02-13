@@ -19,17 +19,44 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
-// Maintainers:
-// - MGTheTrain 
-//
-// Contributors:
-// - TBD
+
 
 #pragma once
+
+#include <GL/glew.h>
 #include "iscene-importer.h"  
 #include <string>
+#include <stdexcept>
+#include <iostream>
+
 #include <tiny_gltf.h>
+
+#define GLTF_COMPONENT_TYPE_BYTE (5120)
+#define GLTF_COMPONENT_TYPE_UNSIGNED_BYTE (5121)
+#define GLTF_COMPONENT_TYPE_SHORT (5122)
+#define GLTF_COMPONENT_TYPE_UNSIGNED_SHORT (5123)
+#define GLTF_COMPONENT_TYPE_INT (5124)
+#define GLTF_COMPONENT_TYPE_UNSIGNED_INT (5125)
+#define GLTF_COMPONENT_TYPE_FLOAT (5126)
+#define GLTF_COMPONENT_TYPE_DOUBLE (5130)
+
+#define GLTF_PARAMETER_TYPE_BYTE (5120)
+#define GLTF_PARAMETER_TYPE_UNSIGNED_BYTE (5121)
+#define GLTF_PARAMETER_TYPE_SHORT (5122)
+#define GLTF_PARAMETER_TYPE_UNSIGNED_SHORT (5123)
+#define GLTF_PARAMETER_TYPE_INT (5124)
+#define GLTF_PARAMETER_TYPE_UNSIGNED_INT (5125)
+#define GLTF_PARAMETER_TYPE_FLOAT (5126)
+
+#define GLTF_TYPE_VEC2 (2)
+#define GLTF_TYPE_VEC3 (3)
+#define GLTF_TYPE_VEC4 (4)
+#define GLTF_TYPE_MAT2 (32 + 2)
+#define GLTF_TYPE_MAT3 (32 + 3)
+#define GLTF_TYPE_MAT4 (32 + 4)
+#define GLTF_TYPE_SCALAR (64 + 1)
+#define GLTF_TYPE_VECTOR (64 + 4)
+#define GLTF_TYPE_MATRIX (64 + 16)
 
 namespace Mgtt::Rendering {
     /**
@@ -62,5 +89,99 @@ namespace Mgtt::Rendering {
          * @param scene A unique pointer to the scene to clear.
          */
         void Clear(Mgtt::Rendering::Scene& scene) override;
+
+    private:
+        /**
+         * @brief Extracts the folder path from a given file path.
+         *
+         * This function takes a file path as input and extracts the folder path
+         * by finding the last occurrence of the directory separator ('/' or '\\').
+         *
+         * @param filePath The full file path from which to extract the folder path.
+         * @return The extracted folder path. If no directory separator is found,
+         *         an empty string is returned.
+         *
+         * @note The function uses the platform-specific directory separator ('/' or '\\').
+         * @note The returned folder path includes the trailing directory separator.
+         **/
+        std::string ExtractFolderPath(const std::string& filePath);
+
+        /**
+         * @brief Load texture from the provided glTF model.
+         *
+         * This method loads texture from the given glTF model and updates the
+         * internal representation of the 3D scene accordingly.
+         *
+         * @param scene A reference to the updated 3D scene after loading nodes.
+         * @param gltfModel The glTF model containing node information.
+         */
+        void LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
+
+        /**
+         * @brief Sets up a texture for rendering.
+         *
+         * It ensures that the texture data is properly uploaded to video memory (VRAM) for efficient rendering.
+         *
+         * @param texture A reference to the `Mgtt::Rendering::Texture` object to modify.
+         */
+        void SetupTexture(Mgtt::Rendering::Texture& texture);
+
+        /**
+         * @brief Load materials from the provided glTF model.
+         *
+         * This method loads materials from the given glTF model and updates the
+         * internal representation of the 3D scene accordingly.
+         *
+         * @param scene A reference to the updated 3D scene after loading nodes.
+         * @param gltfModel The glTF model containing node information.
+         */
+        void LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
+
+        /**
+         * @brief Load nodes from the provided glTF model.
+         *
+         * This method loads nodes from the given glTF model and updates the
+         * internal representation of the 3D scene accordingly.
+         *
+         * @param parent A shared pointer to the parent node in the 3D scene.
+         * @param scene Reference to the updated 3D scene after loading nodes.
+         * @param node Reference to the glTF node containing information.
+         * @param nodeIndex Index of the current node in the glTF model.
+         * @param model Reference to the glTF model containing node information.
+         */
+        void LoadNode(
+            std::shared_ptr<Mgtt::Rendering::Node> parent, Mgtt::Rendering::Scene &scene,
+            const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model);
+
+        /**
+         * @brief Sets up a mesh for rendering, including vertex attribute configuration.
+         *
+         * This method prepares a mesh for rendering by configuring its vertex attributes,
+         * associating it with the specified shader, and potentially moving vertex data to VRAM.
+         *
+         * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object representing the mesh.
+         * @param shaderId An unsigned 32-bit integer representing the shader ID.
+         */
+        void SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId);
+
+        /**
+         * @brief Load a texture from the specified file path and update the Texture object.
+         *
+         * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
+         *
+         * @param texturePath The file path to the texture.
+         * @param texture Reference to the Texture object to be updated with the loaded data.
+         */
+        void Load(const std::string& texturePath, Mgtt::Rendering::Texture& texture);
+
+        /**
+         * @brief Clear the RAM resources associated with the Texture object.
+         *
+         * This method releases the memory resources in RAM associated with the Texture object, freeing up memory.
+         * It is recommended to call this method when the Texture is no longer needed to avoid unnecessary memory usage.
+         *
+         * @param texture Reference to the Texture object for which RAM resources should be cleared.
+         */
+        void ClearRAM(Mgtt::Rendering::Texture& texture);
     };
 }

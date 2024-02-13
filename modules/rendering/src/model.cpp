@@ -1,8 +1,5 @@
 #include "model.h" 
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 /**
  * @brief Constructor for the Scene structure.
  */
@@ -12,6 +9,7 @@ Mgtt::Rendering::Scene::Scene() {
   this->pos = glm::vec3(0.0f);
   this->rot = glm::vec3(0.0f); 
   this->scale = 1.0f;
+  this->shaderId = 0;
 }
 
 /**
@@ -39,6 +37,59 @@ void Mgtt::Rendering::Scene::Linearize(std::shared_ptr<Mgtt::Rendering::Node> no
     for (uint32_t i = 0; i < node->children.size(); i++) {
         this->Linearize(node->children[i]);
     }
+}
+
+/**
+ * @brief Constructor for the AABB structure.
+ */
+Mgtt::Rendering::AABB::AABB() {
+    this->min = glm::vec3(FLT_MAX);
+    this->max = glm::vec3(-FLT_MAX);
+    this->center = glm::vec3(0.0f);
+}
+
+  /**
+ * @brief CalculateBoundingBox calculates the bounding box of an object transformed by the given matrix.
+ *
+ * This function takes a 4x4 transformation matrix and calculates the bounding box
+ * of an object after being transformed by the matrix. The resulting bounding box
+ * can be used for various purposes, such as collision detection or rendering optimizations.
+ *
+ * @param m A 4x4 transformation matrix representing the object's transformation.
+ *
+ * @return void This function does not return a value. The bounding box information is typically
+ *              stored or used internally within the calling code.
+ *
+ * @note The function assumes that the object's original bounding box is defined in its local space.
+ *       The resulting bounding box is in the same coordinate space as the transformed object.
+ *
+ * @see glm::mat4 - The type of the transformation matrix.
+ */
+void Mgtt::Rendering::AABB::CalculateBoundingBox(const glm::mat4 &m) {
+  glm::vec3 min = glm::vec3(m[3]);
+  glm::vec3 max = min;
+  glm::vec3 v0, v1;
+
+  glm::vec3 right = glm::vec3(m[0]);
+  v0 = right * this->min.x;
+  v1 = right * this->max.x;
+  min += glm::min(v0, v1);
+  max += glm::max(v0, v1);
+
+  glm::vec3 up = glm::vec3(m[1]);
+  v0 = up * this->min.y;
+  v1 = up * this->max.y;
+  min += glm::min(v0, v1);
+  max += glm::max(v0, v1);
+
+  glm::vec3 back = glm::vec3(m[2]);
+  v0 = back * this->min.z;
+  v1 = back * this->max.z;
+  min += glm::min(v0, v1);
+  max += glm::max(v0, v1);
+
+  this->min = min;
+  this->max = max;
 }
 
 /**
@@ -159,24 +210,18 @@ Mgtt::Rendering::Material::Material() {
 Mgtt::Rendering::PbrMaterial::PbrMaterial() {
     this->alphaCutoff = 0.0f;
     this->doubleSided = false;
-    this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQE;
-
-    this->normalTexture = std::make_unique<NormalTexture>();
-    this->occlusionTexture = std::make_unique<OcclusionTexture>();
-    this->emissiveTexture = std::make_unique<EmissiveTexture>();
-    this->baseColorTexture = std::make_unique<BaseColorTexture>();
-    this->metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>();
+    this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
 }
 
 /**
  * @brief Clear releases resources.
  */
 void Mgtt::Rendering::PbrMaterial::Clear() {
-    this->baseColorTexture->Clear();
-    this->metallicRoughnessTexture->Clear();
-    this->normalTexture->Clear();
-    this->emissiveTexture->Clear();
-    this->occlusionTexture->Clear();
+    this->baseColorTexture.Clear();
+    this->metallicRoughnessTexture.Clear();
+    this->normalTexture.Clear();
+    this->emissiveTexture.Clear();
+    this->occlusionTexture.Clear();
 }
 
 /**
@@ -184,63 +229,7 @@ void Mgtt::Rendering::PbrMaterial::Clear() {
  *
  * This constructor initializes a Texture object with the specified texture path.
  *
- * @param texturePath The file path to the texture.
  **/
-Mgtt::Rendering::Texture::Texture(const std::string& texturePath) {
-    this->name = "";
-    this->id = 0;
-    this->path = "";
-    this->width = 0;
-    this->height = 0;
-    this->nrComponents = 0;
-    this->data = nullptr;
-    this->sizeInBytes = 0;
-}
-
-/**
- * @brief Clear releases resources.
- *
- * This method clears the resources associated with the Texture object, freeing up memory.
- * It is recommended to call this method when the Texture is no longer needed.
- */
-void Mgtt::Rendering::Texture::Clear() {
-    this->ClearRAM();
-    if (this->id > 0) {
-        glDeleteTextures(1, &this->id);
-        this->id = 0;
-    }
-}
-
-/**
- * @brief Load a texture from the specified file path.
- *
- * This method loads a texture from the given file path and updates the Texture object.
- *
- * @param texturePath The file path to the texture.
- */
-void Mgtt::Rendering::Texture::Load(const std::string& texturePath) {
-    if(!this->data) {
-        this->data = stbi_load(texturePath.c_str(),
-            &this->width, &this->height, &this->nrComponents, 0);
-    }
-}
-
-/**
- * @brief Clear the Texture resources.
- *
- * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
- * It is recommended to call this method when the Texture is no longer needed.
- */
-void Mgtt::Rendering::Texture::ClearRAM() {
-    if (this->data) {
-        stbi_image_free(this->data);
-        this->data = nullptr;
-    }
-}
-
-/**
-* @brief @brief Constructor for the Texture structure
-*/
 Mgtt::Rendering::Texture::Texture() {
     this->name = "";
     this->id = 0;
@@ -253,6 +242,35 @@ Mgtt::Rendering::Texture::Texture() {
 }
 
 /**
+* @brief Copy Constructor for the Texture structure
+* 
+* @param texture The texture to be associated with this structure.
+*/
+Mgtt::Rendering::Texture::Texture(const Texture& texture) {
+    this->name = texture.name;
+    this->id = texture.id;
+    this->path = texture.path;
+    this->width = texture.width;
+    this->height = texture.height;
+    this->nrComponents = texture.nrComponents;
+    this->data = texture.data;
+    this->sizeInBytes = texture.sizeInBytes;
+}
+
+/**
+ * @brief Clear releases resources.
+ *
+ * This method clears the resources associated with the Texture object, freeing up memory.
+ * It is recommended to call this method when the Texture is no longer needed.
+ */
+void Mgtt::Rendering::Texture::Clear() {
+    if (this->id > 0) {
+        glDeleteTextures(1, &this->id);
+        this->id = 0;
+    }
+}
+
+/**
  * @brief Constructor for the NormalTexture structure.
  */
 Mgtt::Rendering::NormalTexture::NormalTexture() {
@@ -260,11 +278,27 @@ Mgtt::Rendering::NormalTexture::NormalTexture() {
 }
 
 /**
+* @brief Constructor for the NormalTexture structure.
+*
+* @param texture The normal texture to be associated with this structure.
+* @param scale The scale factor applied to the normal texture.
+*/
+Mgtt::Rendering::NormalTexture::NormalTexture(const Texture& texture, const float& scale): Texture(texture), scale(scale) {}
+
+/**
  * @brief Constructor for the EmissiveTexture structure.
  */
 Mgtt::Rendering::EmissiveTexture::EmissiveTexture() {
     this->color = glm::vec3(0.0f);
 }
+
+/**
+* @brief Constructor for the Emissive Texture structure.
+*
+* @param texture The emissive texture to be associated with this structure.
+* @param scale The emissive color applied to the normal texture.
+*/
+Mgtt::Rendering::EmissiveTexture::EmissiveTexture(const Texture& texture, const glm::vec3& color): Texture(texture), color(color) {}
 
 /**
  * @brief Constructor for the MetallicRoughnessTexture structure.
@@ -275,6 +309,17 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
 }
 
 /**
+* @brief Constructor for the Metallic roughness texture.
+*
+* @param texture The Metallic roughness texture to be associated with this structure.
+* @param metallicFactor The metallic factor applied to the Metallic roughness texture.
+* @param roughnnessFactor The roughness factor applied to the Metallic roughness texture.
+*/
+Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(
+    const Texture& texture, const float& metallicFactor, const float& roughnessFactor): 
+    Texture(texture), metallicFactor(metallicFactor), roughnessFactor(roughnessFactor) {}
+
+/**
  * @brief Constructor for the OcclusionTexture structure.
  */
 Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
@@ -282,8 +327,24 @@ Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
 }
 
 /**
+* @brief Constructor for the Occlusion Texture structure.
+*
+* @param texture The occlusion texture to be associated with this structure.
+* @param scale The occlusion color applied to the occlusion texture.
+*/
+Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture, const glm::vec3& color): Texture(texture), color(color) {}
+
+/**
  * @brief Constructor for the BaseColorTexture structure.
  */
 Mgtt::Rendering::BaseColorTexture::BaseColorTexture() {
     this->color = glm::vec4(1.0f);
 }
+
+/**
+* @brief Constructor for the BaseColor Texture structure.
+*
+* @param texture The base color texture to be associated with this structure.
+* @param scale The base color applied to the base color texture.
+*/
+Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, const glm::vec4& color): Texture(texture), color(color) {}

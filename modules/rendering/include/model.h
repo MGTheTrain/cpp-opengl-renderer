@@ -19,12 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
-// Maintainers:
-// - MGTheTrain 
-//
-// Contributors:
-// - TBD
+
 
 #pragma once
 
@@ -47,13 +42,46 @@ namespace Mgtt::Rendering {
     struct Mesh;
     struct MeshPrimitive;
     struct Material;
-    struct PbrMaterial;
     struct Texture;
     struct NormalTexture;
     struct EmissiveTexture;
     struct MetallicRoughnessTexture;
     struct OcclusionTexture;
     struct BaseColorTexture;
+    struct PbrMaterial;
+    struct AABB;
+
+    /**
+     * @brief Represents a collidable aabb
+     */
+    struct AABB {
+        /**
+         * @brief Constructor for the AABB structure.
+         */
+        AABB();
+        glm::vec3 min;
+        glm::vec3 max;
+        glm::vec3 center;
+
+        /**
+         * @brief CalculateBoundingBox calculates the bounding box of an object transformed by the given matrix.
+         *
+         * This function takes a 4x4 transformation matrix and calculates the bounding box
+         * of an object after being transformed by the matrix. The resulting bounding box
+         * can be used for various purposes, such as collision detection or rendering optimizations.
+         *
+         * @param m A 4x4 transformation matrix representing the object's transformation.
+         *
+         * @return void This function does not return a value. The bounding box information is typically
+         *              stored or used internally within the calling code.
+         *
+         * @note The function assumes that the object's original bounding box is defined in its local space.
+         *       The resulting bounding box is in the same coordinate space as the transformed object.
+         *
+         * @see glm::mat4 - The type of the transformation matrix.
+         */
+        void CalculateBoundingBox(const glm::mat4& m);
+    };
 
     /**
      * @brief Represents a 3D scene.
@@ -76,10 +104,11 @@ namespace Mgtt::Rendering {
         glm::mat4 mvp;
         glm::mat4 matrix;
         std::map<std::string, Mgtt::Rendering::Texture> textureMap; // case in which we want to prevent loading the same texture into RAM which is time consuming
-        std::vector<std::shared_ptr<Node>> nodes;
-        std::vector<std::shared_ptr<Node>> linearNodes; 
-        std::vector<std::shared_ptr<Material>> materials;
-
+        std::vector< std::shared_ptr<Node>> nodes;
+        std::vector< std::shared_ptr<Node>> linearNodes;
+        std::vector<PbrMaterial> materials;
+        AABB aabb;
+        uint32_t shaderId;
     private:
         /**
          * @brief Recursively linearizes the scene hierarchy starting from the given node.
@@ -154,7 +183,7 @@ namespace Mgtt::Rendering {
         glm::mat4 matrix;
 
         uint32_t vao;   
-        uint32_t ebo; // On existing indices
+        uint32_t ebo; 
         uint32_t pos; 
         uint32_t normal;
         uint32_t tex;
@@ -184,6 +213,143 @@ namespace Mgtt::Rendering {
         bool hasSkin;
         bool hasIndices;
         std::shared_ptr<PbrMaterial> pbrMaterial;
+        AABB aabb;
+    };
+
+    /**
+     * @brief Represents a generic texture.
+     */
+    struct Texture {
+        /**
+        * @brief Constructor for the Texture structure
+        */
+        Texture();
+
+        /**
+        * @brief Copy Constructor for the Texture structure
+        *
+        * @param texture The texture to be associated with this structure.
+        */
+        Texture(const Texture& texture);
+
+        /**
+         * @brief Clear releases resources.
+         *
+         * This method clears the resources associated with the Texture object, freeing up memory.
+         * It is recommended to call this method when the Texture is no longer needed.
+         */
+        void Clear();
+
+        std::string name;
+        uint32_t id;
+        std::string path;
+        int32_t width;
+        int32_t height;
+        int32_t nrComponents;
+        unsigned char* data;
+        uint32_t sizeInBytes;
+    };
+
+    /**
+     * @brief Represents a normal map texture.
+     */
+    struct NormalTexture : public Texture {
+        /**
+         * @brief Constructor for the NormalTexture structure.
+         */
+        NormalTexture();
+
+        /**
+        * @brief Constructor for the NormalTexture structure.
+        *
+        * @param texture The normal texture to be associated with this structure.
+        * @param scale The scale factor applied to the normal texture.
+        */
+        NormalTexture(const Texture& texture, const float& scale);
+
+        float scale;
+    };
+
+    /**
+     * @brief Represents an emissive map texture.
+     */
+    struct EmissiveTexture : public Texture {
+        /**
+         * @brief Constructor for the Emissive Texture structure.
+         */
+        EmissiveTexture();
+
+        /**
+        * @brief Constructor for the Emissive Texture structure.
+        *
+        * @param texture The emissive texture to be associated with this structure.
+        * @param scale The emissive color applied to the normal texture.
+        */
+        EmissiveTexture(const Texture& texture, const glm::vec3& color);
+
+        glm::vec3 color;
+    };
+
+    /**
+     * @brief Represents a metallic and roughness map texture.
+     */
+    struct MetallicRoughnessTexture : public Texture {
+        /**
+         * @brief Constructor for the MetallicRoughnessTexture structure.
+         */
+        MetallicRoughnessTexture();
+
+        /**
+        * @brief Constructor for the Metallic roughness texture.
+        *
+        * @param texture The Metallic roughness texture to be associated with this structure.
+        * @param metallicFactor The metallic factor applied to the Metallic roughness texture.
+        * @param roughnnessFactor The roughness factor applied to the Metallic roughness texture.
+        */
+        MetallicRoughnessTexture(const Texture& texture, const float& metallicFactor, const float& roughnessFactor);
+
+        float metallicFactor;
+        float roughnessFactor;
+    };
+
+    /**
+     * @brief Represents an occlusion map texture.
+     */
+    struct OcclusionTexture : public Texture {
+        /**
+         * @brief Constructor for the OcclusionTexture structure.
+         */
+        OcclusionTexture();
+
+        /**
+        * @brief Constructor for the Occlusion Texture structure.
+        *
+        * @param texture The occlusion texture to be associated with this structure.
+        * @param scale The occlusion color applied to the occlusion texture.
+        */
+        OcclusionTexture(const Texture& texture, const glm::vec3& color);
+
+        glm::vec3 color;
+    };
+
+    /**
+     * @brief Represents a base color map texture.
+     */
+    struct BaseColorTexture : public Texture {
+        /**
+         * @brief Constructor for the BaseColorTexture structure.
+         */
+        BaseColorTexture();
+
+        /**
+        * @brief Constructor for the BaseColor Texture structure.
+        *
+        * @param texture The base color texture to be associated with this structure.
+        * @param scale The base color applied to the base color texture.
+        */
+        BaseColorTexture(const Texture& texture, const glm::vec4& color);
+
+        glm::vec4 color;
     };
 
     /**
@@ -195,10 +361,15 @@ namespace Mgtt::Rendering {
          */
         Material();
 
+        /**
+         * @brief Virtual destructor for the Material structure.
+         */
+        virtual ~Material() {}
+
         std::string name;
     };
 
-    enum class AlphaMode { NONE, OPAQE, MASK, BLEND };
+    enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
 
     /**
      * @brief Represents a physically based rendering (PBR) material.
@@ -214,123 +385,15 @@ namespace Mgtt::Rendering {
          */
         void Clear();
 
-        std::unique_ptr<NormalTexture> normalTexture;
-        std::unique_ptr<OcclusionTexture> occlusionTexture;
-        std::unique_ptr<EmissiveTexture> emissiveTexture;
-        std::unique_ptr<BaseColorTexture> baseColorTexture;
-        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture;
+        std::string name;
+        NormalTexture normalTexture;
+        OcclusionTexture occlusionTexture;
+        EmissiveTexture emissiveTexture;
+        BaseColorTexture baseColorTexture;
+        MetallicRoughnessTexture metallicRoughnessTexture;
 
         float alphaCutoff;
         bool doubleSided;
         AlphaMode alphaMode;
-    };
-
-    /**
-     * @brief Represents a generic texture.
-     */
-    struct Texture {
-        /**
-        * @brief Constructor for the Texture structure
-        */
-        Texture();
-
-        /**
-         * @brief Clear releases resources.
-         *
-         * This method clears the resources associated with the Texture object, freeing up memory.
-         * It is recommended to call this method when the Texture is no longer needed.
-         */
-        void Clear();
-
-        /**
-         * @brief Constructor for the Texture structure.
-         *
-         * This constructor initializes a Texture object with the specified texture path.
-         *
-         * @param texturePath The file path to the texture.
-         */
-        Texture(const std::string& texturePath);
-
-        /**
-         * @brief Load a texture from the specified file path.
-         *
-         * This method loads a texture from the given file path and updates the Texture object.
-         *
-         * @param texturePath The file path to the texture.
-         */
-        void Load(const std::string& texturePath);
-
-        /**
-         * @brief Clear the Texture resources.
-         *
-         * This method clears the resources associated with the Texture object, freeing up memory, essentially RAM.
-         * It is recommended to call this method when the Texture is no longer needed.
-         */
-        void ClearRAM();
-
-        std::string name;
-        uint32_t id;
-        std::string path;
-        int32_t width;
-        int32_t height;
-        int32_t nrComponents;
-        unsigned char *data;
-        uint32_t sizeInBytes;
-    };
-
-    /**
-     * @brief Represents a normal map texture.
-     */
-    struct NormalTexture : public Texture {
-        /**
-         * @brief Constructor for the NormalTexture structure.
-         */
-        NormalTexture();
-        float scale;
-    };
-
-    /**
-     * @brief Represents an emissive map texture.
-     */
-    struct EmissiveTexture : public Texture {
-        /**
-         * @brief Constructor for the EmissiveTexture structure.
-         */
-        EmissiveTexture();
-        glm::vec3 color;
-    };
-
-    /**
-     * @brief Represents a metallic and roughness map texture.
-     */
-    struct MetallicRoughnessTexture : public Texture {
-        /**
-         * @brief Constructor for the MetallicRoughnessTexture structure.
-         */
-        MetallicRoughnessTexture();
-        float metallicFactor;
-        float roughnessFactor;
-    };
-
-    /**
-     * @brief Represents an occlusion map texture.
-     */
-    struct OcclusionTexture : public Texture {
-        /**
-         * @brief Constructor for the OcclusionTexture structure.
-         */
-        OcclusionTexture();
-        glm::vec3 color;
-    };
-
-    /**
-     * @brief Represents a base color map texture.
-     */
-    struct BaseColorTexture : public Texture {
-        /**
-         * @brief Constructor for the BaseColorTexture structure.
-         */
-        BaseColorTexture();
-        glm::vec4 color;
     };
 }

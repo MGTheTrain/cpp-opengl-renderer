@@ -19,12 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
-// Maintainers:
-// - MGTheTrain 
-//
-// Contributors:
-// - TBD
+
 
 #include <opengl-viewer.h>
 
@@ -32,18 +27,20 @@
  * @brief Destructs the OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
-    
+    this->gltfSceneImporter->Clear(this->mgttScene);
 }
 
 /**
  * @brief Constructs an OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
-    this->glfwWindow = 
-      std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
+    this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
+
+    this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
+    this->mgttScene = this->gltfSceneImporter->Load("assets/scenes/water-bottle/WaterBottle.gltf");
 }
 
 
@@ -59,14 +56,15 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
 }
+ 
+int main() {
+    try {
+        Mgtt::Apps::OpenGlViewer openGlViewer;
+        openGlViewer.Render();
 
-//int main() {
-//    try {
-//        Mgtt::Apps::OpenGlViewer openGlViewer;
-//        openGlViewer.Render();
-//    } catch(const std::exception& ex) {
-//        std::cout << ex.what() << std::endl;
-//        return 1;
-//    }
-//    return 0;
-//}
+    } catch(const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
