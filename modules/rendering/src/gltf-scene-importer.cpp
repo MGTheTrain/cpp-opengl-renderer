@@ -140,30 +140,35 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
  * @param texture A reference to the `Mgtt::Rendering::Texture` object to modify.
  */
 void Mgtt::Rendering::GltfSceneImporter::SetupTexture(Mgtt::Rendering::Texture& texture) {
-    auto format = GL_RGBA;
-    if (texture.nrComponents == 1) {
-        format = GL_RED;
-    }
-    else if (texture.nrComponents == 2) {
-        format = GL_RG;
-    }
-    else if (texture.nrComponents == 3) {
-        format = GL_RGB;
-    }
-    else if (texture.nrComponents == 4) {
-        format = GL_RGBA;
-    }
+    if (texture.data) {
+        auto format = GL_RGBA;
+        if (texture.nrComponents == 1) {
+            format = GL_RED;
+        }
+        else if (texture.nrComponents == 2) {
+            format = GL_RG;
+        }
+        else if (texture.nrComponents == 3) {
+            format = GL_RGB;
+        }
+        else if (texture.nrComponents == 4) {
+            format = GL_RGBA;
+        }
 
-    glGenTextures(1, &texture.id);
-    glBindTexture(GL_TEXTURE_2D, texture.id);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, texture.width, texture.height, 0, format, GL_UNSIGNED_BYTE, texture.data);
+        glGenTextures(1, &texture.id);
+        glBindTexture(GL_TEXTURE_2D, texture.id);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, texture.width, texture.height, 0, format, GL_UNSIGNED_BYTE, texture.data);
 
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+    else {
+        std::cout << "LOG INFO: Texture is a nullptr" << std::endl;
+    }
 }
 
 /**
