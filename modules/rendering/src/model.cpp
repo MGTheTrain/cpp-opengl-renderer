@@ -9,6 +9,7 @@ Mgtt::Rendering::Scene::Scene() {
   this->pos = glm::vec3(0.0f);
   this->rot = glm::vec3(0.0f); 
   this->scale = 1.0f;
+  this->shaderId = 0;
 }
 
 /**

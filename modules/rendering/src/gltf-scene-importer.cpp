@@ -442,6 +442,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
             newPrimitive.name = node.name;
             newMesh->meshPrimitives.push_back(newPrimitive);
         }
+        this->SetupMesh(newMesh, scene.shaderId);
         newNode->mesh = newMesh;
     }
     if (parent) {
