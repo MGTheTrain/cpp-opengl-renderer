@@ -54,6 +54,7 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
         }
     }
     else {
+        this->Clear(mgttScene);
         throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
     }
 
@@ -68,22 +69,6 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
  */
 void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
     scene.Clear();
-}
-
-/**
- * @brief Clear the resources associated with the Texture object, freeing up memory.
- *
- * This method releases resources associated with the provided Texture object, essentially freeing up memory.
- * It is recommended to call this method when the Texture is no longer needed.
- *
- * @param texture Reference to the Texture object whose resources are to be cleared.
- */
-void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Texture& texture) {
-    this->ClearRAM(texture);
-    if (texture.id > 0) {
-        glDeleteTextures(1, &texture.id);
-        texture.id = 0;
-    }
 }
 
 /**

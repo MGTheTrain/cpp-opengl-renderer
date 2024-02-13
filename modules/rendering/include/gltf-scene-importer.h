@@ -155,16 +155,6 @@ namespace Mgtt::Rendering {
         void SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId);
 
         /**
-         * @brief Clear the resources associated with the Texture object, freeing up memory.
-         *
-         * This method releases resources associated with the provided Texture object, essentially freeing up memory.
-         * It is recommended to call this method when the Texture is no longer needed.
-         *
-         * @param texture Reference to the Texture object whose resources are to be cleared.
-         */
-        void Clear(Mgtt::Rendering::Texture& texture);
-
-        /**
          * @brief Load a texture from the specified file path and update the Texture object.
          *
          * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
