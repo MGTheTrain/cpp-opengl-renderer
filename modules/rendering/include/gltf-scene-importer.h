@@ -32,6 +32,7 @@
 #include "iscene-importer.h"  
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 #include <tiny_gltf.h>
 

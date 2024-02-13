@@ -259,12 +259,70 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
  */
 void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId) {
     if(mesh) {
-        if(mesh->ebo == 0) {
-            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh ebo needs to be > 0");
+        if(mesh->ebo > 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh ebo needs to be equal 0");
         }
-        else if(mesh->pos == 0) {
-            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh pod id needs to be > 0");
+        else if(mesh->pos > 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh pos id needs to be equal 0");
         }
+        else if(mesh->normal > 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh normal id needs to be equal 0");
+        }
+        else if(mesh->tex > 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh tex id needs to be equal 0");
+        }
+        else if(mesh->vertexPositionAttribs.size() == 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh vertex position attributes needs contain elements");
+        }
+        else if(mesh->vertexPositionAttribs.size() == 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh vertex position attributes need to contain elements");
+        }
+        else if(mesh->indices.size() == 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh indices need to contain elements");
+        }
+
+        glGenVertexArrays(1, &mesh->vao);
+        glGenBuffers(1, &mesh->pos);
+        glGenBuffers(1, &mesh->normal);
+        glGenBuffers(1, &mesh->tex);
+        glGenBuffers(1, &mesh->ebo);
+
+        glBindVertexArray(mesh->vao);
+
+        if (mesh->indices.size() > 0) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                mesh->indices.size() * sizeof(unsigned int),
+                &mesh->indices[0], GL_STATIC_DRAW);
+        }
+
+        // pos
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
+        glBufferData(GL_ARRAY_BUFFER, mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), &mesh->vertexPositionAttribs[0], GL_STATIC_DRAW);
+
+        uint32_t posLoc = glGetAttribLocation(shaderId, "inVertexPosition");
+        glEnableVertexAttribArray(posLoc); glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(0));
+
+        // normal
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->normal);
+        glBufferData(GL_ARRAY_BUFFER, mesh->vertexNormalAttribs.size() * sizeof(glm::vec3), &mesh->vertexNormalAttribs[0], GL_STATIC_DRAW);
+        uint32_t normalLoc = glGetAttribLocation(shaderId, "inVertexNormalCoordinates");
+        glEnableVertexAttribArray(normalLoc);
+        glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(0));
+
+        // uv
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->tex);
+        glBufferData(GL_ARRAY_BUFFER, mesh->vertexTextureAttribs.size() * sizeof(glm::vec2), &mesh->vertexTextureAttribs[0], GL_STATIC_DRAW);
+        uint32_t texLoc = glGetAttribLocation(shaderId, "inVertexTextureCoordinates");
+        glEnableVertexAttribArray(texLoc);
+        glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),
+            reinterpret_cast<void*>(0));
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+
+        glBindVertexArray(0);
+    } else {
+        std::cout << "LOG INFO: Node is not a mesh" << std::endl; // We might utilize spdlog as an improvement for logging
     }
 }
 
