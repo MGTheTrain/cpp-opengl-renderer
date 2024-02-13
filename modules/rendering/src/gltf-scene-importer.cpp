@@ -194,65 +194,64 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
         }
 
         // Base color
-        std::unique_ptr<BaseColorTexture> baseColorTexture;
+        BaseColorTexture baseColorTexture;
         if (material.values.find("baseColorTexture") != material.values.end() && material.values.find("baseColorFactor") != material.values.end()) {
-            baseColorTexture = std::make_unique<BaseColorTexture>(
+            baseColorTexture = BaseColorTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.values["baseColorTexture"].TextureIndex()].source].name],
                 glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));
         }
         else {
             if (material.values.find("baseColorFactor") != material.values.end()) {
-                baseColorTexture = std::make_unique<BaseColorTexture>(
+                baseColorTexture = BaseColorTexture(
                     Texture(),
-                    glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));
-            }
+                    glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));}
         }
 
         // Normal
-        std::unique_ptr<NormalTexture> normalTexture;
+        NormalTexture normalTexture;
         if (material.values.find("normalTexture") != material.values.end()) {
-            normalTexture = std::make_unique<NormalTexture>(
+            normalTexture = NormalTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.values["normalTexture"].TextureIndex()].source].name],
                 1.0f);
         }
         else {
-            normalTexture = std::make_unique<NormalTexture>(
+            normalTexture = NormalTexture(
                 Texture(),
                 1.0f);
         }
 
         // Normal
-        std::unique_ptr<OcclusionTexture> occlusionTexture;
+        OcclusionTexture occlusionTexture;
         if (material.values.find("occlusionTexture") != material.values.end()) {
-            occlusionTexture = std::make_unique<OcclusionTexture>(
+            occlusionTexture = OcclusionTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.values["occlusionTexture"].TextureIndex()].source].name],
                 glm::vec3(1.0f));
         }
         else {
-            occlusionTexture = std::make_unique<OcclusionTexture>(
+            occlusionTexture = OcclusionTexture(
                 Texture(),
                 glm::vec3(1.0f));
         }
 
         // Emissive
-        std::unique_ptr<EmissiveTexture> emissiveTexture;
+        EmissiveTexture emissiveTexture;
         if (material.values.find("emissiveTexture") != material.values.end()) {
-            emissiveTexture = std::make_unique<EmissiveTexture>(
+            emissiveTexture = EmissiveTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.values["emissiveTexture"].TextureIndex()].source].name],
                 glm::vec3(0.0f));
         }
         else {
-            emissiveTexture = std::make_unique<EmissiveTexture>(
+            emissiveTexture = EmissiveTexture(
                 Texture(),
                 glm::vec3(0.0f));
         }
 
         // Metallic roughness
-        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture;
+        MetallicRoughnessTexture metallicRoughnessTexture;
         if (material.values.find("metallicRoughnessTexture") != material.values.end() && 
             material.values.find("roughnessFactor") != material.values.end() && 
             material.values.find("metallicFactor") != material.values.end()) {
-            metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>(
+            metallicRoughnessTexture = MetallicRoughnessTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.values["metallicRoughnessTexture"].TextureIndex()].source].name],
                     static_cast<float>(material.values["metallicFactor"].Factor()),
                     static_cast<float>(material.values["roughnessFactor"].Factor())
@@ -261,7 +260,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
         else {
             if(material.values.find("roughnessFactor") != material.values.end() && 
                material.values.find("metallicFactor") != material.values.end()) {
-                metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>(
+                metallicRoughnessTexture = MetallicRoughnessTexture(
                     Texture(),
                     static_cast<float>(material.values["metallicFactor"].Factor()),
                     static_cast<float>(material.values["roughnessFactor"].Factor()));

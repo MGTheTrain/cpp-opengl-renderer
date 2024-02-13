@@ -211,23 +211,17 @@ Mgtt::Rendering::PbrMaterial::PbrMaterial() {
     this->alphaCutoff = 0.0f;
     this->doubleSided = false;
     this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
-
-    this->normalTexture = std::make_unique<NormalTexture>();
-    this->occlusionTexture = std::make_unique<OcclusionTexture>();
-    this->emissiveTexture = std::make_unique<EmissiveTexture>();
-    this->baseColorTexture = std::make_unique<BaseColorTexture>();
-    this->metallicRoughnessTexture = std::make_unique<MetallicRoughnessTexture>();
 }
 
 /**
  * @brief Clear releases resources.
  */
 void Mgtt::Rendering::PbrMaterial::Clear() {
-    this->baseColorTexture->Clear();
-    this->metallicRoughnessTexture->Clear();
-    this->normalTexture->Clear();
-    this->emissiveTexture->Clear();
-    this->occlusionTexture->Clear();
+    this->baseColorTexture.Clear();
+    this->metallicRoughnessTexture.Clear();
+    this->normalTexture.Clear();
+    this->emissiveTexture.Clear();
+    this->occlusionTexture.Clear();
 }
 
 /**

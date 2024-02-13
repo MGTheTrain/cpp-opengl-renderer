@@ -47,13 +47,13 @@ namespace Mgtt::Rendering {
     struct Mesh;
     struct MeshPrimitive;
     struct Material;
-    struct PbrMaterial;
     struct Texture;
     struct NormalTexture;
     struct EmissiveTexture;
     struct MetallicRoughnessTexture;
     struct OcclusionTexture;
     struct BaseColorTexture;
+    struct PbrMaterial;
     struct AABB;
 
     /**
@@ -222,45 +222,6 @@ namespace Mgtt::Rendering {
     };
 
     /**
-     * @brief Represents a generic material.
-     */
-    struct Material {
-        /**
-         * @brief Constructor for the Material structure.
-         */
-        Material();
-
-        std::string name;
-    };
-
-    enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
-
-    /**
-     * @brief Represents a physically based rendering (PBR) material.
-     */
-    struct PbrMaterial : public Material {
-        /**
-         * @brief Constructor for the PbrMaterial structure.
-         */
-        PbrMaterial();
-
-        /**
-         * @brief Clear releases resources.
-         */
-        void Clear();
-
-        std::unique_ptr<NormalTexture> normalTexture;
-        std::unique_ptr<OcclusionTexture> occlusionTexture;
-        std::unique_ptr<EmissiveTexture> emissiveTexture;
-        std::unique_ptr<BaseColorTexture> baseColorTexture;
-        std::unique_ptr<MetallicRoughnessTexture> metallicRoughnessTexture;
-
-        float alphaCutoff;
-        bool doubleSided;
-        AlphaMode alphaMode;
-    };
-
-    /**
      * @brief Represents a generic texture.
      */
     struct Texture {
@@ -271,7 +232,7 @@ namespace Mgtt::Rendering {
 
         /**
         * @brief Copy Constructor for the Texture structure
-        * 
+        *
         * @param texture The texture to be associated with this structure.
         */
         Texture(const Texture& texture);
@@ -290,7 +251,7 @@ namespace Mgtt::Rendering {
         int32_t width;
         int32_t height;
         int32_t nrComponents;
-        unsigned char *data;
+        unsigned char* data;
         uint32_t sizeInBytes;
     };
 
@@ -394,5 +355,50 @@ namespace Mgtt::Rendering {
         BaseColorTexture(const Texture& texture, const glm::vec4& color);
 
         glm::vec4 color;
+    };
+
+    /**
+     * @brief Represents a generic material.
+     */
+    struct Material {
+        /**
+         * @brief Constructor for the Material structure.
+         */
+        Material();
+
+        /**
+         * @brief Virtual destructor for the Material structure.
+         */
+        virtual ~Material() {}
+
+        std::string name;
+    };
+
+    enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
+
+    /**
+     * @brief Represents a physically based rendering (PBR) material.
+     */
+    struct PbrMaterial : public Material {
+        /**
+         * @brief Constructor for the PbrMaterial structure.
+         */
+        PbrMaterial();
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
+
+        std::string name;
+        NormalTexture normalTexture;
+        OcclusionTexture occlusionTexture;
+        EmissiveTexture emissiveTexture;
+        BaseColorTexture baseColorTexture;
+        MetallicRoughnessTexture metallicRoughnessTexture;
+
+        float alphaCutoff;
+        bool doubleSided;
+        AlphaMode alphaMode;
     };
 }
