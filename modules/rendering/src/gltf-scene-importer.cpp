@@ -138,6 +138,33 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
         texture.nrComponents = image.component;
         texture.data = stbi_load(image.uri.c_str(), &image.height, &image.height, &image.component, 0); // data needs to be transferred to VRAM first and can then be freed
 
+        auto format = GL_RGBA;
+        if (texture.nrComponents == 1) {
+            format = GL_RED;
+        } else if (texture.nrComponents == 2) {
+            format = GL_RG;
+        } else if (texture.nrComponents == 3) {
+            format = GL_RGB;
+        } else if (texture.nrComponents == 4) {
+            format = GL_RGBA;
+        }
+
+        glGenTextures(1, &texture.id);
+        glBindTexture(GL_TEXTURE_2D, texture.id);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, texture.width, texture.height, 0, format, GL_UNSIGNED_BYTE, texture.data);
+
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        if(texture.data) {
+            stbi_image_free(texture.data);
+            texture.data = nullptr;
+        }
+
         scene.textureMap[image.name] = texture;
     }
 }
