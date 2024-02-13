@@ -108,6 +108,15 @@ namespace Mgtt::Rendering {
         void LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
 
         /**
+         * @brief Sets up a texture for rendering.
+         *
+         * It ensures that the texture data is properly uploaded to video memory (VRAM) for efficient rendering.
+         *
+         * @param texture A reference to the `Mgtt::Rendering::Texture` object to modify.
+         */
+        void SetupTexture(Mgtt::Rendering::Texture& texture);
+
+        /**
          * @brief Load materials from the provided glTF model.
          *
          * This method loads materials from the given glTF model and updates the
