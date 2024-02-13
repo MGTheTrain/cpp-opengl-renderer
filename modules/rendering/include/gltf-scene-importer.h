@@ -97,6 +97,21 @@ namespace Mgtt::Rendering {
 
     private:
         /**
+         * @brief Extracts the folder path from a given file path.
+         *
+         * This function takes a file path as input and extracts the folder path
+         * by finding the last occurrence of the directory separator ('/' or '\\').
+         *
+         * @param filePath The full file path from which to extract the folder path.
+         * @return The extracted folder path. If no directory separator is found,
+         *         an empty string is returned.
+         *
+         * @note The function uses the platform-specific directory separator ('/' or '\\').
+         * @note The returned folder path includes the trailing directory separator.
+         **/
+        std::string ExtractFolderPath(const std::string& filePath);
+
+        /**
          * @brief Load texture from the provided glTF model.
          *
          * This method loads texture from the given glTF model and updates the

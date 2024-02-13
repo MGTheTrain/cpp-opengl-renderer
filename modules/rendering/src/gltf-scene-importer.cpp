@@ -87,6 +87,29 @@ void Mgtt::Rendering::GltfSceneImporter::Load(const std::string& texturePath, Mg
 }
 
 /**
+* @brief Extracts the folder path from a given file path.
+*
+* This function takes a file path as input and extracts the folder path
+* by finding the last occurrence of the directory separator ('/' or '\\').
+*
+* @param filePath The full file path from which to extract the folder path.
+* @return The extracted folder path. If no directory separator is found,
+*         an empty string is returned.
+*
+* @note The function uses the platform-specific directory separator ('/' or '\\').
+* @note The returned folder path includes the trailing directory separator.
+**/
+std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(const std::string& filePath) {
+    const size_t lastSeparatorIdx = filePath.find_last_of("\\/");
+    std::string folderPath = "";
+    if (std::string::npos != lastSeparatorIdx) {
+        folderPath = filePath.substr(0, lastSeparatorIdx + 1);
+    }
+
+    return folderPath;
+}
+
+/**
  * @brief Clear the RAM resources associated with the Texture object.
  *
  * This method releases the memory resources in RAM associated with the Texture object, freeing up memory.
@@ -111,17 +134,18 @@ void Mgtt::Rendering::GltfSceneImporter::ClearRAM(Mgtt::Rendering::Texture& text
  * @param gltfModel The glTF model containing node information.
  */
 void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
+    auto efp = this->ExtractFolderPath(scene.path);
     for (tinygltf::Texture& tex : gltfModel.textures) {
         Mgtt::Rendering::Texture texture;
         tinygltf::Image image = gltfModel.images[tex.source];
        
         // Consider primarily gltf with non-embedded inmages
         texture.name= image.name;
-        texture.path = image.uri;
+        texture.path = efp + image.uri;
         texture.width = image.width;
         texture.height = image.height;
         texture.nrComponents = image.component;
-        texture.data = stbi_load(image.uri.c_str(), &image.height, &image.height, &image.component, 0); // data needs to be transferred to VRAM first and can then be freed
+        texture.data = stbi_load(texture.path.c_str(), &image.height, &image.height, &image.component, 0); // data needs to be transferred to VRAM first and can then be freed
         this->SetupTexture(texture);
         if(texture.data) {
             stbi_image_free(texture.data);
