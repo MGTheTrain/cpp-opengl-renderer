@@ -134,6 +134,16 @@ namespace Mgtt::Rendering {
             const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model);
 
         /**
+         * @brief Loads a mesh and associates it with a shader.
+         *
+         * This function loads a 3D mesh and assigns it to the specified shader.
+         *
+         * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object representing the mesh.
+         * @param shaderId An unsigned 32-bit integer representing the shader ID.
+         */
+        void LoadMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId);
+
+        /**
          * @brief Clear the resources associated with the Texture object, freeing up memory.
          *
          * This method releases resources associated with the provided Texture object, essentially freeing up memory.

@@ -249,6 +249,18 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
 }
 
 /**
+ * @brief Loads a mesh and associates it with a shader.
+ *
+ * This function loads a 3D mesh and assigns it to the specified shader.
+ *
+ * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object representing the mesh.
+ * @param shaderId An unsigned 32-bit integer representing the shader ID.
+ */
+void Mgtt::Rendering::GltfSceneImporter::LoadMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId) {
+
+}
+
+/**
  * @brief Load nodes from the provided glTF model.
  *
  * This method loads nodes from the given glTF model and updates the
