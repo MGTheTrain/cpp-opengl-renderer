@@ -210,7 +210,7 @@ Mgtt::Rendering::Material::Material() {
 Mgtt::Rendering::PbrMaterial::PbrMaterial() {
     this->alphaCutoff = 0.0f;
     this->doubleSided = false;
-    this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQE;
+    this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
 
     this->normalTexture = std::make_unique<NormalTexture>();
     this->occlusionTexture = std::make_unique<OcclusionTexture>();
