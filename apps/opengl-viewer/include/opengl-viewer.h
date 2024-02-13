@@ -68,6 +68,8 @@ namespace Mgtt::Apps {
          */
         void Render();
     private:
+        Mgtt::Rendering::Scene mgttScene;
+        std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
     };
 
