@@ -296,6 +296,10 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
                 &mesh->indices[0], GL_STATIC_DRAW);
         }
 
+        // indices
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0], GL_STATIC_DRAW);
+
         // pos
         glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
         glBufferData(GL_ARRAY_BUFFER, mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), &mesh->vertexPositionAttribs[0], GL_STATIC_DRAW);
@@ -303,7 +307,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         uint32_t posLoc = glGetAttribLocation(shaderId, "inVertexPosition");
         glEnableVertexAttribArray(posLoc); glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(0));
 
-        // normal
+        // normal 
         glBindBuffer(GL_ARRAY_BUFFER, mesh->normal);
         glBufferData(GL_ARRAY_BUFFER, mesh->vertexNormalAttribs.size() * sizeof(glm::vec3), &mesh->vertexNormalAttribs[0], GL_STATIC_DRAW);
         uint32_t normalLoc = glGetAttribLocation(shaderId, "inVertexNormalCoordinates");
@@ -315,8 +319,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         glBufferData(GL_ARRAY_BUFFER, mesh->vertexTextureAttribs.size() * sizeof(glm::vec2), &mesh->vertexTextureAttribs[0], GL_STATIC_DRAW);
         uint32_t texLoc = glGetAttribLocation(shaderId, "inVertexTextureCoordinates");
         glEnableVertexAttribArray(texLoc);
-        glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),
-            reinterpret_cast<void*>(0));
+        glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<void*>(0));
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
 
