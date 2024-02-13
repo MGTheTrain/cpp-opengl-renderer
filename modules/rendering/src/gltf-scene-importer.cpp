@@ -167,7 +167,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupTexture(Mgtt::Rendering::Texture& 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
     else {
-        std::cout << "LOG INFO: Texture is a nullptr" << std::endl;
+        std::cout << "LOG INFO: Texture data is a nullptr" << std::endl;
     }
 }
 
