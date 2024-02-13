@@ -134,14 +134,15 @@ namespace Mgtt::Rendering {
             const tinygltf::Node &node, const uint32_t nodeIndex, const tinygltf::Model &model);
 
         /**
-         * @brief Loads a mesh and associates it with a shader.
+         * @brief Sets up a mesh for rendering, including vertex attribute configuration.
          *
-         * This function loads a 3D mesh and assigns it to the specified shader.
+         * This method prepares a mesh for rendering by configuring its vertex attributes,
+         * associating it with the specified shader, and potentially moving vertex data to VRAM.
          *
          * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object representing the mesh.
          * @param shaderId An unsigned 32-bit integer representing the shader ID.
          */
-        void LoadMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId);
+        void SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId);
 
         /**
          * @brief Clear the resources associated with the Texture object, freeing up memory.

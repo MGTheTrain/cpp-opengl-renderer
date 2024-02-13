@@ -249,15 +249,23 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
 }
 
 /**
- * @brief Loads a mesh and associates it with a shader.
+ * @brief Sets up a mesh for rendering, including vertex attribute configuration.
  *
- * This function loads a 3D mesh and assigns it to the specified shader.
+ * This method prepares a mesh for rendering by configuring its vertex attributes,
+ * associating it with the specified shader, and potentially moving vertex data to VRAM.
  *
  * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object representing the mesh.
  * @param shaderId An unsigned 32-bit integer representing the shader ID.
  */
-void Mgtt::Rendering::GltfSceneImporter::LoadMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId) {
-
+void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId) {
+    if(mesh) {
+        if(mesh->ebo == 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh ebo needs to be > 0");
+        }
+        else if(mesh->pos == 0) {
+            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh pod id needs to be > 0");
+        }
+    }
 }
 
 /**
