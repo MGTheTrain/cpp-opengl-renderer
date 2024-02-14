@@ -328,7 +328,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         glGenBuffers(1, &mesh->pos);
         glGenBuffers(1, &mesh->normal);
         glGenBuffers(1, &mesh->tex);
-        if (mesh->indices.size() == 0) {
+        if (mesh->indices.size() > 0) {
             glGenBuffers(1, &mesh->ebo);
         }
 
@@ -360,7 +360,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         glEnableVertexAttribArray(texLoc);
         glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<void*>(0));
 
-        if (mesh->indices.size() == 0) {
+        if (mesh->indices.size() > 0) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
         }
 
