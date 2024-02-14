@@ -343,7 +343,6 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         // pos
         glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
         glBufferData(GL_ARRAY_BUFFER, mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), &mesh->vertexPositionAttribs[0], GL_STATIC_DRAW);
-
         uint32_t posLoc = glGetAttribLocation(shaderId, "inVertexPosition");
         glEnableVertexAttribArray(posLoc); glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(0));
 
