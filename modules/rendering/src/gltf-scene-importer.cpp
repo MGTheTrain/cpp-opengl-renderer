@@ -21,44 +21,49 @@
  */
 Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::string& path) {
     Mgtt::Rendering::Scene mgttScene;
-    mgttScene.path = path;
+    try {
+        mgttScene.path = path;
 
-    bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
-                          path.substr(path.size() - 5, 5) == ".gltf" ||
-                          path.substr(path.size() - 4, 4) == ".GLB" ||
-                          path.substr(path.size() - 4, 4) == ".glb");
+        bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
+                            path.substr(path.size() - 5, 5) == ".gltf" ||
+                            path.substr(path.size() - 4, 4) == ".GLB" ||
+                            path.substr(path.size() - 4, 4) == ".glb");
 
-    if (!hasGltfSuffix) {
-        throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " + path);
-    }
-
-    bool binary = false;
-    size_t suffix = path.rfind('.', path.size());
-    if (suffix != std::string::npos) {
-        binary = (path.substr(suffix + 1, path.length() - suffix) == "glb");
-    }
-
-    std::string err;
-    std::string warn;
-    tinygltf::Model gltfModel;
-    tinygltf::TinyGLTF gltfContext;
-    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
-
-    if (fileLoaded) {
-        this->LoadTextures(mgttScene, gltfModel);
-        this->LoadMaterials(mgttScene, gltfModel);
-        const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
-        for (size_t i = 0; i < scene.nodes.size(); i++) {
-            const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
-            LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
+        if (!hasGltfSuffix) {
+            throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " + path);
         }
-    }
-    else {
-        this->Clear(mgttScene);
-        throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
-    }
 
-    return mgttScene;
+        bool binary = false;
+        size_t suffix = path.rfind('.', path.size());
+        if (suffix != std::string::npos) {
+            binary = (path.substr(suffix + 1, path.length() - suffix) == "glb");
+        }
+
+        std::string err;
+        std::string warn;
+        tinygltf::Model gltfModel;
+        tinygltf::TinyGLTF gltfContext;
+        bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
+
+        if (fileLoaded) {
+            this->LoadTextures(mgttScene, gltfModel);
+            this->LoadMaterials(mgttScene, gltfModel);
+            const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
+            for (size_t i = 0; i < scene.nodes.size(); i++) {
+                const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
+                LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
+            }
+        }
+        else {
+            throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
+        }
+
+        return mgttScene;
+    }
+    catch(const std::runtime_error& ex) {
+        this->Clear(mgttScene);
+        throw ex;
+    }
 }
 
 /**
