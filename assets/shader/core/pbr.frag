@@ -22,14 +22,14 @@ uniform	float roughnessFactor;
 uniform	bool alphaMaskSet;
 uniform	float alphaMaskCutoff;
 
-// texture maps/images in GPU
+// texture maps allocated in VRAM
 uniform sampler2D colorMap;
 uniform sampler2D physicalDescriptorMap;
 uniform sampler2D normalMap;
 uniform sampler2D aoMap;
 uniform sampler2D emissiveMap;
 
-// booleans for setting tetures
+// booleans for enabling/disabling tetures
 uniform	bool baseColorTextureSet;
 uniform	bool physicalDescriptorTextureSet;
 uniform	bool normalTextureSet;
@@ -50,7 +50,6 @@ uniform float prefilteredCubeMipLevels;
 
 // constants
 const vec3 dielectric = vec3(0.04);
-// const float c_MinRoughness = 0.04;	
 const float PI = 3.14;
 // const float epsilon = 1e-6;
 const float epsilon = 0.1;
@@ -203,7 +202,7 @@ void main() {
 	vec3 specularEnvironmentR90 = vec3(1.0, 1.0, 1.0) * reflectance90;
 
     // per fragment/pixel vectors 
-	    // calculate for each fragment/pixel light dir and view dir vectors
+    // calculate for each fragment/pixel light direction and view direction vectors
     vec3 norm = (normalTextureSet) ? GetNormal() : normalize(outVertexNormal);
     vec3 viewDirection = normalize(cameraPosition - outWorldPosition);
     vec3 lightDirection = normalize(lightPosition - outWorldPosition);
@@ -214,7 +213,7 @@ void main() {
 	float NdotH = clamp(dot(norm, halfVector), 0.0, 1.0);
 	float LdotH = clamp(dot(lightDirection, halfVector), 0.0, 1.0);
     float VdotH = clamp(dot(viewDirection, halfVector), 0.0, 1.0);
-	 //vec3 reflection = -reflect(viewDirection, norm);
+    //vec3 reflection = -reflect(viewDirection, norm);
 	vec3 reflection = -reflect(norm, viewDirection);
 	reflection.y *= -1.0; 
 
@@ -278,7 +277,7 @@ void main() {
 		color += emissiveFactor.rgb;
 	}
 
-    //color = SRGBtoLINEAR(vec4(color, baseColorFactor.a));	
+    // color = SRGBtoLINEAR(vec4(color, baseColorFactor.a));	
     fragmentColor = vec4(color, baseColorFactor.a);	
 
 	// diplay occlusion effect
@@ -286,13 +285,13 @@ void main() {
 	// color = mix(color, color * ao, occlusionFactor.rgb);
 	// fragmentColor = vec4(color, 1.0); 
 
-    //--display textures   
-    //--base color 
+    // display textures   
+    // base color 
     // fragmentColor = vec4(texture(colorMap, outVertexTextureCoordinates).rgb, 1.0);
 
-    //--physical descriptor map
+    // physical descriptor map
     // fragmentColor = vec4(texture(physicalDescriptorMap, outVertexTextureCoordinates).rgb, 1.0);
 
-    //--normal map
+    // normal map
     // fragmentColor = vec4(texture(normalMap, outVertexTextureCoordinates).rgb, 1.0);
 }
