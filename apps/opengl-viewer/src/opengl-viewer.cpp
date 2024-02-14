@@ -40,7 +40,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     }
 
     this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
-    this->mgttScene = this->gltfSceneImporter->Load("assets/scenes/water-bottle/WaterBottle.gltf");
+    this->gltfSceneImporter->Load(this->mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf");
 }
 
 

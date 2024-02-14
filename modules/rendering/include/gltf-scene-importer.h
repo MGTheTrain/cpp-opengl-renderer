@@ -78,9 +78,9 @@ namespace Mgtt::Rendering {
          * It loads the 3D scene from the specified file path.
          * 
          * @param path The file path from which to load the 3D scene.
-         * @return An instance of the loaded 3D scene.
+         * @paramAn instance of the loaded 3D scene.
          */
-        Mgtt::Rendering::Scene& Load(const std::string& path) override;
+        void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) override;
 
         /**
          * @brief Clear the allocated resources in RAM and VRAM for the scene object.
