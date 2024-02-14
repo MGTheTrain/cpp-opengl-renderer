@@ -6,7 +6,7 @@ layout (location = 2) in vec2 inVertexTextureCoordinates;
 
 out vec3 outVertexNormal;
 out vec3 outWorldPosition;
-out vec2 VertexTextureCoordinates;
+out vec2 outVertexTextureCoordinates;
 
 uniform mat4 model; 
 uniform mat4 mvp;
