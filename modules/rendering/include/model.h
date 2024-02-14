@@ -327,9 +327,9 @@ namespace Mgtt::Rendering {
         * @param texture The occlusion texture to be associated with this structure.
         * @param scale The occlusion color applied to the occlusion texture.
         */
-        OcclusionTexture(const Texture& texture, const glm::vec3& color);
+        OcclusionTexture(const Texture& texture, const float& color);
 
-        glm::vec3 color;
+        float strength;
     };
 
     /**

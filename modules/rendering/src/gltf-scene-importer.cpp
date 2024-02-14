@@ -150,14 +150,14 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
         texture.width = image.width;
         texture.height = image.height;
         texture.nrComponents = image.component;
-        texture.data = stbi_load(texture.path.c_str(), &image.height, &image.height, &image.component, 0); // data needs to be transferred to VRAM first and can then be freed
+        texture.data = stbi_load(texture.path.c_str(), &image.height, &image.height, &image.component, image.component);
         this->SetupTexture(texture);
         if(texture.data) {
             stbi_image_free(texture.data);
             texture.data = nullptr;
         }
 
-        scene.textureMap[image.name] = texture;
+        scene.textureMap[image.uri] = texture;
     }
 }
 
@@ -229,76 +229,71 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
 
         // Base color
         BaseColorTexture baseColorTexture;
-        if (material.values.find("baseColorTexture") != material.values.end() && material.values.find("baseColorFactor") != material.values.end()) {
+        
+        if (material.pbrMetallicRoughness.baseColorTexture.index > 0) {
             baseColorTexture = BaseColorTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["baseColorTexture"].TextureIndex()].source].name],
-                glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.pbrMetallicRoughness.baseColorTexture.index].source].uri],
+                glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
         }
         else {
-            if (material.values.find("baseColorFactor") != material.values.end()) {
-                baseColorTexture = BaseColorTexture(
-                    Texture(),
-                    glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));}
+            baseColorTexture = BaseColorTexture(
+                Texture(),
+                glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
         }
 
         // Normal
         NormalTexture normalTexture;
-        if (material.values.find("normalTexture") != material.values.end()) {
+        if (material.normalTexture.index > 0) {
             normalTexture = NormalTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["normalTexture"].TextureIndex()].source].name],
-                1.0f);
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.normalTexture.index].source].uri],
+                material.normalTexture.scale);
         }
         else {
             normalTexture = NormalTexture(
                 Texture(),
-                1.0f);
+                material.normalTexture.scale);
         }
 
         // Normal
         OcclusionTexture occlusionTexture;
-        if (material.values.find("occlusionTexture") != material.values.end()) {
+        if (material.occlusionTexture.index > 0) {
             occlusionTexture = OcclusionTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["occlusionTexture"].TextureIndex()].source].name],
-                glm::vec3(1.0f));
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.occlusionTexture.index].source].uri],
+                material.occlusionTexture.strength);
         }
         else {
             occlusionTexture = OcclusionTexture(
                 Texture(),
-                glm::vec3(1.0f));
+                material.occlusionTexture.strength);
         }
 
         // Emissive
         EmissiveTexture emissiveTexture;
-        if (material.values.find("emissiveTexture") != material.values.end()) {
+        if (material.emissiveTexture.index > 0) {
             emissiveTexture = EmissiveTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["emissiveTexture"].TextureIndex()].source].name],
-                glm::vec3(0.0f));
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.emissiveTexture.index].source].uri],
+                glm::make_vec3(material.emissiveFactor.data()));
         }
         else {
             emissiveTexture = EmissiveTexture(
                 Texture(),
-                glm::vec3(0.0f));
+                glm::make_vec3(material.emissiveFactor.data()));
         }
 
         // Metallic roughness
         MetallicRoughnessTexture metallicRoughnessTexture;
-        if (material.values.find("metallicRoughnessTexture") != material.values.end() && 
-            material.values.find("roughnessFactor") != material.values.end() && 
-            material.values.find("metallicFactor") != material.values.end()) {
+        if (material.pbrMetallicRoughness.metallicRoughnessTexture.index > 0) {
             metallicRoughnessTexture = MetallicRoughnessTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["metallicRoughnessTexture"].TextureIndex()].source].name],
-                    static_cast<float>(material.values["metallicFactor"].Factor()),
-                    static_cast<float>(material.values["roughnessFactor"].Factor())
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].source].uri],
+                    static_cast<float>(material.pbrMetallicRoughness.metallicFactor),
+                    static_cast<float>(material.pbrMetallicRoughness.roughnessFactor)
             );
         }
         else {
-            if(material.values.find("roughnessFactor") != material.values.end() && 
-               material.values.find("metallicFactor") != material.values.end()) {
-                metallicRoughnessTexture = MetallicRoughnessTexture(
-                    Texture(),
-                    static_cast<float>(material.values["metallicFactor"].Factor()),
-                    static_cast<float>(material.values["roughnessFactor"].Factor()));
-            }
+            metallicRoughnessTexture = MetallicRoughnessTexture(
+                Texture(),
+                static_cast<float>(material.pbrMetallicRoughness.metallicFactor),
+                static_cast<float>(material.pbrMetallicRoughness.roughnessFactor));
         }
 
         scene.materials.push_back(pbrMaterial);

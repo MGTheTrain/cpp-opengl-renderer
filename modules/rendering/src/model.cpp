@@ -323,7 +323,7 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(
  * @brief Constructor for the OcclusionTexture structure.
  */
 Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
-    this->color = glm::vec3(0.0f);
+    this->strength = 0.0f;
 }
 
 /**
@@ -332,7 +332,7 @@ Mgtt::Rendering::OcclusionTexture::OcclusionTexture() {
 * @param texture The occlusion texture to be associated with this structure.
 * @param scale The occlusion color applied to the occlusion texture.
 */
-Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture, const glm::vec3& color): Texture(texture), color(color) {}
+Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture, const float& strength): Texture(texture), strength(strength) {}
 
 /**
  * @brief Constructor for the BaseColorTexture structure.
