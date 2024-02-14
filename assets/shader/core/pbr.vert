@@ -12,8 +12,7 @@ uniform mat4 model;
 uniform mat4 mvp;
 uniform mat4 matrix;
 
-void main()
-{
+void main() {
 	vec4 localVertexPosition;
     localVertexPosition = matrix * vec4(inVertexPosition, 1.0);
 
