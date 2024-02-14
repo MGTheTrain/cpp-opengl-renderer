@@ -41,7 +41,7 @@ uniform samplerCube samplerEnvMap;
 uniform samplerCube samplerIrradianceMap;
 
 // brdf texture
-uniform sampler2D samplerBrdfLUT;
+uniform sampler2D samplerBrdfLut;
 
 // ibl factors uniforms
 uniform	float scaleIblAmbient;
@@ -146,7 +146,7 @@ vec3 GetIBLContribution(
 	vec3 envLight = textureLod(samplerEnvMap, reflection, lod).rgb;
 
 	// vec2 brdfTest = vec2(NdotV, 1.0 - perceptualRoughness); // false
-	vec2 brdfTest = texture(samplerBrdfLUT, vec2(NdotV, 1.0 - perceptualRoughness)).rg;
+	vec2 brdfTest = texture(samplerBrdfLut, vec2(NdotV, 1.0 - perceptualRoughness)).rg;
 	vec3 specular = envLight * 
 		(specularColor * brdfTest.x + brdfTest.y) * scaleIblAmbient; 
 
