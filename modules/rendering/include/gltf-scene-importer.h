@@ -184,4 +184,66 @@ namespace Mgtt::Rendering {
          */
         void ClearRAM(Mgtt::Rendering::Texture& texture);
     };
+
+    /**
+     * @brief Class for importing and managing cube map textures.
+     * 
+     * The CubeMapImporter class provides functionality for loading and managing cube map textures.
+     */
+    class CubeMapImporter {
+    public:
+        /**
+         * @brief Load a cube map texture from the given file path.
+         * 
+         * This function loads a cube map texture from the specified file path and 
+         * associates it with the provided Texture object. It performs necessary operations
+         * to make the texture available for use in rendering.
+         * 
+         * @param texture The Texture object to associate with the loaded cube map.
+         * @param cubeMapTexturePath The file path to the cube map texture.
+         */
+        void Load(Mgtt::Rendering::Texture& texture, const std::string& cubeMapTexturePath);
+
+        /**
+         * @brief Clear the provided cube map texture.
+         * 
+         * This function clears the contents of the provided Texture object, releasing
+         * any resources associated with the cube map texture.
+         * 
+         * @param texture The Texture object to clear.
+         */
+        void Clear(Mgtt::Rendering::Texture& texture);
+    };
+
+
+    /**
+     * @brief Class for importing and managing Bidirectional Reflectance Distribution Function (BRDF) textures.
+     * 
+     * The BrdfImporter class provides functionality for loading and managing BRDF textures.
+     */
+    class BrdfImporter {
+    public:
+        /**
+         * @brief Load a BRDF texture from the given file path.
+         * 
+         * This function loads a BRDF texture from the specified file path and 
+         * associates it with the provided Texture object. It performs necessary operations
+         * to make the texture available for use in rendering.
+         * 
+         * @param texture The Texture object to associate with the loaded BRDF texture.
+         * @param texturePath The file path to the BRDF texture.
+         */
+        void Load(Mgtt::Rendering::Texture& texture, const std::string& texturePath);
+
+        /**
+         * @brief Clear the provided BRDF texture.
+         * 
+         * This function clears the contents of the provided Texture object, releasing
+         * any resources associated with the BRDF texture.
+         * 
+         * @param texture The Texture object to clear.
+         */
+        void Clear(Mgtt::Rendering::Texture& texture);
+    };
+
 }
