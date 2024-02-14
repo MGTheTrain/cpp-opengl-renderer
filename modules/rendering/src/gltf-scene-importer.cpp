@@ -228,69 +228,63 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
         }
 
         // Base color
-        BaseColorTexture baseColorTexture;
-        
-        if (material.pbrMetallicRoughness.baseColorTexture.index > 0) {
-            baseColorTexture = BaseColorTexture(
+        if (material.pbrMetallicRoughness.baseColorTexture.index > -1) {
+            pbrMaterial.baseColorTexture = BaseColorTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.pbrMetallicRoughness.baseColorTexture.index].source].uri],
                 glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
         }
         else {
-            baseColorTexture = BaseColorTexture(
+            pbrMaterial.baseColorTexture = BaseColorTexture(
                 Texture(),
                 glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
         }
 
         // Normal
-        NormalTexture normalTexture;
-        if (material.normalTexture.index > 0) {
-            normalTexture = NormalTexture(
+        if (material.normalTexture.index > -1) {
+            pbrMaterial.normalTexture = NormalTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.normalTexture.index].source].uri],
                 material.normalTexture.scale);
         }
         else {
-            normalTexture = NormalTexture(
+            pbrMaterial.normalTexture = NormalTexture(
                 Texture(),
                 material.normalTexture.scale);
         }
 
         // Normal
-        OcclusionTexture occlusionTexture;
-        if (material.occlusionTexture.index > 0) {
-            occlusionTexture = OcclusionTexture(
+        if (material.occlusionTexture.index > -1) {
+            pbrMaterial.occlusionTexture = OcclusionTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.occlusionTexture.index].source].uri],
                 material.occlusionTexture.strength);
         }
         else {
-            occlusionTexture = OcclusionTexture(
+            pbrMaterial.occlusionTexture = OcclusionTexture(
                 Texture(),
                 material.occlusionTexture.strength);
         }
 
         // Emissive
-        EmissiveTexture emissiveTexture;
-        if (material.emissiveTexture.index > 0) {
-            emissiveTexture = EmissiveTexture(
+        if (material.emissiveTexture.index > -1) {
+            pbrMaterial.emissiveTexture = EmissiveTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.emissiveTexture.index].source].uri],
                 glm::make_vec3(material.emissiveFactor.data()));
         }
         else {
-            emissiveTexture = EmissiveTexture(
+            pbrMaterial.emissiveTexture = EmissiveTexture(
                 Texture(),
                 glm::make_vec3(material.emissiveFactor.data()));
         }
 
         // Metallic roughness
-        MetallicRoughnessTexture metallicRoughnessTexture;
-        if (material.pbrMetallicRoughness.metallicRoughnessTexture.index > 0) {
-            metallicRoughnessTexture = MetallicRoughnessTexture(
+        if (material.pbrMetallicRoughness.metallicRoughnessTexture.index > -1) {
+            pbrMaterial.metallicRoughnessTexture = MetallicRoughnessTexture(
                 scene.textureMap[gltfModel.images[gltfModel.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].source].uri],
                     static_cast<float>(material.pbrMetallicRoughness.metallicFactor),
                     static_cast<float>(material.pbrMetallicRoughness.roughnessFactor)
             );
         }
         else {
-            metallicRoughnessTexture = MetallicRoughnessTexture(
+            pbrMaterial.metallicRoughnessTexture = MetallicRoughnessTexture(
                 Texture(),
                 static_cast<float>(material.pbrMetallicRoughness.metallicFactor),
                 static_cast<float>(material.pbrMetallicRoughness.roughnessFactor));
@@ -329,28 +323,22 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         else if(mesh->vertexPositionAttribs.size() == 0) {
             throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh vertex position attributes need to contain elements");
         }
-        else if(mesh->indices.size() == 0) {
-            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh indices need to contain elements");
-        }
 
         glGenVertexArrays(1, &mesh->vao);
         glGenBuffers(1, &mesh->pos);
         glGenBuffers(1, &mesh->normal);
         glGenBuffers(1, &mesh->tex);
-        glGenBuffers(1, &mesh->ebo);
+        if (mesh->indices.size() == 0) {
+            glGenBuffers(1, &mesh->ebo);
+        }
 
         glBindVertexArray(mesh->vao);
 
         if (mesh->indices.size() > 0) {
+            // indices
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                mesh->indices.size() * sizeof(unsigned int),
-                &mesh->indices[0], GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0], GL_STATIC_DRAW);
         }
-
-        // indices
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0], GL_STATIC_DRAW);
 
         // pos
         glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
@@ -373,7 +361,9 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         glEnableVertexAttribArray(texLoc);
         glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<void*>(0));
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+        if (mesh->indices.size() == 0) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+        }
 
         glBindVertexArray(0);
     } else {
