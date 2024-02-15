@@ -133,13 +133,15 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
         texture.height = image.height;
         texture.nrComponents = image.component;
         texture.data = stbi_load(texture.path.c_str(), &image.height, &image.height, &image.component, image.component);
-        this->SetupTexture(texture);
-        if(texture.data) {
-            stbi_image_free(texture.data);
-            texture.data = nullptr;
-        }
+        if (texture.data) {
+            this->SetupTexture(texture);
+            if (texture.data) {
+                stbi_image_free(texture.data);
+                texture.data = nullptr;
+            }
 
-        scene.textureMap[image.uri] = texture;
+            scene.textureMap[image.uri] = texture;
+        }
     }
 }
 
