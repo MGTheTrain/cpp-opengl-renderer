@@ -234,9 +234,9 @@ namespace Mgtt::Rendering {
          * This function loads the BRDF Lookup Texture into the provided HDR texture container.
          * It performs necessary operations to make the BRDF texture available for use in rendering.
          * 
-         * @param container The HdrTextureContainer to associate with the loaded BRDF texture.
+         * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
          */
-        void LoadBrdfLut(Mgtt::Rendering::HdrTextureContainer& container);
+        void LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container);
 
         /**
          * @brief Generate the irradiance map for the provided HDR texture container.
@@ -244,8 +244,8 @@ namespace Mgtt::Rendering {
          * This function generates the irradiance map for the provided HDR texture container.
          * It performs necessary operations to make the irradiance map available for use in rendering.
          * 
-         * @param container The HdrTextureContainer to associate with the generated irradiance map.
+         * @param container The RenderTexturesContainer to associate with the generated irradiance map.
          */
-        void GenerateIrradianceMap(Mgtt::Rendering::HdrTextureContainer& container);
+        void GenerateIrradianceMap(Mgtt::Rendering::RenderTexturesContainer& container);
     };
 }
