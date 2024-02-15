@@ -41,6 +41,12 @@ namespace Mgtt::Rendering {
     class OpenGlShader : public IShader {
     public:
         /**
+         * @brief Default Constructor for the OpenGlShader class.
+         *
+         */
+        OpenGlShader() {}
+
+        /**
          * @brief Constructor for the OpenGlShader class.
          *
          * @param vsPath Path to the vertex shader source file.
