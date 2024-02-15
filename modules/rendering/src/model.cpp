@@ -366,8 +366,8 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
       envMapVao(0),
       envMapVbo(0),
       brdfQuadVao(0),
-      brdfQuadVbo(0) {
-}
+      brdfQuadVbo(0),
+      equirectangularToCubemapShader(OpenGlShader("","")) {}
 
 /**
  * @brief Clear releases resources.

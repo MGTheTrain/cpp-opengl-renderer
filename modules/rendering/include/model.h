@@ -34,6 +34,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 #include <map>
+#include <opengl-shader.h>
 
 namespace Mgtt::Rendering {
     // Forward declarations
@@ -443,5 +444,7 @@ namespace Mgtt::Rendering {
         uint32_t brdfQuadVao;            
         uint32_t brdfQuadVbo;            
         std::vector<TextureBase> textures; // @note This vector can be used to store either a single HDR texture or multiple cube map textures.
+
+        Mgtt::Rendering::OpenGlShader eq2CubeMapShader; // equirectangular to cubemap shader
     };
 }

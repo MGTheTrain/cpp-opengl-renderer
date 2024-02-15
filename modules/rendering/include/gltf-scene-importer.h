@@ -181,6 +181,7 @@ namespace Mgtt::Rendering {
      * 
      * The TextureManager class provides functionality for loading and managing different textures,
      * including cube maps and High Dynamic Range (HDR) textures.
+     * @note Take a read on: https://learnopengl.com/PBR/IBL/Diffuse-irradiance
      */
     class TextureManager {
     public:

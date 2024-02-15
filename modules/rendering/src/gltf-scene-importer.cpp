@@ -503,6 +503,96 @@ void Mgtt::Rendering::TextureManager::LoadFromEnvMap(Mgtt::Rendering::RenderText
  * @param texturePath The file path to the HDR texture.
  */
 void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexturesContainer& container, const std::string& texturePath) {
+    Mgtt::Rendering::Texture texture;
+    if (!texture.data) {
+        texture.data = stbi_load(texturePath.c_str(), &texture.width, &texture.height, &texture.nrComponents, 0);
+        if (texture.data) {
+            glGenTextures(1, &container.hdrTextureId);
+            glBindTexture(GL_TEXTURE_2D, container.hdrTextureId);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glGenFramebuffers(1, &container.fboId);
+            glGenRenderbuffers(1, &container.rboId);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+            glBindRenderbuffer(GL_RENDERBUFFER, container.rboId);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 128, 128);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, container.rboId);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+                if (container.hdrTextureId > 0) {
+                    glDeleteTextures(1, &container.hdrTextureId);
+                    container.hdrTextureId = 0;
+                }
+                if (container.fboId > 0) {
+                    glDeleteFramebuffers(1, &container.fboId);
+                    container.fboId = 0;
+                }
+                if (container.rboId > 0) {
+                    glDeleteRenderbuffers(1, &container.rboId);
+                    container.rboId = 0;
+                }
+                throw std::runtime_error("OPENGL FRAMEBUFFER ERROR: Framebuffer not complete");
+            }
+
+            // Cube map texture id
+            glGenTextures(1, &container.cubeMapTextureId);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, container.cubeMapTextureId);
+            for (uint32_t i = 0; i < 6; ++i) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB8, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+            }
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            // Set up projection and view matrices capturing image data onto the 6 cubemap faces
+            glm::mat4 captureProjection =
+                glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+            glm::mat4 captureViews[] = {
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
+                            glm::vec3(0.0f, 0.0f, 1.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f),
+                            glm::vec3(0.0f, 0.0f, -1.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f))};
+
+            glUseProgram(container.eq2CubeMapShader.GetProgramId());
+            glUniform1i(glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "equirectangularMap"), 0);
+            glUniformMatrix4fv( glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "projection"), 1, GL_FALSE, &captureProjection[0][0]);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, container.hdrTextureId);
+
+            glViewport(0, 0, 128, 128);
+            glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+            for (uint32_t i = 0; i < 6; ++i) {
+                glUniformMatrix4fv(glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "view"), 1, GL_FALSE, &captureViews[i][0][0]);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, container.cubeMapTextureId, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                // this->SetupCube(framebuffer);
+            }
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            // glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureId);
+            // glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+            
+            glDeleteTextures(1, &container.hdrTextureId);
+            container.hdrTextureId = 0;
+            container.textures.push_back(texture);
+        }
+    }
 }
 
 /**
