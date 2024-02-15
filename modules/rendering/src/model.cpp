@@ -378,19 +378,19 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
 void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     // textures
     if(this->cubeMapTextureId > 0) {
-        glDeleteTextures(1, &cubeMapTextureId);
+        glDeleteTextures(1, &this->cubeMapTextureId);
         this->cubeMapTextureId = 0;
     }
     if(this->irradianceMapTextureId > 0) {
-        glDeleteTextures(1, &irradianceMapTextureId);
+        glDeleteTextures(1, &this->irradianceMapTextureId);
         this->irradianceMapTextureId = 0;
     }
     if(this->brdfLutTextureId > 0) {
-        glDeleteTextures(1, &brdfLutTextureId);
+        glDeleteTextures(1, &this->brdfLutTextureId);
         this->brdfLutTextureId = 0;
     }
     if(this->hdrTextureId > 0) {
-        glDeleteTextures(1, >hdrTextureId);
+        glDeleteTextures(1, &this->hdrTextureId);
         this->hdrTextureId = 0;
     }
     // framebuffer
@@ -422,18 +422,4 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
         glDeleteBuffers(1, &this->brdfQuadVbo);
         this->brdfQuadVbo = 0;
     }
-}
-
-/**
- * @brief Constructor for the HdrTextureContainer structure.
- */
-Mgtt::Rendering::HdrTextureContainer::HdrTextureContainer()
-    : RenderTexturesContainer(), hdrTexture() {
-}
-
-/**
- * @brief Constructor for the CubeMapContainer structure.
- */
-Mgtt::Rendering::CubeMapContainer::CubeMapContainer()
-    : RenderTexturesContainer(), cubeMap() { 
 }

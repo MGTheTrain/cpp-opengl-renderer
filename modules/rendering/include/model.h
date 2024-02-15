@@ -432,43 +432,16 @@ namespace Mgtt::Rendering {
          */
         void Clear();
 
-        uint32_t cubeMapTextureId;      /**< ID of the cube map texture. */
-        uint32_t irradianceMapTextureId; /**< ID of the irradiance map texture. */
-        uint32_t brdfLutTextureId;       /**< ID of the BRDF lookup texture. */
-        uint32_t hdrTextureId;          /**< ID of the hdr texture. */
-        uint32_t fboId;                  /**< ID of the framebuffer object. */
-        uint32_t rboId;                  /**< ID of the renderbuffer object. */
-        uint32_t envMapVao;              /**< Vertex array object for environment mapping. */
-        uint32_t envMapVbo;              /**< Vertex buffer object for environment mapping. */
-        uint32_t brdfQuadVao;            /**< Vertex array object for BRDF quad rendering. */
-        uint32_t brdfQuadVbo;            /**< Vertex buffer object for BRDF quad rendering. */
-    };
-
-    /**
-     * @brief Container for managing High Dynamic Range (HDR) textures.
-     * 
-     * The HdrTextureContainer structure extends RenderTexturesContainer and includes
-     * additional functionality for handling HDR textures.
-     */
-    struct HdrTextureContainer : public RenderTexturesContainer {
-        /**
-         * @brief Constructor for the HdrTextureContainer structure.
-         */
-        HdrTextureContainer();
-        TextureBase hdrTexture; /**< High Dynamic Range texture. */
-    };
-
-    /**
-     * @brief Container for managing cube map textures.
-     * 
-     * The CubeMapContainer structure extends RenderTexturesContainer and includes
-     * additional functionality for handling cube map textures.
-     */
-    struct CubeMapContainer : public RenderTexturesContainer {
-        /**
-         * @brief Constructor for the CubeMapContainer structure.
-         */
-        CubeMapContainer();
-        std::vector<TextureBase> cubeMap; /**< Vector of cube map textures. */
+        uint32_t cubeMapTextureId;      
+        uint32_t irradianceMapTextureId; 
+        uint32_t brdfLutTextureId;       
+        uint32_t hdrTextureId;          
+        uint32_t fboId;                  
+        uint32_t rboId;                  
+        uint32_t envMapVao;              
+        uint32_t envMapVbo;              
+        uint32_t brdfQuadVao;            
+        uint32_t brdfQuadVbo;            
+        std::vector<TextureBase> textures; // @note This vector can be used to store either a single HDR texture or multiple cube map textures.
     };
 }
