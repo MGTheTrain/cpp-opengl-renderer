@@ -492,53 +492,72 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
 }
 
 /**
- * @brief Load a cube map texture from the given file path.
+ * @brief Default constructor for the TextureManager class.
+ */
+Mgtt::Rendering::TextureManager::TextureManager() {
+    
+}
+
+/**
+ * @brief Load a cube map texture from the given folder path.
  * 
- * This function loads a cube map texture from the specified file path and 
- * associates it with the provided Texture object. It performs necessary operations
+ * This function loads a cube map texture from the specified folder path and 
+ * associates it with the provided CubeMapContainer. It performs necessary operations
  * to make the texture available for use in rendering.
  * 
- * @param texture The Texture object to associate with the loaded cube map.
- * @param cubeMapTexturePath The file path to the cube map texture.
+ * @param container The CubeMapContainer to associate with the loaded cube map.
+ * @param folderPath The folder path containing the cube map texture files.
  */
-void Mgtt::Rendering::CubeMapImporter::Load(Mgtt::Rendering::Texture& texture, const std::string& cubeMapTexturePath) {
+void Mgtt::Rendering::TextureManager::Load(Mgtt::Rendering::CubeMapContainer& container, const std::string& folderPath) {
     
 }
 
 /**
- * @brief Clear the provided cube map texture.
+ * @brief Load an HDR texture from the given file path.
  * 
- * This function clears the contents of the provided Texture object, releasing
- * any resources associated with the cube map texture.
- * 
- * @param texture The Texture object to clear.
- */
-void Mgtt::Rendering::CubeMapImporter::Clear(Mgtt::Rendering::Texture& texture) {
-    
-}
-
-/**
- * @brief Load a BRDF texture from the given file path.
- * 
- * This function loads a BRDF texture from the specified file path and 
- * associates it with the provided Texture object. It performs necessary operations
+ * This function loads an HDR texture from the specified file path and 
+ * associates it with the provided HdrTextureContainer. It performs necessary operations
  * to make the texture available for use in rendering.
  * 
- * @param texture The Texture object to associate with the loaded BRDF texture.
- * @param texturePath The file path to the BRDF texture.
+ * @param container The HdrTextureContainer to associate with the loaded HDR texture.
+ * @param texturePath The file path to the HDR texture.
  */
-void Mgtt::Rendering::BrdfImporter::Load(Mgtt::Rendering::Texture& texture, const std::string& texturePath) {
+void Mgtt::Rendering::TextureManager::Load(Mgtt::Rendering::HdrTextureContainer& container, const std::string& texturePath) {
     
 }
 
 /**
- * @brief Clear the provided BRDF texture.
+ * @brief Clear the provided render textures container.
  * 
- * This function clears the contents of the provided Texture object, releasing
- * any resources associated with the BRDF texture.
+ * This function clears the contents of the provided RenderTexturesContainer, releasing
+ * any resources associated with the textures.
  * 
- * @param texture The Texture object to clear.
+ * @param container The RenderTexturesContainer to clear.
  */
-void Mgtt::Rendering::BrdfImporter::Clear(Mgtt::Rendering::Texture& texture) {
+void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesContainer& container) {
+    
+}
+
+/**
+ * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
+ * 
+ * This function loads the BRDF Lookup Texture into the provided HDR texture container.
+ * It performs necessary operations to make the BRDF texture available for use in rendering.
+ * 
+ * @param container The HdrTextureContainer to associate with the loaded BRDF texture.
+ */
+void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::HdrTextureContainer& container) {
+    
+}
+
+/**
+ * @brief Generate the irradiance map for the provided HDR texture container.
+ * 
+ * This function generates the irradiance map for the provided HDR texture container.
+ * It performs necessary operations to make the irradiance map available for use in rendering.
+ * 
+ * @param container The HdrTextureContainer to associate with the generated irradiance map.
+ */
+void Mgtt::Rendering::TextureManager::GenerateIrradianceMap(Mgtt::Rendering::HdrTextureContainer& container) {
     
 }
