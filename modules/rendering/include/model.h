@@ -422,8 +422,9 @@ namespace Mgtt::Rendering {
     struct RenderTexturesContainer {
         /**
          * @brief Constructor for the RenderTexturesContainer structure.
+         * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
          */
-        RenderTexturesContainer();
+        RenderTexturesContainer(const std::pair<std::string, std::string>& eq2CubeMapShaderPathes);
 
         /**
          * @brief Clear releases resources.

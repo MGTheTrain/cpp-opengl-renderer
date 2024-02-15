@@ -553,8 +553,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             // Set up projection and view matrices capturing image data onto the 6 cubemap faces
-            glm::mat4 captureProjection =
-                glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+            glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
             glm::mat4 captureViews[] = {
                 glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
                             glm::vec3(0.0f, -1.0f, 0.0f)),
@@ -587,7 +586,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
 
             // glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureId);
             // glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-            
+
             glDeleteTextures(1, &container.hdrTextureId);
             container.hdrTextureId = 0;
             container.textures.push_back(texture);

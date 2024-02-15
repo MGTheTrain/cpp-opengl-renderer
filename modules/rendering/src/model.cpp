@@ -356,7 +356,7 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, cons
 /**
  * @brief Constructor for the RenderTexturesContainer structure.
  */
-Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
+Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(const std::pair<std::string, std::string>& eq2CubeMapShaderPathes)
     : cubeMapTextureId(0),
       irradianceMapTextureId(0),
       brdfLutTextureId(0),
@@ -367,7 +367,7 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
       envMapVbo(0),
       brdfQuadVao(0),
       brdfQuadVbo(0),
-      equirectangularToCubemapShader(OpenGlShader("","")) {}
+      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes.first, eq2CubeMapShaderPathes.second)) {}
 
 /**
  * @brief Clear releases resources.
