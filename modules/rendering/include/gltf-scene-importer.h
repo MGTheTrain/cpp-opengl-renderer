@@ -164,15 +164,6 @@ namespace Mgtt::Rendering {
          */
         void SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId);
 
-        /**
-         * @brief Load a texture from the specified file path and update the Texture object.
-         *
-         * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
-         *
-         * @param texturePath The file path to the texture.
-         * @param texture Reference to the Texture object to be updated with the loaded data.
-         */
-        void Load(const std::string& texturePath, Mgtt::Rendering::Texture& texture);
 
         /**
          * @brief Clear the RAM resources associated with the Texture object.

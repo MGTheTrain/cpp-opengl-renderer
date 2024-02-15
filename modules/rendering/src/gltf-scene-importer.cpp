@@ -74,21 +74,6 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
 }
 
 /**
- * @brief Load a texture from the specified file path and update the Texture object.
- *
- * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
- *
- * @param texturePath The file path to the texture.
- * @param texture Reference to the Texture object to be updated with the loaded data.
- */
-void Mgtt::Rendering::GltfSceneImporter::Load(const std::string& texturePath, Mgtt::Rendering::Texture& texture) {
-    if (!texture.data) {
-        texture.data = stbi_load(texturePath.c_str(),
-            &texture.width, &texture.height, &texture.nrComponents, 0);
-    }
-}
-
-/**
 * @brief Extracts the folder path from a given file path.
 *
 * This function takes a file path as input and extracts the folder path
@@ -516,7 +501,6 @@ void Mgtt::Rendering::TextureManager::LoadFromEnvMap(Mgtt::Rendering::RenderText
  * @param texturePath The file path to the HDR texture.
  */
 void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexturesContainer& container, const std::string& texturePath) {
-
 }
 
 /**
