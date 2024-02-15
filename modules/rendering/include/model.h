@@ -42,6 +42,7 @@ namespace Mgtt::Rendering {
     struct Mesh;
     struct MeshPrimitive;
     struct Material;
+    struct TextureBase;
     struct Texture;
     struct NormalTexture;
     struct EmissiveTexture;
@@ -50,6 +51,9 @@ namespace Mgtt::Rendering {
     struct BaseColorTexture;
     struct PbrMaterial;
     struct AABB;
+    struct RenderTexturesContainer;
+    struct HdrTextureContainer;
+    struct CubeMapContainer;
 
     /**
      * @brief Represents a collidable aabb
@@ -217,9 +221,27 @@ namespace Mgtt::Rendering {
     };
 
     /**
+     * @brief Represents a generic texture base.
+     */
+    struct TextureBase {
+        /**
+        * @brief Constructor for the TextureBase structure
+        */
+        TextureBase();
+        
+        std::string name;
+        std::string path;
+        int32_t width;
+        int32_t height;
+        int32_t nrComponents;
+        unsigned char* data;
+        uint32_t sizeInBytes;
+    };
+
+    /**
      * @brief Represents a generic texture.
      */
-    struct Texture {
+    struct Texture: public TextureBase {
         /**
         * @brief Constructor for the Texture structure
         */
@@ -240,14 +262,7 @@ namespace Mgtt::Rendering {
          */
         void Clear();
 
-        std::string name;
         uint32_t id;
-        std::string path;
-        int32_t width;
-        int32_t height;
-        int32_t nrComponents;
-        unsigned char* data;
-        uint32_t sizeInBytes;
     };
 
     /**
@@ -409,6 +424,7 @@ namespace Mgtt::Rendering {
          */
         RenderTexturesContainer();
 
+        uint32_t cubeMapTextureId;      /**< ID of the cube map texture. */
         uint32_t irradianceMapTextureId; /**< ID of the irradiance map texture. */
         uint32_t fboId;                  /**< ID of the framebuffer object. */
         uint32_t rboId;                  /**< ID of the renderbuffer object. */
@@ -430,7 +446,7 @@ namespace Mgtt::Rendering {
          * @brief Constructor for the HdrTextureContainer structure.
          */
         HdrTextureContainer();
-        Texture hdrTexture; /**< High Dynamic Range texture. */
+        TextureBase hdrTexture; /**< High Dynamic Range texture. */
     };
 
     /**
@@ -444,6 +460,6 @@ namespace Mgtt::Rendering {
          * @brief Constructor for the CubeMapContainer structure.
          */
         CubeMapContainer();
-        std::vector<Texture> cubeMap; /**< Vector of cube map textures. */
+        std::vector<TextureBase> cubeMap; /**< Vector of cube map textures. */
     };
 }

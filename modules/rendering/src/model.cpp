@@ -225,14 +225,10 @@ void Mgtt::Rendering::PbrMaterial::Clear() {
 }
 
 /**
- * @brief Constructor for the Texture structure.
- *
- * This constructor initializes a Texture object with the specified texture path.
- *
- **/
-Mgtt::Rendering::Texture::Texture() {
+* @brief Constructor for the TextureBase structure
+*/
+Mgtt::Rendering::TextureBase::TextureBase() {
     this->name = "";
-    this->id = 0;
     this->path = "";
     this->width = 0;
     this->height = 0;
@@ -240,6 +236,14 @@ Mgtt::Rendering::Texture::Texture() {
     this->data = nullptr;
     this->sizeInBytes = 0;
 }
+
+/**
+ * @brief Constructor for the Texture structure.
+ *
+ * This constructor initializes a Texture object with the specified texture path.
+ *
+ **/
+Mgtt::Rendering::Texture::Texture(): TextureBase(), id(0) {}
 
 /**
 * @brief Copy Constructor for the Texture structure
@@ -353,7 +357,8 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, cons
  * @brief Constructor for the RenderTexturesContainer structure.
  */
 Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
-    : irradianceMapTextureId(0),
+    : cubeMapTextureId(0),
+      irradianceMapTextureId(0),
       fboId(0),
       rboId(0),
       envMapVao(0),
