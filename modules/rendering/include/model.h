@@ -435,6 +435,7 @@ namespace Mgtt::Rendering {
         uint32_t cubeMapTextureId;      /**< ID of the cube map texture. */
         uint32_t irradianceMapTextureId; /**< ID of the irradiance map texture. */
         uint32_t brdfLutTextureId;       /**< ID of the BRDF lookup texture. */
+        uint32_t hdrTextureId;          /**< ID of the hdr texture. */
         uint32_t fboId;                  /**< ID of the framebuffer object. */
         uint32_t rboId;                  /**< ID of the renderbuffer object. */
         uint32_t envMapVao;              /**< Vertex array object for environment mapping. */

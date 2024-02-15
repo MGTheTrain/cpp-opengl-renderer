@@ -360,6 +360,7 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
     : cubeMapTextureId(0),
       irradianceMapTextureId(0),
       brdfLutTextureId(0),
+      hdrTextureId(0),
       fboId(0),
       rboId(0),
       envMapVao(0),
@@ -387,6 +388,10 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     if(this->brdfLutTextureId > 0) {
         glDeleteTextures(1, &brdfLutTextureId);
         this->brdfLutTextureId = 0;
+    }
+    if(this->hdrTextureId > 0) {
+        glDeleteTextures(1, >hdrTextureId);
+        this->hdrTextureId = 0;
     }
     // framebuffer
     if (this->fboId > 0) {
