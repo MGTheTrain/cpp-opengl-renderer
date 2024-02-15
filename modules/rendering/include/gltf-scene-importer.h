@@ -194,12 +194,12 @@ namespace Mgtt::Rendering {
     class TextureManager {
     public:
         /**
-         * @brief Load a cube map texture from the given folder path.
-         * 
-         * This function loads a cube map texture from the specified folder path and 
+         * @brief Load cube map textures from the given folder path.
+         *
+         * This function loads cube map textures from the specified folder path and
          * associates it with the provided CubeMapContainer. It performs necessary operations
-         * to make the texture available for use in rendering.
-         * 
+         * to make the textures available for use in rendering.
+         *
          * @param container The CubeMapContainer to associate with the loaded cube map.
          * @param folderPath The folder path containing the cube map texture files.
          */
