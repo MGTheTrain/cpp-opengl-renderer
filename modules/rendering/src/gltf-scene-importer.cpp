@@ -492,13 +492,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
 }
 
 /**
- * @brief Default constructor for the TextureManager class.
- */
-Mgtt::Rendering::TextureManager::TextureManager() {
-    
-}
-
-/**
  * @brief Load a cube map texture from the given folder path.
  * 
  * This function loads a cube map texture from the specified folder path and 
