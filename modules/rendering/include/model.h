@@ -396,4 +396,27 @@ namespace Mgtt::Rendering {
         bool doubleSided;
         AlphaMode alphaMode;
     };
+
+    /**
+     * @brief Container for managing rendering-related textures and resources.
+     * 
+     * The RenderTexturesContainer structure encapsulates various texture IDs and rendering
+     * resources used in a graphics rendering pipeline.
+     */
+    struct RenderTexturesContainer {
+        /**
+         * @brief Constructor for the RenderTexturesContainer structure.
+         */
+        RenderTexturesContainer();
+
+        uint32_t cubeMapTextureId;       /**< ID of the cube map texture. */
+        uint32_t irradianceMapTextureId; /**< ID of the irradiance map texture. */
+        uint32_t fboId;                  /**< ID of the framebuffer object. */
+        uint32_t rboId;                  /**< ID of the renderbuffer object. */
+        uint32_t envMapVao;              /**< Vertex array object for environment mapping. */
+        uint32_t envMapVbo;              /**< Vertex buffer object for environment mapping. */
+        uint32_t brdfLutTextureId;       /**< ID of the BRDF lookup texture. */
+        uint32_t brdfQuadVao;            /**< Vertex array object for BRDF quad rendering. */
+        uint32_t brdfQuadVbo;            /**< Vertex buffer object for BRDF quad rendering. */
+    };
 }

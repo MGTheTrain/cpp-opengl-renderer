@@ -348,3 +348,21 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture() {
 * @param scale The base color applied to the base color texture.
 */
 Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, const glm::vec4& color): Texture(texture), color(color) {}
+
+/**
+ * @brief Container for managing rendering-related textures and resources.
+ * 
+ * The RenderTexturesContainer structure encapsulates various texture IDs and rendering
+ * resources used in a graphics rendering pipeline.
+ */
+Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer() {
+    this->cubeMapTextureId = 0;
+    this->irradianceMapTextureId = 0;
+    this->fboId = 0;
+    this->rboId = 0;
+    this->envMapVao = 0;
+    this->envMapVbo = 0;
+    this->brdfLutTextureId = 0;
+    this->brdfQuadVao = 0;
+    this->brdfQuadVbo = 0;
+}
