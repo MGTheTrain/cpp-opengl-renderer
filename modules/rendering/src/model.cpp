@@ -359,13 +359,64 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, cons
 Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
     : cubeMapTextureId(0),
       irradianceMapTextureId(0),
+      brdfLutTextureId(0),
       fboId(0),
       rboId(0),
       envMapVao(0),
       envMapVbo(0),
-      brdfLutTextureId(0),
       brdfQuadVao(0),
       brdfQuadVbo(0) {
+}
+
+/**
+ * @brief Clear releases resources.
+ *
+ * This method clears the resources associated with the RenderTextureContainer object, freeing up memory.
+ * It is recommended to call this method when the RenderTextureContainer is no longer needed.
+ */
+void Mgtt::Rendering::RenderTexturesContainer::Clear() {
+    // textures
+    if(this->cubeMapTextureId > 0) {
+        glDeleteTextures(1, &cubeMapTextureId);
+        this->cubeMapTextureId = 0;
+    }
+    if(this->irradianceMapTextureId > 0) {
+        glDeleteTextures(1, &irradianceMapTextureId);
+        this->irradianceMapTextureId = 0;
+    }
+    if(this->brdfLutTextureId > 0) {
+        glDeleteTextures(1, &brdfLutTextureId);
+        this->brdfLutTextureId = 0;
+    }
+    // framebuffer
+    if (this->fboId > 0) {
+        glDeleteFramebuffers(1, &this->fboId);
+        this->fboId = 0;
+    }
+    if (this->rboId > 0) {
+        glDeleteRenderbuffers(1, &this->rboId);
+        this->rboId = 0;
+    }
+
+    // vao
+    if (this->envMapVao > 0) {
+        glDeleteVertexArrays(1, &this->envMapVao);
+        this->envMapVao = 0;
+    }
+    if (this->brdfQuadVao > 0) {
+        glDeleteVertexArrays(1, &this->brdfQuadVao);
+        this->brdfQuadVao = 0;
+    }
+
+    // vbo
+    if (this->envMapVbo > 0) {
+        glDeleteBuffers(1, &this->envMapVbo);
+        this->envMapVbo = 0;
+    }
+    if (this->brdfQuadVbo > 0) {
+        glDeleteBuffers(1, &this->brdfQuadVbo);
+        this->brdfQuadVbo = 0;
+    }
 }
 
 /**
