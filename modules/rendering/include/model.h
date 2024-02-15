@@ -409,7 +409,6 @@ namespace Mgtt::Rendering {
          */
         RenderTexturesContainer();
 
-        uint32_t cubeMapTextureId;       /**< ID of the cube map texture. */
         uint32_t irradianceMapTextureId; /**< ID of the irradiance map texture. */
         uint32_t fboId;                  /**< ID of the framebuffer object. */
         uint32_t rboId;                  /**< ID of the renderbuffer object. */
@@ -418,5 +417,33 @@ namespace Mgtt::Rendering {
         uint32_t brdfLutTextureId;       /**< ID of the BRDF lookup texture. */
         uint32_t brdfQuadVao;            /**< Vertex array object for BRDF quad rendering. */
         uint32_t brdfQuadVbo;            /**< Vertex buffer object for BRDF quad rendering. */
+    };
+
+    /**
+     * @brief Container for managing High Dynamic Range (HDR) textures.
+     * 
+     * The HdrTextureContainer structure extends RenderTexturesContainer and includes
+     * additional functionality for handling HDR textures.
+     */
+    struct HdrTextureContainer : public RenderTexturesContainer {
+        /**
+         * @brief Constructor for the HdrTextureContainer structure.
+         */
+        HdrTextureContainer();
+        Texture hdrTexture; /**< High Dynamic Range texture. */
+    };
+
+    /**
+     * @brief Container for managing cube map textures.
+     * 
+     * The CubeMapContainer structure extends RenderTexturesContainer and includes
+     * additional functionality for handling cube map textures.
+     */
+    struct CubeMapContainer : public RenderTexturesContainer {
+        /**
+         * @brief Constructor for the CubeMapContainer structure.
+         */
+        CubeMapContainer();
+        std::vector<Texture> cubeMap; /**< Vector of cube map textures. */
     };
 }
