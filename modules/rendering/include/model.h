@@ -422,6 +422,11 @@ namespace Mgtt::Rendering {
     struct RenderTexturesContainer {
         /**
          * @brief Constructor for the RenderTexturesContainer structure.
+         */
+        RenderTexturesContainer() {}
+
+        /**
+         * @brief Constructor for the RenderTexturesContainer structure.
          * 
          * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
          * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
