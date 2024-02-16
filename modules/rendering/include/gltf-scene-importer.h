@@ -221,6 +221,18 @@ namespace Mgtt::Rendering {
 
     private:
         /**
+         * @brief Set up rendering resources for a cube.
+         * 
+         * The SetupCube function initializes and configures rendering resources
+         * for a cube, including textures and buffers. It uses the provided
+         * RenderTexturesContainer to manage the associated textures.
+         * 
+         * @param container A reference to a RenderTexturesContainer used to manage
+         *                  rendering-related textures and resources.
+         */
+        void SetupCube(Mgtt::Rendering::RenderTexturesContainer& container);
+
+        /**
          * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
          * 
          * This function loads the BRDF Lookup Texture into the provided HDR texture container.

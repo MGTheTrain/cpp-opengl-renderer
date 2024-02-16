@@ -580,7 +580,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
                 glUniformMatrix4fv(glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "view"), 1, GL_FALSE, &captureViews[i][0][0]);
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, container.cubeMapTextureId, 0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                // this->SetupCube(framebuffer);
+                this->SetupCube(container);
             }
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -605,6 +605,21 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
 void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesContainer& container) {
     
 }
+
+/**
+* @brief Set up rendering resources for a cube.
+* 
+* The SetupCube function initializes and configures rendering resources
+* for a cube, including textures and buffers. It uses the provided
+* RenderTexturesContainer to manage the associated textures.
+* 
+* @param container A reference to a RenderTexturesContainer used to manage
+*                  rendering-related textures and resources.
+*/
+void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container) {
+
+}
+
 
 /**
  * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
