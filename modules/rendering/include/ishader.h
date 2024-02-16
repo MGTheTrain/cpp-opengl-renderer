@@ -41,10 +41,9 @@ namespace Mgtt::Rendering {
          * 
          * This method compiles the vertex and fragment shaders, linking them into a shader program.
          * 
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
+         * @param shaderPathes The vertex and fragment shader pathes
          */
-        virtual void Compile(const std::string& vsPath, const std::string& fsPath) = 0;
+        virtual void Compile(const std::pair<std::string, std::string> shaderPathes) = 0;
 
 
         /**

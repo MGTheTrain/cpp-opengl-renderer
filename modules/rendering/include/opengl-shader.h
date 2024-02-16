@@ -49,10 +49,9 @@ namespace Mgtt::Rendering {
         /**
          * @brief Constructor for the OpenGlShader class.
          *
-         * @param vsPath Path to the vertex shader source file.
-         * @param fsPath Path to the fragment shader source file.
+         * @param shaderPathes The vertex and fragment shader pathes
          */
-        OpenGlShader(const std::string& vsPath, const std::string& fsPath);
+        OpenGlShader(const std::pair<std::string, std::string> shaderPathes);
 
         /**
          * @brief Destructor for the OpenGL shader.
@@ -60,15 +59,13 @@ namespace Mgtt::Rendering {
         ~OpenGlShader();
 
         /**
-         * @brief Compile the OpenGL shader program from specified vertex and fragment shader files.
-         *
-         * This method overrides the corresponding method in the IShader interface.
-         * It compiles the vertex and fragment shaders, linking them into a shader program.
-         *
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
+         * @brief Compile the shader program from specified vertex and fragment shader files.
+         * 
+         * This method compiles the vertex and fragment shaders, linking them into a shader program.
+         * 
+         * @param shaderPathes The vertex and fragment shader pathes
          */
-        void Compile(const std::string& vsPath, const std::string& fsPath) override;
+        void Compile(const std::pair<std::string, std::string> shaderPathes) override;
 
         /**
          * @brief Delete the shader program.

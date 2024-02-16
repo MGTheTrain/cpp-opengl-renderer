@@ -4,12 +4,11 @@
 /**
  * @brief Constructor for the OpenGlShader class.
  *
- * @param vsPath Path to the vertex shader source file.
- * @param fsPath Path to the fragment shader source file.
+ * @param shaderPathes The vertex and fragment shader pathes
  */
-Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::string& vsPath, const std::string& fsPath) {
+Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::pair<std::string, std::string> shaderPathes) {
     this->id = 0;
-    this->Compile(vsPath, fsPath);
+    this->Compile(shaderPathes);
 }
 
 /**
@@ -20,22 +19,20 @@ Mgtt::Rendering::OpenGlShader::~OpenGlShader() {
 }
 
 /**
- * @brief Compile the OpenGL shader program from specified vertex and fragment shader files.
- *
- * This method overrides the corresponding method in the IShader interface.
- * It compiles the vertex and fragment shaders, linking them into a shader program.
- *
- * @param vsPath The file path to the vertex shader source code.
- * @param fsPath The file path to the fragment shader source code.
+ * @brief Compile the shader program from specified vertex and fragment shader files.
+ * 
+ * This method compiles the vertex and fragment shaders, linking them into a shader program.
+ * 
+ * @param shaderPathes The vertex and fragment shader pathes
  */
-void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std::string& fsPath) {
+void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::string> shaderPathes) {
     this->Clear();
 
-    if (vsPath.size() == 0) {
-        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " + vsPath);
+    if (shaderPathes.first.size() == 0) {
+        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " + shaderPathes.first);
     }
-    if (fsPath.size() == 0) {
-        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty fragment path: " + fsPath);
+    if (shaderPathes.second.size() == 0) {
+        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty fragment path: " + shaderPathes.second);
     }
     std::string vsCode;
     std::string fsCode;
@@ -44,8 +41,8 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std
     vsFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     fsFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     try  {
-        vsFile.open(vsPath.c_str());
-        fsFile.open(fsPath.c_str());
+        vsFile.open(shaderPathes.first.c_str());
+        fsFile.open(shaderPathes.second.c_str());
         std::stringstream vShaderStream, fShaderStream;
         vShaderStream << vsFile.rdbuf();
         fShaderStream << fsFile.rdbuf();		
@@ -56,7 +53,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std
     }
     catch (std::ifstream::failure& ex)
     {
-        std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + vsPath + " and fragment shader file " + fsPath + "does not exist";
+        std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + shaderPathes.first + " and fragment shader file " + shaderPathes.second + "does not exist";
         throw std::runtime_error(errorMsg.c_str());
         return;
     }
