@@ -113,7 +113,7 @@ namespace Mgtt::Rendering {
         std::vector< std::shared_ptr<Node>> linearNodes;
         std::vector<PbrMaterial> materials;
         AABB aabb;
-        uint32_t shaderId;
+        OpenGlShader shader;
     private:
         /**
          * @brief Recursively linearizes the scene hierarchy starting from the given node.
@@ -423,7 +423,7 @@ namespace Mgtt::Rendering {
         /**
          * @brief Constructor for the RenderTexturesContainer structure.
          */
-        RenderTexturesContainer() {}
+        RenderTexturesContainer();
 
         /**
          * @brief Constructor for the RenderTexturesContainer structure.

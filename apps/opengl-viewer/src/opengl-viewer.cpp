@@ -49,6 +49,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     }
 
     this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
+    //this->mgttScene.shader.Compile();
     this->gltfSceneImporter->Load(this->mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf");
     this->textureManager->LoadFromHdr(this->renderTextureContainer, "assets/texture/surgery.jpg");
 }

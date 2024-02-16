@@ -9,7 +9,10 @@ Mgtt::Rendering::Scene::Scene() {
   this->pos = glm::vec3(0.0f);
   this->rot = glm::vec3(0.0f); 
   this->scale = 1.0f;
-  this->shaderId = 0;
+  this->mvp = glm::mat4(1.0f);
+  this->matrix = glm::mat4(1.0f);
+  this->aabb = AABB();
+  this->shader = OpenGlShader();
 }
 
 /**
@@ -22,6 +25,18 @@ void Mgtt::Rendering::Scene::Clear() {
     for (auto& linearNode : this->linearNodes) {
         linearNode->Clear();
     }
+
+    this->textureMap.clear();
+    this->nodes.clear();
+    this->nodes.shrink_to_fit();
+    this->linearNodes.clear();
+    this->linearNodes.shrink_to_fit();
+    this->materials.clear();
+    this->materials.shrink_to_fit();
+
+    this->shader.Clear();
+
+    Scene();
 }
 
 /**
@@ -145,6 +160,7 @@ Mgtt::Rendering::Mesh::Mesh() {
     this->tex = 0;
     //this->joint = 0;
     //this->weight = 0;
+    this->matrix = glm::mat4(1.0f);
 }
 
 /**
@@ -174,6 +190,21 @@ void Mgtt::Rendering::Mesh::Clear() {
     for(auto mehsPrimitive: this->meshPrimitives) {
         mehsPrimitive.Clear();
     }
+    this->meshPrimitives.clear();
+    this->meshPrimitives.shrink_to_fit();
+    this->indices.clear();
+    this->indices.shrink_to_fit();
+    this->vertexPositionAttribs.clear();
+    this->vertexPositionAttribs.shrink_to_fit();
+    this->vertexNormalAttribs.clear();
+    this->vertexNormalAttribs.shrink_to_fit();
+    this->vertexTextureAttribs.clear();
+    this->vertexTextureAttribs.shrink_to_fit();
+    this->vertexJointAttribs.clear();
+    this->vertexJointAttribs.shrink_to_fit();
+    this->vertexWeightAttribs.clear();
+    this->vertexWeightAttribs.shrink_to_fit();
+    Mesh();
 }
 
 
@@ -208,9 +239,15 @@ Mgtt::Rendering::Material::Material() {
  * @brief Constructor for the PbrMaterial structure.
  */
 Mgtt::Rendering::PbrMaterial::PbrMaterial() {
+    this->name = "";
     this->alphaCutoff = 0.0f;
     this->doubleSided = false;
     this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
+    this->normalTexture = NormalTexture();
+    this->occlusionTexture = OcclusionTexture();
+    this->emissiveTexture = EmissiveTexture();
+    this->baseColorTexture = BaseColorTexture();
+    this->metallicRoughnessTexture = MetallicRoughnessTexture();
 }
 
 /**
@@ -222,6 +259,8 @@ void Mgtt::Rendering::PbrMaterial::Clear() {
     this->normalTexture.Clear();
     this->emissiveTexture.Clear();
     this->occlusionTexture.Clear();
+
+    PbrMaterial();
 }
 
 /**
@@ -272,6 +311,7 @@ void Mgtt::Rendering::Texture::Clear() {
         glDeleteTextures(1, &this->id);
         this->id = 0;
     }
+    Texture();
 }
 
 /**
@@ -355,6 +395,23 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, cons
 
 /**
  * @brief Constructor for the RenderTexturesContainer structure.
+ */
+Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
+    : cubeMapTextureId(0),
+      irradianceMapTextureId(0),
+      brdfLutTextureId(0),
+      hdrTextureId(0),
+      fboId(0),
+      rboId(0),
+      envMapVao(0),
+      envMapVbo(0),
+      brdfQuadVao(0),
+      brdfQuadVbo(0),
+      eq2CubeMapShader(OpenGlShader(std::make_pair<std::string, std::string>("",""))),
+      brdfLutShader(OpenGlShader(std::make_pair<std::string, std::string>("",""))) {}
+
+/**
+ * @brief Constructor for the RenderTexturesContainer structure.
  * 
  * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
  * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
@@ -432,4 +489,5 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     // shader
     this->eq2CubeMapShader.Clear();
     this->brdfLutShader.Clear();
+    RenderTexturesContainer();
 }
