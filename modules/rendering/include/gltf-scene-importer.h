@@ -193,9 +193,9 @@ namespace Mgtt::Rendering {
          * to make the textures available for use in rendering.
          *
          * @param container The RenderTexturesContainer to associate with the loaded cube map.
-         * @param folderPath The folder path containing the cube map texture files.
+         * @param texturePathes The cube map texture pathes
          */
-        void LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container, const std::string& folderPath);
+        void LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container, const std::vector<std::string>& texturePathes);
 
         /**
          * @brief Load an HDR texture from the given file path.

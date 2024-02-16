@@ -486,10 +486,10 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
  * to make the textures available for use in rendering.
  * 
  * @param container The RenderTexturesContainer to associate with the loaded cube map.
- * @param folderPath The folder path containing the cube map texture files.
+ * @param texturePathes The cube map texture pathes
  */
-void Mgtt::Rendering::TextureManager::LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container, const std::string& folderPath) {
-
+void Mgtt::Rendering::TextureManager::LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container, const std::vector<std::string>& texturePathes) {
+    // TBD
 }
 
 /**
