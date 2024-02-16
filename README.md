@@ -18,9 +18,9 @@ TBD
 ## Features
 
 - [ ] Compilation on MacOS, Linux Ubuntu 20.04/22.04, Linux debian 11 and Windows 10/11 OS
-- [ ] USD and/or glTF scene loading
-- [ ] PBR shader pipeline
-- [ ] Support mainly for metal roughness workflow
+- [ ] Support for glTF scene loading
+- [ ] Support for USD scene loading
+- [ ] PBR shader pipeline considering primarily the metal roughness workflow
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] Skeletal animation support (**OPTIONAL**)
 - [ ] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
