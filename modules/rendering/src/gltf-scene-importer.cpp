@@ -603,7 +603,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
  * @param container The RenderTexturesContainer to clear.
  */
 void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesContainer& container) {
-    
+    container.Clear();   
 }
 
 /**
