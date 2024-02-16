@@ -372,8 +372,8 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
       envMapVbo(0),
       brdfQuadVao(0),
       brdfQuadVbo(0),
-      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes.first, eq2CubeMapShaderPathes.second)),
-      brdfLutShader(OpenGlShader(brdfLutShaderPathes.first, brdfLutShaderPathes.second)) {}
+      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes)),
+      brdfLutShader(OpenGlShader(brdfLutShaderPathes)) {}
 
 /**
  * @brief Clear releases resources.

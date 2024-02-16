@@ -51,7 +51,8 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
 
     std::string vsPath = "assets/shader/core/coordinate.vert";
     std::string fsPath = "assets/shader/core/coordinate.frag";
-    auto shader = Mgtt::Rendering::OpenGlShader(vsPath, fsPath);
+    std::pair<std::string, std::string> shaderPathes = std::make_pair(vsPath, fsPath);
+    auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
     this->openGlShaders.push_back(shader);
     
     this->mesh->vertexPositionAttribs = {
