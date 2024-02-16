@@ -221,6 +221,18 @@ namespace Mgtt::Rendering {
 
     private:
         /**
+         * @brief Check if any value in the given vector is greater than zero.
+         *
+         * The function iterates through the elements of the vector and returns true
+         * if it finds at least one element greater than zero; otherwise, it returns false.
+         *
+         * @param vec A const reference to a vector of unsigned integers to be checked.
+         * @return true if any value in the vector is greater than zero, false otherwise.
+         */
+        bool HasValuesGreaterThanZero(const std::vector<unsigned int>& vec);
+
+
+        /**
          * @brief Set up rendering resources for a cube.
          * 
          * The SetupCube function initializes and configures rendering resources

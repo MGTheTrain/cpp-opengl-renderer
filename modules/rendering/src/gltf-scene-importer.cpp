@@ -607,6 +607,24 @@ void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesConta
 }
 
 /**
+ * @brief Check if any value in the given vector is greater than zero.
+ *
+ * The function iterates through the elements of the vector and returns true
+ * if it finds at least one element greater than zero; otherwise, it returns false.
+ *
+ * @param vec A const reference to a vector of unsigned integers to be checked.
+ * @return true if any value in the vector is greater than zero, false otherwise.
+ */
+bool Mgtt::Rendering::TextureManager::HasValuesGreaterThanZero(const std::vector<unsigned int>& vec) {
+    for (auto& val : vec) {
+        if (val > 0) {
+            return true;  
+        }
+    }
+    return false;  
+}
+
+/**
  * @brief Set up rendering resources for a cube.
  * 
  * The SetupCube function initializes and configures rendering resources
@@ -617,61 +635,70 @@ void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesConta
  *                  rendering-related textures and resources.
  */
 void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container){
-    float vertices[] = {
-        -1.0f, 1.0f,  -1.0f, 
-        -1.0f, -1.0f, -1.0f, 
-        1.0f,  -1.0f, -1.0f,
-        1.0f,  -1.0f, -1.0f, 
-        1.0f,  1.0f,  -1.0f, 
-        -1.0f, 1.0f,  -1.0f,
-
-        -1.0f, -1.0f, 1.0f,  
-        -1.0f, -1.0f, -1.0f, 
-        -1.0f, 1.0f,  -1.0f,
-        -1.0f, 1.0f,  -1.0f, 
-        -1.0f, 1.0f,  1.0f,  
-        -1.0f, -1.0f, 1.0f,
-
-        1.0f,  -1.0f, -1.0f, 
-        1.0f,  -1.0f, 1.0f,  
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,  
-        1.0f,  1.0f,  -1.0f, 
-        1.0f,  -1.0f, -1.0f,
-
-        -1.0f, -1.0f, 1.0f,  
-        -1.0f, 1.0f,  1.0f,  
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,  
-        1.0f,  -1.0f, 1.0f,  
-        -1.0f, -1.0f, 1.0f,
-
-        -1.0f, 1.0f,  -1.0f, 
-        1.0f,  1.0f,  -1.0f, 
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,  
-        -1.0f, 1.0f,  1.0f,  
-        -1.0f, 1.0f,  -1.0f,
-
-        -1.0f, -1.0f, -1.0f, 
-        -1.0f, -1.0f, 1.0f,  
-        1.0f,  -1.0f, -1.0f,
-        1.0f,  -1.0f, -1.0f, 
-        -1.0f, -1.0f, 1.0f,  
-        1.0f,  -1.0f, 1.0f
+    std::vector<uint32_t> vec {
+        container.envMapVao,
+        container.envMapVbo
     };
+    if(!this->HasValuesGreaterThanZero(vec)) {
+        float vertices[] = {
+            -1.0f, 1.0f,  -1.0f, 
+            -1.0f, -1.0f, -1.0f, 
+            1.0f,  -1.0f, -1.0f,
+            1.0f,  -1.0f, -1.0f, 
+            1.0f,  1.0f,  -1.0f, 
+            -1.0f, 1.0f,  -1.0f,
 
-    glGenVertexArrays(1, &container.envMapVao);
-    glGenBuffers(1, &container.envMapVbo);
+            -1.0f, -1.0f, 1.0f,  
+            -1.0f, -1.0f, -1.0f, 
+            -1.0f, 1.0f,  -1.0f,
+            -1.0f, 1.0f,  -1.0f, 
+            -1.0f, 1.0f,  1.0f,  
+            -1.0f, -1.0f, 1.0f,
 
-    glBindVertexArray(container.envMapVao);
-    glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void *>(0));
-    glBindVertexArray(container.envMapVao);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
+            1.0f,  -1.0f, -1.0f, 
+            1.0f,  -1.0f, 1.0f,  
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,  
+            1.0f,  1.0f,  -1.0f, 
+            1.0f,  -1.0f, -1.0f,
+
+            -1.0f, -1.0f, 1.0f,  
+            -1.0f, 1.0f,  1.0f,  
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,  
+            1.0f,  -1.0f, 1.0f,  
+            -1.0f, -1.0f, 1.0f,
+
+            -1.0f, 1.0f,  -1.0f, 
+            1.0f,  1.0f,  -1.0f, 
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,  
+            -1.0f, 1.0f,  1.0f,  
+            -1.0f, 1.0f,  -1.0f,
+
+            -1.0f, -1.0f, -1.0f, 
+            -1.0f, -1.0f, 1.0f,  
+            1.0f,  -1.0f, -1.0f,
+            1.0f,  -1.0f, -1.0f, 
+            -1.0f, -1.0f, 1.0f,  
+            1.0f,  -1.0f, 1.0f
+        };
+
+        glGenVertexArrays(1, &container.envMapVao);
+        glGenBuffers(1, &container.envMapVbo);
+
+        glBindVertexArray(container.envMapVao);
+        glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void *>(0));
+        glBindVertexArray(container.envMapVao);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+    } else {
+        container.Clear();
+        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resource already allocated");
+    }
 }
 
 /**
@@ -685,30 +712,39 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
 *                  rendering-related textures and resources.
 */
 void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container) {
-    uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
-    uint32_t texLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
-
-    float quadVertices[] = {
-        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 
-        1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
+    std::vector<uint32_t> vec {
+        container.brdfQuadVao,
+        container.brdfQuadVbo
     };
-    glGenVertexArrays(1, &container.brdfQuadVao);
-    glGenBuffers(1, &container.brdfQuadVbo);
+    if(!this->HasValuesGreaterThanZero(vec)) {
+        uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
+        uint32_t texLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
 
-    glBindVertexArray(container.brdfQuadVao);
-    glBindBuffer(GL_ARRAY_BUFFER, container.brdfQuadVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        float quadVertices[] = {
+            -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+            1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 
+            1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+        glGenVertexArrays(1, &container.brdfQuadVao);
+        glGenBuffers(1, &container.brdfQuadVbo);
 
-    glEnableVertexAttribArray(posLoc);
-    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(0));
-    glEnableVertexAttribArray(texLoc);
-    glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
+        glBindVertexArray(container.brdfQuadVao);
+        glBindBuffer(GL_ARRAY_BUFFER, container.brdfQuadVbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 
-    glBindVertexArray(container.brdfQuadVao);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindVertexArray(0);
+        glEnableVertexAttribArray(posLoc);
+        glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(0));
+        glEnableVertexAttribArray(texLoc);
+        glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
+
+        glBindVertexArray(container.brdfQuadVao);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
+    } else {
+        container.Clear();
+        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resource already allocated");
+    }
 }
 
 
@@ -721,25 +757,33 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
  * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
  */
 void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container) {
-    glGenTextures(1, &container.brdfLutTextureId);
-    glBindTexture(GL_TEXTURE_2D, container.brdfLutTextureId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 128, 128, 0, GL_RG, GL_UNSIGNED_BYTE, 0);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    std::vector<uint32_t> vec {
+        container.brdfLutTextureId
+    };
+    if(!this->HasValuesGreaterThanZero(vec)) {
+        glGenTextures(1, &container.brdfLutTextureId);
+        glBindTexture(GL_TEXTURE_2D, container.brdfLutTextureId);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 128, 128, 0, GL_RG, GL_UNSIGNED_BYTE, 0);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
-    glBindRenderbuffer(GL_RENDERBUFFER, container.rboId);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 128, 128);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, container.brdfLutTextureId, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+        glBindRenderbuffer(GL_RENDERBUFFER, container.rboId);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 128, 128);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, container.brdfLutTextureId, 0);
 
-    glViewport(0, 0, 128, 128);
-    glUseProgram(container.brdfLutShader.GetProgramId());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    this->SetupQuad(container);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, 128, 128);
+        glUseProgram(container.brdfLutShader.GetProgramId());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->SetupQuad(container);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    } else {
+        container.Clear();
+        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resource already allocated");
+    }
 }
 
 /**
