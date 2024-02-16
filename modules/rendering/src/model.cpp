@@ -355,8 +355,13 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture, cons
 
 /**
  * @brief Constructor for the RenderTexturesContainer structure.
+ * 
+ * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
+ * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
  */
-Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(const std::pair<std::string, std::string>& eq2CubeMapShaderPathes)
+Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
+    const std::pair<std::string, std::string>& eq2CubeMapShaderPathes,
+    const std::pair<std::string, std::string>& brdfLutShaderPathes)
     : cubeMapTextureId(0),
       irradianceMapTextureId(0),
       brdfLutTextureId(0),
@@ -367,7 +372,8 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(const std::pai
       envMapVbo(0),
       brdfQuadVao(0),
       brdfQuadVbo(0),
-      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes.first, eq2CubeMapShaderPathes.second)) {}
+      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes.first, eq2CubeMapShaderPathes.second)),
+      brdfLutShader(OpenGlShader(brdfLutShaderPathes.first, brdfLutShaderPathes.second)) {}
 
 /**
  * @brief Clear releases resources.

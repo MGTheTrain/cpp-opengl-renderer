@@ -422,9 +422,13 @@ namespace Mgtt::Rendering {
     struct RenderTexturesContainer {
         /**
          * @brief Constructor for the RenderTexturesContainer structure.
+         * 
          * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
+         * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
          */
-        RenderTexturesContainer(const std::pair<std::string, std::string>& eq2CubeMapShaderPathes);
+        RenderTexturesContainer(
+            const std::pair<std::string, std::string>& eq2CubeMapShaderPathes, 
+            const std::pair<std::string, std::string>& brdfLutShaderPathes);
 
         /**
          * @brief Clear releases resources.
@@ -447,5 +451,6 @@ namespace Mgtt::Rendering {
         std::vector<TextureBase> textures; // @note This vector can be used to store either a single HDR texture or multiple cube map textures.
 
         Mgtt::Rendering::OpenGlShader eq2CubeMapShader; // equirectangular to cubemap shader
+        Mgtt::Rendering::OpenGlShader brdfLutShader; // brdf lut shader
     };
 }
