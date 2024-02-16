@@ -210,6 +210,16 @@ namespace Mgtt::Rendering {
         void LoadFromHdr(Mgtt::Rendering::RenderTexturesContainer& container, const std::string& texturePath);
 
         /**
+         * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
+         *
+         * This function loads the BRDF Lookup Texture into the provided HDR texture container.
+         * It performs necessary operations to make the BRDF texture available for use in rendering.
+         *
+         * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
+         */
+        void LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container);
+
+        /**
          * @brief Clear the provided render textures container.
          * 
          * This function clears the contents of the provided RenderTexturesContainer, releasing
@@ -255,16 +265,6 @@ namespace Mgtt::Rendering {
          *                  rendering-related textures and resources.
          */
         void SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container);
-
-        /**
-         * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
-         * 
-         * This function loads the BRDF Lookup Texture into the provided HDR texture container.
-         * It performs necessary operations to make the BRDF texture available for use in rendering.
-         * 
-         * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
-         */
-        void LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container);
 
         /**
          * @brief Generate the irradiance map for the provided HDR texture container.
