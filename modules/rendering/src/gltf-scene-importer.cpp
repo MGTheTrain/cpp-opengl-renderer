@@ -607,6 +607,74 @@ void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesConta
 }
 
 /**
+ * @brief Set up rendering resources for a cube.
+ * 
+ * The SetupCube function initializes and configures rendering resources
+ * for a cube, including textures and buffers. It uses the provided
+ * RenderTexturesContainer to manage the associated textures.
+ * 
+ * @param container A reference to a RenderTexturesContainer used to manage
+ *                  rendering-related textures and resources.
+ */
+void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container){
+    float vertices[] = {
+        -1.0f, 1.0f,  -1.0f, 
+        -1.0f, -1.0f, -1.0f, 
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f, 
+        1.0f,  1.0f,  -1.0f, 
+        -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, 1.0f,  
+        -1.0f, -1.0f, -1.0f, 
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f, 
+        -1.0f, 1.0f,  1.0f,  
+        -1.0f, -1.0f, 1.0f,
+
+        1.0f,  -1.0f, -1.0f, 
+        1.0f,  -1.0f, 1.0f,  
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  
+        1.0f,  1.0f,  -1.0f, 
+        1.0f,  -1.0f, -1.0f,
+
+        -1.0f, -1.0f, 1.0f,  
+        -1.0f, 1.0f,  1.0f,  
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  
+        1.0f,  -1.0f, 1.0f,  
+        -1.0f, -1.0f, 1.0f,
+
+        -1.0f, 1.0f,  -1.0f, 
+        1.0f,  1.0f,  -1.0f, 
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  
+        -1.0f, 1.0f,  1.0f,  
+        -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, -1.0f, 
+        -1.0f, -1.0f, 1.0f,  
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f, 
+        -1.0f, -1.0f, 1.0f,  
+        1.0f,  -1.0f, 1.0f
+    };
+
+    glGenVertexArrays(1, &container.envMapVao);
+    glGenBuffers(1, &container.envMapVbo);
+
+    glBindVertexArray(container.envMapVao);
+    glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void *>(0));
+    glBindVertexArray(container.envMapVao);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+}
+
+/**
 * @brief Set up rendering resources for a cube.
 * 
 * The SetupQuad function initializes and configures rendering resources
@@ -670,7 +738,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexture
     glViewport(0, 0, 128, 128);
     glUseProgram(container.brdfLutShader.GetProgramId());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    this->SetupQuad(brdfLutTextureShader, framebuffer);
+    this->SetupQuad(container);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
