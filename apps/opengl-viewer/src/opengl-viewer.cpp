@@ -49,9 +49,21 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     }
 
     this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
-    //this->mgttScene.shader.Compile();
-    this->gltfSceneImporter->Load(this->mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf");
-    this->textureManager->LoadFromHdr(this->renderTextureContainer, "assets/texture/surgery.jpg");
+    auto pbrShaderPathes = std::make_pair<std::string, std::string>("assets/shader/core/pbr.vert","assets/shader/core/pbr.frag");
+    this->mgttScene.shader.Compile(pbrShaderPathes);
+    std::string mgttScenePath= "assets/scenes/water-bottle/WaterBottle.gltf";
+    this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
+
+    // env map 
+    auto eq2BrdfLutShaderPathes = std::make_pair<std::string, std::string>("", "");
+    this->renderTextureContainer.eq2CubeMapShader.Compile(eq2BrdfLutShaderPathes);
+    std::string hdrTexturePath = "assets/texture/surgery.jpg";
+    this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
+
+    
+    // brdf lut
+    auto brdfLutShaderPathes = std::make_pair<std::string, std::string>("", "");
+    this->renderTextureContainer.brdfLutShader.Compile(brdfLutShaderPathes);
 }
 
 
