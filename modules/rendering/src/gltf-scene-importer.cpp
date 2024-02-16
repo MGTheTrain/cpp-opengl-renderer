@@ -697,7 +697,7 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
         glBindVertexArray(0);
     } else {
         container.Clear();
-        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resource already allocated");
+        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [envMapVao, envMapVbo]");
     }
 }
 
@@ -743,7 +743,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
         glBindVertexArray(0);
     } else {
         container.Clear();
-        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resource already allocated");
+        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfQuadVao, brdfQuadVbo]");
     }
 }
 
@@ -782,7 +782,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexture
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     } else {
         container.Clear();
-        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resource already allocated");
+        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfLutTextureId]");
     }
 }
 
