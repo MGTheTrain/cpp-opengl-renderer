@@ -617,7 +617,30 @@ void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesConta
 *                  rendering-related textures and resources.
 */
 void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container) {
+    uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
+    uint32_t texLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
 
+    float quadVertices[] = {
+        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 
+        1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
+    };
+    glGenVertexArrays(1, &container.brdfQuadVao);
+    glGenBuffers(1, &container.brdfQuadVbo);
+
+    glBindVertexArray(container.brdfQuadVao);
+    glBindBuffer(GL_ARRAY_BUFFER, container.brdfQuadVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(0));
+    glEnableVertexAttribArray(texLoc);
+    glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
+
+    glBindVertexArray(container.brdfQuadVao);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
 }
 
 
