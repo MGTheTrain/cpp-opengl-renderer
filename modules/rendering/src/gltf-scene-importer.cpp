@@ -640,65 +640,60 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
         container.envMapVbo
     };
     if(!this->HasValuesGreaterThanZero(vec)) {
-        float vertices[] = {
-            -1.0f, 1.0f,  -1.0f, 
-            -1.0f, -1.0f, -1.0f, 
-            1.0f,  -1.0f, -1.0f,
-            1.0f,  -1.0f, -1.0f, 
-            1.0f,  1.0f,  -1.0f, 
-            -1.0f, 1.0f,  -1.0f,
-
-            -1.0f, -1.0f, 1.0f,  
-            -1.0f, -1.0f, -1.0f, 
-            -1.0f, 1.0f,  -1.0f,
-            -1.0f, 1.0f,  -1.0f, 
-            -1.0f, 1.0f,  1.0f,  
-            -1.0f, -1.0f, 1.0f,
-
-            1.0f,  -1.0f, -1.0f, 
-            1.0f,  -1.0f, 1.0f,  
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,  
-            1.0f,  1.0f,  -1.0f, 
-            1.0f,  -1.0f, -1.0f,
-
-            -1.0f, -1.0f, 1.0f,  
-            -1.0f, 1.0f,  1.0f,  
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,  
-            1.0f,  -1.0f, 1.0f,  
-            -1.0f, -1.0f, 1.0f,
-
-            -1.0f, 1.0f,  -1.0f, 
-            1.0f,  1.0f,  -1.0f, 
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,  
-            -1.0f, 1.0f,  1.0f,  
-            -1.0f, 1.0f,  -1.0f,
-
-            -1.0f, -1.0f, -1.0f, 
-            -1.0f, -1.0f, 1.0f,  
-            1.0f,  -1.0f, -1.0f,
-            1.0f,  -1.0f, -1.0f, 
-            -1.0f, -1.0f, 1.0f,  
-            1.0f,  -1.0f, 1.0f
-        };
-
         glGenVertexArrays(1, &container.envMapVao);
         glGenBuffers(1, &container.envMapVbo);
-
-        glBindVertexArray(container.envMapVao);
-        glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void *>(0));
-        glBindVertexArray(container.envMapVao);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-    } else {
-        container.Clear();
-        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [envMapVao, envMapVbo]");
     }
+    float vertices[] = {
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  1.0f,
+        -1.0f, -1.0f, 1.0f,
+
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, 1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  -1.0f,
+        1.0f,  -1.0f, -1.0f,
+
+        -1.0f, -1.0f, 1.0f,
+        -1.0f, 1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  -1.0f, 1.0f,
+        -1.0f, -1.0f, 1.0f,
+
+        -1.0f, 1.0f,  -1.0f,
+        1.0f,  1.0f,  -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        -1.0f, 1.0f,  1.0f,
+        -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, 1.0f,
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f,
+        -1.0f, -1.0f, 1.0f,
+        1.0f,  -1.0f, 1.0f
+    };
+    glBindVertexArray(container.envMapVao);
+    glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void*>(0));
+    glBindVertexArray(container.envMapVao);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
 }
 
 /**
@@ -742,8 +737,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
     } else {
-        container.Clear();
-        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfQuadVao, brdfQuadVbo]");
+        std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfQuadVao, brdfQuadVbo]" << std::endl;
     }
 }
 
@@ -781,8 +775,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexture
         this->SetupQuad(container);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     } else {
-        container.Clear();
-        throw std::runtime_error("TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfLutTextureId]");
+        std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfLutTextureId]" << std::endl;
     }
 }
 
