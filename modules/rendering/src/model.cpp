@@ -428,4 +428,8 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
         glDeleteBuffers(1, &this->brdfQuadVbo);
         this->brdfQuadVbo = 0;
     }
+
+    // shader
+    this->eq2CubeMapShader.Clear();
+    this->brdfLutShader.Clear();
 }
