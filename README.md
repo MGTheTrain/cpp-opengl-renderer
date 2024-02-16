@@ -19,9 +19,9 @@ TBD
 
 - [ ] Compilation on MacOS, Linux Ubuntu 20.04/22.04, Linux debian 11 and Windows 10/11 OS
 - [ ] Support for glTF scene loading
-- [ ] Support for USD scene loading
 - [ ] PBR shader pipeline considering primarily the metal roughness workflow
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
+- [ ] Support for USD scene loading (**OPTIONAL**)
 - [ ] Skeletal animation support (**OPTIONAL**)
 - [ ] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
 - [ ] Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)
