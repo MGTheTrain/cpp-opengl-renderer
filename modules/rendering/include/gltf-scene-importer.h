@@ -188,7 +188,7 @@ namespace Mgtt::Rendering {
         /**
          * @brief Load cube map textures from the given folder path.
          *
-         * This function loads cube map textures from the specified folder path and
+         * This function loads cube map textures and
          * associates it with the provided RenderTexturesContainer. It performs necessary operations
          * to make the textures available for use in rendering.
          *
