@@ -57,6 +57,12 @@ namespace Mgtt::Apps {
         ~OpenGlViewer();
 
         /**
+         * @brief Clears OpenGl and RAM allocated resources
+         *
+         */
+        void Clear();
+
+        /**
          * @brief Renders the scene using OpenGL.
          *
          * This method is responsible for rendering the contents of the scene using OpenGL.
@@ -64,7 +70,9 @@ namespace Mgtt::Apps {
         void Render();
     private:
         Mgtt::Rendering::Scene mgttScene;
+        Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
         std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
+        std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
     };
 

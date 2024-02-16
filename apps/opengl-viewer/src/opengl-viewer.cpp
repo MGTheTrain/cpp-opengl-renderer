@@ -27,7 +27,16 @@
  * @brief Destructs the OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::~OpenGlViewer() {
+    this->Clear();
+}
+
+/**
+ * @brief Clears OpenGl and RAM allocated resources
+ * 
+ */
+void Mgtt::Apps::OpenGlViewer::Clear() {
     this->gltfSceneImporter->Clear(this->mgttScene);
+    this->textureManager->Clear(this->renderTextureContainer);
 }
 
 /**
@@ -41,6 +50,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 
     this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
     this->gltfSceneImporter->Load(this->mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf");
+    this->textureManager->LoadFromHdr(this->renderTextureContainer, "assets/texture/surgery.jpg");
 }
 
 
@@ -58,12 +68,13 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 }
  
 int main() {
+    Mgtt::Apps::OpenGlViewer openGlViewer;
     try {
-        Mgtt::Apps::OpenGlViewer openGlViewer;
         openGlViewer.Render();
 
     } catch(const std::exception& ex) {
         std::cout << ex.what() << std::endl;
+        openGlViewer.Clear();
         return 1;
     }
     return 0;
