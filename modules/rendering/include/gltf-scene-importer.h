@@ -233,6 +233,18 @@ namespace Mgtt::Rendering {
         void SetupCube(Mgtt::Rendering::RenderTexturesContainer& container);
 
         /**
+         * @brief Set up rendering resources for a cube.
+         * 
+         * The SetupQuad function initializes and configures rendering resources
+         * for a quad, including textures and buffers. It uses the provided
+         * RenderTexturesContainer to manage the associated textures.
+         * 
+         * @param container A reference to a RenderTexturesContainer used to manage
+         *                  rendering-related textures and resources.
+         */
+        void SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container);
+
+        /**
          * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
          * 
          * This function loads the BRDF Lookup Texture into the provided HDR texture container.

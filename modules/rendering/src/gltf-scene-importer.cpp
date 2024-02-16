@@ -609,14 +609,14 @@ void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesConta
 /**
 * @brief Set up rendering resources for a cube.
 * 
-* The SetupCube function initializes and configures rendering resources
-* for a cube, including textures and buffers. It uses the provided
+* The SetupQuad function initializes and configures rendering resources
+* for a quad, including textures and buffers. It uses the provided
 * RenderTexturesContainer to manage the associated textures.
 * 
 * @param container A reference to a RenderTexturesContainer used to manage
 *                  rendering-related textures and resources.
 */
-void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container) {
+void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container) {
     uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
     uint32_t texLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
 
@@ -653,7 +653,25 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
  * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
  */
 void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container) {
+    glGenTextures(1, &container.brdfLutTextureId);
+    glBindTexture(GL_TEXTURE_2D, container.brdfLutTextureId);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 128, 128, 0, GL_RG, GL_UNSIGNED_BYTE, 0);
     
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+    glBindRenderbuffer(GL_RENDERBUFFER, container.rboId);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 128, 128);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, container.brdfLutTextureId, 0);
+
+    glViewport(0, 0, 128, 128);
+    glUseProgram(container.brdfLutShader.GetProgramId());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    this->SetupQuad(brdfLutTextureShader, framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 /**
