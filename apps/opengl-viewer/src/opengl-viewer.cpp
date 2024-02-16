@@ -64,6 +64,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     // brdf lut
     auto brdfLutShaderPathes = std::make_pair<std::string, std::string>("", "");
     this->renderTextureContainer.brdfLutShader.Compile(brdfLutShaderPathes);
+    this->textureManager->LoadBrdfLut(this->renderTextureContainer);
 }
 
 
