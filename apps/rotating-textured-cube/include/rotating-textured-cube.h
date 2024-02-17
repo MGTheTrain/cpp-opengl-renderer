@@ -40,20 +40,6 @@
 
 namespace Mgtt::Apps {
     /**
-     * @brief Represents window params 
-     */
-    struct WindowParams {
-        WindowParams() {
-            this->name = "";
-            this->width = 0.0f;
-            this->height = 0.0f;
-        }
-        std::string name;
-        float width;
-        float height;
-    };
-
-    /**
      * @brief Represents glm matrices
      */
     struct GlmMatrices {
@@ -116,7 +102,6 @@ namespace Mgtt::Apps {
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
-        std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
         Mgtt::Rendering::Mesh mesh;
     };

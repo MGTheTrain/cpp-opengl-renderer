@@ -37,14 +37,12 @@ Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
  * @brief Constructs an RotatingTexturedCube  object.
  */
 Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
-    this->windowParams = std::make_unique<WindowParams>();
-    this->windowParams->name = "rotating-textured-cube";
-    this->windowParams->width= 1000.0f;
-    this->windowParams->height= 1000.0f;
+    std::string appName = "rotating-textured-cube";
+    float windowWidth = 1000.0f;
+    float windowHeight = 1000.0f;
 
     this->glmMatrices = std::make_unique<GlmMatrices>();
-    this->glfwWindow = 
-      std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
+    this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(appName, windowWidth, windowHeight);
     this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
@@ -212,7 +210,8 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         this->glmMatrices->projection = glm::mat4(1.0f);
         this->glmMatrices->model = glm::rotate(this->glmMatrices->model , (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
         this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
-        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
+        auto [width, height] = glfwWindow->GetWindowSize();
+        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.1f, 1000.0f);
         this->glmMatrices->mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
         this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
         glBindVertexArray(this->mesh.vao);
