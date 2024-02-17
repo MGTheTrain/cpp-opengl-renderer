@@ -89,6 +89,7 @@ namespace Mgtt::Apps {
         std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
         std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+        glm::vec3 cameraPosition;
 
         /**
          * @brief Iterates recursively over all nodes in the scene

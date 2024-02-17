@@ -43,6 +43,7 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
  * @brief Constructs an OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
+    this->cameraPosition = glm::vec3(0.0f, 0.0f, -1.0f);
     std::string appName = "opengl-viewer";
     float windowWidth = 1000.0f;
     float windowHeight = 1000.0f;
@@ -94,32 +95,41 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         this->glmMatrices->projection = glm::mat4(1.0f);
         auto [width, height] = glfwWindow->GetWindowSize();
         this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.1f, 1000.0f);
-        this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -1.0f));
+        this->glmMatrices->view = glm::translate(this->glmMatrices->view, this->cameraPosition);
         this->glmMatrices->model = glm::rotate(this->glmMatrices->model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         this->mgttScene.mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
 
         this->mgttScene.shader.Use();
         this->mgttScene.shader.SetMat4("model", this->glmMatrices->model);
         this->mgttScene.shader.SetMat4("mvp", this->mgttScene.mvp);
+        this->mgttScene.shader.SetVec3("lightPosition", this->cameraPosition);
+        this->mgttScene.shader.SetVec3("cameraPosition", this->cameraPosition);
+
+        // samplerEnvMap
+        // samplerIrradianceMap
+        // samplerBrdfLut
+        // scaleIblAmbient
+        // prefilteredCubeMipLevels
+
 
         for (auto& node : this->mgttScene.nodes) {
             this->TraverseSceneNode(node);
         }
 
-        // Check brdf lut
+        //// Check brdf lut
         //this->renderTextureContainer.brdfLutShader.Use();
 
         //glBindVertexArray(this->renderTextureContainer.quadVao);
-        //glDrawArrays(GL_TRIANGLES, 0, 4);
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
         //glBindVertexArray(0);
 
-         //Check env map
+        // //Check env map
+        glDepthFunc(GL_LEQUAL);
         this->renderTextureContainer.envMapShader.Use();
         this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
         this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
         this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
 
-        glDepthFunc(GL_LEQUAL);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
         glBindVertexArray(this->renderTextureContainer.cubeVao);
@@ -156,35 +166,70 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
     if (node->mesh) {
         glUniformMatrix4fv(glGetUniformLocation(this->mgttScene.shader.GetProgramId(), "matrix"), 1, GL_FALSE, &node->mesh->matrix[0][0]);
         for(auto& meshPrimitve: node->mesh->meshPrimitives) {
-            meshPrimitve.pbrMaterial.emissiveTexture.color;
+            
+            // base color
+            if (meshPrimitve.pbrMaterial.baseColorTexture.id > 0) {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.baseColorTexture.id);
+                this->mgttScene.shader.SetBool("baseColorTextureSet", true);
+                this->mgttScene.shader.SetInt("baseColorMap", 0);
+            }
+            else {
+                this->mgttScene.shader.SetBool("baseColorTextureSet", false);
+            }
+            
+            // metallic roughness
+            if (meshPrimitve.pbrMaterial.metallicRoughnessTexture.id > 0) {
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.metallicRoughnessTexture.id);
+                this->mgttScene.shader.SetBool("physicalDescriptorTextureSet", true);
+                this->mgttScene.shader.SetInt("physicalDescriptorMap", 1);
+            }
+            else {
+                this->mgttScene.shader.SetBool("physicalDescriptorTextureSet", false);
+            }
 
-            // lightPosition
-            // cameraPosition
-            // baseColorFactor
-            // emissiveFactor
-            // occlusionFactor
-            // diffuseFactor
-            // specularFactor
-            // metallicFactor
-            // roughnessFactor
-            // alphaMaskSet
-            // alphaMaskCutoff
-            // colorMap
-            // physicalDescriptorMap
-            // normalMap
-            // aoMap
-            // emissiveMap
-            // baseColorTextureSet
-            // physicalDescriptorTextureSet
-            // normalTextureSet
-            // occlusionTextureSet
-            // emissiveTextureSet
-            // samplerEnvMap
-            // samplerIrradianceMap
-            // samplerBrdfLut
-            // scaleIblAmbient
-            // prefilteredCubeMipLevels
+            // normal
+            if (meshPrimitve.pbrMaterial.normalTexture.id > 0) {
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.normalTexture.id);
+                this->mgttScene.shader.SetBool("normalTextureSet", true);
+                this->mgttScene.shader.SetInt("normalMap", 2);
+            }
+            else {
+                this->mgttScene.shader.SetBool("normalTextureSet", false);
+            }
 
+            // emissive
+            if (meshPrimitve.pbrMaterial.emissiveTexture.id > 0) {
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.emissiveTexture.id);
+                this->mgttScene.shader.SetBool("emissiveTextureSet", true);
+                this->mgttScene.shader.SetInt("emissiveMap", 3);
+            }
+            else {
+                this->mgttScene.shader.SetBool("emissiveTextureSet", false);
+            }
+
+            // ambient occlusion
+            if (meshPrimitve.pbrMaterial.occlusionTexture.id > 0) {
+                glActiveTexture(GL_TEXTURE4);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.occlusionTexture.id);
+                this->mgttScene.shader.SetBool("occlusionTextureSet", true);
+                this->mgttScene.shader.SetInt("occlusionMap", 4);
+            }
+            else {
+                this->mgttScene.shader.SetBool("occlusionTextureSet", false);
+            }
+
+            this->mgttScene.shader.SetVec4("baseColorFactor", meshPrimitve.pbrMaterial.baseColorTexture.color);
+            this->mgttScene.shader.SetVec3("emissiveFactor", meshPrimitve.pbrMaterial.emissiveTexture.color);
+            this->mgttScene.shader.SetFloat("occlusionFactor", meshPrimitve.pbrMaterial.occlusionTexture.strength);
+            this->mgttScene.shader.SetFloat("metallicFactor", meshPrimitve.pbrMaterial.metallicRoughnessTexture.metallicFactor);
+            this->mgttScene.shader.SetFloat("roughnessFactor", meshPrimitve.pbrMaterial.metallicRoughnessTexture.roughnessFactor);
+            this->mgttScene.shader.SetBool("alphaMaskSet", true);
+            this->mgttScene.shader.SetFloat("alphaMaskCutoff", meshPrimitve.pbrMaterial.alphaCutoff);
+            
             glBindVertexArray(node->mesh->vao);
             glDrawElements(GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT, (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
             glBindVertexArray(0);
