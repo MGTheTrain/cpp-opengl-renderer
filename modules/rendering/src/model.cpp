@@ -11,8 +11,6 @@ Mgtt::Rendering::Scene::Scene() {
   this->scale = 1.0f;
   this->mvp = glm::mat4(1.0f);
   this->matrix = glm::mat4(1.0f);
-  this->aabb = AABB();
-  this->shader = OpenGlShader();
 }
 
 /**
@@ -243,11 +241,6 @@ Mgtt::Rendering::PbrMaterial::PbrMaterial() {
     this->alphaCutoff = 0.0f;
     this->doubleSided = false;
     this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
-    this->normalTexture = NormalTexture();
-    this->occlusionTexture = OcclusionTexture();
-    this->emissiveTexture = EmissiveTexture();
-    this->baseColorTexture = BaseColorTexture();
-    this->metallicRoughnessTexture = MetallicRoughnessTexture();
 }
 
 /**
@@ -406,9 +399,7 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
       envMapVao(0),
       envMapVbo(0),
       brdfQuadVao(0),
-      brdfQuadVbo(0),
-      eq2CubeMapShader(OpenGlShader(std::make_pair<std::string, std::string>("",""))),
-      brdfLutShader(OpenGlShader(std::make_pair<std::string, std::string>("",""))) {}
+      brdfQuadVbo(0) {}
 
 /**
  * @brief Constructor for the RenderTexturesContainer structure.
