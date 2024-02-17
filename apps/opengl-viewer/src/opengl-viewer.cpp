@@ -132,8 +132,6 @@ void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(std::shared_ptr<Mgtt::Rendering
         glUniformMatrix4fv(glGetUniformLocation(this->mgttScene.shader.GetProgramId(), "matrix"), 1, GL_FALSE, &node->mesh->matrix[0][0]);
         RenderMesh(node);
     }
-
-    // recursevily draw
     for (auto& child : node->children) {
         this->TraverseSceneNode(child);
     }
