@@ -608,6 +608,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
  */
 void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesContainer& container) {
     container.Clear();   
+    std::cout << "CLEAR INFO: Successfully cleared render texture components required " << this->path << std::endl;
 }
 
 /**
