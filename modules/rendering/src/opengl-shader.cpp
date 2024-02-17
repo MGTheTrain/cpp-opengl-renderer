@@ -26,6 +26,7 @@ Mgtt::Rendering::OpenGlShader::~OpenGlShader() {
  * @param shaderPathes The vertex and fragment shader pathes
  */
 void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::string> shaderPathes) {
+
     this->Clear();
 
     if (shaderPathes.first.size() == 0) {
@@ -38,18 +39,18 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
     std::string fsCode;
     std::ifstream vsFile;
     std::ifstream fsFile;
-    vsFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    fsFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    try  {
+    vsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    fsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    try {
         vsFile.open(shaderPathes.first.c_str());
         fsFile.open(shaderPathes.second.c_str());
         std::stringstream vShaderStream, fShaderStream;
         vShaderStream << vsFile.rdbuf();
-        fShaderStream << fsFile.rdbuf();		
+        fShaderStream << fsFile.rdbuf();
         vsFile.close();
         fsFile.close();
         vsCode = vShaderStream.str();
-        fsCode = fShaderStream.str();			
+        fsCode = fShaderStream.str();
     }
     catch (std::ifstream::failure& ex)
     {
@@ -58,22 +59,37 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
         return;
     }
     const char* vShaderCode = vsCode.c_str();
-    const char * fShaderCode = fsCode.c_str();
-    unsigned int vs, fragment;
-    vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vShaderCode, NULL);
-    glCompileShader(vs);
-    this->CheckCompileErrors(vs, "VERTEX");
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
-    glCompileShader(fragment);
-    this->CheckCompileErrors(fragment, "FRAGMENT");
-    this->id = glCreateProgram();
-    glAttachShader(this->id, vs);
-    glAttachShader(this->id, fragment);
-    glLinkProgram(this->id);
-    this->CheckCompileErrors(this->id, "PROGRAM");
-    glDeleteShader(vs);
+    const char* fShaderCode = fsCode.c_str();
+    unsigned int vertex, fragment;
+    try {
+        vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &vShaderCode, NULL);
+        glCompileShader(vertex);
+        this->CheckCompileErrors(vertex, "VERTEX");
+        fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &fShaderCode, NULL);
+        glCompileShader(fragment);
+        this->CheckCompileErrors(fragment, "FRAGMENT");
+        this->id = glCreateProgram();
+        glAttachShader(this->id, vertex);
+        glAttachShader(this->id, fragment);
+        glLinkProgram(this->id);
+        this->CheckCompileErrors(this->id, "PROGRAM");
+    } catch (std::runtime_error& ex) {
+        if(vertex > 0) {
+            glDeleteShader(vertex);
+            vertex = 0;
+        }
+        if(fragment > 0) {
+            glDeleteShader(fragment);
+            fragment = 0;
+        }
+        if(id > 0) {
+            this->Clear();
+        }
+        throw ex.what();
+    }
+    glDeleteShader(vertex);
     glDeleteShader(fragment);
 }
 
@@ -238,22 +254,20 @@ void Mgtt::Rendering::OpenGlShader::SetMat4(const std::string& name, const glm::
 void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader, std::string type) {
     GLint success;
     GLchar infoLog[1024];
-    if (type != "PROGRAM")
-    {
+    if (type != "PROGRAM") {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            throw std::runtime_error("SHADER COMPILATION ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################");
+            std::string errorMsg = "SHADER COMPILATION ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################";
+            throw std::runtime_error(errorMsg.c_str());
         }
     }
-    else
-    {
+    else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            throw std::runtime_error("PROGRAM LINKING ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################");
+            std::string errorMsg = "PROGRAM LINKING ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################";
+            throw std::runtime_error(errorMsg.c_str());
         }
     }
 }
