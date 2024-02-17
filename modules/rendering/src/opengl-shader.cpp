@@ -52,6 +52,12 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
         vsCode = vShaderStream.str();
         fsCode = fShaderStream.str();
     } catch (std::ifstream::failure& ex) {
+        if (vsFile.is_open()) {
+            vsFile.close();
+        }
+        if (fsFile.is_open()) {
+            fsFile.close();
+        }
         std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + shaderPathes.first + " and fragment shader file " + shaderPathes.second + "does not exist";
         std::cerr << errorMsg.c_str() << std::endl;
         return;
