@@ -21,6 +21,7 @@ TBD
 - [ ] Support for glTF scene loading
 - [ ] PBR shader pipeline considering primarily the metal roughness workflow
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
+- [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
 - [ ] Skeletal animation support (**OPTIONAL**)
 - [ ] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
