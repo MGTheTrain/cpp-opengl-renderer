@@ -34,7 +34,13 @@ void Mgtt::Rendering::Scene::Clear() {
 
     this->shader.Clear();
 
-    Scene();
+    this->name = "";
+    this->path = "";
+    this->pos = glm::vec3(0.0f);
+    this->rot = glm::vec3(0.0f); 
+    this->scale = 1.0f;
+    this->mvp = glm::mat4(1.0f);
+    this->matrix = glm::mat4(1.0f);
 }
 
 /**
@@ -121,6 +127,11 @@ Mgtt::Rendering::Node::Node() {
  */
 void Mgtt::Rendering::Node::Clear() {
     this->mesh->Clear();
+    this->index = 0;
+    this->pos = glm::vec3(0.0f);
+    // this->rot = glm::quat();
+    this->scale = glm::vec3(1.0f);
+    this->matrix = glm::mat4(1.0f);
 }
 
 /**
@@ -202,7 +213,10 @@ void Mgtt::Rendering::Mesh::Clear() {
     this->vertexJointAttribs.shrink_to_fit();
     this->vertexWeightAttribs.clear();
     this->vertexWeightAttribs.shrink_to_fit();
-    Mesh();
+
+    this->matrix = glm::mat4(1.0f);
+    this->name = "";
+    this->matrix = glm::mat4(1.0f);
 }
 
 
@@ -223,6 +237,12 @@ Mgtt::Rendering::MeshPrimitive::MeshPrimitive() {
  */
 void Mgtt::Rendering::MeshPrimitive::Clear() {
     this->pbrMaterial->Clear();
+    this->name = "";
+    this->hasSkin = false;
+    this->hasIndices = false;
+    this->firstIndex = 0;
+    this->indexCount = 0;
+    this->vertexCount = 0;
 }
 
 
@@ -253,7 +273,10 @@ void Mgtt::Rendering::PbrMaterial::Clear() {
     this->emissiveTexture.Clear();
     this->occlusionTexture.Clear();
 
-    PbrMaterial();
+    this->name = "";
+    this->alphaCutoff = 0.0f;
+    this->doubleSided = false;
+    this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
 }
 
 /**
@@ -480,5 +503,4 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     // shader
     this->eq2CubeMapShader.Clear();
     this->brdfLutShader.Clear();
-    RenderTexturesContainer();
 }
