@@ -22,14 +22,14 @@ uniform	float roughnessFactor;
 uniform	bool alphaMaskSet;
 uniform	float alphaMaskCutoff;
 
-// texture maps allocated in VRAM
+// texture maps
 uniform sampler2D colorMap;
 uniform sampler2D physicalDescriptorMap;
 uniform sampler2D normalMap;
 uniform sampler2D aoMap;
 uniform sampler2D emissiveMap;
 
-// booleans for enabling/disabling tetures
+// booleans enabling or disabling tetures
 uniform	bool baseColorTextureSet;
 uniform	bool physicalDescriptorTextureSet;
 uniform	bool normalTextureSet;
@@ -40,12 +40,11 @@ uniform	bool emissiveTextureSet;
 uniform samplerCube samplerEnvMap;
 uniform samplerCube samplerIrradianceMap;
 
-// brdf texture
+// brdf 
 uniform sampler2D samplerBrdfLut;
 
-// ibl factors uniforms
+// ibl 
 uniform	float scaleIblAmbient;
-
 uniform float prefilteredCubeMipLevels;
 
 // constants
