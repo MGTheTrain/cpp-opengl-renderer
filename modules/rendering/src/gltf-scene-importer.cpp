@@ -554,7 +554,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
 
             // Set up projection and view matrices capturing image data onto the 6 cubemap faces
             glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-            glm::mat4 captureViews[] = {
+            std::vector<glm::mat4> captureViews = {
                 glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
                             glm::vec3(0.0f, -1.0f, 0.0f)),
                 glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f),
@@ -643,7 +643,7 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
         glGenVertexArrays(1, &container.envMapVao);
         glGenBuffers(1, &container.envMapVbo);
     }
-    float vertices[] = {
+    std::vector<float> vertices = {
         -1.0f, 1.0f,  -1.0f,
         -1.0f, -1.0f, -1.0f,
         1.0f,  -1.0f, -1.0f,
@@ -688,7 +688,7 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
     };
     glBindVertexArray(container.envMapVao);
     glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void*>(0));
     glBindVertexArray(container.envMapVao);
@@ -715,7 +715,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
         uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
         uint32_t texLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
 
-        float quadVertices[] = {
+        std::vector<float> vertices = {
             -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 
             -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
             1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 
@@ -726,7 +726,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
 
         glBindVertexArray(container.brdfQuadVao);
         glBindBuffer(GL_ARRAY_BUFFER, container.brdfQuadVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(posLoc);
         glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(0));
