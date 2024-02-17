@@ -20,41 +20,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
+#include <GL/glew.h>
 #include <string>
+#include <vector>
+#include <memory>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <mesh.h>
 
 namespace Mgtt::Rendering {
+    struct Node;
+    struct Mesh;
     /**
-     * @brief Interface for managing shaders in a 3D rendering context.
-     * 
+     * @brief Represents a node in the scene hierarchy.
      */
-    class IShader {
-    public:
+    struct Node {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the Node struct.
          */
-        virtual ~IShader() {}
+        Node();
+
+        ~Node() {}
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         * 
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
-         * @param shaderPathes The vertex and fragment shader pathes
+         * @brief Clear releases resources.
          */
-        virtual void Compile(const std::pair<std::string, std::string> shaderPathes) = 0;
-
+        void Clear();
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         *
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         *
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
+         * @brief Calculates the local transformation matrix of the node.
+         * @return Local transformation matrix.
          */
-        virtual void Clear() = 0;
+        glm::mat4 LocalMatrix();
+
+        /**
+         * @brief Calculates the global transformation matrix of the node.
+         * @return Global transformation matrix.
+         */
+        glm::mat4 GetGlobalMatrix();
+
+        std::string name;
+        std::shared_ptr<Mgtt::Rendering::Node> parent;
+        std::shared_ptr<Mgtt::Rendering::Mesh> mesh;
+        std::vector<std::shared_ptr<Mgtt::Rendering::Node>> children;
+        glm::vec3 pos;
+        glm::quat rot;
+        glm::vec3 scale;
+        glm::mat4 mvp;
+        glm::mat4 matrix;
+        uint32_t index;
     };
-
 }

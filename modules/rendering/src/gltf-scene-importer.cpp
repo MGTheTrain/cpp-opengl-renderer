@@ -14,51 +14,57 @@
  * It loads the 3D scene from the specified file path.
  * 
  * @param path The file path from which to load the 3D scene.
- * @return An instance of the loaded 3D scene.
+ * @param An instance of the loaded 3D scene.
  * 
  * @note This implementation is inspired by the Vulkan glTF PBR example:
  * https://github.com/SaschaWillems/Vulkan-glTF-PBR/blob/master/base/VulkanglTFModel.cpp
  */
-Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::string& path) {
-    Mgtt::Rendering::Scene mgttScene;
-    mgttScene.path = path;
+void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) {
+    try {
+        if (mgttScene.shader.GetProgramId() == 0) {
+            throw std::runtime_error("LOAD ERROR: Ensure that a shader program for [scene.shader]exists");
+        }
 
-    bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
-                          path.substr(path.size() - 5, 5) == ".gltf" ||
-                          path.substr(path.size() - 4, 4) == ".GLB" ||
-                          path.substr(path.size() - 4, 4) == ".glb");
+        mgttScene.path = path;
 
-    if (!hasGltfSuffix) {
-        throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " + path);
-    }
+        bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
+                            path.substr(path.size() - 5, 5) == ".gltf" ||
+                            path.substr(path.size() - 4, 4) == ".GLB" ||
+                            path.substr(path.size() - 4, 4) == ".glb");
 
-    bool binary = false;
-    size_t suffix = path.rfind('.', path.size());
-    if (suffix != std::string::npos) {
-        binary = (path.substr(suffix + 1, path.length() - suffix) == "glb");
-    }
+        if (!hasGltfSuffix) {
+            throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " + path);
+        }
 
-    std::string err;
-    std::string warn;
-    tinygltf::Model gltfModel;
-    tinygltf::TinyGLTF gltfContext;
-    bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
+        bool binary = false;
+        size_t suffix = path.rfind('.', path.size());
+        if (suffix != std::string::npos) {
+            binary = (path.substr(suffix + 1, path.length() - suffix) == "glb");
+        }
 
-    if (fileLoaded) {
-        this->LoadTextures(mgttScene, gltfModel);
-        this->LoadMaterials(mgttScene, gltfModel);
-        const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
-        for (size_t i = 0; i < scene.nodes.size(); i++) {
-            const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
-            LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
+        std::string err;
+        std::string warn;
+        tinygltf::Model gltfModel;
+        tinygltf::TinyGLTF gltfContext;
+        bool fileLoaded = binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
+
+        if (fileLoaded) {
+            this->LoadTextures(mgttScene, gltfModel);
+            this->LoadMaterials(mgttScene, gltfModel);
+            const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
+            for (size_t i = 0; i < scene.nodes.size(); i++) {
+                const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
+                LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
+            }
+        }
+        else {
+            throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
         }
     }
-    else {
+    catch(const std::runtime_error& ex) {
         this->Clear(mgttScene);
-        throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " + path);
+        std::cerr << ex.what() << std::endl;
     }
-
-    return mgttScene;
 }
 
 /**
@@ -69,21 +75,6 @@ Mgtt::Rendering::Scene& Mgtt::Rendering::GltfSceneImporter::Load(const std::stri
  */
 void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
     scene.Clear();
-}
-
-/**
- * @brief Load a texture from the specified file path and update the Texture object.
- *
- * This method loads a texture from the given file path and updates the provided Texture object with the loaded data.
- *
- * @param texturePath The file path to the texture.
- * @param texture Reference to the Texture object to be updated with the loaded data.
- */
-void Mgtt::Rendering::GltfSceneImporter::Load(const std::string& texturePath, Mgtt::Rendering::Texture& texture) {
-    if (!texture.data) {
-        texture.data = stbi_load(texturePath.c_str(),
-            &texture.width, &texture.height, &texture.nrComponents, 0);
-    }
 }
 
 /**
@@ -145,15 +136,18 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
         texture.width = image.width;
         texture.height = image.height;
         texture.nrComponents = image.component;
-        texture.data = stbi_load(texture.path.c_str(), &image.height, &image.height, &image.component, 0); // data needs to be transferred to VRAM first and can then be freed
-        this->SetupTexture(texture);
-        if(texture.data) {
-            stbi_image_free(texture.data);
-            texture.data = nullptr;
-        }
+        texture.data = stbi_load(texture.path.c_str(), &image.height, &image.height, &image.component, image.component);
+        if (texture.data) {
+            this->SetupTexture(texture);
+            if (texture.data) {
+                stbi_image_free(texture.data);
+                texture.data = nullptr;
+            }
 
-        scene.textureMap[image.name] = texture;
+            scene.textureMap[image.uri] = texture;
+        }
     }
+    std::cout << "LOAD TEXTURES INFO: Successfully loaded all textures for scene " << scene.path << std::endl;
 }
 
 /**
@@ -223,81 +217,71 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
         }
 
         // Base color
-        BaseColorTexture baseColorTexture;
-        if (material.values.find("baseColorTexture") != material.values.end() && material.values.find("baseColorFactor") != material.values.end()) {
-            baseColorTexture = BaseColorTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["baseColorTexture"].TextureIndex()].source].name],
-                glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));
+        if (material.pbrMetallicRoughness.baseColorTexture.index > -1) {
+            pbrMaterial.baseColorTexture = BaseColorTexture(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.pbrMetallicRoughness.baseColorTexture.index].source].uri],
+                glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
         }
         else {
-            if (material.values.find("baseColorFactor") != material.values.end()) {
-                baseColorTexture = BaseColorTexture(
-                    Texture(),
-                    glm::make_vec4(material.values["baseColorFactor"].ColorFactor().data()));}
+            pbrMaterial.baseColorTexture = BaseColorTexture(
+                Texture(),
+                glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
         }
 
         // Normal
-        NormalTexture normalTexture;
-        if (material.values.find("normalTexture") != material.values.end()) {
-            normalTexture = NormalTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["normalTexture"].TextureIndex()].source].name],
-                1.0f);
+        if (material.normalTexture.index > -1) {
+            pbrMaterial.normalTexture = NormalTexture(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.normalTexture.index].source].uri],
+                material.normalTexture.scale);
         }
         else {
-            normalTexture = NormalTexture(
+            pbrMaterial.normalTexture = NormalTexture(
                 Texture(),
-                1.0f);
+                material.normalTexture.scale);
         }
 
         // Normal
-        OcclusionTexture occlusionTexture;
-        if (material.values.find("occlusionTexture") != material.values.end()) {
-            occlusionTexture = OcclusionTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["occlusionTexture"].TextureIndex()].source].name],
-                glm::vec3(1.0f));
+        if (material.occlusionTexture.index > -1) {
+            pbrMaterial.occlusionTexture = OcclusionTexture(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.occlusionTexture.index].source].uri],
+                material.occlusionTexture.strength);
         }
         else {
-            occlusionTexture = OcclusionTexture(
+            pbrMaterial.occlusionTexture = OcclusionTexture(
                 Texture(),
-                glm::vec3(1.0f));
+                material.occlusionTexture.strength);
         }
 
         // Emissive
-        EmissiveTexture emissiveTexture;
-        if (material.values.find("emissiveTexture") != material.values.end()) {
-            emissiveTexture = EmissiveTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["emissiveTexture"].TextureIndex()].source].name],
-                glm::vec3(0.0f));
+        if (material.emissiveTexture.index > -1) {
+            pbrMaterial.emissiveTexture = EmissiveTexture(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.emissiveTexture.index].source].uri],
+                glm::make_vec3(material.emissiveFactor.data()));
         }
         else {
-            emissiveTexture = EmissiveTexture(
+            pbrMaterial.emissiveTexture = EmissiveTexture(
                 Texture(),
-                glm::vec3(0.0f));
+                glm::make_vec3(material.emissiveFactor.data()));
         }
 
         // Metallic roughness
-        MetallicRoughnessTexture metallicRoughnessTexture;
-        if (material.values.find("metallicRoughnessTexture") != material.values.end() && 
-            material.values.find("roughnessFactor") != material.values.end() && 
-            material.values.find("metallicFactor") != material.values.end()) {
-            metallicRoughnessTexture = MetallicRoughnessTexture(
-                scene.textureMap[gltfModel.images[gltfModel.textures[material.values["metallicRoughnessTexture"].TextureIndex()].source].name],
-                    static_cast<float>(material.values["metallicFactor"].Factor()),
-                    static_cast<float>(material.values["roughnessFactor"].Factor())
+        if (material.pbrMetallicRoughness.metallicRoughnessTexture.index > -1) {
+            pbrMaterial.metallicRoughnessTexture = MetallicRoughnessTexture(
+                scene.textureMap[gltfModel.images[gltfModel.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index].source].uri],
+                    static_cast<float>(material.pbrMetallicRoughness.metallicFactor),
+                    static_cast<float>(material.pbrMetallicRoughness.roughnessFactor)
             );
         }
         else {
-            if(material.values.find("roughnessFactor") != material.values.end() && 
-               material.values.find("metallicFactor") != material.values.end()) {
-                metallicRoughnessTexture = MetallicRoughnessTexture(
-                    Texture(),
-                    static_cast<float>(material.values["metallicFactor"].Factor()),
-                    static_cast<float>(material.values["roughnessFactor"].Factor()));
-            }
+            pbrMaterial.metallicRoughnessTexture = MetallicRoughnessTexture(
+                Texture(),
+                static_cast<float>(material.pbrMetallicRoughness.metallicFactor),
+                static_cast<float>(material.pbrMetallicRoughness.roughnessFactor));
         }
 
         scene.materials.push_back(pbrMaterial);
     }
+    std::cout << "LOAD MATERIALS INFO: Successfully loaded all materials for scene " << scene.path << std::endl;
 }
 
 /**
@@ -329,24 +313,14 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         else if(mesh->vertexPositionAttribs.size() == 0) {
             throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh vertex position attributes need to contain elements");
         }
-        else if(mesh->indices.size() == 0) {
-            throw std::runtime_error("OPENGL SCENE ALLOCATOR ERROR: mesh indices need to contain elements");
-        }
 
         glGenVertexArrays(1, &mesh->vao);
         glGenBuffers(1, &mesh->pos);
         glGenBuffers(1, &mesh->normal);
         glGenBuffers(1, &mesh->tex);
         glGenBuffers(1, &mesh->ebo);
-
+        
         glBindVertexArray(mesh->vao);
-
-        if (mesh->indices.size() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                mesh->indices.size() * sizeof(unsigned int),
-                &mesh->indices[0], GL_STATIC_DRAW);
-        }
 
         // indices
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
@@ -355,7 +329,6 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         // pos
         glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
         glBufferData(GL_ARRAY_BUFFER, mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), &mesh->vertexPositionAttribs[0], GL_STATIC_DRAW);
-
         uint32_t posLoc = glGetAttribLocation(shaderId, "inVertexPosition");
         glEnableVertexAttribArray(posLoc); glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(0));
 
@@ -477,24 +450,59 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 glm::vec2 tmpTex = bufferTexCoordSet? glm::make_vec2(&bufferTexCoordSet[v * uv0ByteStride]): glm::vec2(0.0f);
                 newMesh->vertexTextureAttribs.push_back(tmpTex);
             }
+            if (hasIndices) {
+                const tinygltf::Accessor& accessor = model.accessors[primitive.indices > -1 ? primitive.indices : 0];
+                const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
+                const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+                indexCount = static_cast<unsigned int>(accessor.count);
+
+                const void* dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+
+                switch (accessor.componentType) {
+                case GLTF_PARAMETER_TYPE_UNSIGNED_INT: {
+                    const uint32_t* buf = static_cast<const uint32_t*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        newMesh->indices.push_back(buf[index] + vertexStart);
+                    }
+                    break;
+                }
+                case GLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
+                    const uint16_t* buf = static_cast<const uint16_t*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        newMesh->indices.push_back(buf[index] + vertexStart);
+                    }
+                    break;
+                }
+                case GLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
+                    const uint8_t* buf = static_cast<const uint8_t*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        newMesh->indices.push_back(buf[index] + vertexStart);
+                    }
+                    break;
+                }
+                default:
+                    return;
+                }
+            }
+
             Mgtt::Rendering::MeshPrimitive newPrimitive;
             newPrimitive.firstIndex = indexStart;
             newPrimitive.indexCount = indexCount;
             newPrimitive.hasIndices = true;
             newPrimitive.vertexCount = vertexCount;
             if (primitive.material > -1) {
-                newPrimitive.pbrMaterial = 
-                    std::make_shared<Mgtt::Rendering::PbrMaterial>(scene.materials[primitive.material]);
+                //newPrimitive.pbrMaterial =
+                newPrimitive.pbrMaterial = scene.materials[primitive.material];
             }
-            else { 
-                newPrimitive.pbrMaterial = std::make_shared<Mgtt::Rendering::PbrMaterial>();
-            }
+            //else { 
+            //    newPrimitive.pbrMaterial = std::make_shared<Mgtt::Rendering::PbrMaterial>();
+            //}
             newPrimitive.aabb.min = posMin;
             newPrimitive.aabb.max = posMax;
             newPrimitive.name = node.name;
             newMesh->meshPrimitives.push_back(newPrimitive);
         }
-        this->SetupMesh(newMesh, scene.shaderId);
+        this->SetupMesh(newMesh, scene.shader.GetProgramId());
         newNode->mesh = newMesh;
     }
     if (parent) {
@@ -502,5 +510,326 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     }
     else {
         scene.nodes.push_back(newNode);
+        std::cout << "LOAD NODE INFO: Successfully loaded node for scene " << newNode->name << " with index " << nodeIndex << std::endl;
     }
+}
+
+/**
+ * @brief Load cube map textures from the given folder path.
+ * 
+ * This function loads cube map textures and 
+ * associates it with the provided RenderTexturesContainer. It performs necessary operations
+ * to make the textures available for use in rendering.
+ * 
+ * @param container The RenderTexturesContainer to associate with the loaded cube map.
+ * @param texturePathes The cube map texture pathes
+ */
+void Mgtt::Rendering::TextureManager::LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container, const std::vector<std::string>& texturePathes) {
+    // TBD
+    for (auto& texturePath : texturePathes) {
+        std::cout << "LOAD FROM ENV INFO: Successfully loaded env map " << texturePath << std::endl;
+    }
+}
+
+/**
+ * @brief Load an HDR texture from the given file path.
+ * 
+ * This function loads an HDR texture from the specified file path and 
+ * associates it with the provided RenderTexturesContainer. It performs necessary operations
+ * to make the texture available for use in rendering.
+ * 
+ * @param container The RenderTexturesContainer to associate with the loaded HDR texture.
+ * @param texturePath The file path to the HDR texture.
+ */
+void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexturesContainer& container, const std::string& texturePath) {
+    Mgtt::Rendering::Texture texture;
+    if (!texture.data) {
+        texture.data = stbi_load(texturePath.c_str(), &texture.width, &texture.height, &texture.nrComponents, 0);
+        if (texture.data) {
+            glGenTextures(1, &container.hdrTextureId);
+            glBindTexture(GL_TEXTURE_2D, container.hdrTextureId);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
+
+            stbi_image_free(texture.data);
+            texture.data = nullptr;
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glGenFramebuffers(1, &container.fboId);
+            glGenRenderbuffers(1, &container.rboId);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+            glBindRenderbuffer(GL_RENDERBUFFER, container.rboId);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 128, 128);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, container.rboId);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+                container.Clear();
+                throw std::runtime_error("OPENGL FRAMEBUFFER ERROR: Framebuffer not complete");
+            }
+
+            // Cube map texture id
+            glGenTextures(1, &container.cubeMapTextureId);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, container.cubeMapTextureId);
+            for (uint32_t i = 0; i < 6; ++i) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB8, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+            }
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            // Set up projection and view matrices capturing image data onto the 6 cubemap faces
+            glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+            std::vector<glm::mat4> captureViews = {
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
+                            glm::vec3(0.0f, 0.0f, 1.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f),
+                            glm::vec3(0.0f, 0.0f, -1.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f)),
+                glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f),
+                            glm::vec3(0.0f, -1.0f, 0.0f))};
+
+            if (container.eq2CubeMapShader.GetProgramId() == 0) {
+                container.Clear();
+                throw std::runtime_error("LOAD FROM HDR ERROR: Ensure that a shader program for [eq2CubeMapShader]exists");
+            }
+
+            glUseProgram(container.eq2CubeMapShader.GetProgramId());
+            glUniform1i(glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "equirectangularMap"), 0);
+            glUniformMatrix4fv( glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "projection"), 1, GL_FALSE, &captureProjection[0][0]);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, container.hdrTextureId);
+
+            glViewport(0, 0, 128, 128);
+            glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+            for (uint32_t i = 0; i < 6; ++i) {
+                glUniformMatrix4fv(glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "view"), 1, GL_FALSE, &captureViews[i][0][0]);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, container.cubeMapTextureId, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                this->SetupCube(container);
+            }
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            // glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureId);
+            // glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+            glDeleteTextures(1, &container.hdrTextureId);
+            container.hdrTextureId = 0;
+            container.textures.push_back(texture);
+        }
+    }
+    std::cout << "LOAD FROM HDR INFO: Successfully loaded env map from hdr " << texturePath << std::endl;
+}
+
+/**
+ * @brief Clear the provided render textures container.
+ * 
+ * This function clears the contents of the provided RenderTexturesContainer, releasing
+ * any resources associated with the textures.
+ * 
+ * @param container The RenderTexturesContainer to clear.
+ */
+void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesContainer& container) {
+    container.Clear();   
+}
+
+/**
+ * @brief Check if any value in the given vector is greater than zero.
+ *
+ * The function iterates through the elements of the vector and returns true
+ * if it finds at least one element greater than zero; otherwise, it returns false.
+ *
+ * @param vec A const reference to a vector of unsigned integers to be checked.
+ * @return true if any value in the vector is greater than zero, false otherwise.
+ */
+bool Mgtt::Rendering::TextureManager::HasValuesGreaterThanZero(const std::vector<unsigned int>& vec) {
+    for (auto& val : vec) {
+        if (val > 0) {
+            return true;  
+        }
+    }
+    return false;  
+}
+
+/**
+ * @brief Set up rendering resources for a cube.
+ * 
+ * The SetupCube function initializes and configures rendering resources
+ * for a cube, including textures and buffers. It uses the provided
+ * RenderTexturesContainer to manage the associated textures.
+ * 
+ * @param container A reference to a RenderTexturesContainer used to manage
+ *                  rendering-related textures and resources.
+ */
+void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container){
+    std::vector<uint32_t> vec {
+        container.cubeVao,
+        container.cubeVbo
+    };
+    if(!this->HasValuesGreaterThanZero(vec)) {
+        glGenVertexArrays(1, &container.cubeVao);
+        glGenBuffers(1, &container.cubeVbo);
+    }
+    std::vector<float> vertices = {
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  1.0f,
+        -1.0f, -1.0f, 1.0f,
+
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, 1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  -1.0f,
+        1.0f,  -1.0f, -1.0f,
+
+        -1.0f, -1.0f, 1.0f,
+        -1.0f, 1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  -1.0f, 1.0f,
+        -1.0f, -1.0f, 1.0f,
+
+        -1.0f, 1.0f,  -1.0f,
+        1.0f,  1.0f,  -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        -1.0f, 1.0f,  1.0f,
+        -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, 1.0f,
+        1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f,
+        -1.0f, -1.0f, 1.0f,
+        1.0f,  -1.0f, 1.0f
+    };
+    uint32_t posLoc = glGetAttribLocation(container.envMapShader.GetProgramId(), "inVertexPosition");
+
+    glBindVertexArray(container.cubeVao);
+    glBindBuffer(GL_ARRAY_BUFFER, container.cubeVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void*>(0));
+    glBindVertexArray(container.cubeVao);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+}
+
+/**
+* @brief Set up rendering resources for a cube.
+* 
+* The SetupQuad function initializes and configures rendering resources
+* for a quad, including textures and buffers. It uses the provided
+* RenderTexturesContainer to manage the associated textures.
+* 
+* @param container A reference to a RenderTexturesContainer used to manage
+*                  rendering-related textures and resources.
+*/
+void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container) {
+    std::vector<uint32_t> vec {
+        container.quadVao,
+        container.quadVbo
+    };
+    if(!this->HasValuesGreaterThanZero(vec)) {
+        uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
+        uint32_t texLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
+
+        std::vector<float> vertices = {
+            -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+            1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 
+            1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+        glGenVertexArrays(1, &container.quadVao);
+        glGenBuffers(1, &container.quadVbo);
+
+        glBindVertexArray(container.quadVao);
+        glBindBuffer(GL_ARRAY_BUFFER, container.quadVbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(posLoc);
+        glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(0));
+        glEnableVertexAttribArray(texLoc);
+        glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
+
+        glBindVertexArray(container.quadVao);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
+    } else {
+        std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [quadVao, quadVbo]" << std::endl;
+    }
+}
+
+
+/**
+ * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
+ * 
+ * This function loads the BRDF Lookup Texture into the provided HDR texture container.
+ * It performs necessary operations to make the BRDF texture available for use in rendering.
+ * 
+ * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
+ */
+void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container) {
+    if (container.brdfLutShader.GetProgramId() == 0) {
+        throw std::runtime_error("LOAD BRDF LUT ERROR: Ensure that a shader program for [brdfLutShader]exists");
+    }
+    std::vector<uint32_t> vec {
+        container.brdfLutTextureId
+    };
+    if(!this->HasValuesGreaterThanZero(vec)) {
+        glGenTextures(1, &container.brdfLutTextureId);
+        glBindTexture(GL_TEXTURE_2D, container.brdfLutTextureId);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 128, 128, 0, GL_RG, GL_UNSIGNED_BYTE, 0);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
+        glBindRenderbuffer(GL_RENDERBUFFER, container.rboId);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 128, 128);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, container.brdfLutTextureId, 0);
+
+        glViewport(0, 0, 128, 128);
+        glUseProgram(container.brdfLutShader.GetProgramId());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->SetupQuad(container);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    } else {
+        std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfLutTextureId]" << std::endl;
+    }
+    std::cout << "LOAD FROM HDR INFO: Successfully loaded brdf lut texture" << std::endl;
+}
+
+/**
+ * @brief Generate the irradiance map for the provided HDR texture container.
+ * 
+ * This function generates the irradiance map for the provided HDR texture container.
+ * It performs necessary operations to make the irradiance map available for use in rendering.
+ * 
+ * @param container The RenderTexturesContainer to associate with the generated irradiance map.
+ */
+void Mgtt::Rendering::TextureManager::GenerateIrradianceMap(Mgtt::Rendering::RenderTexturesContainer& container) {
+    
 }

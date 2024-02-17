@@ -20,41 +20,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
+#include <GL/glew.h>
 #include <string>
+#include <texture.h>
 
 namespace Mgtt::Rendering {
     /**
-     * @brief Interface for managing shaders in a 3D rendering context.
-     * 
+     * @brief Represents a generic material.
      */
-    class IShader {
-    public:
+    struct Material {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the Material structure.
          */
-        virtual ~IShader() {}
+        Material();
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         * 
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
-         * @param shaderPathes The vertex and fragment shader pathes
+         * @brief Virtual destructor for the Material structure.
          */
-        virtual void Compile(const std::pair<std::string, std::string> shaderPathes) = 0;
+        virtual ~Material() {}
 
-
-        /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         *
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         *
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
-         */
-        virtual void Clear() = 0;
+        std::string name;
     };
 
+    enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
+
+    /**
+     * @brief Represents a physically based rendering (PBR) material.
+     */
+    struct PbrMaterial : public Material {
+        /**
+         * @brief Constructor for the PbrMaterial structure.
+         */
+        PbrMaterial();
+
+        ~PbrMaterial() {}
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
+
+        std::string name;
+        NormalTexture normalTexture;
+        OcclusionTexture occlusionTexture;
+        EmissiveTexture emissiveTexture;
+        BaseColorTexture baseColorTexture;
+        MetallicRoughnessTexture metallicRoughnessTexture;
+
+        float alphaCutoff;
+        bool doubleSided;
+        AlphaMode alphaMode;
+    };
 }

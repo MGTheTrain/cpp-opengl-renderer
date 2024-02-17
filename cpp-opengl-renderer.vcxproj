@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\c++ repos\cpp-opengl-renderer\apps\opengl-viewer\include;D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\window\include;D:\c++ repos\cpp-opengl-renderer\apps\rotating-textured-cube\include;D:\c++ repos\dependencies\vcpkg\packages\stb_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\tinygltf_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include;D:\c++ repos\dependencies\vcpkg\packages\nlohmann-json_x64-windows\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\c++ repos\cpp-opengl-renderer\apps\opengl-viewer\include;D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\window\include;D:\c++ repos\cpp-opengl-renderer\apps\rotating-textured-cube\include;D:\c++ repos\dependencies\vcpkg\packages\stb_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\tinygltf_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include;D:\c++ repos\dependencies\vcpkg\packages\nlohmann-json_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include\model;$(IncludePath)</IncludePath>
     <LibraryPath>D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -136,7 +136,13 @@
     <ClCompile Include="apps\opengl-viewer\src\opengl-viewer.cpp" />
     <ClCompile Include="apps\rotating-textured-cube\src\rotating-textured-cube.cpp" />
     <ClCompile Include="modules\rendering\src\gltf-scene-importer.cpp" />
-    <ClCompile Include="modules\rendering\src\model.cpp" />
+    <ClCompile Include="modules\rendering\src\model\aabb.cpp" />
+    <ClCompile Include="modules\rendering\src\model\material.cpp" />
+    <ClCompile Include="modules\rendering\src\model\mesh-primitive.cpp" />
+    <ClCompile Include="modules\rendering\src\model\mesh.cpp" />
+    <ClCompile Include="modules\rendering\src\model\node.cpp" />
+    <ClCompile Include="modules\rendering\src\model\scene.cpp" />
+    <ClCompile Include="modules\rendering\src\model\texture.cpp" />
     <ClCompile Include="modules\rendering\src\opengl-shader.cpp" />
     <ClCompile Include="modules\window\src\glfw-window.cpp" />
   </ItemGroup>
@@ -146,7 +152,13 @@
     <ClInclude Include="modules\rendering\include\gltf-scene-importer.h" />
     <ClInclude Include="modules\rendering\include\iscene-importer.h" />
     <ClInclude Include="modules\rendering\include\ishader.h" />
-    <ClInclude Include="modules\rendering\include\model.h" />
+    <ClInclude Include="modules\rendering\include\model\aabb.h" />
+    <ClInclude Include="modules\rendering\include\model\material.h" />
+    <ClInclude Include="modules\rendering\include\model\mesh-primitive.h" />
+    <ClInclude Include="modules\rendering\include\model\mesh.h" />
+    <ClInclude Include="modules\rendering\include\model\node.h" />
+    <ClInclude Include="modules\rendering\include\model\scene.h" />
+    <ClInclude Include="modules\rendering\include\model\texture.h" />
     <ClInclude Include="modules\rendering\include\opengl-shader.h" />
     <ClInclude Include="modules\window\include\glfw-window.h" />
     <ClInclude Include="modules\window\include\iwindow.h" />

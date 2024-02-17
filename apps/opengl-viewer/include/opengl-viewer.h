@@ -39,6 +39,20 @@
 
 namespace Mgtt::Apps {
     /**
+     * @brief Represents glm matrices
+     */
+    struct GlmMatrices {
+        GlmMatrices() {
+            this->model = glm::mat4(1.0f);
+            this->view = glm::mat4(1.0f);
+            this->projection = glm::mat4(1.0f);
+        }
+        glm::mat4 model;
+        glm::mat4 view;
+        glm::mat4 projection;
+    };
+
+    /**
      * @brief The OpenGlViewer class represents a simple OpenGL viewer.
      *
      * This class provides basic functionality for initializing an OpenGL context,
@@ -57,15 +71,54 @@ namespace Mgtt::Apps {
         ~OpenGlViewer();
 
         /**
+         * @brief Clears OpenGl and RAM allocated resources
+         *
+         */
+        void Clear();
+
+        /**
          * @brief Renders the scene using OpenGL.
          *
          * This method is responsible for rendering the contents of the scene using OpenGL.
          */
         void Render();
     private:
+        std::unique_ptr<GlmMatrices> glmMatrices;
         Mgtt::Rendering::Scene mgttScene;
+        Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
         std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
+        std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+
+        /**
+         * @brief Iterates recursively over all nodes in the scene
+         *
+         * This function is responsible for iteraing recursively over all nodes in the scene 
+         *
+         * @param node A shared pointer to the 3D node to be rendered.
+         **/
+        void TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node);
+
+        /**
+         * @brief Renders the mesh using the specified rendering technique.
+         *
+         * This function is responsible for rendering the mesh using the current rendering
+         * technique and associated settings. It should be called within the rendering loop.
+         */
+        void RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node);
+
+        /**
+        * @brief Callback function for framebuffer size changes.
+        *
+        * This static callback function is invoked when the framebuffer size of the GLFW window changes.
+        * It is typically registered using `glfwSetFramebufferSizeCallback`. The function updates the
+        * viewport size based on the new width and height.
+        *
+        * @param window A pointer to the GLFW window whose framebuffer size has changed.
+        * @param width  The new width of the framebuffer.
+        * @param height The new height of the framebuffer.
+        */
+        static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
     };
 
 } // namespace Mgtt::Apps

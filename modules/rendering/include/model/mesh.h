@@ -20,41 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
+#include <GL/glew.h>
 #include <string>
+#include <vector>
+#include <memory>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <opengl-shader.h>
+#include <mesh-primitive.h>
 
 namespace Mgtt::Rendering {
+    struct MeshPrimitive;
     /**
-     * @brief Interface for managing shaders in a 3D rendering context.
-     * 
+     * @brief Represents a mesh in the scene.
      */
-    class IShader {
-    public:
+    struct Mesh {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the Mesh struct.
          */
-        virtual ~IShader() {}
+        Mesh();
+
+        ~Mesh() {}
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         * 
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
-         * @param shaderPathes The vertex and fragment shader pathes
+         * @brief Clear releases resources.
          */
-        virtual void Compile(const std::pair<std::string, std::string> shaderPathes) = 0;
+        void Clear();
 
+        std::string name;
+        std::vector<Mgtt::Rendering::MeshPrimitive> meshPrimitives;
+        std::vector<unsigned int> indices;
+        std::vector<glm::vec3> vertexPositionAttribs;
+        std::vector<glm::vec3> vertexNormalAttribs;
+        std::vector<glm::vec2> vertexTextureAttribs;
+        std::vector<glm::ivec4> vertexJointAttribs;
+        std::vector<glm::vec4> vertexWeightAttribs;
+        glm::mat4 matrix;
 
-        /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         *
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         *
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
-         */
-        virtual void Clear() = 0;
+        uint32_t vao;   
+        uint32_t ebo; 
+        uint32_t pos; 
+        uint32_t normal;
+        uint32_t tex;
+        //uint32_t joint; 
+        //uint32_t weight;
     };
-
 }

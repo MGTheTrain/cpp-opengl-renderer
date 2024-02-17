@@ -121,6 +121,19 @@ GLFWwindow* Mgtt::Window::GlfwWindow::GetWindow() {
    glfwPollEvents();
  }
 
+ /**
+ * @brief Get the width and height of a GLFW window.
+ *
+ * This method retrieves the width and height of the specified GLFW window.
+ *
+ * @return A tuple containing the width and height of the window.
+ */
+ std::tuple<int, int> Mgtt::Window::GlfwWindow::GetWindowSize() {
+     int width, height;
+     glfwGetWindowSize(this->window, &width, &height);
+     return std::make_tuple(width, height);
+ }
+
 /**
  * @brief Checks if the GLFW window should close.
  *

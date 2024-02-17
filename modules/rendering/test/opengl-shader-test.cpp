@@ -43,8 +43,3 @@ TEST_F(OpenGlShaderTest, SetInt) {
 TEST_F(OpenGlShaderTest, SetFloat) {
     // Similar structure to the previous test
 }
-
-int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

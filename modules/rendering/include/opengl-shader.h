@@ -27,6 +27,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <stdexcept>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
@@ -41,28 +42,26 @@ namespace Mgtt::Rendering {
     class OpenGlShader : public IShader {
     public:
         /**
+         * @brief Default Constructor for the OpenGlShader class.
+         *
+         */
+        OpenGlShader() {}
+
+        /**
          * @brief Constructor for the OpenGlShader class.
          *
-         * @param vsPath Path to the vertex shader source file.
-         * @param fsPath Path to the fragment shader source file.
+         * @param shaderPathes The vertex and fragment shader pathes
          */
-        OpenGlShader(const std::string& vsPath, const std::string& fsPath);
+        OpenGlShader(const std::pair<std::string, std::string> shaderPathes);
 
         /**
-         * @brief Destructor for the OpenGL shader.
+         * @brief Compile the shader program from specified vertex and fragment shader files.
+         * 
+         * This method compiles the vertex and fragment shaders, linking them into a shader program.
+         * 
+         * @param shaderPathes The vertex and fragment shader pathes
          */
-        ~OpenGlShader();
-
-        /**
-         * @brief Compile the OpenGL shader program from specified vertex and fragment shader files.
-         *
-         * This method overrides the corresponding method in the IShader interface.
-         * It compiles the vertex and fragment shaders, linking them into a shader program.
-         *
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
-         */
-        void Compile(const std::string& vsPath, const std::string& fsPath) override;
+        void Compile(const std::pair<std::string, std::string> shaderPathes) override;
 
         /**
          * @brief Delete the shader program.

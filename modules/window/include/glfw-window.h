@@ -25,6 +25,7 @@
 #include <iwindow.h>
 #include <iostream>
 #include <memory>
+#include <tuple>
 #include <GLFW/glfw3.h>
 
 namespace Mgtt::Window {
@@ -90,6 +91,14 @@ namespace Mgtt::Window {
          */
         void SwapBuffersAndPollEvents();
 
+        /**
+        * @brief Get the width and height of a GLFW window.
+        *
+        * This method retrieves the width and height of the specified GLFW window.
+        *
+        * @return A tuple containing the width and height of the window.
+        */
+        std::tuple<int, int> GetWindowSize();
 
         /**
          * @brief Checks if the GLFW window should close.

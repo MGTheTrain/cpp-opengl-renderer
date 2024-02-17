@@ -26,7 +26,8 @@
 #include <iostream>
 #include <glfw-window.h>
 #include <opengl-shader.h>
-#include <model.h>
+#include <scene.h>
+#include <mesh.h>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -38,20 +39,6 @@
 #include <stb_image.h>
 
 namespace Mgtt::Apps {
-    /**
-     * @brief Represents window params 
-     */
-    struct WindowParams {
-        WindowParams() {
-            this->name = "";
-            this->width = 0.0f;
-            this->height = 0.0f;
-        }
-        std::string name;
-        float width;
-        float height;
-    };
-
     /**
      * @brief Represents glm matrices
      */
@@ -115,10 +102,8 @@ namespace Mgtt::Apps {
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
-        std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
-        std::unique_ptr<Mgtt::Rendering::Mesh> mesh;
-        Mgtt::Rendering::MeshPrimitive meshPrimitive;
+        Mgtt::Rendering::Mesh mesh;
     };
 
 } // namespace Mgtt::Apps

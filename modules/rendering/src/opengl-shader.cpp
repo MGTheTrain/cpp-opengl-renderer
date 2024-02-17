@@ -1,83 +1,91 @@
 #include <opengl-shader.h>
 
-
 /**
  * @brief Constructor for the OpenGlShader class.
  *
- * @param vsPath Path to the vertex shader source file.
- * @param fsPath Path to the fragment shader source file.
+ * @param shaderPathes The vertex and fragment shader pathes
  */
-Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::string& vsPath, const std::string& fsPath) {
+Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::pair<std::string, std::string> shaderPathes) {
     this->id = 0;
-    this->Compile(vsPath, fsPath);
+    this->Compile(shaderPathes);
 }
 
 /**
- * @brief Destructor for the OpenGL shader.
+ * @brief Compile the shader program from specified vertex and fragment shader files.
+ * 
+ * This method compiles the vertex and fragment shaders, linking them into a shader program.
+ * 
+ * @param shaderPathes The vertex and fragment shader pathes
  */
-Mgtt::Rendering::OpenGlShader::~OpenGlShader() {
-    this->Clear();
-}
+void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::string> shaderPathes) {
 
-/**
- * @brief Compile the OpenGL shader program from specified vertex and fragment shader files.
- *
- * This method overrides the corresponding method in the IShader interface.
- * It compiles the vertex and fragment shaders, linking them into a shader program.
- *
- * @param vsPath The file path to the vertex shader source code.
- * @param fsPath The file path to the fragment shader source code.
- */
-void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std::string& fsPath) {
     this->Clear();
 
-    if (vsPath.size() == 0) {
-        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " + vsPath);
+    if (shaderPathes.first.size() == 0) {
+        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " + shaderPathes.first);
     }
-    if (fsPath.size() == 0) {
-        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty fragment path: " + fsPath);
+    if (shaderPathes.second.size() == 0) {
+        throw std::runtime_error("OPENGL SHADER ALLOCATOR ERROR: Empty fragment path: " + shaderPathes.second);
     }
     std::string vsCode;
     std::string fsCode;
     std::ifstream vsFile;
     std::ifstream fsFile;
-    vsFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    fsFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    try  {
-        vsFile.open(vsPath.c_str());
-        fsFile.open(fsPath.c_str());
+    vsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    fsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    try {
+        vsFile.open(shaderPathes.first.c_str());
+        fsFile.open(shaderPathes.second.c_str());
         std::stringstream vShaderStream, fShaderStream;
         vShaderStream << vsFile.rdbuf();
-        fShaderStream << fsFile.rdbuf();		
+        fShaderStream << fsFile.rdbuf();
         vsFile.close();
         fsFile.close();
         vsCode = vShaderStream.str();
-        fsCode = fShaderStream.str();			
-    }
-    catch (std::ifstream::failure& ex)
-    {
-        std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + vsPath + " and fragment shader file " + fsPath + "does not exist";
-        throw std::runtime_error(errorMsg.c_str());
+        fsCode = fShaderStream.str();
+    } catch (std::ifstream::failure& ex) {
+        if (vsFile.is_open()) {
+            vsFile.close();
+        }
+        if (fsFile.is_open()) {
+            fsFile.close();
+        }
+        std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + shaderPathes.first + " and fragment shader file " + shaderPathes.second + "does not exist";
+        std::cerr << errorMsg.c_str() << std::endl;
         return;
     }
     const char* vShaderCode = vsCode.c_str();
-    const char * fShaderCode = fsCode.c_str();
-    unsigned int vs, fragment;
-    vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vShaderCode, NULL);
-    glCompileShader(vs);
-    this->CheckCompileErrors(vs, "VERTEX");
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
-    glCompileShader(fragment);
-    this->CheckCompileErrors(fragment, "FRAGMENT");
-    this->id = glCreateProgram();
-    glAttachShader(this->id, vs);
-    glAttachShader(this->id, fragment);
-    glLinkProgram(this->id);
-    this->CheckCompileErrors(this->id, "PROGRAM");
-    glDeleteShader(vs);
-    glDeleteShader(fragment);
+    const char* fShaderCode = fsCode.c_str();
+    unsigned int vertex, fragment;
+    try {
+        vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &vShaderCode, NULL);
+        glCompileShader(vertex);
+        this->CheckCompileErrors(vertex, "VERTEX");
+        fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &fShaderCode, NULL);
+        glCompileShader(fragment);
+        this->CheckCompileErrors(fragment, "FRAGMENT");
+        this->id = glCreateProgram();
+        glAttachShader(this->id, vertex);
+        glAttachShader(this->id, fragment);
+        glLinkProgram(this->id);
+        this->CheckCompileErrors(this->id, "PROGRAM");
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+    } catch (const std::runtime_error& ex) {
+        if(vertex > 0) {
+            glDeleteShader(vertex);
+            vertex = 0;
+        }
+        if(fragment > 0) {
+            glDeleteShader(fragment);
+            fragment = 0;
+        }
+        this->Clear();
+        std::cerr << ex.what() << std::endl;
+    }
+    std::cout << "COMPILE INFO: Successfully linked to a shader program the compiled vertex shader " << shaderPathes.first << " and fragment shader " << shaderPathes.second << std::endl;
 }
 
 /**
@@ -86,6 +94,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::string& vsPath, const std
 void Mgtt::Rendering::OpenGlShader::Clear() {
     if (this->id > 0) {
         glDeleteProgram(this->id);
+        std::cout << "CLEAR INFO: Successfully deleted program with id " << this->id << std::endl;
         this->id = 0;
     }
 }
@@ -241,22 +250,20 @@ void Mgtt::Rendering::OpenGlShader::SetMat4(const std::string& name, const glm::
 void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader, std::string type) {
     GLint success;
     GLchar infoLog[1024];
-    if (type != "PROGRAM")
-    {
+    if (type != "PROGRAM") {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            throw std::runtime_error("SHADER COMPILATION ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################");
+            std::string errorMsg = "SHADER COMPILATION ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################";
+            throw std::runtime_error(errorMsg);
         }
     }
-    else
-    {
+    else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            throw std::runtime_error("PROGRAM LINKING ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################");
+            std::string errorMsg = "PROGRAM LINKING ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################";
+            throw std::runtime_error(errorMsg);
         }
     }
 }

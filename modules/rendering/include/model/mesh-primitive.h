@@ -20,41 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
 #include <string>
+#include <memory>
+#include <scene.h>
+#include <material.h>
 
 namespace Mgtt::Rendering {
     /**
-     * @brief Interface for managing shaders in a 3D rendering context.
-     * 
-     */
-    class IShader {
-    public:
+    * @brief Represents a primitive mesh in the scene.
+    */
+    struct MeshPrimitive {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the MeshPrimitive structure.
          */
-        virtual ~IShader() {}
+        MeshPrimitive();
+
+        ~MeshPrimitive() {}
 
         /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         * 
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         * 
-         * @param shaderPathes The vertex and fragment shader pathes
+         * @brief Clear releases resources.
          */
-        virtual void Compile(const std::pair<std::string, std::string> shaderPathes) = 0;
+        void Clear();
 
-
-        /**
-         * @brief Compile the shader program from specified vertex and fragment shader files.
-         *
-         * This method compiles the vertex and fragment shaders, linking them into a shader program.
-         *
-         * @param vsPath The file path to the vertex shader source code.
-         * @param fsPath The file path to the fragment shader source code.
-         */
-        virtual void Clear() = 0;
+        std::string name;
+        uint32_t firstIndex;  // required for glDrawElements(...)
+        uint32_t indexCount;  // required for glDrawElements(...)
+        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
+        bool hasSkin;
+        bool hasIndices;
+        Mgtt::Rendering::PbrMaterial pbrMaterial;
+        AABB aabb;
     };
-
 }

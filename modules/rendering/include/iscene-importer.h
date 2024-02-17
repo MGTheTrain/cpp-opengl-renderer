@@ -24,7 +24,8 @@
 #pragma once
 #include <string>
 #include <memory>
-#include <model.h>
+#include <scene.h>
+#include <mesh.h>
 
 namespace Mgtt::Rendering {
     /**
@@ -43,9 +44,9 @@ namespace Mgtt::Rendering {
          * @brief Load the scene from a specified file path.
          * 
          * @param path The file path from which to load the scene.
-         * @return An instance of the loaded scene.
+         * @param An instance of the loaded scene.
          */
-        virtual Mgtt::Rendering::Scene& Load(const std::string& path) = 0;
+        virtual void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) = 0;
 
         /**
          * @brief Clear the allocated resources in RAM and VRAM for the scene object.
