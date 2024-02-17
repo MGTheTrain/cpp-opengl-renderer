@@ -21,6 +21,10 @@
  */
 void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) {
     try {
+        if (mgttScene.shader.GetProgramId() == 0) {
+            throw std::runtime_error("LOAD ERROR: Ensure that a shader program for [scene.shader]exists");
+        }
+
         mgttScene.path = path;
 
         bool hasGltfSuffix = (path.substr(path.size() - 5, 5) == ".GLTF" ||
@@ -59,7 +63,7 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
     }
     catch(const std::runtime_error& ex) {
         this->Clear(mgttScene);
-        throw ex;
+        std::cerr << ex.what() << std::endl;
     }
 }
 
@@ -568,7 +572,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
 
             if (container.eq2CubeMapShader.GetProgramId() == 0) {
                 container.Clear();
-                throw std::runtime_error("LOAD FROM HDR ERROR: Ensure that a shader program for [eq2CubeMapShader] has been created");
+                throw std::runtime_error("LOAD FROM HDR ERROR: Ensure that a shader program for [eq2CubeMapShader]exists");
             }
 
             glUseProgram(container.eq2CubeMapShader.GetProgramId());
@@ -608,7 +612,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
  */
 void Mgtt::Rendering::TextureManager::Clear(Mgtt::Rendering::RenderTexturesContainer& container) {
     container.Clear();   
-    std::cout << "CLEAR INFO: Successfully cleared render texture components required " << this->path << std::endl;
 }
 
 /**
@@ -757,7 +760,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
  */
 void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container) {
     if (container.brdfLutShader.GetProgramId() == 0) {
-        throw std::runtime_error("LOAD BRDF LUT ERROR: Ensure that a shader program for [brdfLutShader] has been created");
+        throw std::runtime_error("LOAD BRDF LUT ERROR: Ensure that a shader program for [brdfLutShader]exists");
     }
     std::vector<uint32_t> vec {
         container.brdfLutTextureId
