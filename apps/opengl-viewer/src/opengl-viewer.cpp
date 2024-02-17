@@ -88,23 +88,65 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
-        this->glmMatrices->view = glm::mat4(1.0f);
+        this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-        this->renderTextureContainer.envMapShader.Use();
-        this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
-        this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
-        this->renderTextureContainer.envMapShader.SetInt("skybox", 0);
+        for (auto& node : this->mgttScene.nodes) {
+            this->TraverseSceneNode(node);
+        }
 
-        glDepthFunc(GL_LEQUAL);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.envMapVao);
-        glBindVertexArray(this->renderTextureContainer.envMapVao);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
+        // Check brdf lut
+        //this->renderTextureContainer.brdfLutShader.Use();
+
+        //glBindVertexArray(this->renderTextureContainer.quadVao);
+        //glDrawArrays(GL_TRIANGLES, 0, 4);
+        //glBindVertexArray(0);
+
+        // Check env map
+        //this->renderTextureContainer.envMapShader.Use();
+        //this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
+        //this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
+        //this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
+
+        //glDepthFunc(GL_LEQUAL);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
+        //glBindVertexArray(this->renderTextureContainer.cubeVao);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(0);
+        //glDepthFunc(GL_LESS);
 
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
+}
+
+
+/**
+ * @brief Iterates recursively over all nodes in the scene
+ *
+ * This function is responsible for iteraing recursively over all nodes in the scene
+ *
+ * @param node A shared pointer to the 3D node to be rendered.
+ **/
+void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node) {
+    if (node->mesh) {
+        glUniformMatrix4fv(glGetUniformLocation(this->mgttScene.shader.GetProgramId(), "matrix"), 1, GL_FALSE, &node->mesh->matrix[0][0]);
+        RenderMesh(node);
+    }
+
+    // recursevily draw
+    for (auto& child : node->children) {
+        this->TraverseSceneNode(child);
+    }
+}
+
+/**
+ * @brief Renders the mesh using the specified rendering technique.
+ *
+ * This function is responsible for rendering the mesh using the current rendering
+ * technique and associated settings. It should be called within the rendering loop.
+ */
+void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node) {
+
 }
  
 int main() {

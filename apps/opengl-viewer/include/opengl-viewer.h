@@ -60,12 +60,10 @@ namespace Mgtt::Apps {
             this->model = glm::mat4(1.0f);
             this->view = glm::mat4(1.0f);
             this->projection = glm::mat4(1.0f);
-            this->mvp = glm::mat4(1.0f);
         }
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 projection;
-        glm::mat4 mvp;
     };
 
     /**
@@ -106,6 +104,23 @@ namespace Mgtt::Apps {
         std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
         std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
         std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+
+        /**
+         * @brief Iterates recursively over all nodes in the scene
+         *
+         * This function is responsible for iteraing recursively over all nodes in the scene 
+         *
+         * @param node A shared pointer to the 3D node to be rendered.
+         **/
+        void TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node);
+
+        /**
+         * @brief Renders the mesh using the specified rendering technique.
+         *
+         * This function is responsible for rendering the mesh using the current rendering
+         * technique and associated settings. It should be called within the rendering loop.
+         */
+        void RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node);
     };
 
 } // namespace Mgtt::Apps
