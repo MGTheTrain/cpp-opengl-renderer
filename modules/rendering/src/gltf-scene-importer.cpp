@@ -143,6 +143,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(Mgtt::Rendering::Scene& sc
             scene.textureMap[image.uri] = texture;
         }
     }
+    std::cout << "LOAD TEXTURES INFO: Successfully loaded all textures for scene " << scene.path << std::endl;
 }
 
 /**
@@ -276,6 +277,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(Mgtt::Rendering::Scene& s
 
         scene.materials.push_back(pbrMaterial);
     }
+    std::cout << "LOAD MATERIALS INFO: Successfully loaded all materials for scene " << scene.path << std::endl;
 }
 
 /**
@@ -475,6 +477,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     }
     else {
         scene.nodes.push_back(newNode);
+        std::cout << "LOAD NODE INFO: Successfully loaded node for scene " << newNode->name << " with index " << nodeIndex << std::endl;
     }
 }
 
@@ -490,6 +493,9 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
  */
 void Mgtt::Rendering::TextureManager::LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container, const std::vector<std::string>& texturePathes) {
     // TBD
+    for (auto& texturePath : texturePathes) {
+        std::cout << "LOAD FROM ENV INFO: Successfully loaded env map " << texturePath << std::endl;
+    }
 }
 
 /**
@@ -589,6 +595,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
             container.textures.push_back(texture);
         }
     }
+    std::cout << "LOAD FROM HDR INFO: Successfully loaded env map from hdr " << texturePath << std::endl;
 }
 
 /**
@@ -777,6 +784,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexture
     } else {
         std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfLutTextureId]" << std::endl;
     }
+    std::cout << "LOAD FROM HDR INFO: Successfully loaded brdf lut texture" << std::endl;
 }
 
 /**

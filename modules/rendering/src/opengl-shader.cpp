@@ -93,6 +93,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
         this->Clear();
         std::cerr << ex.what() << std::endl;
     }
+    std::cout << "COMPILE INFO: Successfully linked to a shader program the compiled vertex shader " << shaderPathes.first << " and fragment shader " << shaderPathes.second << std::endl;
 }
 
 /**
