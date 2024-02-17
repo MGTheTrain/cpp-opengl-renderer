@@ -109,8 +109,8 @@ namespace Mgtt::Rendering {
         glm::mat4 mvp;
         glm::mat4 matrix;
         std::map<std::string, Mgtt::Rendering::Texture> textureMap; // case in which we want to prevent loading the same texture into RAM which is time consuming
-        std::vector< std::shared_ptr<Node>> nodes;
-        std::vector< std::shared_ptr<Node>> linearNodes;
+        std::vector<std::shared_ptr<Node>> nodes;
+        std::vector<std::shared_ptr<Node>> linearNodes;
         std::vector<PbrMaterial> materials;
         AABB aabb;
         OpenGlShader shader;
