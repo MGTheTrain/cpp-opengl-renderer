@@ -12,10 +12,8 @@ uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
 
 uniform	vec4 baseColorFactor;
-uniform vec4 emissiveFactor;
-uniform vec4 occlusionFactor;
-uniform vec4 diffuseFactor;
-uniform vec4 specularFactor;
+uniform vec3 emissiveFactor;
+uniform float occlusionFactor;
 
 uniform	float metallicFactor;
 uniform	float roughnessFactor;
@@ -23,10 +21,10 @@ uniform	bool alphaMaskSet;
 uniform	float alphaMaskCutoff;
 
 // texture maps
-uniform sampler2D colorMap;
+uniform sampler2D baseColorMap;
 uniform sampler2D physicalDescriptorMap;
 uniform sampler2D normalMap;
-uniform sampler2D aoMap;
+uniform sampler2D occlusionMap;
 uniform sampler2D emissiveMap;
 
 // booleans enabling or disabling tetures
@@ -45,7 +43,6 @@ uniform sampler2D samplerBrdfLut;
 
 // ibl 
 uniform	float scaleIblAmbient;
-uniform float prefilteredCubeMipLevels;
 
 // constants
 const vec3 dielectric = vec3(0.04);
@@ -175,7 +172,7 @@ void main() {
     } 
 
     if (baseColorTextureSet) {
-        baseColor = texture(colorMap, outVertexTextureCoordinates) * baseColorFactor;
+        baseColor = texture(baseColorMap, outVertexTextureCoordinates) * baseColorFactor;
     } else {
         baseColor = baseColorFactor;
     }
@@ -189,10 +186,11 @@ void main() {
     // diffuse color
     diffuseColor = baseColor.rgb * (vec3(1.0) - dielectric);
 	diffuseColor *= 1.0 - metallic;
+    // fragmentColor = vec4(diffuseColor, 1.0);
+
 
     // base color
     vec3 specularColor = mix(dielectric, baseColor.rgb, metallic);
-
     // fragmentColor = vec4(specularColor, 1.0);
 
 	// Compute reflectance.
@@ -202,12 +200,10 @@ void main() {
 	vec3 specularEnvironmentR0 = specularColor.rgb;
 	vec3 specularEnvironmentR90 = vec3(1.0, 1.0, 1.0) * reflectance90;
 
-    // per fragment/pixel vectors 
-    // calculate for each fragment/pixel light direction and view direction vectors
     vec3 norm = (normalTextureSet) ? GetNormal() : normalize(outVertexNormal);
     vec3 viewDirection = normalize(cameraPosition - outWorldPosition);
     vec3 lightDirection = normalize(lightPosition - outWorldPosition);
-    vec3 halfVector = normalize(lightDirection + viewDirection); // half vector between lightDirection and viewDirection
+    vec3 halfVector = normalize(lightDirection + viewDirection); 
 	
     float NdotL = clamp(dot(norm, lightDirection), 0.001, 1.0);
 	float NdotV = clamp(dot(norm, viewDirection), 0.001, 1.0);
@@ -222,25 +218,19 @@ void main() {
     float alphaRoughness = perceptualRoughness * perceptualRoughness;
 	float G = GeometricOcclusion(NdotL, NdotV, alphaRoughness);
     // fragmentColor.rgb = vec3(G);
-    // fragmentColor.a = 1.0;
 
     float D = MicrofacetDistribution(alphaRoughness, NdotH);
 
     // fragmentColor.rgb = vec3(D);
-    // fragmentColor.a = 1.0;
 
     // Calculation of analytical lighting contribution
 	vec3 diffuseContrib = (1.0 - F) * (diffuseColor / PI);
 
     // fragmentColor.rgb = diffuseContrib;
-    // fragmentColor.a = 1.0;
 
     vec3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
     // vec3 specContrib = F * G * D / max(epsilon, (4.0 * NdotL * NdotV));
     // fragmentColor.rgb = specContrib;
-    // fragmentColor.a = 1.0;
-
-    // vec3 color = diffuseContrib + specContrib;
 
 	// Important: NdotL * vec3(1.0) as factor
 	vec3 color = NdotL * vec3(1.0) * (diffuseContrib + specContrib);
@@ -258,42 +248,46 @@ void main() {
 				specularColor,
 				diffuseColor, 
 				norm,
-				reflection); 
+				reflection);
+
+	// fragmentColor = vec4(color, 1.0);
 
 	if (occlusionTextureSet) {
-		float ao = texture(aoMap, outVertexTextureCoordinates).r;
-		color = mix(color, color * ao, occlusionFactor.rgb);
+		float ao = texture(occlusionMap, outVertexTextureCoordinates).r;
+		color = mix(color, color * ao, vec3(occlusionFactor));
 	}
 	else{
-		color = mix(color, color + 0.001, occlusionFactor.rgb);
+		color = mix(color, color + 0.001, vec3(occlusionFactor));
 	}
 
 	if (emissiveTextureSet) {
 		vec3 emissive = texture(emissiveMap, outVertexTextureCoordinates).rgb;
 		
-		emissive = emissive * emissiveFactor.rgb;
+		emissive = emissive * emissiveFactor;
 		color += emissive;
 	}
 	else{
-		color += emissiveFactor.rgb;
+		color += emissiveFactor;
 	}
 
-    // color = SRGBtoLINEAR(vec4(color, baseColorFactor.a));	
-    //fragmentColor = vec4(color, baseColorFactor.a);	
-    fragmentColor = vec4(0.0, 1.0, 0.0, 1.0);	
+    fragmentColor = vec4(color, baseColorFactor.a);	
+    // fragmentColor = vec4(0.0, 1.0, 0.0, 1.0);	
 
 	// diplay occlusion effect
-	// float ao = texture(aoMap, outVertexTextureCoordinates).r;
-	// color = mix(color, color * ao, occlusionFactor.rgb);
+	// float ao = texture(occlusionMap, outVertexTextureCoordinates).r;
+	// color = mix(color, color * ao, vec3(occlusionFactor));
 	// fragmentColor = vec4(color, 1.0); 
 
     // display textures   
     // base color 
-    // fragmentColor = vec4(texture(colorMap, outVertexTextureCoordinates).rgb, 1.0);
+    // fragmentColor = vec4(texture(baseColorMap, outVertexTextureCoordinates).rgb, 1.0);
 
     // physical descriptor map
     // fragmentColor = vec4(texture(physicalDescriptorMap, outVertexTextureCoordinates).rgb, 1.0);
 
     // normal map
     // fragmentColor = vec4(texture(normalMap, outVertexTextureCoordinates).rgb, 1.0);
+
+	// emissive map
+    // fragmentColor = vec4(texture(emissiveMap, outVertexTextureCoordinates).rgb, 1.0);
 }

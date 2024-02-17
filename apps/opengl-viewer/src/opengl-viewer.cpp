@@ -105,12 +105,19 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         this->mgttScene.shader.SetVec3("lightPosition", this->cameraPosition);
         this->mgttScene.shader.SetVec3("cameraPosition", this->cameraPosition);
 
-        // samplerEnvMap
-        // samplerIrradianceMap
-        // samplerBrdfLut
-        // scaleIblAmbient
-        // prefilteredCubeMipLevels
+        this->mgttScene.shader.SetInt("samplerEnvMap", 7);
+        glActiveTexture(GL_TEXTURE7);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
 
+        this->mgttScene.shader.SetInt("samplerIrradianceMap", 8);
+        glActiveTexture(GL_TEXTURE8);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
+
+        this->mgttScene.shader.SetInt("samplerBrdfLut", 9);
+        glActiveTexture(GL_TEXTURE9);
+        glBindTexture(GL_TEXTURE_2D, this->renderTextureContainer.brdfLutTextureId);
+        
+        this->mgttScene.shader.SetFloat("scaleIblAmbient", 2.0f);
 
         for (auto& node : this->mgttScene.nodes) {
             this->TraverseSceneNode(node);
@@ -124,18 +131,18 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         //glBindVertexArray(0);
 
         // //Check env map
-        glDepthFunc(GL_LEQUAL);
-        this->renderTextureContainer.envMapShader.Use();
-        this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
-        this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
-        this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
+        //glDepthFunc(GL_LEQUAL);
+        //this->renderTextureContainer.envMapShader.Use();
+        //this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
+        //this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
+        //this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
-        glBindVertexArray(this->renderTextureContainer.cubeVao);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
+        //glBindVertexArray(this->renderTextureContainer.cubeVao);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(0);
+        //glDepthFunc(GL_LESS);
 
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
@@ -169,10 +176,10 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
             
             // base color
             if (meshPrimitve.pbrMaterial.baseColorTexture.id > 0) {
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.baseColorTexture.id);
                 this->mgttScene.shader.SetBool("baseColorTextureSet", true);
                 this->mgttScene.shader.SetInt("baseColorMap", 0);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.baseColorTexture.id);
             }
             else {
                 this->mgttScene.shader.SetBool("baseColorTextureSet", false);
@@ -180,10 +187,10 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
             
             // metallic roughness
             if (meshPrimitve.pbrMaterial.metallicRoughnessTexture.id > 0) {
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.metallicRoughnessTexture.id);
                 this->mgttScene.shader.SetBool("physicalDescriptorTextureSet", true);
                 this->mgttScene.shader.SetInt("physicalDescriptorMap", 1);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.metallicRoughnessTexture.id);
             }
             else {
                 this->mgttScene.shader.SetBool("physicalDescriptorTextureSet", false);
@@ -191,10 +198,10 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
 
             // normal
             if (meshPrimitve.pbrMaterial.normalTexture.id > 0) {
-                glActiveTexture(GL_TEXTURE2);
-                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.normalTexture.id);
                 this->mgttScene.shader.SetBool("normalTextureSet", true);
                 this->mgttScene.shader.SetInt("normalMap", 2);
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.normalTexture.id);
             }
             else {
                 this->mgttScene.shader.SetBool("normalTextureSet", false);
@@ -202,10 +209,10 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
 
             // emissive
             if (meshPrimitve.pbrMaterial.emissiveTexture.id > 0) {
-                glActiveTexture(GL_TEXTURE3);
-                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.emissiveTexture.id);
                 this->mgttScene.shader.SetBool("emissiveTextureSet", true);
                 this->mgttScene.shader.SetInt("emissiveMap", 3);
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.emissiveTexture.id);
             }
             else {
                 this->mgttScene.shader.SetBool("emissiveTextureSet", false);
@@ -213,10 +220,10 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
 
             // ambient occlusion
             if (meshPrimitve.pbrMaterial.occlusionTexture.id > 0) {
-                glActiveTexture(GL_TEXTURE4);
-                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.occlusionTexture.id);
                 this->mgttScene.shader.SetBool("occlusionTextureSet", true);
                 this->mgttScene.shader.SetInt("occlusionMap", 4);
+                glActiveTexture(GL_TEXTURE4);
+                glBindTexture(GL_TEXTURE_2D, meshPrimitve.pbrMaterial.occlusionTexture.id);
             }
             else {
                 this->mgttScene.shader.SetBool("occlusionTextureSet", false);
