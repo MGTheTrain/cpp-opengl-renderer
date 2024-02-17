@@ -79,6 +79,8 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
         glAttachShader(this->id, fragment);
         glLinkProgram(this->id);
         this->CheckCompileErrors(this->id, "PROGRAM");
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
     } catch (const std::runtime_error& ex) {
         if(vertex > 0) {
             glDeleteShader(vertex);
@@ -88,13 +90,9 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
             glDeleteShader(fragment);
             fragment = 0;
         }
-        if(this->id > 0) {
-            this->Clear();
-        }
+        this->Clear();
         std::cerr << ex.what() << std::endl;
     }
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
 }
 
 /**
