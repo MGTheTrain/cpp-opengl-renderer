@@ -451,10 +451,10 @@ namespace Mgtt::Rendering {
         uint32_t hdrTextureId;          
         uint32_t fboId;                  
         uint32_t rboId;                  
-        uint32_t envMapVao;              
-        uint32_t envMapVbo;              
-        uint32_t brdfQuadVao;            
-        uint32_t brdfQuadVbo;            
+        uint32_t cubeVao;              
+        uint32_t cubeVbo;              
+        uint32_t quadVao;            
+        uint32_t quadVbo;            
         std::vector<TextureBase> textures; // @note This vector can be used to store either a single HDR texture or multiple cube map textures.
 
         Mgtt::Rendering::OpenGlShader eq2CubeMapShader; // equirectangular to cubemap shader

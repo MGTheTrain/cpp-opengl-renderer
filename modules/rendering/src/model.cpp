@@ -420,10 +420,10 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
       hdrTextureId(0),
       fboId(0),
       rboId(0),
-      envMapVao(0),
-      envMapVbo(0),
-      brdfQuadVao(0),
-      brdfQuadVbo(0) {}
+      cubeVao(0),
+      cubeVbo(0),
+      quadVao(0),
+      quadVbo(0) {}
 
 /**
  * @brief Constructor for the RenderTexturesContainer structure.
@@ -442,10 +442,10 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
       hdrTextureId(0),
       fboId(0),
       rboId(0),
-      envMapVao(0),
-      envMapVbo(0),
-      brdfQuadVao(0),
-      brdfQuadVbo(0),
+      cubeVao(0),
+      cubeVbo(0),
+      quadVao(0),
+      quadVbo(0),
       eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes)),
       brdfLutShader(OpenGlShader(brdfLutShaderPathes)),
       envMapShader(OpenGlShader(envMapShaderPathes)) {}
@@ -485,23 +485,23 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     }
 
     // vao
-    if (this->envMapVao > 0) {
-        glDeleteVertexArrays(1, &this->envMapVao);
-        this->envMapVao = 0;
+    if (this->cubeVao > 0) {
+        glDeleteVertexArrays(1, &this->cubeVao);
+        this->cubeVao = 0;
     }
-    if (this->brdfQuadVao > 0) {
-        glDeleteVertexArrays(1, &this->brdfQuadVao);
-        this->brdfQuadVao = 0;
+    if (this->quadVao > 0) {
+        glDeleteVertexArrays(1, &this->quadVao);
+        this->quadVao = 0;
     }
 
     // vbo
-    if (this->envMapVbo > 0) {
-        glDeleteBuffers(1, &this->envMapVbo);
-        this->envMapVbo = 0;
+    if (this->cubeVbo > 0) {
+        glDeleteBuffers(1, &this->cubeVbo);
+        this->cubeVbo = 0;
     }
-    if (this->brdfQuadVbo > 0) {
-        glDeleteBuffers(1, &this->brdfQuadVbo);
-        this->brdfQuadVbo = 0;
+    if (this->quadVbo > 0) {
+        glDeleteBuffers(1, &this->quadVbo);
+        this->quadVbo = 0;
     }
 
     // shader

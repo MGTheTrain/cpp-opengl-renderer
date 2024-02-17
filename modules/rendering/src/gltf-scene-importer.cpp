@@ -644,12 +644,12 @@ bool Mgtt::Rendering::TextureManager::HasValuesGreaterThanZero(const std::vector
  */
 void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesContainer& container){
     std::vector<uint32_t> vec {
-        container.envMapVao,
-        container.envMapVbo
+        container.cubeVao,
+        container.cubeVbo
     };
     if(!this->HasValuesGreaterThanZero(vec)) {
-        glGenVertexArrays(1, &container.envMapVao);
-        glGenBuffers(1, &container.envMapVbo);
+        glGenVertexArrays(1, &container.cubeVao);
+        glGenBuffers(1, &container.cubeVbo);
     }
     std::vector<float> vertices = {
         -1.0f, 1.0f,  -1.0f,
@@ -694,12 +694,14 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
         -1.0f, -1.0f, 1.0f,
         1.0f,  -1.0f, 1.0f
     };
-    glBindVertexArray(container.envMapVao);
-    glBindBuffer(GL_ARRAY_BUFFER, container.envMapVbo);
+    uint32_t posLoc = glGetAttribLocation(container.envMapShader.GetProgramId(), "inVertexPosition");
+
+    glBindVertexArray(container.cubeVao);
+    glBindBuffer(GL_ARRAY_BUFFER, container.cubeVbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void*>(0));
-    glBindVertexArray(container.envMapVao);
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void*>(0));
+    glBindVertexArray(container.cubeVao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
@@ -716,8 +718,8 @@ void Mgtt::Rendering::TextureManager::SetupCube(Mgtt::Rendering::RenderTexturesC
 */
 void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container) {
     std::vector<uint32_t> vec {
-        container.brdfQuadVao,
-        container.brdfQuadVbo
+        container.quadVao,
+        container.quadVbo
     };
     if(!this->HasValuesGreaterThanZero(vec)) {
         uint32_t posLoc = glGetAttribLocation(container.brdfLutShader.GetProgramId(), "inVertexPosition");
@@ -729,11 +731,11 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
             1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 
             1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
         };
-        glGenVertexArrays(1, &container.brdfQuadVao);
-        glGenBuffers(1, &container.brdfQuadVbo);
+        glGenVertexArrays(1, &container.quadVao);
+        glGenBuffers(1, &container.quadVbo);
 
-        glBindVertexArray(container.brdfQuadVao);
-        glBindBuffer(GL_ARRAY_BUFFER, container.brdfQuadVbo);
+        glBindVertexArray(container.quadVao);
+        glBindBuffer(GL_ARRAY_BUFFER, container.quadVbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(posLoc);
@@ -741,11 +743,11 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
         glEnableVertexAttribArray(texLoc);
         glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
 
-        glBindVertexArray(container.brdfQuadVao);
+        glBindVertexArray(container.quadVao);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
     } else {
-        std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [brdfQuadVao, brdfQuadVbo]" << std::endl;
+        std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [quadVao, quadVbo]" << std::endl;
     }
 }
 
