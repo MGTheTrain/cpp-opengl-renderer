@@ -335,7 +335,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         // normal 
         glBindBuffer(GL_ARRAY_BUFFER, mesh->normal);
         glBufferData(GL_ARRAY_BUFFER, mesh->vertexNormalAttribs.size() * sizeof(glm::vec3), &mesh->vertexNormalAttribs[0], GL_STATIC_DRAW);
-        uint32_t normalLoc = glGetAttribLocation(shaderId, "inVertexNormalCoordinates");
+        uint32_t normalLoc = glGetAttribLocation(shaderId, "inVertexNormal");
         glEnableVertexAttribArray(normalLoc);
         glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(0));
 
