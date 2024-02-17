@@ -55,11 +55,6 @@ namespace Mgtt::Rendering {
         OpenGlShader(const std::pair<std::string, std::string> shaderPathes);
 
         /**
-         * @brief Destructor for the OpenGL shader.
-         */
-        ~OpenGlShader();
-
-        /**
          * @brief Compile the shader program from specified vertex and fragment shader files.
          * 
          * This method compiles the vertex and fragment shaders, linking them into a shader program.

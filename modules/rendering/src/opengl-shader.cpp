@@ -12,13 +12,6 @@ Mgtt::Rendering::OpenGlShader::OpenGlShader(const std::pair<std::string, std::st
 }
 
 /**
- * @brief Destructor for the OpenGL shader.
- */
-Mgtt::Rendering::OpenGlShader::~OpenGlShader() {
-    this->Clear();
-}
-
-/**
  * @brief Compile the shader program from specified vertex and fragment shader files.
  * 
  * This method compiles the vertex and fragment shaders, linking them into a shader program.

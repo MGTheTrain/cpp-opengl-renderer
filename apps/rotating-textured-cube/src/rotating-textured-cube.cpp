@@ -28,6 +28,9 @@
  */
 Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
     this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.Clear();
+    for (auto& shader : this->openGlShaders) {
+        shader.Clear();
+    }
 }
 
 /**
