@@ -27,6 +27,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <stdexcept>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 

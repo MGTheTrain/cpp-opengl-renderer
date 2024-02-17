@@ -51,9 +51,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
         fsFile.close();
         vsCode = vShaderStream.str();
         fsCode = fShaderStream.str();
-    }
-    catch (std::ifstream::failure& ex)
-    {
+    } catch (std::ifstream::failure& ex) {
         std::string errorMsg = "SHADER ERROR: Provided vertex shader file " + shaderPathes.first + " and fragment shader file " + shaderPathes.second + "does not exist";
         throw std::runtime_error(errorMsg.c_str());
         return;
@@ -75,7 +73,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
         glAttachShader(this->id, fragment);
         glLinkProgram(this->id);
         this->CheckCompileErrors(this->id, "PROGRAM");
-    } catch (std::runtime_error& ex) {
+    } catch (const std::runtime_error& ex) {
         if(vertex > 0) {
             glDeleteShader(vertex);
             vertex = 0;
@@ -84,10 +82,10 @@ void Mgtt::Rendering::OpenGlShader::Compile(const std::pair<std::string, std::st
             glDeleteShader(fragment);
             fragment = 0;
         }
-        if(id > 0) {
+        if(this->id > 0) {
             this->Clear();
         }
-        throw ex.what();
+        std::cerr << ex.what() << std::endl;
     }
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -259,7 +257,7 @@ void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader, std::strin
         if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
             std::string errorMsg = "SHADER COMPILATION ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################";
-            throw std::runtime_error(errorMsg.c_str());
+            throw std::runtime_error(errorMsg);
         }
     }
     else {
@@ -267,7 +265,7 @@ void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader, std::strin
         if (!success) {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
             std::string errorMsg = "PROGRAM LINKING ERROR: Type: " + type + "\n" + infoLog + "\n#####################################################################################";
-            throw std::runtime_error(errorMsg.c_str());
+            throw std::runtime_error(errorMsg);
         }
     }
 }
