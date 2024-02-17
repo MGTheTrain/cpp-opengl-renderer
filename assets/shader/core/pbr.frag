@@ -164,6 +164,8 @@ vec3 GetIBLContribution(
 void main() {    
     float perceptualRoughness;
 	float metallic;
+	vec3 diffuseColor;
+	vec4 baseColor;
 
     perceptualRoughness = roughnessFactor;
     metallic = metallicFactor;
