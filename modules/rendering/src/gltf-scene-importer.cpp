@@ -318,17 +318,13 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         glGenBuffers(1, &mesh->pos);
         glGenBuffers(1, &mesh->normal);
         glGenBuffers(1, &mesh->tex);
-        if (mesh->indices.size() > 0) {
-            glGenBuffers(1, &mesh->ebo);
-        }
-
+        glGenBuffers(1, &mesh->ebo);
+        
         glBindVertexArray(mesh->vao);
 
-        if (mesh->indices.size() > 0) {
-            // indices
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0], GL_STATIC_DRAW);
-        }
+        // indices
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0], GL_STATIC_DRAW);
 
         // pos
         glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
@@ -350,9 +346,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(std::shared_ptr<Mgtt::Renderi
         glEnableVertexAttribArray(texLoc);
         glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<void*>(0));
 
-        if (mesh->indices.size() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-        }
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
 
         glBindVertexArray(0);
     } else {
@@ -456,6 +450,41 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 glm::vec2 tmpTex = bufferTexCoordSet? glm::make_vec2(&bufferTexCoordSet[v * uv0ByteStride]): glm::vec2(0.0f);
                 newMesh->vertexTextureAttribs.push_back(tmpTex);
             }
+            if (hasIndices) {
+                const tinygltf::Accessor& accessor = model.accessors[primitive.indices > -1 ? primitive.indices : 0];
+                const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
+                const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+                indexCount = static_cast<unsigned int>(accessor.count);
+
+                const void* dataPtr = &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+
+                switch (accessor.componentType) {
+                case GLTF_PARAMETER_TYPE_UNSIGNED_INT: {
+                    const uint32_t* buf = static_cast<const uint32_t*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        newMesh->indices.push_back(buf[index] + vertexStart);
+                    }
+                    break;
+                }
+                case GLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
+                    const uint16_t* buf = static_cast<const uint16_t*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        newMesh->indices.push_back(buf[index] + vertexStart);
+                    }
+                    break;
+                }
+                case GLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
+                    const uint8_t* buf = static_cast<const uint8_t*>(dataPtr);
+                    for (size_t index = 0; index < accessor.count; index++) {
+                        newMesh->indices.push_back(buf[index] + vertexStart);
+                    }
+                    break;
+                }
+                default:
+                    return;
+                }
+            }
+
             Mgtt::Rendering::MeshPrimitive newPrimitive;
             newPrimitive.firstIndex = indexStart;
             newPrimitive.indexCount = indexCount;

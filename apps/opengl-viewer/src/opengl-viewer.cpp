@@ -68,12 +68,12 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     std::string mgttScenePath= "assets/scenes/water-bottle/WaterBottle.gltf";
     this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
-    // e2quirectangular to env map
-    std::string hdrTexturePath = "assets/texture/surgery.jpg";
-    this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
+    //// e2quirectangular to env map
+    //std::string hdrTexturePath = "assets/texture/surgery.jpg";
+    //this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
 
-    // brdf lut
-    this->textureManager->LoadBrdfLut(this->renderTextureContainer);
+    //// brdf lut
+    //this->textureManager->LoadBrdfLut(this->renderTextureContainer);
 }
 
 
@@ -87,8 +87,17 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        this->glmMatrices->model = glm::mat4(1.0f);
+        this->glmMatrices->view = glm::mat4(1.0f);
+        this->glmMatrices->projection = glm::mat4(1.0f);
         this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
         this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
+        this->glmMatrices->model = glm::rotate(this->glmMatrices->model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        this->mgttScene.mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
+
+        this->mgttScene.shader.Use();
+        this->mgttScene.shader.SetMat4("model", this->glmMatrices->model);
+        this->mgttScene.shader.SetMat4("mvp", this->mgttScene.mvp);
 
         for (auto& node : this->mgttScene.nodes) {
             this->TraverseSceneNode(node);
@@ -128,10 +137,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
  * @param node A shared pointer to the 3D node to be rendered.
  **/
 void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node) {
-    if (node->mesh) {
-        glUniformMatrix4fv(glGetUniformLocation(this->mgttScene.shader.GetProgramId(), "matrix"), 1, GL_FALSE, &node->mesh->matrix[0][0]);
-        RenderMesh(node);
-    }
+    RenderMesh(node);
     for (auto& child : node->children) {
         this->TraverseSceneNode(child);
     }
@@ -144,7 +150,43 @@ void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(std::shared_ptr<Mgtt::Rendering
  * technique and associated settings. It should be called within the rendering loop.
  */
 void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node) {
+    if (node->mesh) {
+        glUniformMatrix4fv(glGetUniformLocation(this->mgttScene.shader.GetProgramId(), "matrix"), 1, GL_FALSE, &node->mesh->matrix[0][0]);
+        for(auto& meshPrimitve: node->mesh->meshPrimitives) {
+            meshPrimitve.pbrMaterial.emissiveTexture.color;
 
+            // lightPosition
+            // cameraPosition
+            // baseColorFactor
+            // emissiveFactor
+            // occlusionFactor
+            // diffuseFactor
+            // specularFactor
+            // metallicFactor
+            // roughnessFactor
+            // alphaMaskSet
+            // alphaMaskCutoff
+            // colorMap
+            // physicalDescriptorMap
+            // normalMap
+            // aoMap
+            // emissiveMap
+            // baseColorTextureSet
+            // physicalDescriptorTextureSet
+            // normalTextureSet
+            // occlusionTextureSet
+            // emissiveTextureSet
+            // samplerEnvMap
+            // samplerIrradianceMap
+            // samplerBrdfLut
+            // scaleIblAmbient
+            // prefilteredCubeMipLevels
+
+            glBindVertexArray(node->mesh->vao);
+            glDrawElements(GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT, (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
+            glBindVertexArray(0);
+        }
+    }
 }
  
 int main() {

@@ -279,7 +279,8 @@ void main() {
 	}
 
     // color = SRGBtoLINEAR(vec4(color, baseColorFactor.a));	
-    fragmentColor = vec4(color, baseColorFactor.a);	
+    //fragmentColor = vec4(color, baseColorFactor.a);	
+    fragmentColor = vec4(0.0, 1.0, 0.0, 1.0);	
 
 	// diplay occlusion effect
 	// float ao = texture(aoMap, outVertexTextureCoordinates).r;
