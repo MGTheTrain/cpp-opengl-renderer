@@ -43,13 +43,13 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
  * @brief Constructs an OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
-    this->windowParams = std::make_unique<WindowParams>();
-    this->windowParams->name = "opengl-viewer";
-    this->windowParams->width = 1000.0f;
-    this->windowParams->height = 1000.0f;
+    std::string appName = "opengl-viewer";
+    float windowWidth = 1000.0f;
+    float windowHeight = 1000.0f;
 
     this->glmMatrices = std::make_unique<GlmMatrices>();
-    this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
+    this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(appName, windowWidth, windowHeight);
+    this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
@@ -68,12 +68,14 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     std::string mgttScenePath= "assets/scenes/water-bottle/WaterBottle.gltf";
     this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
-    //// e2quirectangular to env map
-    //std::string hdrTexturePath = "assets/texture/surgery.jpg";
-    //this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
+    // e2quirectangular to env map
+    std::string hdrTexturePath = "assets/texture/surgery.jpg";
+    this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
 
-    //// brdf lut
-    //this->textureManager->LoadBrdfLut(this->renderTextureContainer);
+    // brdf lut
+    this->textureManager->LoadBrdfLut(this->renderTextureContainer);
+
+    glViewport(0, 0, windowWidth, windowHeight);
 }
 
 
@@ -90,8 +92,9 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         this->glmMatrices->model = glm::mat4(1.0f);
         this->glmMatrices->view = glm::mat4(1.0f);
         this->glmMatrices->projection = glm::mat4(1.0f);
-        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
-        this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
+        auto [width, height] = glfwWindow->GetWindowSize();
+        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.1f, 1000.0f);
+        this->glmMatrices->view = glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -1.0f));
         this->glmMatrices->model = glm::rotate(this->glmMatrices->model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         this->mgttScene.mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
 
@@ -110,19 +113,19 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         //glDrawArrays(GL_TRIANGLES, 0, 4);
         //glBindVertexArray(0);
 
-        // Check env map
-        //this->renderTextureContainer.envMapShader.Use();
-        //this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
-        //this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
-        //this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
+         //Check env map
+        this->renderTextureContainer.envMapShader.Use();
+        this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
+        this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
+        this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
 
-        //glDepthFunc(GL_LEQUAL);
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
-        //glBindVertexArray(this->renderTextureContainer.cubeVao);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
-        //glBindVertexArray(0);
-        //glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LEQUAL);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.cubeMapTextureId);
+        glBindVertexArray(this->renderTextureContainer.cubeVao);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
 
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
@@ -187,6 +190,21 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
             glBindVertexArray(0);
         }
     }
+}
+
+/**
+ * @brief Callback function for framebuffer size changes.
+ *
+ * This static callback function is invoked when the framebuffer size of the GLFW window changes.
+ * It is typically registered using `glfwSetFramebufferSizeCallback`. The function updates the
+ * viewport size based on the new width and height.
+ *
+ * @param window A pointer to the GLFW window whose framebuffer size has changed.
+ * @param width  The new width of the framebuffer.
+ * @param height The new height of the framebuffer.
+ */
+void Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
 }
  
 int main() {

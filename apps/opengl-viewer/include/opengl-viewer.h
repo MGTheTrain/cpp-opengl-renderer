@@ -39,20 +39,6 @@
 
 namespace Mgtt::Apps {
     /**
- * @brief Represents window params
- */
-    struct WindowParams {
-        WindowParams() {
-            this->name = "";
-            this->width = 0.0f;
-            this->height = 0.0f;
-        }
-        std::string name;
-        float width;
-        float height;
-    };
-
-    /**
      * @brief Represents glm matrices
      */
     struct GlmMatrices {
@@ -97,7 +83,6 @@ namespace Mgtt::Apps {
          */
         void Render();
     private:
-        std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
         Mgtt::Rendering::Scene mgttScene;
         Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
@@ -121,6 +106,19 @@ namespace Mgtt::Apps {
          * technique and associated settings. It should be called within the rendering loop.
          */
         void RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node);
+
+        /**
+        * @brief Callback function for framebuffer size changes.
+        *
+        * This static callback function is invoked when the framebuffer size of the GLFW window changes.
+        * It is typically registered using `glfwSetFramebufferSizeCallback`. The function updates the
+        * viewport size based on the new width and height.
+        *
+        * @param window A pointer to the GLFW window whose framebuffer size has changed.
+        * @param width  The new width of the framebuffer.
+        * @param height The new height of the framebuffer.
+        */
+        static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
     };
 
 } // namespace Mgtt::Apps
