@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 09-02-2024
+## [0.1.0] - 17-02-2024
 
 ### Added
 
-- Initial setup
+- [Feature] Support for glTF scene loading
+- [Feature] PBR shader pipeline considering primarily the metal roughness workflow
