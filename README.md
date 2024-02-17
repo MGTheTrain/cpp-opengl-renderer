@@ -21,6 +21,8 @@ TBD
 - [x] Support for glTF scene loading
 - [x] PBR shader pipeline considering primarily the metal roughness workflow
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
+- [ ] High code coverage with GoogleTest for methods in module structs and classes 
+- [ ] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems and continuous testing of the modules
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
 - [ ] Skeletal animation support (**OPTIONAL**)
