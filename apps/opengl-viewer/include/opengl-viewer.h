@@ -39,6 +39,36 @@
 
 namespace Mgtt::Apps {
     /**
+ * @brief Represents window params
+ */
+    struct WindowParams {
+        WindowParams() {
+            this->name = "";
+            this->width = 0.0f;
+            this->height = 0.0f;
+        }
+        std::string name;
+        float width;
+        float height;
+    };
+
+    /**
+     * @brief Represents glm matrices
+     */
+    struct GlmMatrices {
+        GlmMatrices() {
+            this->model = glm::mat4(1.0f);
+            this->view = glm::mat4(1.0f);
+            this->projection = glm::mat4(1.0f);
+            this->mvp = glm::mat4(1.0f);
+        }
+        glm::mat4 model;
+        glm::mat4 view;
+        glm::mat4 projection;
+        glm::mat4 mvp;
+    };
+
+    /**
      * @brief The OpenGlViewer class represents a simple OpenGL viewer.
      *
      * This class provides basic functionality for initializing an OpenGL context,
@@ -69,6 +99,8 @@ namespace Mgtt::Apps {
          */
         void Render();
     private:
+        std::unique_ptr<WindowParams> windowParams;
+        std::unique_ptr<GlmMatrices> glmMatrices;
         Mgtt::Rendering::Scene mgttScene;
         Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
         std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;

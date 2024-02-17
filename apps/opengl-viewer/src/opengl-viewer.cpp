@@ -43,10 +43,17 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
  * @brief Constructs an OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
-    this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer", 1000.0f, 1000.0f);
+    this->windowParams = std::make_unique<WindowParams>();
+    this->windowParams->name = "opengl-viewer";
+    this->windowParams->width = 1000.0f;
+    this->windowParams->height = 1000.0f;
+
+    this->glmMatrices = std::make_unique<GlmMatrices>();
+    this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
+    glEnable(GL_DEPTH_TEST);
 
     // Compile shaders and link to OpenGl program
     auto pbrShaderPathes = std::make_pair<std::string, std::string>("assets/shader/core/pbr.vert","assets/shader/core/pbr.frag");
@@ -67,8 +74,6 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 
     // brdf lut
     this->textureManager->LoadBrdfLut(this->renderTextureContainer);
-
-    glEnable(GL_DEPTH_TEST);
 }
 
 
@@ -82,10 +87,13 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(skyBoxShader.id);
-        glUniformMatrix4fv(glGetUniformLocation(skyBoxShader.id, "projection"), 1, GL_FALSE, &projection[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(skyBoxShader.id, "view"), 1, GL_FALSE, &view[0][0]);
-        glUniform1i(glGetUniformLocation(skyBoxShader.id, "skybox"), 0);
+        this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
+        this->glmMatrices->view = glm::mat4(1.0f);
+
+        this->renderTextureContainer.envMapShader.Use();
+        this->renderTextureContainer.envMapShader.SetMat4("projection", this->glmMatrices->projection);
+        this->renderTextureContainer.envMapShader.SetMat4("view", this->glmMatrices->view);
+        this->renderTextureContainer.envMapShader.SetInt("skybox", 0);
 
         glDepthFunc(GL_LEQUAL);
         glActiveTexture(GL_TEXTURE0);
