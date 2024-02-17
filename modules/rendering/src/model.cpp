@@ -33,6 +33,7 @@ void Mgtt::Rendering::Scene::Clear() {
     this->materials.shrink_to_fit();
 
     this->shader.Clear();
+    std::cout << "CLEAR INFO: Successfully cleared scene with all it's components " << this->path << std::endl;
 
     this->name = "";
     this->path = "";
@@ -503,4 +504,6 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     // shader
     this->eq2CubeMapShader.Clear();
     this->brdfLutShader.Clear();
+
+    std::cout << "CLEAR INFO: Successfully deleted the render texture container with IBL related components" << std::endl;
 }

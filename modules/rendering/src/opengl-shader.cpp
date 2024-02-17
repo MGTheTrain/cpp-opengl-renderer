@@ -103,6 +103,7 @@ void Mgtt::Rendering::OpenGlShader::Clear() {
     if (this->id > 0) {
         glDeleteProgram(this->id);
         this->id = 0;
+        std::cout << "CLEAR INFO: Successfully deleted program with id " << this->id << std::endl;
     }
 }
 
