@@ -20,41 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
+#include <GL/glew.h>
 #include <string>
+#include <vector>
 #include <memory>
-#include <scene.h>
-#include <mesh.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <opengl-shader.h>
+#include <mesh-primitive.h>
 
 namespace Mgtt::Rendering {
+    struct MeshPrimitive;
     /**
-     * @brief Interface for importing 3D scenes.
-     * 
-     * This interface defines methods for loading and clearing 3D scenes.
+     * @brief Represents a mesh in the scene.
      */
-    class ISceneImporter {
-    public:
+    struct Mesh {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the Mesh struct.
          */
-        virtual ~ISceneImporter() {}
+        Mesh();
+
+        ~Mesh() {}
 
         /**
-         * @brief Load the scene from a specified file path.
-         * 
-         * @param path The file path from which to load the scene.
-         * @param An instance of the loaded scene.
+         * @brief Clear releases resources.
          */
-        virtual void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) = 0;
+        void Clear();
 
-        /**
-         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-         * 
-         * This method is used to reset the internal state of the scene.
-         * @param scene A unique pointer to the scene to clear.
-         */
-        virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
+        std::string name;
+        std::vector<Mgtt::Rendering::MeshPrimitive> meshPrimitives;
+        std::vector<unsigned int> indices;
+        std::vector<glm::vec3> vertexPositionAttribs;
+        std::vector<glm::vec3> vertexNormalAttribs;
+        std::vector<glm::vec2> vertexTextureAttribs;
+        std::vector<glm::ivec4> vertexJointAttribs;
+        std::vector<glm::vec4> vertexWeightAttribs;
+        glm::mat4 matrix;
+
+        uint32_t vao;   
+        uint32_t ebo; 
+        uint32_t pos; 
+        uint32_t normal;
+        uint32_t tex;
+        //uint32_t joint; 
+        //uint32_t weight;
     };
-
 }

@@ -462,12 +462,12 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
             newPrimitive.hasIndices = true;
             newPrimitive.vertexCount = vertexCount;
             if (primitive.material > -1) {
-                newPrimitive.pbrMaterial = 
-                    std::make_shared<Mgtt::Rendering::PbrMaterial>(scene.materials[primitive.material]);
+                //newPrimitive.pbrMaterial =
+                newPrimitive.pbrMaterial = scene.materials[primitive.material];
             }
-            else { 
-                newPrimitive.pbrMaterial = std::make_shared<Mgtt::Rendering::PbrMaterial>();
-            }
+            //else { 
+            //    newPrimitive.pbrMaterial = std::make_shared<Mgtt::Rendering::PbrMaterial>();
+            //}
             newPrimitive.aabb.min = posMin;
             newPrimitive.aabb.max = posMax;
             newPrimitive.name = node.name;

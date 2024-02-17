@@ -20,41 +20,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
+#include <GL/glew.h>
 #include <string>
-#include <memory>
-#include <scene.h>
-#include <mesh.h>
+#include <texture.h>
 
 namespace Mgtt::Rendering {
     /**
-     * @brief Interface for importing 3D scenes.
-     * 
-     * This interface defines methods for loading and clearing 3D scenes.
+     * @brief Represents a generic material.
      */
-    class ISceneImporter {
-    public:
+    struct Material {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the Material structure.
          */
-        virtual ~ISceneImporter() {}
+        Material();
 
         /**
-         * @brief Load the scene from a specified file path.
-         * 
-         * @param path The file path from which to load the scene.
-         * @param An instance of the loaded scene.
+         * @brief Virtual destructor for the Material structure.
          */
-        virtual void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) = 0;
+        virtual ~Material() {}
 
-        /**
-         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-         * 
-         * This method is used to reset the internal state of the scene.
-         * @param scene A unique pointer to the scene to clear.
-         */
-        virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
+        std::string name;
     };
 
+    enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
+
+    /**
+     * @brief Represents a physically based rendering (PBR) material.
+     */
+    struct PbrMaterial : public Material {
+        /**
+         * @brief Constructor for the PbrMaterial structure.
+         */
+        PbrMaterial();
+
+        ~PbrMaterial() {}
+
+        /**
+         * @brief Clear releases resources.
+         */
+        void Clear();
+
+        std::string name;
+        NormalTexture normalTexture;
+        OcclusionTexture occlusionTexture;
+        EmissiveTexture emissiveTexture;
+        BaseColorTexture baseColorTexture;
+        MetallicRoughnessTexture metallicRoughnessTexture;
+
+        float alphaCutoff;
+        bool doubleSided;
+        AlphaMode alphaMode;
+    };
 }

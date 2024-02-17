@@ -1,6 +1,5 @@
 #include <opengl-shader.h>
 
-
 /**
  * @brief Constructor for the OpenGlShader class.
  *

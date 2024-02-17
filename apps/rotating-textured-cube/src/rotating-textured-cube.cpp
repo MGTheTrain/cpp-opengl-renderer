@@ -27,7 +27,7 @@
  * @brief Destructs the RotatingTexturedCube  object.
  */
 Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube () {
-    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.Clear();
+    this->mesh.Clear();
     for (auto& shader : this->openGlShaders) {
         shader.Clear();
     }
@@ -43,7 +43,6 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     this->windowParams->height= 1000.0f;
 
     this->glmMatrices = std::make_unique<GlmMatrices>();
-    this->mesh= std::make_unique<Mgtt::Rendering::Mesh>();
     this->glfwWindow = 
       std::make_unique<Mgtt::Window::GlfwWindow>(this->windowParams->name, this->windowParams->width, this->windowParams->height);
     this->glfwWindow->SetFramebufferSizeCallback(Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
@@ -58,7 +57,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
     auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
     this->openGlShaders.push_back(shader);
     
-    this->mesh->vertexPositionAttribs = {
+    this->mesh.vertexPositionAttribs = {
         glm::vec3(-0.5f, -0.5f, -0.5f),
         glm::vec3(0.5f, -0.5f, -0.5f),
         glm::vec3(0.5f, 0.5f, -0.5f),
@@ -102,7 +101,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
         glm::vec3(-0.5f, 0.5f, -0.5f)
     };
 
-    this->mesh->vertexTextureAttribs = {
+    this->mesh.vertexTextureAttribs = {
         glm::vec2(0.0f, 0.0f),
         glm::vec2(1.0f, 0.0f),
         glm::vec2(1.0f, 1.0f),
@@ -141,50 +140,50 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube () {
         glm::vec2(0.0f, 1.0f)
     };
 
-    glGenVertexArrays(1, &this->mesh->vao);
-    glBindVertexArray(this->mesh->vao);
+    glGenVertexArrays(1, &this->mesh.vao);
+    glBindVertexArray(this->mesh.vao);
 
-    glGenBuffers(1, &this->mesh->pos); 
-    glBindBuffer(GL_ARRAY_BUFFER, this->mesh->pos);
-    glBufferData(GL_ARRAY_BUFFER, this->mesh->vertexPositionAttribs.size() * sizeof(glm::vec3), this->mesh->vertexPositionAttribs.data(), GL_STATIC_DRAW);
+    glGenBuffers(1, &this->mesh.pos); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->mesh.pos);
+    glBufferData(GL_ARRAY_BUFFER, this->mesh.vertexPositionAttribs.size() * sizeof(glm::vec3), this->mesh.vertexPositionAttribs.data(), GL_STATIC_DRAW);
     uint32_t posLocation = glGetAttribLocation(this->openGlShaders[0].GetProgramId(), "inVertexPosition");
     glEnableVertexAttribArray(posLocation);
     glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
 
-    glGenBuffers(1, &this->mesh->tex); 
-    glBindBuffer(GL_ARRAY_BUFFER, this->mesh->tex);
-    glBufferData(GL_ARRAY_BUFFER, this->mesh->vertexTextureAttribs.size() * sizeof(glm::vec2), this->mesh->vertexTextureAttribs.data(), GL_STATIC_DRAW);
+    glGenBuffers(1, &this->mesh.tex); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->mesh.tex);
+    glBufferData(GL_ARRAY_BUFFER, this->mesh.vertexTextureAttribs.size() * sizeof(glm::vec2), this->mesh.vertexTextureAttribs.data(), GL_STATIC_DRAW);
     uint32_t texLocation = glGetAttribLocation(this->openGlShaders[0].GetProgramId(), "inVertexTextureCoordinates");
     glEnableVertexAttribArray(texLocation);
     glVertexAttribPointer(texLocation, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)(0));
 
-    this->mesh->meshPrimitives.push_back(this->meshPrimitive);
-    this->mesh->meshPrimitives[0].pbrMaterial = std::make_unique<Mgtt::Rendering::PbrMaterial>();
-    glGenTextures(1, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.id);
-    glBindTexture(GL_TEXTURE_2D, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.id);
+    Mgtt::Rendering::MeshPrimitive meshPrimitive;
+    this->mesh.meshPrimitives.push_back(meshPrimitive);
+    glGenTextures(1, &this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.id);
+    glBindTexture(GL_TEXTURE_2D, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     std::string texturePath = "assets/texture/surgery.jpg";
-    this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data = stbi_load(texturePath.c_str(),
-        &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.width, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.height, &this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.nrComponents, 0);
-    if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data) {
-        if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.nrComponents == 3) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data);
+    this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data = stbi_load(texturePath.c_str(),
+        &this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.width, &this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.height, &this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.nrComponents, 0);
+    if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data) {
+        if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.nrComponents == 3) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.width, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data);
         }
-        else if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.nrComponents == 4) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.width, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data);
+        else if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.nrComponents == 4) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.width, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data);
         }
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
         throw std::runtime_error("TEXTURE ERROR: Failed to load texture " + texturePath);
     }
-    if (this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data) {
-        stbi_image_free(this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data);
-        this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.data = nullptr;
+    if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data) {
+        stbi_image_free(this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data);
+        this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data = nullptr;
     }
 
     this->openGlShaders[0].Use();
@@ -204,7 +203,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->mesh->meshPrimitives[0].pbrMaterial->baseColorTexture.id);
+        glBindTexture(GL_TEXTURE_2D, this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.id);
 
         this->openGlShaders[0].Use();
 
@@ -216,7 +215,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         this->glmMatrices->projection = glm::perspective(glm::radians(45.0f), this->windowParams->width / this->windowParams->height, 0.1f, 1000.0f);
         this->glmMatrices->mvp = this->glmMatrices->projection * this->glmMatrices->view * this->glmMatrices->model;
         this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
-        glBindVertexArray(this->mesh->vao);
+        glBindVertexArray(this->mesh.vao);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         this->glfwWindow->SwapBuffersAndPollEvents();
@@ -253,13 +252,13 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow* windo
     glViewport(0, 0, width, height);
 }
 
-//int main() {
-//    try {
-//        Mgtt::Apps::RotatingTexturedCube  RotatingTexturedCube;
-//        RotatingTexturedCube .Render();
-//    } catch(const std::exception& ex) {
-//        std::cout << ex.what() << std::endl;
-//        return 1;
-//    }
-//    return 0;
-//}
+int main() {
+    try {
+        Mgtt::Apps::RotatingTexturedCube  RotatingTexturedCube;
+        RotatingTexturedCube .Render();
+    } catch(const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}

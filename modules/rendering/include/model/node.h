@@ -20,41 +20,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
+#include <GL/glew.h>
 #include <string>
+#include <vector>
 #include <memory>
-#include <scene.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 #include <mesh.h>
 
 namespace Mgtt::Rendering {
+    struct Node;
+    struct Mesh;
     /**
-     * @brief Interface for importing 3D scenes.
-     * 
-     * This interface defines methods for loading and clearing 3D scenes.
+     * @brief Represents a node in the scene hierarchy.
      */
-    class ISceneImporter {
-    public:
+    struct Node {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the Node struct.
          */
-        virtual ~ISceneImporter() {}
+        Node();
+
+        ~Node() {}
 
         /**
-         * @brief Load the scene from a specified file path.
-         * 
-         * @param path The file path from which to load the scene.
-         * @param An instance of the loaded scene.
+         * @brief Clear releases resources.
          */
-        virtual void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) = 0;
+        void Clear();
 
         /**
-         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-         * 
-         * This method is used to reset the internal state of the scene.
-         * @param scene A unique pointer to the scene to clear.
+         * @brief Calculates the local transformation matrix of the node.
+         * @return Local transformation matrix.
          */
-        virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
+        glm::mat4 LocalMatrix();
+
+        /**
+         * @brief Calculates the global transformation matrix of the node.
+         * @return Global transformation matrix.
+         */
+        glm::mat4 GetGlobalMatrix();
+
+        std::string name;
+        std::shared_ptr<Mgtt::Rendering::Node> parent;
+        std::shared_ptr<Mgtt::Rendering::Mesh> mesh;
+        std::vector<std::shared_ptr<Mgtt::Rendering::Node>> children;
+        glm::vec3 pos;
+        glm::quat rot;
+        glm::vec3 scale;
+        glm::mat4 mvp;
+        glm::mat4 matrix;
+        uint32_t index;
     };
-
 }

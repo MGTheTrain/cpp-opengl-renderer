@@ -26,7 +26,8 @@
 #include <iostream>
 #include <glfw-window.h>
 #include <opengl-shader.h>
-#include <model.h>
+#include <scene.h>
+#include <mesh.h>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -117,8 +118,7 @@ namespace Mgtt::Apps {
         std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
         std::unique_ptr<WindowParams> windowParams;
         std::unique_ptr<GlmMatrices> glmMatrices;
-        std::unique_ptr<Mgtt::Rendering::Mesh> mesh;
-        Mgtt::Rendering::MeshPrimitive meshPrimitive;
+        Mgtt::Rendering::Mesh mesh;
     };
 
 } // namespace Mgtt::Apps

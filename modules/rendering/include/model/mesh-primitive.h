@@ -20,41 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
+
 #include <string>
 #include <memory>
 #include <scene.h>
-#include <mesh.h>
+#include <material.h>
 
 namespace Mgtt::Rendering {
     /**
-     * @brief Interface for importing 3D scenes.
-     * 
-     * This interface defines methods for loading and clearing 3D scenes.
-     */
-    class ISceneImporter {
-    public:
+    * @brief Represents a primitive mesh in the scene.
+    */
+    struct MeshPrimitive {
         /**
-         * @brief Virtual destructor for the interface.
+         * @brief Constructor for the MeshPrimitive structure.
          */
-        virtual ~ISceneImporter() {}
+        MeshPrimitive();
+
+        ~MeshPrimitive() {}
 
         /**
-         * @brief Load the scene from a specified file path.
-         * 
-         * @param path The file path from which to load the scene.
-         * @param An instance of the loaded scene.
+         * @brief Clear releases resources.
          */
-        virtual void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) = 0;
+        void Clear();
 
-        /**
-         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-         * 
-         * This method is used to reset the internal state of the scene.
-         * @param scene A unique pointer to the scene to clear.
-         */
-        virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
+        std::string name;
+        uint32_t firstIndex;  // required for glDrawElements(...)
+        uint32_t indexCount;  // required for glDrawElements(...)
+        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
+        bool hasSkin;
+        bool hasIndices;
+        Mgtt::Rendering::PbrMaterial pbrMaterial;
+        AABB aabb;
     };
-
 }
