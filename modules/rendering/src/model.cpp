@@ -430,10 +430,12 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
  * 
  * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
  * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
+ * @param envMapShaderPathes The env map vertex and fragment shader path
  */
 Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
-    const std::pair<std::string, std::string>& eq2CubeMapShaderPathes,
-    const std::pair<std::string, std::string>& brdfLutShaderPathes)
+    const std::pair<std::string, std::string>& eq2CubeMapShaderPathes, 
+    const std::pair<std::string, std::string>& brdfLutShaderPathes,
+    const std::pair<std::string, std::string>& envMapShaderPathes)
     : cubeMapTextureId(0),
       irradianceMapTextureId(0),
       brdfLutTextureId(0),
@@ -445,7 +447,8 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
       brdfQuadVao(0),
       brdfQuadVbo(0),
       eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes)),
-      brdfLutShader(OpenGlShader(brdfLutShaderPathes)) {}
+      brdfLutShader(OpenGlShader(brdfLutShaderPathes)),
+      envMapShader(OpenGlShader(envMapShaderPathes)) {}
 
 /**
  * @brief Clear releases resources.
@@ -504,6 +507,7 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     // shader
     this->eq2CubeMapShader.Clear();
     this->brdfLutShader.Clear();
+    this->envMapShader.Clear();
 
     std::cout << "CLEAR INFO: Successfully deleted the render texture container with IBL related components" << std::endl;
 }

@@ -430,10 +430,12 @@ namespace Mgtt::Rendering {
          * 
          * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and fragment shader path
          * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
+         * @param envMapShaderPathes The env map vertex and fragment shader path
          */
         RenderTexturesContainer(
             const std::pair<std::string, std::string>& eq2CubeMapShaderPathes, 
-            const std::pair<std::string, std::string>& brdfLutShaderPathes);
+            const std::pair<std::string, std::string>& brdfLutShaderPathes,
+            const std::pair<std::string, std::string>& envMapShaderPathes);
 
         /**
          * @brief Clear releases resources.
@@ -457,5 +459,6 @@ namespace Mgtt::Rendering {
 
         Mgtt::Rendering::OpenGlShader eq2CubeMapShader; // equirectangular to cubemap shader
         Mgtt::Rendering::OpenGlShader brdfLutShader; // brdf lut shader
+        Mgtt::Rendering::OpenGlShader envMapShader; // env map shader
     };
 }

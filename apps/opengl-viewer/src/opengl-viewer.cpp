@@ -48,23 +48,27 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
         throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
     }
 
-    this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
+    // Compile shaders and link to OpenGl program
     auto pbrShaderPathes = std::make_pair<std::string, std::string>("assets/shader/core/pbr.vert","assets/shader/core/pbr.frag");
     this->mgttScene.shader.Compile(pbrShaderPathes);
+    auto eq2BrdfLutShaderPathes = std::make_pair<std::string, std::string>("assets/shader/core/eq2CubeMap.vert", "assets/shader/core/eq2CubeMap.frag");
+    auto brdfLutShaderPathes = std::make_pair<std::string, std::string>("assets/shader/core/genBrdf.vert", "assets/shader/core/genBrdf.frag");
+    auto envMapShaderPathes = std::make_pair<std::string, std::string>("assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag");
+    this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+
+    // scene
+    this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
     std::string mgttScenePath= "assets/scenes/water-bottle/WaterBottle.gltf";
     this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
-    // env map 
-    auto eq2BrdfLutShaderPathes = std::make_pair<std::string, std::string>("", "");
-    this->renderTextureContainer.eq2CubeMapShader.Compile(eq2BrdfLutShaderPathes);
+    // e2quirectangular to env map
     std::string hdrTexturePath = "assets/texture/surgery.jpg";
     this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
 
-    
     // brdf lut
-    auto brdfLutShaderPathes = std::make_pair<std::string, std::string>("", "");
-    this->renderTextureContainer.brdfLutShader.Compile(brdfLutShaderPathes);
     this->textureManager->LoadBrdfLut(this->renderTextureContainer);
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 
@@ -77,6 +81,20 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     while(!this->glfwWindow->WindowShouldClose()) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glUseProgram(skyBoxShader.id);
+        glUniformMatrix4fv(glGetUniformLocation(skyBoxShader.id, "projection"), 1, GL_FALSE, &projection[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(skyBoxShader.id, "view"), 1, GL_FALSE, &view[0][0]);
+        glUniform1i(glGetUniformLocation(skyBoxShader.id, "skybox"), 0);
+
+        glDepthFunc(GL_LEQUAL);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, this->renderTextureContainer.envMapVao);
+        glBindVertexArray(this->renderTextureContainer.envMapVao);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
+
         this->glfwWindow->SwapBuffersAndPollEvents();
     }
 }
@@ -86,7 +104,7 @@ int main() {
     try {
         openGlViewer.Render();
 
-    } catch(const std::exception& ex) {
+    } catch(const std::runtime_error& ex) {
         std::cout << ex.what() << std::endl;
         openGlViewer.Clear();
         return 1;
