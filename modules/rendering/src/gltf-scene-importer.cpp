@@ -511,6 +511,9 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
             glBindTexture(GL_TEXTURE_2D, container.hdrTextureId);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.data);
 
+            stbi_image_free(texture.data);
+            texture.data = nullptr;
+
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -525,18 +528,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, container.rboId);
 
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-                if (container.hdrTextureId > 0) {
-                    glDeleteTextures(1, &container.hdrTextureId);
-                    container.hdrTextureId = 0;
-                }
-                if (container.fboId > 0) {
-                    glDeleteFramebuffers(1, &container.fboId);
-                    container.fboId = 0;
-                }
-                if (container.rboId > 0) {
-                    glDeleteRenderbuffers(1, &container.rboId);
-                    container.rboId = 0;
-                }
+                container.Clear();
                 throw std::runtime_error("OPENGL FRAMEBUFFER ERROR: Framebuffer not complete");
             }
 
@@ -567,6 +559,11 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(Mgtt::Rendering::RenderTexture
                             glm::vec3(0.0f, -1.0f, 0.0f)),
                 glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f),
                             glm::vec3(0.0f, -1.0f, 0.0f))};
+
+            if (container.eq2CubeMapShader.GetProgramId() == 0) {
+                container.Clear();
+                throw std::runtime_error("LOAD FROM HDR ERROR: Ensure that a shader program for [eq2CubeMapShader] has been created");
+            }
 
             glUseProgram(container.eq2CubeMapShader.GetProgramId());
             glUniform1i(glGetUniformLocation(container.eq2CubeMapShader.GetProgramId(), "equirectangularMap"), 0);
@@ -751,6 +748,9 @@ void Mgtt::Rendering::TextureManager::SetupQuad(Mgtt::Rendering::RenderTexturesC
  * @param container The RenderTexturesContainer to associate with the loaded BRDF texture.
  */
 void Mgtt::Rendering::TextureManager::LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container) {
+    if (container.brdfLutShader.GetProgramId() == 0) {
+        throw std::runtime_error("LOAD BRDF LUT ERROR: Ensure that a shader program for [brdfLutShader] has been created");
+    }
     std::vector<uint32_t> vec {
         container.brdfLutTextureId
     };
