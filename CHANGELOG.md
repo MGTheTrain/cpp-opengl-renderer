@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.1] - 18-02-2024
+## [0.2.0] - 18-02-2024
 
 - [Feature] Add git submodule providing several glTF samples to load and render
 - [Feature] High code coverage with GoogleTest for methods in module structs and classes 
