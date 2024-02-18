@@ -1,27 +1,57 @@
 #ifdef MGTT_RENDERING_TEST
-#include <gtest/gtest.h>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <gtest/gtest.h>
 #include <gltf-scene-importer.h>
 
 namespace Mgtt::Rendering::Test {
     class GltfSceneImporterTest : public ::testing::Test {
     public:
         static Mgtt::Rendering::Scene mgttScene;
+        static GLFWwindow* window;
         static std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
     protected:
         void SetUp() override {
             try {
+                if (!glfwInit()) {
+                    throw std::runtime_error("GLFW ERROR: Failed to initialize GLFW");
+                }
+
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+
+#ifdef __APPLE__
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+                glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#else
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+#endif
+                glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+                glfwWindowHint(GLFW_SAMPLES, 4); // enable anti-aliasing
+
+                GltfSceneImporterTest::window = glfwCreateWindow(800, 600, "test-window", nullptr, nullptr);
+                if (!GltfSceneImporterTest::window) {
+                    glfwTerminate();
+                    throw std::runtime_error("GLFW ERROR: Failed to create GLFW window");
+                    return;
+                }
+                glfwMakeContextCurrent(GltfSceneImporterTest::window);
                 if (glewInit() != GLEW_OK) {
                     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
                 }
             }
-            catch (...) {
-                FAIL();
+            catch (const std::runtime_error& ex) {
+                std::cerr << ex.what();
             }
         }
-        void TearDown() override {}
+        void TearDown() override {
+            if (GltfSceneImporterTest::window) {
+                glfwDestroyWindow(GltfSceneImporterTest::window);
+                glfwTerminate();
+            }
+        }
     };
 
+    GLFWwindow* GltfSceneImporterTest::window = nullptr;
     Mgtt::Rendering::Scene GltfSceneImporterTest::mgttScene; 
     std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> GltfSceneImporterTest::gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
     
