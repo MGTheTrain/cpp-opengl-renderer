@@ -24,6 +24,7 @@ namespace Mgtt::Rendering::Test {
     Mgtt::Rendering::Scene GltfSceneImporterTest::mgttScene; 
     std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> GltfSceneImporterTest::gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
     
+    // Test case for the LoadInvalidGltfFile method
     TEST_F(GltfSceneImporterTest, LoadInvalidGltfFile) {
          RecordProperty("Test Description", "Checks if LoadInvalidGltfFile handles invalid Gltf file");
         RecordProperty("Expected Result", "std::runtime_error is caught");
@@ -39,6 +40,8 @@ namespace Mgtt::Rendering::Test {
         }
     }
 
+    // Test case for the LoadValidGltfFile method
+    // @note Future suggestion: Evaluate a variety of GLTF scenes that include more than one node.
     TEST_F(GltfSceneImporterTest, LoadValidGltfFile) {
         RecordProperty("Test Description", "Checks if LoadValidGltfFile loads a valid Gltf file");
         RecordProperty("Expected Result", "No exception is thrown");
@@ -72,6 +75,8 @@ namespace Mgtt::Rendering::Test {
         }
     }
 
+    // Test case for the ClearScene method
+    // @note Future suggestion: Evaluate a variety of GLTF scenes that include more than one node.
     TEST_F(GltfSceneImporterTest, ClearScene) {
         RecordProperty("Test Description", "Checks if ClearScene clears the scene");
         RecordProperty("Expected Result", "No exception is thrown");
