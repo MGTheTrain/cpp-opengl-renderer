@@ -23,6 +23,7 @@ TBD
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] High code coverage with GoogleTest for methods in module structs and classes 
 - [ ] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems and continuous testing of the modules
+- [ ] Native file dialog support
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
 - [ ] Skeletal animation support (**OPTIONAL**)
@@ -36,6 +37,7 @@ TBD
 - Download and install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
 - Download and install [CMake from the official website](https://cmake.org/download/)  or trough a package manager
 - Install [vcpkg from the official website](https://vcpkg.io/en/getting-started.html) or trough a package manager
+- To obtain multiple glTF samples, ensure that you update the Git submodules: `git submodule update --init` 
 
 ### Integrate vcpkg with Visual Studio
 
