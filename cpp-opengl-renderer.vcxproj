@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\c++ repos\cpp-opengl-renderer\apps\opengl-viewer\include;D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\window\include;D:\c++ repos\cpp-opengl-renderer\apps\rotating-textured-cube\include;D:\c++ repos\dependencies\vcpkg\packages\stb_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\tinygltf_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include;D:\c++ repos\dependencies\vcpkg\packages\nlohmann-json_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include\model;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\c++ repos\cpp-opengl-renderer\apps\opengl-viewer\include;D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\window\include;D:\c++ repos\cpp-opengl-renderer\apps\rotating-textured-cube\include;D:\c++ repos\dependencies\vcpkg\packages\stb_x64-windows\include;D:\c++ repos\dependencies\vcpkg\packages\tinygltf_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include;D:\c++ repos\dependencies\vcpkg\packages\nlohmann-json_x64-windows\include;D:\c++ repos\cpp-opengl-renderer\modules\rendering\include\model;D:\c++ repos\dependencies\vcpkg\packages\gtest_x64-windows\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\c++ repos\dependencies\vcpkg\packages\glew_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glfw3_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\imgui_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\glm_x64-windows\lib;D:\c++ repos\dependencies\vcpkg\packages\gtest_x64-windows\debug\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,7 +113,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glm.lib;imgui.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glm.lib;imgui.lib;glfw3dll.lib;gtest.lib;gmock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +145,7 @@
     <ClCompile Include="modules\rendering\src\model\texture.cpp" />
     <ClCompile Include="modules\rendering\src\opengl-shader.cpp" />
     <ClCompile Include="modules\window\src\glfw-window.cpp" />
+    <ClCompile Include="modules\window\test\glfw-window-test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="apps\opengl-viewer\include\opengl-viewer.h" />
