@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <opengl-shader.h>
 
 namespace Mgtt::Rendering::Test {
@@ -43,6 +44,8 @@ namespace Mgtt::Rendering::Test {
 
         try {
             OpenGlShaderTest::openGlShader->Use();
+            OpenGlShaderTest::openGlShader->SetInt("textureMap", 0);
+            OpenGlShaderTest::openGlShader->SetMat4("mvp", glm::mat4(1.0f));
         }
         catch (...) {
             FAIL() << "An exception has been thrown" << std::endl;
