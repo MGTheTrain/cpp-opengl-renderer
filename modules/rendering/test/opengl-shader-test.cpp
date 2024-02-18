@@ -1,45 +1,65 @@
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include <GL/glew.h>
+#include <opengl-shader.h>
 
-#include <open-gl-shader.h>
+namespace Mgtt::Rendering::Test {
+    class OpenGlShaderTest : public ::testing::Test {
+    public:
+        static std::unique_ptr<Mgtt::Rendering::OpenGlShader> openGlShader;
+    protected:
+        void SetUp() override {
+            try {
+                if (glewInit() != GLEW_OK) {
+                    throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+                }
+            }
+            catch (...) {
+                FAIL();
+            }
+        }
+        void TearDown() override {}
+    };
 
-class OpenGlShaderTest : public ::testing::Test {
-protected:
-    Mgtt::Rendering::OpenGlShader* openGlShader;
+    std::unique_ptr<Mgtt::Rendering::OpenGlShader> OpenGlShaderTest::openGlShader = std::make_unique<Mgtt::Rendering::OpenGlShader>();
 
-    void SetUp() override {
-        openGlShader = new Mgtt::Rendering::OpenGlShader("vsPath", "fsPath");
+    // Test case for the Compile method
+    TEST_F(OpenGlShaderTest, Compile) {
+        RecordProperty("Test Description", "Checks if the Compile method compiles the shader program");
+        RecordProperty("Expected Result", "No exception is thrown.");
+
+        try {
+            std::pair<std::string, std::string> shaderPathes = { "assets/shader/core/coordinate.vert", "assets/shader/core/coordinate.frag" };
+            OpenGlShaderTest::openGlShader->Compile(shaderPathes);
+        }
+        catch (...) {
+            FAIL() << "An exception has been thrown" << std::endl;
+        }
     }
 
-    void TearDown() override {
-        delete openGlShader;
+    // Test case for the Use method
+    TEST_F(OpenGlShaderTest, Use) {
+        RecordProperty("Test Description", "Checks if the Use method activates the shader program");
+        RecordProperty("Expected Result", "No exception is thrown.");
+
+        try {
+            OpenGlShaderTest::openGlShader->Use();
+        }
+        catch (...) {
+            FAIL() << "An exception has been thrown" << std::endl;
+        }
     }
-};
 
-// Test case for the Compile method
-TEST_F(OpenGlShaderTest, Compile) {
-    EXPECT_CALL(*glMock, glCreateShader(testing::_)).WillOnce(testing::Return(1));
-}
+    // Test case for the Clear method
+    TEST_F(OpenGlShaderTest, Clear) {
+        RecordProperty("Test Description", "Checks if the Clear method deletes the shader program");
+        RecordProperty("Expected Result", "No exception is thrown.");
 
-// Test case for the GetProgramId method
-TEST_F(OpenGlShaderTest, GetProgramId) {
-    unsigned int programId = openGlShader->GetProgramId();
-}
-
-// Test case for the Use method
-TEST_F(OpenGlShaderTest, Use) {
-    openGlShader->Use();
-}
-
-// Test cases for various Set* methods
-TEST_F(OpenGlShaderTest, SetBool) {
-    // Similar structure to the previous test
-}
-
-TEST_F(OpenGlShaderTest, SetInt) {
-    // Similar structure to the previous test
-}
-
-TEST_F(OpenGlShaderTest, SetFloat) {
-    // Similar structure to the previous test
+        try {
+            OpenGlShaderTest::openGlShader->Clear();
+            EXPECT_EQ(openGlShader->GetProgramId(), 0) << "GetProgramId should return 0 after Clear.";
+        }
+        catch (...) {
+            FAIL() << "An exception has been thrown" << std::endl;
+        }
+    }
 }
