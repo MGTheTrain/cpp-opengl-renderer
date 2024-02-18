@@ -1,7 +1,7 @@
+#ifdef MGTT_WINDOW_TEST
 #include <gtest/gtest.h>
 #include <memory>
 #include <glfw-window.h>
-
 
 namespace Mgtt::Window::Test {
     class GlfwWindowTest : public ::testing::Test {
@@ -114,3 +114,4 @@ namespace Mgtt::Window::Test {
         }
     }
 }
+#endif

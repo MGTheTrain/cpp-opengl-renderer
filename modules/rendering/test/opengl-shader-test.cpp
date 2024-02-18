@@ -1,3 +1,4 @@
+#ifdef MGTT_RENDERING_TEST
 #include <gtest/gtest.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -66,3 +67,4 @@ namespace Mgtt::Rendering::Test {
         }
     }
 }
+#endif

@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
+//#define ROTATING_TEXTURED_CUBE
+#ifdef ROTATING_TEXTURED_CUBE
 #include <rotating-textured-cube.h>
 
 /**
@@ -251,13 +252,14 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow* windo
     glViewport(0, 0, width, height);
 }
 
-//int main() {
-//    try {
-//        Mgtt::Apps::RotatingTexturedCube  RotatingTexturedCube;
-//        RotatingTexturedCube .Render();
-//    } catch(const std::exception& ex) {
-//        std::cout << ex.what() << std::endl;
-//        return 1;
-//    }
-//    return 0;
-//}
+int main() {
+    try {
+        Mgtt::Apps::RotatingTexturedCube  RotatingTexturedCube;
+        RotatingTexturedCube .Render();
+    } catch(const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
+#endif

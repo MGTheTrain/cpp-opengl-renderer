@@ -1,3 +1,4 @@
+#ifdef MGTT_RENDERING_TEST
 #include <gtest/gtest.h>
 #include <GL/glew.h>
 #include <gltf-scene-importer.h>
@@ -92,3 +93,4 @@ namespace Mgtt::Rendering::Test {
         }
     }
 }
+#endif

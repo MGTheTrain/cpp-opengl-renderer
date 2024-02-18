@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 
+//#define OPENGL_VIEWER
+#ifdef OPENGL_VIEWER
 #include <opengl-viewer.h>
 
 /**
@@ -66,10 +68,11 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 
     // scene
     this->gltfSceneImporter = std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
-    std::string mgttScenePath= "assets/scenes/water-bottle/WaterBottle.gltf";
+    std::string mgttScenePath = "assets/scenes/water-bottle/WaterBottle.gltf";
+    //std::string mgttScenePath = "assets/scenes/glTF-Sample-Models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf";
     this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
-    // e2quirectangular to env map
+    // equirectangular to env map
     std::string hdrTexturePath = "assets/texture/surgery.jpg";
     this->textureManager->LoadFromHdr(this->renderTextureContainer, hdrTexturePath);
 
@@ -117,7 +120,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         glActiveTexture(GL_TEXTURE9);
         glBindTexture(GL_TEXTURE_2D, this->renderTextureContainer.brdfLutTextureId);
         
-        this->mgttScene.shader.SetFloat("scaleIblAmbient", 2.0f);
+        this->mgttScene.shader.SetFloat("scaleIblAmbient", 1.0f);
 
         for (auto& node : this->mgttScene.nodes) {
             this->TraverseSceneNode(node);
@@ -258,7 +261,7 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(std::shared_ptr<Mgtt::Rendering::Node>
 void Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
- 
+
 int main() {
     Mgtt::Apps::OpenGlViewer openGlViewer;
     try {
@@ -271,3 +274,4 @@ int main() {
     }
     return 0;
 }
+#endif
