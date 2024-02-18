@@ -47,7 +47,7 @@ Run the following command from the vcpkg directory to install the dependencies s
 
 ### Debugging
 
-Open the `cpp-opengl-renderer.sln`. Modify `include and library paths` in the `cpp-opengl-renderer.vcxproj`. Confirm the presence of only one entry point `int main()`. Set breakpoints as needed. Initiate the debugging process. 
+Open the `cpp-opengl-renderer.sln`. Modify `include  pathes, library pathes and library names` in the `cpp-opengl-renderer.vcxproj`. Confirm the presence of only one entry point `int main()`. Set breakpoints as needed. Initiate the debugging process. 
 If you encounter DLL-related errors, make sure to copy the necessary dynamic libraries to the directory where the built executable is located and then rebuild.
 
 ### CMake
