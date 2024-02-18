@@ -145,6 +145,7 @@
     <ClCompile Include="modules\rendering\src\model\texture.cpp" />
     <ClCompile Include="modules\rendering\src\opengl-shader.cpp" />
     <ClCompile Include="modules\window\src\glfw-window.cpp" />
+    <ClCompile Include="modules\window\test\entrypoint.cpp" />
     <ClCompile Include="modules\window\test\glfw-window-test.cpp" />
   </ItemGroup>
   <ItemGroup>
