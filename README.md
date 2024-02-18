@@ -22,6 +22,7 @@ TBD
 - [x] PBR shader pipeline considering primarily the metal roughness workflow
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] High code coverage with GoogleTest for methods in module structs and classes 
+- [ ] Create a `CMakeLists.txt` files to generate cross-platform build environments
 - [ ] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems and continuous testing of the modules
 - [ ] Native file dialog support
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
