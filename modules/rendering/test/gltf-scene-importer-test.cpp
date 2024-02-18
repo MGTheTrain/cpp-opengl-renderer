@@ -48,6 +48,24 @@ namespace Mgtt::Rendering::Test {
             GltfSceneImporterTest::mgttScene.shader.Compile(shaderPathes);
             GltfSceneImporterTest::gltfSceneImporter->Load(GltfSceneImporterTest::mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf"); 
             EXPECT_EQ("assets/scenes/water-bottle/WaterBottle.gltf", GltfSceneImporterTest::mgttScene.path);
+            EXPECT_EQ(GltfSceneImporterTest::mgttScene.textureMap.size(), 4);
+            EXPECT_EQ(GltfSceneImporterTest::mgttScene.nodes.size(), 1);
+            EXPECT_NE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh, nullptr);
+            EXPECT_NE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives.size(), 1);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->pos, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->normal, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->tex, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vao, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->indices.size(), 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vertexPositionAttribs.size(), 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vertexNormalAttribs.size(), 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vertexTextureAttribs.size(), 0);
+            EXPECT_EQ(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].firstIndex, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.metallicRoughnessTexture.id, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.baseColorTexture.id, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.normalTexture.id, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.occlusionTexture.id, 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.emissiveTexture.id, 0);
         }
         catch (...) {
             FAIL();
