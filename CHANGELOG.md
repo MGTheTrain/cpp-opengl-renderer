@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [Feature] Add git submodule providing several glTF samples to load and render
 - [Feature] Create `CMakeLists.txt` files for cross-platform build environment generation
-- [Feature] High code coverage with GoogleTest for methods in module structs and classes 
+- [Feature] High code coverage with GoogleTest for methods in rendering and window module structs and classes 
 - [Feature] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems and continuous testing of the modules
 
 ## [0.1.0] - 17-02-2024
