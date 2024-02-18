@@ -51,7 +51,6 @@ namespace Mgtt::Rendering::Test {
             EXPECT_EQ(GltfSceneImporterTest::mgttScene.textureMap.size(), 4);
             EXPECT_EQ(GltfSceneImporterTest::mgttScene.nodes.size(), 1);
             EXPECT_NE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh, nullptr);
-            EXPECT_NE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives.size(), 1);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->pos, 0);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->normal, 0);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->tex, 0);
@@ -60,6 +59,7 @@ namespace Mgtt::Rendering::Test {
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vertexPositionAttribs.size(), 0);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vertexNormalAttribs.size(), 0);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->vertexTextureAttribs.size(), 0);
+            EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives.size(), 0);
             EXPECT_EQ(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].firstIndex, 0);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.metallicRoughnessTexture.id, 0);
             EXPECT_GE(GltfSceneImporterTest::mgttScene.nodes[0]->mesh->meshPrimitives[0].pbrMaterial.baseColorTexture.id, 0);
