@@ -78,6 +78,9 @@ namespace Mgtt::Rendering::Test {
         
         try {
             GltfSceneImporterTest::gltfSceneImporter->Clear(this->mgttScene);
+            EXPECT_EQ("", GltfSceneImporterTest::mgttScene.path);
+            EXPECT_EQ(GltfSceneImporterTest::mgttScene.textureMap.size(), 0);
+            EXPECT_EQ(GltfSceneImporterTest::mgttScene.nodes.size(), 0);
         }
         catch (...) {
             FAIL();
