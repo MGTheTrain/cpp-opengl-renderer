@@ -45,7 +45,7 @@ namespace Mgtt::Rendering {
          * @brief Default Constructor for the OpenGlShader class.
          *
          */
-        OpenGlShader() {}
+        OpenGlShader();
 
         /**
          * @brief Constructor for the OpenGlShader class.

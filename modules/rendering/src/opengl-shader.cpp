@@ -1,6 +1,14 @@
 #include <opengl-shader.h>
 
 /**
+ * @brief Default Constructor for the OpenGlShader class.
+ *
+ */
+Mgtt::Rendering::OpenGlShader::OpenGlShader() {
+    this->id = 0;
+}
+
+/**
  * @brief Constructor for the OpenGlShader class.
  *
  * @param shaderPathes The vertex and fragment shader pathes
