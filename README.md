@@ -54,13 +54,13 @@ If you encounter DLL-related errors, make sure to copy the necessary dynamic lib
 
 Make sure to configure the project settings appropriately for the `Debug|x64` build configuration by setting the correct library path and copying the required DLLs:
 
-**Library path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/debug/lib`
-**Binary path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/debug/bin`
+- **Library path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/debug/lib`
+- **Binary path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/debug/bin`
 
 Similair for `Release|x64` build configurations:
 
-**Library path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/lib`
-**Binary path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/bin`
+- **Library path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/lib`
+- **Binary path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/bin`
 
 ### CMake
 
