@@ -21,7 +21,7 @@ fi
 
 currentDir=$(pwd)
 cd "$currentDir/../../.."
-echo "./compile_source_code.sh -CMakeToolchainFile \"$CMakeToolchainFile\""
 cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
 cmake --build build
 cd "$currentDir"
+echo "Example: ./compile_source_code.sh -CMakeToolchainFile \"/d/c++ repos/dependencies/vcpkg/scripts/buildsystems/vcpkg.cmake\""
