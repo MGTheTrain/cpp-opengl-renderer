@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 set(TARGET cpp-opengl-renderer)
 project(${TARGET})   
+set(CMAKE_CXX_STANDARD 17)
 
-option(BUILD_TEST "Compile source files for test executable" OFF)
-option(BUILD_LIB "Compile module source files" OFF)
-option(BUILD_APP "Compile source file of main executable and link compiled libraries" ON) 
+option(BUILD_LIB "Compile module source files" ON)
+option(BUILD_TEST "Compile source files for test executable" ON)
+option(BUILD_APP "Compile source file of main executable and link compiled libraries" OFF) 
 option(BUILD_PACKAGE "Build the package" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
