@@ -18,11 +18,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
-set(TARGET rotating-textured-cube)
-project(${TARGET})
 cmake_minimum_required(VERSION 3.10)
+set(TARGET rotating_textured_cube)
+project(${TARGET})
 
-include_directories(../include)
-add_executable(${TARGET} ${TARGET}.cpp)
-# target_link_libraries(${TARGET})
+add_definitions(-DMGTT_ROTATING_TEXTURED_CUBE)
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+include_directories( ../include
+                    ../../modules/rendering/include
+                    ../../modules/rendering/include/model
+                    ../../modules/window/include)
+set(ROTATING_TEXTURED_CUBE_SRC rotating-textured-cube.cpp)                        
+add_executable(${TARGET} ${ROTATING_TEXTURED_CUBE_SRC})
+target_link_libraries(${TARGET} PRIVATE window rendering)
+
+
+# @note On Windows OS destination path had to be `${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/`
+# We might need to fix this in that tests work for all targeted systems
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/ 
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)

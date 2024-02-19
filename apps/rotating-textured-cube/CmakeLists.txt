@@ -22,7 +22,3 @@
 if(BUILD_APP)
     add_subdirectory(src)
 endif()
-
-if(BUILD_TEST)
-    add_subdirectory(test)
-endif()

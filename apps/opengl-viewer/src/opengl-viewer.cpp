@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 
-#ifdef OPENGL_VIEWER
+#ifdef MGTT_OPENGL_VIEWER
 #include <opengl-viewer.h>
 
 /**

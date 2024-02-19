@@ -25,7 +25,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 option(BUILD_LIB "Compile module source files for static libraries" ON)
 option(BUILD_TEST "Compile source files for test executable and link compiled libraries" ON)
-option(BUILD_APP "Compile source file of main executable and link compiled libraries" OFF) 
+option(BUILD_APP "Compile source file of main executable and link compiled libraries" ON) 
 option(BUILD_PACKAGE "Build the package" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
