@@ -31,8 +31,11 @@ find_package(glfw3 CONFIG REQUIRED)
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 if(${GTest_FOUND} AND ${glfw3_FOUND})
-    include_directories(${GTEST_INCLUDE_DIRS} ../include)
-    include_directories(${GTEST_INCLUDE_DIRS} ../include/model)
+    include_directories(${GTEST_INCLUDE_DIRS} 
+                        ../include 
+                        ../include/model
+                        ${Stb_INCLUDE_DIR}
+                        ${TINYGLTF_INCLUDE_DIRS})
     set(RENDERING_TEST_SRC 
         entrypoint.cpp
         opengl-shader-test.cpp
