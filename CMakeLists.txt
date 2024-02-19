@@ -11,29 +11,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(AzureVcpkg)
 az_vcpkg_integrate()
 
-# find_package(GLEW REQUIRED)
-# target_link_libraries(main PRIVATE GLEW::GLEW)
-
-# # this is heuristically generated, and may not be correct
-# find_package(glfw3 CONFIG REQUIRED)
-# target_link_libraries(main PRIVATE glfw)
-
-# find_package(glm CONFIG REQUIRED)
-# target_link_libraries(main PRIVATE glm::glm-header-only)
-
-# # this is heuristically generated, and may not be correct
-# find_package(imgui CONFIG REQUIRED)
-# target_link_libraries(main PRIVATE imgui::imgui)
-
-# find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
-# target_include_directories(main PRIVATE ${TINYGLTF_INCLUDE_DIRS})
-
 if(BUILD_TEST)
     include(CTestConfig)
 endif()
 
-# add_subdirectory(modules)
-add_subdirectory(apps)
+add_subdirectory(modules)
+# add_subdirectory(apps)
 
 if(BUILD_PACKAGE)
     include(CustomFunctions)
