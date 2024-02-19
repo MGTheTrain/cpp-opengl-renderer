@@ -1,4 +1,4 @@
-# [Company Name] Software License
+# The MIT License
 #
 # Copyright (c) 2024 MGTheTrain
 #
