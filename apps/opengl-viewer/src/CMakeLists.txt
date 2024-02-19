@@ -1,6 +1,6 @@
 # [Company Name] Software License
 #
-# Copyright (c) 2024 B. Braun
+# Copyright (c) 2024 MGTheTrain
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
