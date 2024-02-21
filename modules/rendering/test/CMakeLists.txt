@@ -44,8 +44,13 @@ if(${GTest_FOUND} AND ${glfw3_FOUND})
     target_link_libraries(${TESTING_TARGET} PRIVATE GTest::gtest GTest::gtest_main glfw rendering)
     add_test(NAME ${TESTING_TARGET} COMMAND $<TARGET_FILE:${TESTING_TARGET}>)
 
-    # @note On Windows OS destination path had to be `${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/`
-    # We might need to fix this in that tests work for all targeted systems
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/ 
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+    if(WIN32)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+     elseif(APPLE)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+     else()
+        message(WARNING "Unsupported platform")
+     endif()
 endif()
