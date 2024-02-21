@@ -45,6 +45,19 @@ TBD
 Open a command prompt and navigate to the vcpkg directory. Run the following command to integrate vcpkg with Visual Studio: `<vcpkg installation path>/vcpkg integrate install`
 Run the following command from the vcpkg directory to install the dependencies specified in the vcpkg.json file: `<vcpkg installation path>/vcpkg install`
 
+
+#### Mac OS
+
+Ensure on MacOS you have installed [brew](https://brew.sh) with `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+
+Add brew to the `PATH` variable:
+```sh
+`(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/marvingajek/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+Thereafter install pkg-config with `brew install pkg-config cmake` 
+
 ### Debugging
 
 Open the `cpp-opengl-renderer.sln`. Modify `include  pathes, library pathes and library names` in the `cpp-opengl-renderer.vcxproj`. Confirm the presence of only one entry point `int main()`. Set breakpoints as needed. Initiate the debugging process. 
