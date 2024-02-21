@@ -3,6 +3,5 @@
     "name": "Tools for c++ repos",
     "image": "mcr.microsoft.com/vscode/devcontainers/cpp:ubuntu-20.04",
     // Features to add to the dev container. More info: https://containers.dev/features
-    "features": {},
-    "remoteUser": "root"
+    "features": {}
 }

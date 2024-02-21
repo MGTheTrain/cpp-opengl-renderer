@@ -3,6 +3,5 @@
     "name": "Tools for c++ repos",
     "image": "mcr.microsoft.com/vscode/devcontainers/cpp:debian-11",
     // Features to add to the dev container. More info: https://containers.dev/features
-    "features": {},
-    "remoteUser": "root"
+    "features": {}
 }
