@@ -50,9 +50,9 @@ Run the following command from the vcpkg directory to install the dependencies s
 
 Ensure on MacOS you have installed [brew](https://brew.sh) with `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
-Add brew to the `PATH` variable:
+Add brew to the `PATH` variable and substitute `<your user>` for:
 ```sh
-`(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/marvingajek/.zprofile
+`(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/<your user>/.zprofile
     eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
