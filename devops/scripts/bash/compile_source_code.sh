@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-RunTests=true
+NoTests=false
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -10,15 +10,15 @@ while [ "$#" -gt 0 ]; do
       CMakeToolchainFile="$2"
       shift 2
       ;;
-    -NoTests)
-      RunTests=false
+    -RunTests)
+      NoTests=true
       shift
       ;;
     -h|--help)
-      echo "Usage: $0 [-CMakeToolchainFile <path>] [-NoTests] [-h|--help]"
+      echo "Usage: $0 [-CMakeToolchainFile <path>] [-RunTests] [-h|--help]"
       echo "Options:"
       echo "  -CMakeToolchainFile   Path to CMAKE_TOOLCHAIN_FILE"
-      echo "  -NoTests              Do not run tests"
+      echo "  -RunTests              Do not run tests"
       echo "  -h, --help            Display this help message"
       exit 0
       ;;
