@@ -1,0 +1,8 @@
+{
+    // Docker images officially provided by Microsoft that can utilized as base images: https://hub.docker.com/_/microsoft-vscode-devcontainers
+    "name": "Tools for c++ repos",
+    "image": "mcr.microsoft.com/vscode/devcontainers/cpp:ubuntu-20.04",
+    // Features to add to the dev container. More info: https://containers.dev/features
+    "features": {},
+    "remoteUser": "root"
+}
