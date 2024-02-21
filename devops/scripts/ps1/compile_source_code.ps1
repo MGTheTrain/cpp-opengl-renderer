@@ -1,7 +1,20 @@
 param(
     [string]$CMakeToolchainFile,
-    [switch]$RunTests
+    [switch]$RunTests,
+    [switch]$Help
 )
+
+function Show-Help {
+    echo "Usage: .\compile_source_code.ps1 -CMakeToolchainFile <Path> [-RunTests] [-Help]"
+    echo "  -CMakeToolchainFile <Path>   Path to CMAKE_TOOLCHAIN_FILE"
+    echo "  -RunTests                     Run tests after building (optional)"
+    echo "  -Help                         Display this help message"
+}
+
+if ($Help) {
+    Show-Help
+    exit
+}
 
 if ($CMakeToolchainFile -eq $null) {
     $CMakeToolchainFile = Read-Host "Enter the path to CMAKE_TOOLCHAIN_FILE" 
@@ -16,7 +29,6 @@ cmake --build build
 if ($RunTests) {
     Set-Location -Path "build"
     ctest
-    Set-Location -Path $currentDir
 }
 
-echo "Example: .\compile_source_code.ps1 -CMakeToolchainFile `"D:\c++ repos\dependencies\vcpkg\scripts\buildsystems\vcpkg.cmake`" -RunTests"
+Set-Location -Path $currentDir
