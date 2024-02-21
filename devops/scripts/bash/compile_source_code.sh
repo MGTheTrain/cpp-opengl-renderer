@@ -39,7 +39,7 @@ cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DCMAKE_TOOLCHAIN_F
 
 cmake --build build
 
-if [ "$RunTests" = true ]; then
+if [ "$NoTests" = false ]; then
   cd "build"
   ctest
 fi
