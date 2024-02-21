@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-NoTests=false
+NoTests=true
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -11,7 +11,7 @@ while [ "$#" -gt 0 ]; do
       shift 2
       ;;
     -RunTests)
-      NoTests=true
+      NoTests=false
       shift
       ;;
     -h|--help)
