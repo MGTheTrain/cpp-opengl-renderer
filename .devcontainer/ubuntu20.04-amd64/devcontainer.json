@@ -6,7 +6,7 @@
     "features": {}
 }
 
-// Builds are currently not possible in dev containers on `vcpkg install` command. Error:
+// Currently, the vcpkg install command is unable to build in development containers, resulting in an error:
 // error: building glew:x64-linux failed with: BUILD_FAILED
 // Elapsed time to handle glew:x64-linux: 15 s
 // Please ensure you're using the latest port files with `git pull` and `vcpkg update`.
