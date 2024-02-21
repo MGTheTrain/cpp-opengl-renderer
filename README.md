@@ -56,7 +56,7 @@ Add brew to the `PATH` variable:
     eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-Thereafter install pkg-config with `brew install pkg-config cmake` 
+Thereafter install the required brew packages/formulas with `brew install pkg-config cmake` 
 
 ### Debugging
 
