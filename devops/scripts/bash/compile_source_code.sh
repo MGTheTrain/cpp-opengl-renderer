@@ -2,11 +2,25 @@
 
 set -euo pipefail
 
+RunTests=true
+
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -CMakeToolchainFile)
       CMakeToolchainFile="$2"
       shift 2
+      ;;
+    -NoTests)
+      RunTests=false
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $0 [-CMakeToolchainFile <path>] [-NoTests] [-h|--help]"
+      echo "Options:"
+      echo "  -CMakeToolchainFile   Path to CMAKE_TOOLCHAIN_FILE"
+      echo "  -NoTests              Do not run tests"
+      echo "  -h, --help            Display this help message"
+      exit 0
       ;;
     *)
       echo "Unknown argument: $1"
@@ -22,6 +36,11 @@ fi
 currentDir=$(pwd)
 cd "$currentDir/../../.."
 cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
+
 cmake --build build
+
+if [ "$RunTests" = true ]; then
+  cd "build"
+  ctest
+fi
 cd "$currentDir"
-echo "Example: ./compile_source_code.sh -CMakeToolchainFile \"/d/c++ repos/dependencies/vcpkg/scripts/buildsystems/vcpkg.cmake\""
