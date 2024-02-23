@@ -79,33 +79,33 @@ Similair for `Release|x64` build configurations:
 
 #### Unix
 
-Navigate to the [bash folder](devops/scripts/bash/) and run the `compile_source_code.sh`. Begin with a `compile_source_code.sh --help` command to view the usage instructions for this command-line tool.
-
 In order to compiling the source code and link the binaries run:
 
 ```sh
+cd devops/scripts/bash/
 ./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file>
 ```
 
 In order to additionaly start the test executables: 
 
 ```sh
+cd devops/scripts/bash/
 ./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
 ```
 
 #### Windows
 
-Navigate to the [ps1 folder](devops/scripts/ps1/) and run the `compile_source_code.ps1`. Begin with a `compile_source_code.ps1 -Help` command to view the usage instructions for this command-line tool.
-
 In order to compiling the source code and link the binaries run:
 
 ```sh
+cd devops/scripts/ps1/
 ./compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file>
 ```
 
 In order to additionaly start the test executables: 
 
 ```sh
+cd devops/scripts/ps1/
 ./compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
 ```
 
