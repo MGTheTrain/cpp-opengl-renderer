@@ -47,7 +47,7 @@ if(${GTest_FOUND} AND ${glfw3_FOUND})
     if(WIN32)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
-     elseif(APPLE)
+     elseif(APPLE OR UNIX)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
      else()
