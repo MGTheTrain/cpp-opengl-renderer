@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -20,41 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
-#include <string>
-#include <memory>
-#include <scene.h>
 #include <mesh.h>
+#include <scene.h>
+
+#include <memory>
+#include <string>
 
 namespace Mgtt::Rendering {
-    /**
-     * @brief Interface for importing 3D scenes.
-     * 
-     * This interface defines methods for loading and clearing 3D scenes.
-     */
-    class ISceneImporter {
-    public:
-        /**
-         * @brief Virtual destructor for the interface.
-         */
-        virtual ~ISceneImporter() {}
+/**
+ * @brief Interface for importing 3D scenes.
+ *
+ * This interface defines methods for loading and clearing 3D scenes.
+ */
+class ISceneImporter {
+ public:
+  /**
+   * @brief Virtual destructor for the interface.
+   */
+  virtual ~ISceneImporter() {}
 
-        /**
-         * @brief Load the scene from a specified file path.
-         * 
-         * @param path The file path from which to load the scene.
-         * @param An instance of the loaded scene.
-         */
-        virtual void Load(Mgtt::Rendering::Scene& mgttScene, const std::string& path) = 0;
+  /**
+   * @brief Load the scene from a specified file path.
+   *
+   * @param path The file path from which to load the scene.
+   * @param An instance of the loaded scene.
+   */
+  virtual void Load(Mgtt::Rendering::Scene& mgttScene,
+                    const std::string& path) = 0;
 
-        /**
-         * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-         * 
-         * This method is used to reset the internal state of the scene.
-         * @param scene A unique pointer to the scene to clear.
-         */
-        virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
-    };
+  /**
+   * @brief Clear the allocated resources in RAM and VRAM for the scene object.
+   *
+   * This method is used to reset the internal state of the scene.
+   * @param scene A unique pointer to the scene to clear.
+   */
+  virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
+};
 
-}
+}  // namespace Mgtt::Rendering

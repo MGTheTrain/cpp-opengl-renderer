@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,35 +22,37 @@
 
 #pragma once
 
-#include <string>
-#include <memory>
-#include <scene.h>
 #include <material.h>
+#include <scene.h>
+
+#include <memory>
+#include <string>
 
 namespace Mgtt::Rendering {
-    /**
-    * @brief Represents a primitive mesh in the scene.
-    */
-    struct MeshPrimitive {
-        /**
-         * @brief Constructor for the MeshPrimitive structure.
-         */
-        MeshPrimitive();
+/**
+ * @brief Represents a primitive mesh in the scene.
+ */
+struct MeshPrimitive {
+  /**
+   * @brief Constructor for the MeshPrimitive structure.
+   */
+  MeshPrimitive();
 
-        ~MeshPrimitive() {}
+  ~MeshPrimitive() {}
 
-        /**
-         * @brief Clear releases resources.
-         */
-        void Clear();
+  /**
+   * @brief Clear releases resources.
+   */
+  void Clear();
 
-        std::string name;
-        uint32_t firstIndex;  // required for glDrawElements(...)
-        uint32_t indexCount;  // required for glDrawElements(...)
-        uint32_t vertexCount; // required for glDrawElements(...) or glDrawArrays(...) 
-        bool hasSkin;
-        bool hasIndices;
-        Mgtt::Rendering::PbrMaterial pbrMaterial;
-        AABB aabb;
-    };
-}
+  std::string name;
+  uint32_t firstIndex;  // required for glDrawElements(...)
+  uint32_t indexCount;  // required for glDrawElements(...)
+  uint32_t
+      vertexCount;  // required for glDrawElements(...) or glDrawArrays(...)
+  bool hasSkin;
+  bool hasIndices;
+  Mgtt::Rendering::PbrMaterial pbrMaterial;
+  AABB aabb;
+};
+}  // namespace Mgtt::Rendering

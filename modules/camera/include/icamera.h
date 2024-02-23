@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -20,34 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #pragma once
 
 namespace Mgtt::Camera {
-    /**
-     * @brief Interface for defining a generic camera.
-     * 
-     * This interface outlines methods for initializing and clearing a camera's state.
-     */
-    class ICamera {
-    public:
-        /**
-         * @brief Virtual destructor for the camera interface.
-         */
-        virtual ~ICamera() {}
+/**
+ * @brief Interface for defining a generic camera.
+ *
+ * This interface outlines methods for initializing and clearing a camera's
+ * state.
+ */
+class ICamera {
+ public:
+  /**
+   * @brief Virtual destructor for the camera interface.
+   */
+  virtual ~ICamera() {}
 
-        /**
-         * @brief Initialize the camera.
-         * 
-         * This method should be implemented to set up the initial state of the camera.
-         */
-        virtual void Init() = 0;
+  /**
+   * @brief Initialize the camera.
+   *
+   * This method should be implemented to set up the initial state of the
+   * camera.
+   */
+  virtual void Init() = 0;
 
-        /**
-         * @brief Clear the camera's state.
-         * 
-         * This method should be implemented to reset the internal state of the camera, freeing resources.
-         */
-        virtual void Clear() = 0;
-    };
-}
+  /**
+   * @brief Clear the camera's state.
+   *
+   * This method should be implemented to reset the internal state of the
+   * camera, freeing resources.
+   */
+  virtual void Clear() = 0;
+};
+}  // namespace Mgtt::Camera
