@@ -79,7 +79,7 @@ Similair for `Release|x64` build configurations:
 
 #### Unix
 
-In order to compiling the source code and link the binaries run:
+In order to compile the source code and link the binaries run:
 
 ```sh
 cd devops/scripts/bash/
@@ -95,7 +95,7 @@ cd devops/scripts/bash/
 
 #### Windows
 
-In order to compiling the source code and link the binaries run:
+In order to compile the source code and link the binaries run:
 
 ```sh
 cd devops/scripts/ps1/
