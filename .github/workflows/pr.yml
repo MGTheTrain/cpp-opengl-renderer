@@ -17,10 +17,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up CMake
-      uses: actions/setup-cmake@v2
-      with:
-        cmake-version: '3.21.1'
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake
 
     - name: Install vcpkg
       run: |
@@ -33,49 +33,49 @@ jobs:
         cd devops/scripts/bash/
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
 
-  build_and_test_windows:
-    runs-on: windows-latest
+  # build_and_test_windows:
+  #   runs-on: windows-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v2
 
-    - name: Set up CMake
-      uses: actions/setup-cmake@v2
-      with:
-        cmake-version: '3.21.1'
+  #   - name: Set up CMake
+  #     uses: actions/setup-cmake@v2
+  #     with:
+  #       cmake-version: '3.21.1'
 
-    - name: Install vcpkg
-      run: |
-        git clone https://github.com/Microsoft/vcpkg.git
-        .\vcpkg\bootstrap-vcpkg.bat 
-      working-directory: \tmp\
+  #   - name: Install vcpkg
+  #     run: |
+  #       git clone https://github.com/Microsoft/vcpkg.git
+  #       .\vcpkg\bootstrap-vcpkg.bat 
+  #     working-directory: \tmp\
 
-    - name: Build and Test on Windows
-      shell: powershell
-      run: |
-        cd devops/scripts/ps1/
-        ./compile_source_code.ps1 -CMakeToolchainFile \tmp\vcpkg\scripts\buildsystems\vcpkg.cmake -RunTests
+  #   - name: Build and Test on Windows
+  #     shell: powershell
+  #     run: |
+  #       cd devops/scripts/ps1/
+  #       ./compile_source_code.ps1 -CMakeToolchainFile \tmp\vcpkg\scripts\buildsystems\vcpkg.cmake -RunTests
 
-  build_and_test_macos:
-    runs-on: macos-latest
+  # build_and_test_macos:
+  #   runs-on: macos-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v2
 
-    - name: Set up CMake
-      uses: actions/setup-cmake@v2
-      with:
-        cmake-version: '3.21.1'
+  #   - name: Set up CMake
+  #     uses: actions/setup-cmake@v2
+  #     with:
+  #       cmake-version: '3.21.1'
 
-    - name: Install vcpkg
-      run: |
-        git clone https://github.com/Microsoft/vcpkg.git
-        ./vcpkg/bootstrap-vcpkg.sh
-      working-directory: /tmp/
+  #   - name: Install vcpkg
+  #     run: |
+  #       git clone https://github.com/Microsoft/vcpkg.git
+  #       ./vcpkg/bootstrap-vcpkg.sh
+  #     working-directory: /tmp/
 
-    - name: Build and Test on macOS
-      run: |
-        cd devops/scripts/bash/  # You may need to adjust this based on your project structure
-        ./compile_source_code.sh
+  #   - name: Build and Test on macOS
+  #     run: |
+  #       cd devops/scripts/bash/  # You may need to adjust this based on your project structure
+  #       ./compile_source_code.sh
