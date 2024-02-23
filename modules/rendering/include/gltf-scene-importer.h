@@ -121,7 +121,6 @@ class GltfSceneImporter : public ISceneImporter {
    * @param gltfModel The glTF model containing node information.
    *
    */
-  // NOLINTNEXTLINE(runtime/references)
   void LoadTextures(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
 
   /**
@@ -133,7 +132,6 @@ class GltfSceneImporter : public ISceneImporter {
    * @param texture A reference to the `Mgtt::Rendering::Texture` object to
    * modify.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void SetupTexture(Mgtt::Rendering::Texture& texture);
 
   /**
@@ -145,7 +143,6 @@ class GltfSceneImporter : public ISceneImporter {
    * @param scene A reference to the updated 3D scene after loading nodes.
    * @param gltfModel The glTF model containing node information.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
 
   /**
@@ -160,7 +157,6 @@ class GltfSceneImporter : public ISceneImporter {
    * @param nodeIndex Index of the current node in the glTF model.
    * @param model Reference to the glTF model containing node information.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void LoadNode(std::shared_ptr<Mgtt::Rendering::Node> parent,
                 Mgtt::Rendering::Scene& scene, const tinygltf::Node& node,
                 const uint32_t nodeIndex, const tinygltf::Model& model);
@@ -177,7 +173,6 @@ class GltfSceneImporter : public ISceneImporter {
    * representing the mesh.
    * @param shaderId An unsigned 32-bit integer representing the shader ID.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh,
                  uint32_t& shaderId);
 
@@ -191,7 +186,6 @@ class GltfSceneImporter : public ISceneImporter {
    * @param texture Reference to the Texture object for which RAM resources
    * should be cleared.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void ClearRAM(Mgtt::Rendering::Texture& texture);
 };
 
@@ -216,7 +210,6 @@ class TextureManager {
    * cube map.
    * @param texturePathes The cube map texture pathes
    */
-  // NOLINTNEXTLINE(runtime/references)
   void LoadFromEnvMap(Mgtt::Rendering::RenderTexturesContainer& container,
                       const std::vector<std::string>& texturePathes);
 
@@ -231,7 +224,6 @@ class TextureManager {
    * HDR texture.
    * @param texturePath The file path to the HDR texture.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void LoadFromHdr(Mgtt::Rendering::RenderTexturesContainer& container,
                    const std::string& texturePath);
 
@@ -246,7 +238,6 @@ class TextureManager {
    * @param container The RenderTexturesContainer to associate with the loaded
    * BRDF texture.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void LoadBrdfLut(Mgtt::Rendering::RenderTexturesContainer& container);
 
   /**
@@ -257,7 +248,6 @@ class TextureManager {
    *
    * @param container The RenderTexturesContainer to clear.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void Clear(Mgtt::Rendering::RenderTexturesContainer& container);
 
  private:
@@ -285,7 +275,6 @@ class TextureManager {
    * @param container A reference to a RenderTexturesContainer used to manage
    *                  rendering-related textures and resources.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void SetupCube(Mgtt::Rendering::RenderTexturesContainer& container);
 
   /**
@@ -298,7 +287,6 @@ class TextureManager {
    * @param container A reference to a RenderTexturesContainer used to manage
    *                  rendering-related textures and resources.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void SetupQuad(Mgtt::Rendering::RenderTexturesContainer& container);
 
   /**
@@ -311,7 +299,6 @@ class TextureManager {
    * @param container The RenderTexturesContainer to associate with the
    * generated irradiance map.
    */
-  // NOLINTNEXTLINE(runtime/references)
   void GenerateIrradianceMap(
       Mgtt::Rendering::RenderTexturesContainer& container);
 };
