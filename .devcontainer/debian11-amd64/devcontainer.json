@@ -7,12 +7,3 @@
     "postCreateCommand": "bash .devcontainer/debian11-amd64/scripts/install-dependencies.sh",
     "remoteUser": "root"
 }
-
-// Currently, the vcpkg install command is unable to build in development containers, resulting in an error:
-// error: building glew:x64-linux failed with: BUILD_FAILED
-// Elapsed time to handle glew:x64-linux: 15 s
-// Please ensure you're using the latest port files with `git pull` and `vcpkg update`.
-// Then check for known issues at:
-//   https://github.com/microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+in%3Atitle+glew
-// You can submit a new issue at:
-//   https://github.com/microsoft/vcpkg/issues/new?title=[glew]+Build+error+on+x64-linux&body=Copy+issue+body+from+%2Fworkspaces%2Fcpp-opengl-renderer%2Fvcpkg_installed%2Fvcpkg%2Fissue_body.md
