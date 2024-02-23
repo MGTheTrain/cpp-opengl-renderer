@@ -109,7 +109,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
       this->openGlShaders[0].GetProgramId(), "inVertexPosition");
   glEnableVertexAttribArray(posLocation);
   glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
-                        (void*)0);
+                        static_cast<void*>(0));
 
   glGenBuffers(1, &this->mesh.tex);
   glBindBuffer(GL_ARRAY_BUFFER, this->mesh.tex);
@@ -120,7 +120,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
       this->openGlShaders[0].GetProgramId(), "inVertexTextureCoordinates");
   glEnableVertexAttribArray(texLocation);
   glVertexAttribPointer(texLocation, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),
-                        (void*)(0));
+                        static_cast<void*>(0));
 
   Mgtt::Rendering::MeshPrimitive meshPrimitive;
   this->mesh.meshPrimitives.push_back(meshPrimitive);
@@ -195,13 +195,14 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
     this->glmMatrices->view = glm::mat4(1.0f);
     this->glmMatrices->projection = glm::mat4(1.0f);
     this->glmMatrices->model =
-        glm::rotate(this->glmMatrices->model, (float)glfwGetTime(),
+        glm::rotate(this->glmMatrices->model, static_cast<float>(glfwGetTime()),
                     glm::vec3(0.5f, 1.0f, 0.0f));
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
     auto [width, height] = glfwWindow->GetWindowSize();
     this->glmMatrices->projection = glm::perspective(
-        glm::radians(45.0f), float(width) / float(height), 0.1f, 1000.0f);
+        glm::radians(45.0f),
+        static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->mvp = this->glmMatrices->projection *
                              this->glmMatrices->view * this->glmMatrices->model;
     this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);

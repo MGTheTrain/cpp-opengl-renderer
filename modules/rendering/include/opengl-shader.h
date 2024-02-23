@@ -22,6 +22,7 @@
 
 #pragma once
 #include <GL/glew.h>
+#include <ishader.h>
 
 #include <fstream>
 #include <glm/glm.hpp>
@@ -29,8 +30,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-
-#include "ishader.h"
+#include <utility>
 
 namespace Mgtt::Rendering {
 /**
@@ -54,7 +54,7 @@ class OpenGlShader : public IShader {
    *
    * @param shaderPathes The vertex and fragment shader pathes
    */
-  OpenGlShader(const std::pair<std::string, std::string> shaderPathes);
+  explicit OpenGlShader(const std::pair<std::string, std::string> shaderPathes);
 
   /**
    * @brief Compile the shader program from specified vertex and fragment shader

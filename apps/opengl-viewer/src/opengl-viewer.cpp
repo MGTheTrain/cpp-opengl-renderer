@@ -57,16 +57,16 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   glEnable(GL_DEPTH_TEST);
 
   // Compile shaders and link to OpenGl program
-  auto pbrShaderPathes = std::make_pair<std::string, std::string>(
-      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag");
+  std::pair<std::string, std::string> pbrShaderPathes = {
+      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
   this->mgttScene.shader.Compile(pbrShaderPathes);
-  auto eq2BrdfLutShaderPathes = std::make_pair<std::string, std::string>(
+  std::pair<std::string, std::string> eq2BrdfLutShaderPathes = {
       "assets/shader/core/eq2CubeMap.vert",
-      "assets/shader/core/eq2CubeMap.frag");
-  auto brdfLutShaderPathes = std::make_pair<std::string, std::string>(
-      "assets/shader/core/genBrdf.vert", "assets/shader/core/genBrdf.frag");
-  auto envMapShaderPathes = std::make_pair<std::string, std::string>(
-      "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag");
+      "assets/shader/core/eq2CubeMap.frag"};
+  std::pair<std::string, std::string> brdfLutShaderPathes = {
+      "assets/shader/core/genBrdf.vert", "assets/shader/core/genBrdf.frag"};
+  std::pair<std::string, std::string> envMapShaderPathes = {
+      "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"};
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
       eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
 
@@ -105,11 +105,12 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     this->glmMatrices->projection = glm::mat4(1.0f);
     auto [width, height] = glfwWindow->GetWindowSize();
     this->glmMatrices->projection = glm::perspective(
-        glm::radians(45.0f), float(width) / float(height), 0.1f, 1000.0f);
+        glm::radians(45.0f),
+        static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
     this->glmMatrices->model =
-        glm::rotate(this->glmMatrices->model, (float)glfwGetTime(),
+        glm::rotate(this->glmMatrices->model, static_cast<float>(glfwGetTime()),
                     glm::vec3(0.0f, 1.0f, 0.0f));
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
@@ -270,8 +271,9 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
                                       meshPrimitve.pbrMaterial.alphaCutoff);
 
       glBindVertexArray(node->mesh->vao);
-      glDrawElements(GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
-                     (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
+      glDrawElements(
+          GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
+          static_cast<void*>(meshPrimitve.firstIndex * sizeof(unsigned int)));
       glBindVertexArray(0);
     }
   }
@@ -299,7 +301,6 @@ int main() {
   Mgtt::Apps::OpenGlViewer openGlViewer;
   try {
     openGlViewer.Render();
-
   } catch (const std::runtime_error& ex) {
     std::cout << ex.what() << std::endl;
     openGlViewer.Clear();

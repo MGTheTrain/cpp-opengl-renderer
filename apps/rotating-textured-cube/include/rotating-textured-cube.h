@@ -32,6 +32,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 // To prevent linking errors, refrain from relocating the #define
@@ -109,6 +110,7 @@ class RotatingTexturedCube {
    */
   static void FramebufferSizeCallback(GLFWwindow* window, int width,
                                       int height);
+
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
   std::unique_ptr<GlmMatrices> glmMatrices;

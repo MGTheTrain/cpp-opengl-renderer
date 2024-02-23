@@ -46,6 +46,7 @@ class ISceneImporter {
    * @param path The file path from which to load the scene.
    * @param An instance of the loaded scene.
    */
+
   virtual void Load(Mgtt::Rendering::Scene& mgttScene,
                     const std::string& path) = 0;
 
@@ -55,6 +56,7 @@ class ISceneImporter {
    * This method is used to reset the internal state of the scene.
    * @param scene A unique pointer to the scene to clear.
    */
+
   virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
 };
 

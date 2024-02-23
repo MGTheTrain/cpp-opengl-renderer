@@ -13,7 +13,7 @@ echo "##########################################################################
 echo -e "$BLUE INFO: $NC About to format and lint cpp files"
 find ./apps/** -name '*.h' -o -name '*.cpp' | xargs clang-format -style=Google -i
 find ./modules/** -name '*.h' -o -name '*.cpp' | xargs clang-format -style=Google -i
-# find ./apps/** -name '*.h' -o -name '*.cpp' | xargs cpplint
-# find ./modules/** -name '*.h' -o -name '*.cpp' | xargs cpplint
+find ./apps/** -name '*.h' -o -name '*.cpp' | xargs cpplint
+find ./modules/** -name '*.h' -o -name '*.cpp' | xargs cpplint
 
 cd -
