@@ -1,0 +1,26 @@
+name: Format C++ project with clang-format and commit changes
+
+on: push
+
+jobs:
+  format: 
+    name: Format C++ project
+    runs-on:
+      - generic
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Apply Auto formatting
+        run: |
+          sudo apt-get update 
+          sudo apt-get install clang-format -y
+          cd devops/scripts
+          ./format.sh
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+          git pull
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Formatted cpp project with clang-format"
+          git push
