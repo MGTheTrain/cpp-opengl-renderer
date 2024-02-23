@@ -20,39 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#ifdef MGTT_WINDOW_TEST
+#include <gtest/gtest.h>
 
-#include <material.h>
-#include <scene.h>
-
-#include <memory>
-#include <string>
-
-namespace Mgtt::Rendering {
-/**
- * @brief Represents a primitive mesh in the scene.
- */
-struct MeshPrimitive {
-  /**
-   * @brief Constructor for the MeshPrimitive structure.
-   */
-  MeshPrimitive();
-
-  ~MeshPrimitive() {}
-
-  /**
-   * @brief Clear releases resources.
-   */
-  void Clear();
-
-  std::string name;
-  uint32_t firstIndex;  // required for glDrawElements(...)
-  uint32_t indexCount;  // required for glDrawElements(...)
-  uint32_t
-      vertexCount;  // required for glDrawElements(...) or glDrawArrays(...)
-  bool hasSkin;
-  bool hasIndices;
-  Mgtt::Rendering::PbrMaterial pbrMaterial;
-  AABB aabb;
-};
-}  // namespace Mgtt::Rendering
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+#endif

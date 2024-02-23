@@ -1,6 +1,6 @@
-# [Company Name] Software License
+# The MIT License
 #
-# Copyright (c) 2024 B. Braun
+# Copyright (c) 2024 MGTheTrain
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
-set(TARGET rotating-textured-cube)
-project(${TARGET})
 cmake_minimum_required(VERSION 3.10)
+set(TARGET rotating_textured_cube)
+project(${TARGET})
 
-include_directories(../include)
-add_executable(${TARGET} ${TARGET}.cpp)
-# target_link_libraries(${TARGET})
+add_definitions(-DMGTT_ROTATING_TEXTURED_CUBE)
+
+find_package(GLEW CONFIG REQUIRED)
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+include_directories(../include
+                    ../../../modules/rendering/include
+                    ../../../modules/rendering/include/model
+                    ../../../modules/window/include
+                    ${GLEW_INCLUDE_DIRS}
+                    ${Stb_INCLUDE_DIR}
+)
+set(ROTATING_TEXTURED_CUBE_SRC rotating-textured-cube.cpp)                        
+add_executable(${TARGET} ${ROTATING_TEXTURED_CUBE_SRC})
+target_link_libraries(${TARGET} PRIVATE window rendering)
+
+if(WIN32)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+elseif(APPLE OR UNIX)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+else()
+    message(WARNING "Unsupported platform")
+endif()

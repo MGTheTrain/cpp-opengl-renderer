@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,87 +23,98 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <iostream>
 #include <glfw-window.h>
+#include <mesh.h>
 #include <opengl-shader.h>
 #include <scene.h>
-#include <mesh.h>
-#include <vector>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <memory>
+#include <vector>
 
-// To prevent linking errors, refrain from relocating the #define STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single usage.
-// Tinygltf internally utilizes functions from the stb_image header and requires macros to be set in order to use those. 
-// See: https://github.com/syoyo/tinygltf/blob/release/stb_image.h
+// To prevent linking errors, refrain from relocating the #define
+// STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single
+// usage. Tinygltf internally utilizes functions from the stb_image header and
+// requires macros to be set in order to use those. See:
+// https://github.com/syoyo/tinygltf/blob/release/stb_image.h
 #include <stb_image.h>
 
 namespace Mgtt::Apps {
-    /**
-     * @brief Represents glm matrices
-     */
-    struct GlmMatrices {
-        GlmMatrices() {
-            this->model = glm::mat4(1.0f);
-            this->view = glm::mat4(1.0f);
-            this->projection = glm::mat4(1.0f);
-            this->mvp = glm::mat4(1.0f);
-        }
-        glm::mat4 model;
-        glm::mat4 view;
-        glm::mat4 projection;
-        glm::mat4 mvp;
-    };
+/**
+ * @brief Represents glm matrices
+ */
+struct GlmMatrices {
+  GlmMatrices() {
+    this->model = glm::mat4(1.0f);
+    this->view = glm::mat4(1.0f);
+    this->projection = glm::mat4(1.0f);
+    this->mvp = glm::mat4(1.0f);
+  }
+  glm::mat4 model;
+  glm::mat4 view;
+  glm::mat4 projection;
+  glm::mat4 mvp;
+};
 
-    /**
-     * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
-     *
-     * This class provides basic functionality for initializing an OpenGL context,
-     * rendering scenes, and clearing the rendering buffer.
-     */
-    class RotatingTexturedCube {
-    public:
-        /**
-         * @brief Constructs an RotatingTexturedCube  object.
-         */
-        RotatingTexturedCube ();
+/**
+ * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
+ *
+ * This class provides basic functionality for initializing an OpenGL context,
+ * rendering scenes, and clearing the rendering buffer.
+ */
+class RotatingTexturedCube {
+ public:
+  /**
+   * @brief Constructs an RotatingTexturedCube  object.
+   */
+  RotatingTexturedCube();
 
-        /**
-         * @brief Destructs the RotatingTexturedCube  object.
-         */
-        ~RotatingTexturedCube ();
+  /**
+   * @brief Destructs the RotatingTexturedCube  object.
+   */
+  ~RotatingTexturedCube();
 
-        /**
-         * @brief Renders the scene using OpenGL.
-         *
-         * This method is responsible for rendering the contents of the scene using OpenGL.
-         */
-        void Render();
+  /**
+   * @brief Renders the scene using OpenGL.
+   *
+   * This method is responsible for rendering the contents of the scene using
+   * OpenGL.
+   */
+  void Render();
 
-        /**
-        * @brief Process input for the GLFW window.
-        *
-        * This function processes input for the specified GLFW window. It can handle keyboard
-        * and mouse input events and update the application state accordingly.
-        */
-        void ProcessInput();
-    private:
-        /**
-        * @brief Callback function for framebuffer size changes.
-        *
-        * This static callback function is invoked when the framebuffer size of the GLFW window changes.
-        * It is typically registered using `glfwSetFramebufferSizeCallback`. The function updates the
-        * viewport size based on the new width and height.
-        *
-        * @param window A pointer to the GLFW window whose framebuffer size has changed.
-        * @param width  The new width of the framebuffer.
-        * @param height The new height of the framebuffer.
-        */
-        static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
-        std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
-        std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
-        std::unique_ptr<GlmMatrices> glmMatrices;
-        Mgtt::Rendering::Mesh mesh;
-    };
+  /**
+   * @brief Process input for the GLFW window.
+   *
+   * This function processes input for the specified GLFW window. It can handle
+   * keyboard and mouse input events and update the application state
+   * accordingly.
+   */
+  void ProcessInput();
 
-} // namespace Mgtt::Apps
+ private:
+  /**
+   * @brief Callback function for framebuffer size changes.
+   *
+   * This static callback function is invoked when the framebuffer size of the
+   * GLFW window changes. It is typically registered using
+   * `glfwSetFramebufferSizeCallback`. The function updates the viewport size
+   * based on the new width and height.
+   *
+   * @param window A pointer to the GLFW window whose framebuffer size has
+   * changed.
+   * @param width  The new width of the framebuffer.
+   * @param height The new height of the framebuffer.
+   */
+  static void FramebufferSizeCallback(GLFWwindow* window, int width,
+                                      int height);
+
+  std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+  std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
+  std::unique_ptr<GlmMatrices> glmMatrices;
+  Mgtt::Rendering::Mesh mesh;
+};
+
+}  // namespace Mgtt::Apps

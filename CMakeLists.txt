@@ -1,9 +1,30 @@
+# The MIT License
+#
+# Copyright (c) 2024 MGTheTrain
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 cmake_minimum_required(VERSION 3.10)
 set(TARGET cpp-opengl-renderer)
 project(${TARGET})   
+set(CMAKE_CXX_STANDARD 17)
 
-option(BUILD_TEST "Compile source files for test executable" OFF)
-option(BUILD_LIB "Compile module source files" OFF)
+option(BUILD_LIB "Compile module source files for static libraries" ON)
+option(BUILD_TEST "Compile source files for test executable and link compiled libraries" ON)
 option(BUILD_APP "Compile source file of main executable and link compiled libraries" ON) 
 option(BUILD_PACKAGE "Build the package" OFF)
 
@@ -11,28 +32,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(AzureVcpkg)
 az_vcpkg_integrate()
 
-# find_package(GLEW REQUIRED)
-# target_link_libraries(main PRIVATE GLEW::GLEW)
-
-# # this is heuristically generated, and may not be correct
-# find_package(glfw3 CONFIG REQUIRED)
-# target_link_libraries(main PRIVATE glfw)
-
-# find_package(glm CONFIG REQUIRED)
-# target_link_libraries(main PRIVATE glm::glm-header-only)
-
-# # this is heuristically generated, and may not be correct
-# find_package(imgui CONFIG REQUIRED)
-# target_link_libraries(main PRIVATE imgui::imgui)
-
-# find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
-# target_include_directories(main PRIVATE ${TINYGLTF_INCLUDE_DIRS})
-
 if(BUILD_TEST)
     include(CTestConfig)
 endif()
 
-# add_subdirectory(modules)
+add_subdirectory(modules)
 add_subdirectory(apps)
 
 if(BUILD_PACKAGE)

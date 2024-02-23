@@ -1,12 +1,13 @@
 {
     "name": "cpp-opengl-renderer",
-    "version-string": "0.1.0", 
+    "version-string": "0.2.0", 
     "dependencies": [
         "glfw3",
         "glew",
         "imgui",
         "glm",
         "stb",
-        "tinygltf"
+        "tinygltf",
+        "gtest"
     ]
 }
