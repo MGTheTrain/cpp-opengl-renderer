@@ -271,9 +271,8 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
                                       meshPrimitve.pbrMaterial.alphaCutoff);
 
       glBindVertexArray(node->mesh->vao);
-      glDrawElements(
-          GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
-          (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
+      glDrawElements(GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
+                     (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
       glBindVertexArray(0);
     }
   }
