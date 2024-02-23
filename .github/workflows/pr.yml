@@ -34,8 +34,8 @@ jobs:
       
     - name: Build and Test on Linux
       run: |
-        cd devops/scripts/bash/
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
+      working-directory: ./devops/scripts/bash/
 
   # build_and_test_windows:
   #   runs-on: windows-latest
