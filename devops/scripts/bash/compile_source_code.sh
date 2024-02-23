@@ -35,12 +35,23 @@ fi
 
 currentDir=$(pwd)
 cd "$currentDir/../../.."
+
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+NC='\033[0m' 
+echo "#####################################################################################################"
+echo -e "$BLUE INFO: $NC About to compile the source code and link the binaries"
+
 cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
+echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
 
 cmake --build build
+echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
 
 if [ "$NoTests" = false ]; then
   cd "build"
   ctest
 fi
 cd "$currentDir"
+
+echo -e "$BLUE INFO: $NC Success"
