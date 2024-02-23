@@ -13,6 +13,7 @@ jobs:
         run: |
           sudo apt-get update 
           sudo apt-get install clang-format -y
+          sudo chmod +x *
           ./format.sh
         working-directory: devops/scripts/bash
       - name: Commit changes
