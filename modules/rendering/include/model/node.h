@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,57 +23,58 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <string>
-#include <vector>
-#include <memory>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <memory>
+#include <string>
+#include <vector>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
 #include <mesh.h>
 
+#include <glm/gtx/quaternion.hpp>
+
 namespace Mgtt::Rendering {
-    struct Node;
-    struct Mesh;
-    /**
-     * @brief Represents a node in the scene hierarchy.
-     */
-    struct Node {
-        /**
-         * @brief Constructor for the Node struct.
-         */
-        Node();
+struct Node;
+struct Mesh;
+/**
+ * @brief Represents a node in the scene hierarchy.
+ */
+struct Node {
+  /**
+   * @brief Constructor for the Node struct.
+   */
+  Node();
 
-        ~Node() {}
+  ~Node() {}
 
-        /**
-         * @brief Clear releases resources.
-         */
-        void Clear();
+  /**
+   * @brief Clear releases resources.
+   */
+  void Clear();
 
-        /**
-         * @brief Calculates the local transformation matrix of the node.
-         * @return Local transformation matrix.
-         */
-        glm::mat4 LocalMatrix();
+  /**
+   * @brief Calculates the local transformation matrix of the node.
+   * @return Local transformation matrix.
+   */
+  glm::mat4 LocalMatrix();
 
-        /**
-         * @brief Calculates the global transformation matrix of the node.
-         * @return Global transformation matrix.
-         */
-        glm::mat4 GetGlobalMatrix();
+  /**
+   * @brief Calculates the global transformation matrix of the node.
+   * @return Global transformation matrix.
+   */
+  glm::mat4 GetGlobalMatrix();
 
-        std::string name;
-        std::shared_ptr<Mgtt::Rendering::Node> parent;
-        std::shared_ptr<Mgtt::Rendering::Mesh> mesh;
-        std::vector<std::shared_ptr<Mgtt::Rendering::Node>> children;
-        glm::vec3 pos;
-        glm::quat rot;
-        glm::vec3 scale;
-        glm::mat4 mvp;
-        glm::mat4 matrix;
-        uint32_t index;
-    };
-}
+  std::string name;
+  std::shared_ptr<Mgtt::Rendering::Node> parent;
+  std::shared_ptr<Mgtt::Rendering::Mesh> mesh;
+  std::vector<std::shared_ptr<Mgtt::Rendering::Node>> children;
+  glm::vec3 pos;
+  glm::quat rot;
+  glm::vec3 scale;
+  glm::mat4 mvp;
+  glm::mat4 matrix;
+  uint32_t index;
+};
+}  // namespace Mgtt::Rendering

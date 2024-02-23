@@ -1,0 +1,29 @@
+name: Format and lint C++ project with clang-format and commit changes
+
+on: push
+
+jobs:
+  format-and-lint: 
+    name: Format and lint C++ project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Apply Auto formatting
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y python3 python3-pip
+          sudo pip3 install clang-format cpplint
+          sudo chmod +x *
+          ./format_and_lint.sh
+        working-directory: devops/scripts/bash
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+          git pull
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Formatted cpp project with clang-format"
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
