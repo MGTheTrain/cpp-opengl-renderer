@@ -5,8 +5,7 @@ on: push
 jobs:
   format: 
     name: Format C++ project
-    runs-on:
-      - generic
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,3 +23,5 @@ jobs:
           git add -A
           git diff-index --quiet HEAD || git commit -m "Formatted cpp project with clang-format"
           git push
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
