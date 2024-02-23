@@ -79,14 +79,14 @@ Similair for `Release|x64` build configurations:
 
 #### Unix
 
-In order to compile the source code and link the binaries run:
+In order to compile the source code and link the binaries run in a Unix terminal:
 
 ```sh
 cd devops/scripts/bash/
 ./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file>
 ```
 
-In order to additionaly start the test executables: 
+In order to additionaly start the test executables in a Unix terminal: 
 
 ```sh
 cd devops/scripts/bash/
@@ -95,14 +95,14 @@ cd devops/scripts/bash/
 
 #### Windows
 
-In order to compile the source code and link the binaries run:
+In order to compile the source code and link the binaries run in a PowerShell terminal:
 
 ```sh
 cd devops/scripts/ps1/
 ./compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file>
 ```
 
-In order to additionaly start the test executables: 
+In order to additionaly start the test executables in a PowerShell terminal: 
 
 ```sh
 cd devops/scripts/ps1/
