@@ -11,6 +11,6 @@ NC='\033[0m'
 
 echo "#####################################################################################################"
 echo -e "$BLUE INFO: $NC About to lint cpp files"
-find ./** -name '*.h' -o -name '*.cpp' | xargs clang-format -i
+find . -name '*.h' -o -name '*.cpp' -exec clang-format -i {} \;
 
 cd -
