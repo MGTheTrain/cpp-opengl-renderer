@@ -17,13 +17,13 @@ TBD
 
 ## Features
 
-- [ ] Compilation on MacOS, Linux Ubuntu 20.04/22.04, Linux debian 11 and Windows 10/11 OS
+- [x] Compilation on MacOS, Linux Ubuntu 20.04/22.04, Linux debian 11 and Windows 10/11 OS
 - [x] Support for glTF scene loading
 - [x] PBR shader pipeline considering primarily the metal roughness workflow
+- [x] High code coverage with GoogleTest for methods in module structs and classes 
+- [x] Create `CMakeLists.txt` files for cross-platform build environment generation
+- [x] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems and continuous testing of the modules
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
-- [ ] High code coverage with GoogleTest for methods in module structs and classes 
-- [ ] Create `CMakeLists.txt` files for cross-platform build environment generation
-- [ ] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems and continuous testing of the modules
 - [ ] Native file dialog support
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
