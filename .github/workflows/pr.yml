@@ -67,5 +67,5 @@ jobs:
       working-directory: /tmp/
     - name: Build and Test on macOS
       run: |
-        ./compile_source_code.sh
+        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
       working-directory: ./devops/scripts/bash/
