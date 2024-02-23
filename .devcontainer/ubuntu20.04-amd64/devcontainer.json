@@ -3,7 +3,9 @@
     "name": "Tools for c++ repos",
     "image": "mcr.microsoft.com/vscode/devcontainers/cpp:ubuntu-20.04",
     // Features to add to the dev container. More info: https://containers.dev/features
-    "features": {}
+    "features": {},
+    "postCreateCommand": "bash .devcontainer/ubuntu20.04-amd64/scripts/install-dependencies.sh",
+    "remoteUser": "root"
 }
 
 // Currently, the vcpkg install command is unable to build in development containers, resulting in an error:

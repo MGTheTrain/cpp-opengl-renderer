@@ -1,10 +1,10 @@
-name: Format C++ project with clang-format and commit changes
+name: Format and lint C++ project with clang-format and commit changes
 
 on: push
 
 jobs:
-  format: 
-    name: Format C++ project
+  format-and-lint: 
+    name: Format and lint C++ project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,9 +12,9 @@ jobs:
       - name: Apply Auto formatting
         run: |
           sudo apt-get update 
-          sudo apt-get install clang-format -y
+          sudo pip3 install clang-format cpplint
           sudo chmod +x *
-          ./format.sh
+          ./format_and_lint.sh
         working-directory: devops/scripts/bash
       - name: Commit changes
         run: |
