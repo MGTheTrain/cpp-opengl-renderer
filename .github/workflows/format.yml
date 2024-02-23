@@ -14,7 +14,7 @@ jobs:
           sudo apt-get update 
           sudo apt-get install clang-format -y
           ./format.sh
-        working-directory: devops/bash/scripts
+        working-directory: devops/scripts/bash
       - name: Commit changes
         run: |
           git config --global user.name 'github-actions[bot]'
