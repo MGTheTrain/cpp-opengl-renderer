@@ -273,7 +273,7 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
       glBindVertexArray(node->mesh->vao);
       glDrawElements(
           GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
-          static_cast<void*>(meshPrimitve.firstIndex * sizeof(unsigned int)));
+          (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
       glBindVertexArray(0);
     }
   }
