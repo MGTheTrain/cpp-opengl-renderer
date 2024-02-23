@@ -1,0 +1,81 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build_and_test_ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      uses: actions/setup-cmake@v2
+      with:
+        cmake-version: '3.21.1'
+
+    - name: Install vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+      working-directory: /tmp/
+      
+    - name: Build and Test on Linux
+      run: |
+        cd devops/scripts/bash/
+        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
+
+  build_and_test_windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      uses: actions/setup-cmake@v2
+      with:
+        cmake-version: '3.21.1'
+
+    - name: Install vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat 
+      working-directory: \tmp\
+
+    - name: Build and Test on Windows
+      shell: powershell
+      run: |
+        cd devops/scripts/ps1/
+        ./compile_source_code.ps1 -CMakeToolchainFile \tmp\vcpkg\scripts\buildsystems\vcpkg.cmake -RunTests
+
+  build_and_test_macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      uses: actions/setup-cmake@v2
+      with:
+        cmake-version: '3.21.1'
+
+    - name: Install vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+      working-directory: /tmp/
+
+    - name: Build and Test on macOS
+      run: |
+        cd devops/scripts/bash/  # You may need to adjust this based on your project structure
+        ./compile_source_code.sh
