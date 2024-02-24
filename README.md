@@ -1,5 +1,7 @@
 # cpp-opengl-renderer
 
+![On hold for 3 weeks](https://img.shields.io/badge/STATUS-on_hold_for_3_weeks-blue)
+
 ## Table of Contents
 
 + [Summary](#summary)
@@ -22,8 +24,8 @@ TBD
 - [x] PBR shader pipeline considering primarily the metal roughness workflow
 - [x] High code coverage with GoogleTest for methods in module structs and classes 
 - [x] Create `CMakeLists.txt` files for cross-platform build environment generation
-- [x] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems 
-- [ ] CI/CT workflows ensuring continuous testing of the modules
+- [x] CI workflows ensuring cross-platform compilation primarily for Desktop operating systems 
+- [ ] CI workflows ensuring continuous testing of the modules
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] Native file dialog support
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
