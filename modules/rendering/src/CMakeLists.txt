@@ -53,4 +53,5 @@ if(${OpenGL_FOUND} AND ${GLEW_FOUND} AND ${glm_FOUND} AND ${Stb_FOUND})
 
     add_library(${TARGET} STATIC ${RENDERING_SRC})
     target_link_libraries(${TARGET} PRIVATE GLEW::GLEW glm::glm-header-only)
+    install(TARGETS ${TARGET})
 endif()

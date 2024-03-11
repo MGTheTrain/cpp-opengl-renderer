@@ -49,3 +49,5 @@ elseif(APPLE OR UNIX)
 else()
     message(WARNING "Unsupported platform")
 endif()
+
+install(TARGETS ${TARGET})
