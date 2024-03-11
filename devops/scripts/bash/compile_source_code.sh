@@ -42,7 +42,7 @@ NC='\033[0m'
 echo "#####################################################################################################"
 echo -e "$BLUE INFO: $NC About to compile the source code and link the binaries"
 
-cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
+cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
 echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
 
 cmake --build build

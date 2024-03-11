@@ -40,11 +40,12 @@ add_subdirectory(modules)
 add_subdirectory(apps)
 
 if(BUILD_PACKAGE)
+    list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake") 
     include(CustomFunctions)
     
-    set(PROJECT_NAME "cpp-opengl-renderer")
-    set(CPACK_PACKAGE_NAME "${PROJECT_NAME}" CACHE STRING "The resulting package name")
-
+    set(PACKAGE_NAME "cpp-opengl-renderer")
+    set(PACKAGING_INSTALL_PREFIX "/opt/mgtt/cpp-opengl-renderer/")
+    
     set(file_path "version") 
     file(READ "${file_path}" file_content)
     message(${file_content})
@@ -60,6 +61,5 @@ if(BUILD_PACKAGE)
 
     set(PROJECT_VERSION ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH}${CMAKE_PROJECT_VERSION_TWEAK} 
         CACHE STRING "The version of the debian package")
-
     include(Packing)
 endif()

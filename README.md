@@ -22,8 +22,9 @@ TBD
 - [x] PBR shader pipeline considering primarily the metal roughness workflow
 - [x] High code coverage with GoogleTest for methods in module structs and classes 
 - [x] Create `CMakeLists.txt` files for cross-platform build environment generation
-- [x] CI/CT workflows ensuring cross-platform compilation primarily for Desktop operating systems 
-- [ ] CI/CT workflows ensuring continuous testing of the modules
+- [x] CI workflows ensuring cross-platform compilation primarily for Desktop operating systems 
+- [ ] CI workflows ensuring continuous testing of the modules
+- [x] Cross-platform CPack packaging for Linux, MacOS and Windows OSes
 - [ ] Integrated simple menu (e.g. with buttons, sliders and other widgets)
 - [ ] Native file dialog support
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
@@ -94,6 +95,15 @@ cd devops/scripts/bash/
 ./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
 ```
 
+In order to create compressed files or packages:
+
+```sh
+cd build/
+cpack -G <DEB, ZIP, TGZ, TXZ> # DEB only for Linux systems. Check further generators for the specific Unix OS and CPU arch via `cpack -G --help` 
+cd ../packages
+# install package or unzip compressed file
+```
+
 #### Windows
 
 In order to compile the source code and link the binaries run in a PowerShell terminal:
@@ -108,6 +118,15 @@ In order to additionaly start the test executables in a PowerShell terminal:
 ```sh
 cd devops/scripts/ps1/
 ./compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
+```
+
+In order to create compressed files or installers:
+
+```sh
+cd build/
+cpack -G <ZIP, NSIS, NSIS64> # Check further generators for later Windows OSes and CPU arch via `cpack -G --help` 
+cd ../packages
+# run installer or unzip compressed file
 ```
 
 ## Apps

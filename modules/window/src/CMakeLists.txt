@@ -35,4 +35,5 @@ if(${glfw3_FOUND})
 
     add_library(${TARGET} STATIC ${WINDOW_SRC})
     target_link_libraries(${TARGET} PRIVATE glfw)
+    install(TARGETS ${TARGET})
 endif()
