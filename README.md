@@ -125,6 +125,7 @@ In order to create compressed files or installers:
 ```sh
 cd build/
 cpack -G <ZIP, NSIS, NSIS64> # Check further generators for later Windows OSes and CPU arch via `cpack -G --help` 
+cd ../packages
 # run installer or unzip compressed file
 ```
 
