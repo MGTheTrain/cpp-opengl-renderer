@@ -1,5 +1,7 @@
 # cpp-opengl-renderer
 
+![On hold for 3 weeks](https://img.shields.io/badge/STATUS-on_hold_for_3_weeks-blue)
+
 ## Table of Contents
 
 + [Summary](#summary)
