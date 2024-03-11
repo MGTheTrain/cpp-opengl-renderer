@@ -8,3 +8,4 @@ secrets.cfg
 *.deb
 *.zip
 *.tar
+packages
