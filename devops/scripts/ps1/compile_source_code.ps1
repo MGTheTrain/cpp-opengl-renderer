@@ -22,7 +22,7 @@ if ($CMakeToolchainFile -eq $null) {
 
 $currentDir = Get-Location
 Set-Location -Path "$PSScriptRoot/../../.."
-cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
+cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
 
 cmake --build build
 
