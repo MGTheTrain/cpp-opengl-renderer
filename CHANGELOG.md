@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 27-02-2024
+
+### Added
+
+- [Feature] Cross-platform CPack packaging for Linux, MacOS and Windows OSes
+
 ## [0.2.0] - 23-02-2024
 
 ### Added
