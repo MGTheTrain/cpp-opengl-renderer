@@ -5,3 +5,7 @@ x64/
 vcpkg_installed/
 secrets.cfg
 .vscode/
+*.deb
+*.zip
+*.tar
+packages
