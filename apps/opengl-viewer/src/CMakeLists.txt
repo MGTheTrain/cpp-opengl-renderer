@@ -38,7 +38,7 @@ include_directories(../include
                     ${Stb_INCLUDE_DIR}
                     ${TINYGLTF_INCLUDE_DIRS}
                     ${IMGUI_INCLUDE_DIRS}
-                    # ${nativefiledialog_INCLUDE_DIR} # Explicitly setting this is not necessary; a potential fix for later.
+                    # ${nativefiledialog_INCLUDE_DIR} # Explicitly setting this is not necessary; How to resolve this ? -> Potential fix for later
 )
 set(OPENGL_VIEWER_SRC opengl-viewer.cpp)                        
 add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
