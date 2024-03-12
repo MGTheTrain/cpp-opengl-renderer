@@ -25,6 +25,7 @@ project(${TARGET})
 add_definitions(-DMGTT_OPENGL_VIEWER)
 
 find_package(GLEW CONFIG REQUIRED)
+find_package(IMGUI CONFIG REQUIRED)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -35,10 +36,11 @@ include_directories(../include
                     ${GLEW_INCLUDE_DIRS}
                     ${Stb_INCLUDE_DIR}
                     ${TINYGLTF_INCLUDE_DIRS}
+                    ${IMGUI_INCLUDE_DIRS}
 )
 set(OPENGL_VIEWER_SRC opengl-viewer.cpp)                        
 add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
-target_link_libraries(${TARGET} PRIVATE window rendering)
+target_link_libraries(${TARGET} PRIVATE window rendering imgui::imgui)
 
 if(WIN32)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
