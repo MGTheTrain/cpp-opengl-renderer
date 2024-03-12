@@ -35,6 +35,7 @@ Mgtt::Apps::OpenGlViewer::~OpenGlViewer() { this->Clear(); }
 void Mgtt::Apps::OpenGlViewer::Clear() {
   this->gltfSceneImporter->Clear(this->mgttScene);
   this->textureManager->Clear(this->renderTextureContainer);
+  this->ClearImGui();
 }
 
 /**
@@ -87,6 +88,10 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   this->textureManager->LoadBrdfLut(this->renderTextureContainer);
 
   glViewport(0, 0, windowWidth, windowHeight);
+
+  this->InitializeImGui();
+  
+  this->scaleIblAmbient = 1.0f;
 }
 
 /**
@@ -135,7 +140,16 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     glActiveTexture(GL_TEXTURE9);
     glBindTexture(GL_TEXTURE_2D, this->renderTextureContainer.brdfLutTextureId);
 
-    this->mgttScene.shader.SetFloat("scaleIblAmbient", 1.0f);
+    this->mgttScene.shader.SetFloat("scaleIblAmbient", this->scaleIblAmbient);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    auto [scrWidth, scrHeight] = this->glfwWindow->GetWindowSize();
+    ImGui::SetNextWindowSize(ImVec2((float) scrWidth * 0.3f, (float)scrHeight));
+    ImGui::SetNextWindowPos(ImVec2((float) scrWidth  * 0.7f, 0.0f));
+    this->UpdateTransformationAttributes();
 
     for (auto& node : this->mgttScene.nodes) {
       this->TraverseSceneNode(node);
@@ -165,6 +179,8 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     // glBindVertexArray(0);
     // glDepthFunc(GL_LESS);
 
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     this->glfwWindow->SwapBuffersAndPollEvents();
   }
 }
@@ -175,7 +191,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
  * This function is responsible for iteraing recursively over all nodes in the
  *scene
  *
- * @param node A shared pointer to the 3D node to be rendered.
+ * @param node A shared pointer to the node.
  **/
 void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
     std::shared_ptr<Mgtt::Rendering::Node> node) {
@@ -294,6 +310,50 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
 void Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback(GLFWwindow* window,
                                                        int width, int height) {
   glViewport(0, 0, width, height);
+}
+
+/**
+ * @brief Initializes ImGui for the OpenGL viewer.
+ */
+void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO();
+  (void)io;
+  ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
+  ImGui_ImplOpenGL3_Init("#version 330 core");
+}
+
+/**
+ * @brief Update transformation attributes trough ImGui widgets.
+ */
+void Mgtt::Apps::OpenGlViewer::UpdateTransformationAttributes() {
+  ImGui::Begin("opengl-viewer");
+  if (ImGui::BeginTabBar("Settings")) {
+		if (ImGui::BeginTabItem("Light")) {
+
+      ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem("Light")) {
+      ImGui::Text("Image based lighting");
+
+			ImGui::SliderFloat("Scale ibl ambient", &this->scaleIblAmbient, 0.0f, 2.0f);
+			ImGui::Text("scale \nibl");
+      ImGui::EndTabItem();
+    }
+    ImGui::EndTabBar();
+  }
+  ImGui::End();
+	ImGui::Render();
+}
+
+/**
+ * @brief Initializes ImGui for the OpenGL viewer.
+ */
+void Mgtt::Apps::OpenGlViewer::ClearImGui() {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
 }
 
 int main() {
