@@ -115,7 +115,8 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
     // this->glmMatrices->model =
-    //     glm::rotate(this->glmMatrices->model, static_cast<float>(glfwGetTime()),
+    //     glm::rotate(this->glmMatrices->model,
+    //     static_cast<float>(glfwGetTime()),
     //                 glm::vec3(0.0f, 1.0f, 0.0f));
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
@@ -162,19 +163,19 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     // glDrawArrays(GL_TRIANGLES, 0, 6);
     // glBindVertexArray(0);
 
-    //Check env map
-    if(this->showEnvMap) {
+    // Check env map
+    if (this->showEnvMap) {
       glDepthFunc(GL_LEQUAL);
       this->renderTextureContainer.envMapShader.Use();
-      this->renderTextureContainer.envMapShader.SetMat4("projection",
-      this->glmMatrices->projection);
-      this->renderTextureContainer.envMapShader.SetMat4("view",
-      this->glmMatrices->view);
+      this->renderTextureContainer.envMapShader.SetMat4(
+          "projection", this->glmMatrices->projection);
+      this->renderTextureContainer.envMapShader.SetMat4(
+          "view", this->glmMatrices->view);
       this->renderTextureContainer.envMapShader.SetInt("envMap", 0);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_CUBE_MAP,
-      this->renderTextureContainer.cubeMapTextureId);
+                    this->renderTextureContainer.cubeMapTextureId);
       glBindVertexArray(this->renderTextureContainer.cubeVao);
       glDrawArrays(GL_TRIANGLES, 0, 36);
       glBindVertexArray(0);
@@ -331,26 +332,39 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
 void Mgtt::Apps::OpenGlViewer::UpdateTransformationAttributes() {
   ImGui::Begin("opengl-viewer");
   if (ImGui::BeginTabBar("Settings")) {
-		if (ImGui::BeginTabItem("Model matrix")) {
+    if (ImGui::BeginTabItem("Model matrix")) {
       this->glmMatrices->model = glm::mat4(1.0f);
-      ImGui::SliderFloat3("Translation", (float *) &this->glmVectors->translation, -1.0f, 1.0f);    
+      ImGui::SliderFloat3("Translation", (float*)&this->glmVectors->translation,
+                          -1.0f, 1.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::SliderFloat3("Rotation", (float *) &this->glmVectors->rotation, 0.0f, 360.0f);
+      ImGui::SliderFloat3("Rotation", (float*)&this->glmVectors->rotation, 0.0f,
+                          360.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::SliderFloat3("Scale", (float *) &this->glmVectors->scale, 0.1f, 3.0f);
+      ImGui::SliderFloat3("Scale", (float*)&this->glmVectors->scale, 0.1f,
+                          3.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), this->glmVectors->translation);
-      glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(this->glmVectors->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-      rotationMatrix = glm::rotate(rotationMatrix, glm::radians(this->glmVectors->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-      rotationMatrix = glm::rotate(rotationMatrix, glm::radians(this->glmVectors->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-      glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), this->glmVectors->scale);
-      this->glmMatrices->model = translationMatrix * rotationMatrix * scaleMatrix;
+      glm::mat4 translationMatrix =
+          glm::translate(glm::mat4(1.0f), this->glmVectors->translation);
+      glm::mat4 rotationMatrix = glm::rotate(
+          glm::mat4(1.0f), glm::radians(this->glmVectors->rotation.x),
+          glm::vec3(1.0f, 0.0f, 0.0f));
+      rotationMatrix = glm::rotate(rotationMatrix,
+                                   glm::radians(this->glmVectors->rotation.y),
+                                   glm::vec3(0.0f, 1.0f, 0.0f));
+      rotationMatrix = glm::rotate(rotationMatrix,
+                                   glm::radians(this->glmVectors->rotation.z),
+                                   glm::vec3(0.0f, 0.0f, 1.0f));
+      glm::mat4 scaleMatrix =
+          glm::scale(glm::mat4(1.0f), this->glmVectors->scale);
+      this->glmMatrices->model =
+          translationMatrix * rotationMatrix * scaleMatrix;
       ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem("Light")) {
       ImGui::Text("Image based lighting");
-			ImGui::SliderFloat("Scale ibl ambient", &this->scaleIblAmbient, 0.0f, 2.0f);
-			ImGui::Text("Scale ibl");
+      ImGui::SliderFloat("Scale ibl ambient", &this->scaleIblAmbient, 0.0f,
+                         2.0f);
+      ImGui::Text("Scale ibl");
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::Checkbox("Show env map", &this->showEnvMap);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
