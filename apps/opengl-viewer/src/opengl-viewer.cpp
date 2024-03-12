@@ -114,10 +114,6 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
-    // this->glmMatrices->model =
-    //     glm::rotate(this->glmMatrices->model,
-    //     static_cast<float>(glfwGetTime()),
-    //                 glm::vec3(0.0f, 1.0f, 0.0f));
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
 
