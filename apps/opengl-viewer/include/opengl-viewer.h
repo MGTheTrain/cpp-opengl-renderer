@@ -99,6 +99,7 @@ class OpenGlViewer {
   std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
   glm::vec3 cameraPosition;
+  float scaleIblAmbient;
 
   /**
    * @brief Iterates recursively over all nodes in the scene
@@ -141,11 +142,9 @@ class OpenGlViewer {
   void InitializeImGui();
 
   /**
-   * @brief Renders ImGui user interface for PBR material attributes.
-   *
-   * @param node A shared pointer to the node.
+   * @brief Update transformation attributes trough ImGui widgets.
    */
-  void RenderImGuiPBRAttributes(std::shared_ptr<Mgtt::Rendering::Node> node);
+  void UpdateTransformationAttributes();
 
   /**
    * @brief Initializes ImGui for the OpenGL viewer.
