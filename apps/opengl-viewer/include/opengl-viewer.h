@@ -28,6 +28,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <nfd.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>
@@ -36,7 +37,6 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <nfd.h>
 
 // To prevent linking errors, refrain from relocating the #define
 // STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single
