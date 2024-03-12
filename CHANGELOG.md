@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [Feature] Integrated simple menu (e.g. with buttons, sliders and other widgets)
+- [Feature] Integrated simple menu (e.g. with sliders and other widgets)
 
 ## [0.3.0] - 27-02-2024
 

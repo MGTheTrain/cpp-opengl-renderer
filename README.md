@@ -25,7 +25,7 @@ TBD
 - [x] CI workflows ensuring cross-platform compilation primarily for Desktop operating systems 
 - [ ] CI workflows ensuring continuous testing of the modules
 - [x] Cross-platform CPack packaging for Linux, MacOS and Windows OSes
-- [x] Integrated simple menu (e.g. with buttons, sliders and other widgets)
+- [x] Integrated simple menu (e.g. with sliders and other widgets)
 - [ ] Native file dialog support
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
