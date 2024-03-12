@@ -25,6 +25,9 @@
 #include <GL/glew.h>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>
@@ -33,9 +36,6 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
 
 // To prevent linking errors, refrain from relocating the #define
 // STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single
@@ -142,7 +142,7 @@ class OpenGlViewer {
 
   /**
    * @brief Renders ImGui user interface for PBR material attributes.
-   * 
+   *
    * @param node A shared pointer to the node to be rendered.
    */
   void RenderImGuiPBRAttributes(std::shared_ptr<Mgtt::Rendering::Node> node);
