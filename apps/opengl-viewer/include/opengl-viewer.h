@@ -36,6 +36,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <nfd.h>
 
 // To prevent linking errors, refrain from relocating the #define
 // STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single
