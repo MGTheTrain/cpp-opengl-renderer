@@ -33,6 +33,9 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 // To prevent linking errors, refrain from relocating the #define
 // STB_IMAGE_IMPLEMENTATION macro to this location. It is restricted to a single
@@ -103,7 +106,7 @@ class OpenGlViewer {
    * This function is responsible for iteraing recursively over all nodes in the
    *scene
    *
-   * @param node A shared pointer to the 3D node to be rendered.
+   * @param node A shared pointer to the node to be rendered.
    **/
   void TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node);
 
@@ -131,6 +134,23 @@ class OpenGlViewer {
    */
   static void FramebufferSizeCallback(GLFWwindow* window, int width,
                                       int height);
+
+  /**
+   * @brief Initializes ImGui for the OpenGL viewer.
+   */
+  void InitializeImGui();
+
+  /**
+   * @brief Renders ImGui user interface for PBR material attributes.
+   * 
+   * @param node A shared pointer to the node to be rendered.
+   */
+  void RenderImGuiPBRAttributes(std::shared_ptr<Mgtt::Rendering::Node> node);
+
+  /**
+   * @brief Initializes ImGui for the OpenGL viewer.
+   */
+  void ClearImGui();
 };
 
 }  // namespace Mgtt::Apps
