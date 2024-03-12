@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 12-04-2024
+
+### Added
+
+- [Feature] Integrated simple menu (e.g. with sliders and other widgets)
+
 ## [0.3.0] - 27-02-2024
 
 ### Added

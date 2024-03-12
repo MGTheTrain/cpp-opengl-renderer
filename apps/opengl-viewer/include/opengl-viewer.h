@@ -25,6 +25,9 @@
 #include <GL/glew.h>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>
@@ -54,6 +57,20 @@ struct GlmMatrices {
   glm::mat4 model;
   glm::mat4 view;
   glm::mat4 projection;
+};
+
+/**
+ * @brief Represents glm vectors
+ */
+struct GlmVectors {
+  GlmVectors() {
+    this->translation = glm::vec3(0.0f);
+    this->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    this->scale = glm::vec3(1.0f);
+  }
+  glm::vec3 translation;
+  glm::vec3 rotation;
+  glm::vec3 scale;
 };
 
 /**
@@ -90,12 +107,15 @@ class OpenGlViewer {
 
  private:
   std::unique_ptr<GlmMatrices> glmMatrices;
+  std::unique_ptr<GlmVectors> glmVectors;
   Mgtt::Rendering::Scene mgttScene;
   Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
   std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
   std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
   glm::vec3 cameraPosition;
+  float scaleIblAmbient;
+  bool showEnvMap;
 
   /**
    * @brief Iterates recursively over all nodes in the scene
@@ -103,7 +123,7 @@ class OpenGlViewer {
    * This function is responsible for iteraing recursively over all nodes in the
    *scene
    *
-   * @param node A shared pointer to the 3D node to be rendered.
+   * @param node A shared pointer to the node.
    **/
   void TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node);
 
@@ -131,6 +151,21 @@ class OpenGlViewer {
    */
   static void FramebufferSizeCallback(GLFWwindow* window, int width,
                                       int height);
+
+  /**
+   * @brief Initializes ImGui for the OpenGL viewer.
+   */
+  void InitializeImGui();
+
+  /**
+   * @brief Update transformation attributes trough ImGui widgets.
+   */
+  void UpdateTransformationAttributes();
+
+  /**
+   * @brief Initializes ImGui for the OpenGL viewer.
+   */
+  void ClearImGui();
 };
 
 }  // namespace Mgtt::Apps
