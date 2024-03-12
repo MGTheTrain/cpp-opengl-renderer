@@ -106,7 +106,7 @@ class OpenGlViewer {
    * This function is responsible for iteraing recursively over all nodes in the
    *scene
    *
-   * @param node A shared pointer to the node to be rendered.
+   * @param node A shared pointer to the node.
    **/
   void TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node);
 
@@ -143,7 +143,7 @@ class OpenGlViewer {
   /**
    * @brief Renders ImGui user interface for PBR material attributes.
    *
-   * @param node A shared pointer to the node to be rendered.
+   * @param node A shared pointer to the node.
    */
   void RenderImGuiPBRAttributes(std::shared_ptr<Mgtt::Rendering::Node> node);
 
