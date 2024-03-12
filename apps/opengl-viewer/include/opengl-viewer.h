@@ -60,6 +60,20 @@ struct GlmMatrices {
 };
 
 /**
+ * @brief Represents glm vectors
+ */
+struct GlmVectors {
+  GlmVectors() {
+    this->translation = glm::vec3(0.0f);
+    this->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    this->scale = glm::vec3(1.0f);
+  }
+  glm::vec3 translation;
+  glm::vec3 rotation;
+  glm::vec3 scale;
+};
+
+/**
  * @brief The OpenGlViewer class represents a simple OpenGL viewer.
  *
  * This class provides basic functionality for initializing an OpenGL context,
@@ -93,6 +107,7 @@ class OpenGlViewer {
 
  private:
   std::unique_ptr<GlmMatrices> glmMatrices;
+  std::unique_ptr<GlmVectors> glmVectors;
   Mgtt::Rendering::Scene mgttScene;
   Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
   std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
@@ -100,6 +115,7 @@ class OpenGlViewer {
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
   glm::vec3 cameraPosition;
   float scaleIblAmbient;
+  bool showEnvMap;
 
   /**
    * @brief Iterates recursively over all nodes in the scene
