@@ -147,8 +147,8 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     ImGui::NewFrame();
 
     auto [scrWidth, scrHeight] = this->glfwWindow->GetWindowSize();
-    ImGui::SetNextWindowSize(ImVec2((float) scrWidth * 0.3f, (float)scrHeight));
-    ImGui::SetNextWindowPos(ImVec2((float) scrWidth  * 0.7f, 0.0f));
+    ImGui::SetNextWindowSize(ImVec2((float)scrWidth * 0.3f, (float)scrHeight));
+    ImGui::SetNextWindowPos(ImVec2((float)scrWidth * 0.7f, 0.0f));
     this->UpdateTransformationAttributes();
 
     for (auto& node : this->mgttScene.nodes) {
@@ -359,7 +359,7 @@ void Mgtt::Apps::OpenGlViewer::UpdateTransformationAttributes() {
     ImGui::EndTabBar();
   }
   ImGui::End();
-	ImGui::Render();
+  ImGui::Render();
 }
 
 /**
