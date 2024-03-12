@@ -159,9 +159,9 @@ class OpenGlViewer {
   void InitializeImGui();
 
   /**
-   * @brief Update transformation attributes trough ImGui widgets.
+   * @brief Update settings trough ImGui widgets.
    */
-  void UpdateTransformationAttributes();
+  void UpdateSettings();
 
   /**
    * @brief Initializes ImGui for the OpenGL viewer.
