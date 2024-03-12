@@ -90,7 +90,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   glViewport(0, 0, windowWidth, windowHeight);
 
   this->InitializeImGui();
-  
+
   this->scaleIblAmbient = 1.0f;
 }
 
@@ -147,8 +147,8 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     ImGui::NewFrame();
 
     auto [scrWidth, scrHeight] = this->glfwWindow->GetWindowSize();
-    ImGui::SetNextWindowSize(ImVec2((float) scrWidth * 0.3f, (float)scrHeight));
-    ImGui::SetNextWindowPos(ImVec2((float) scrWidth  * 0.7f, 0.0f));
+    ImGui::SetNextWindowSize(ImVec2((float)scrWidth * 0.3f, (float)scrHeight));
+    ImGui::SetNextWindowPos(ImVec2((float)scrWidth * 0.7f, 0.0f));
     this->UpdateTransformationAttributes();
 
     for (auto& node : this->mgttScene.nodes) {
@@ -178,7 +178,6 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     // glDrawArrays(GL_TRIANGLES, 0, 36);
     // glBindVertexArray(0);
     // glDepthFunc(GL_LESS);
-
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     this->glfwWindow->SwapBuffersAndPollEvents();
@@ -330,21 +329,21 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
 void Mgtt::Apps::OpenGlViewer::UpdateTransformationAttributes() {
   ImGui::Begin("opengl-viewer");
   if (ImGui::BeginTabBar("Settings")) {
-		if (ImGui::BeginTabItem("Light")) {
-
+    if (ImGui::BeginTabItem("Light")) {
       ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem("Light")) {
       ImGui::Text("Image based lighting");
 
-			ImGui::SliderFloat("Scale ibl ambient", &this->scaleIblAmbient, 0.0f, 2.0f);
-			ImGui::Text("scale \nibl");
+      ImGui::SliderFloat("Scale ibl ambient", &this->scaleIblAmbient, 0.0f,
+                         2.0f);
+      ImGui::Text("scale \nibl");
       ImGui::EndTabItem();
     }
     ImGui::EndTabBar();
   }
   ImGui::End();
-	ImGui::Render();
+  ImGui::Render();
 }
 
 /**
