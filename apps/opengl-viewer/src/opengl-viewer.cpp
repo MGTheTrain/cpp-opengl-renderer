@@ -330,8 +330,8 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
   if (ImGui::BeginTabBar("Settings")) {
     if (ImGui::BeginTabItem("Scene")) {
       if (ImGui::Button("Select glTF scene")) {
-        nfdchar_t *selectedPath = NULL;
-				nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
+        nfdchar_t* selectedPath = NULL;
+        nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
         if (result == NFD_OKAY) {
           this->gltfSceneImporter->Clear(this->mgttScene);
           std::pair<std::string, std::string> pbrShaderPathes = {
