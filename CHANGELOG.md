@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 13-04-2024
+
+### Added
+
+- [Feature] Native file dialog support for loading new glTF scenes
+
+### Updated
+
+- Introduce helper methods within the `GltfSceneImporter` class to facilitate the correct initial transformations of the scene and its node meshes. These transformations are essential for initially centering the model according to the scene's AABB.
+
+### Fixed
+
+- [Fix] Ensure only node meshes are cleared when using the `Clear()` method in [node.cpp](modules/rendering/src/model/node.cpp)
+
 ## [0.4.0] - 12-04-2024
 
 ### Added

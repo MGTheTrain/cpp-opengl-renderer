@@ -29,6 +29,7 @@ Mgtt::Rendering::AABB::AABB() {
   this->min = glm::vec3(FLT_MAX);
   this->max = glm::vec3(-FLT_MAX);
   this->center = glm::vec3(0.0f);
+  this->scale = 1.0f;
 }
 
 /**

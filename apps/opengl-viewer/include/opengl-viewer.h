@@ -28,6 +28,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <nfd.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>
@@ -158,9 +159,9 @@ class OpenGlViewer {
   void InitializeImGui();
 
   /**
-   * @brief Update transformation attributes trough ImGui widgets.
+   * @brief Update settings trough ImGui widgets.
    */
-  void UpdateTransformationAttributes();
+  void UpdateSettings();
 
   /**
    * @brief Initializes ImGui for the OpenGL viewer.

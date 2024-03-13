@@ -26,7 +26,7 @@ TBD
 - [ ] CI workflows ensuring continuous testing of the modules
 - [x] Cross-platform CPack packaging for Linux, MacOS and Windows OSes
 - [x] Integrated simple menu (e.g. with sliders and other widgets)
-- [ ] Native file dialog support
+- [x] Native file dialog support for loading new glTF scenes
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
 - [ ] Skeletal animation support (**OPTIONAL**)
