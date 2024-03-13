@@ -114,14 +114,28 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
-    this->glmMatrices->model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f / this->mgttScene.aabb.scale));
-    this->glmMatrices->model = glm::scale(this->glmMatrices->model, this->glmVectors->scale);
-    this->glmMatrices->model = glm::translate(this->glmMatrices->model, -(this->mgttScene.aabb.center + this->glmVectors->translation));
-    this->glmMatrices->model = glm::translate(this->glmMatrices->model, (this->mgttScene.aabb.center + this->glmVectors->translation));
-    this->glmMatrices->model = glm::rotate(this->glmMatrices->model, glm::radians(this->glmVectors->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    this->glmMatrices->model = glm::rotate(this->glmMatrices->model, glm::radians(this->glmVectors->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    this->glmMatrices->model = glm::rotate(this->glmMatrices->model, glm::radians(this->glmVectors->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    this->glmMatrices->model = glm::translate(this->glmMatrices->model, -(this->mgttScene.aabb.center + this->glmVectors->translation));
+    this->glmMatrices->model = glm::scale(
+        glm::mat4(1.0f), glm::vec3(1.0f / this->mgttScene.aabb.scale));
+    this->glmMatrices->model =
+        glm::scale(this->glmMatrices->model, this->glmVectors->scale);
+    this->glmMatrices->model = glm::translate(
+        this->glmMatrices->model,
+        -(this->mgttScene.aabb.center + this->glmVectors->translation));
+    this->glmMatrices->model = glm::translate(
+        this->glmMatrices->model,
+        (this->mgttScene.aabb.center + this->glmVectors->translation));
+    this->glmMatrices->model = glm::rotate(
+        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.x),
+        glm::vec3(1.0f, 0.0f, 0.0f));
+    this->glmMatrices->model = glm::rotate(
+        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.y),
+        glm::vec3(0.0f, 1.0f, 0.0f));
+    this->glmMatrices->model = glm::rotate(
+        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.z),
+        glm::vec3(0.0f, 0.0f, 1.0f));
+    this->glmMatrices->model = glm::translate(
+        this->glmMatrices->model,
+        -(this->mgttScene.aabb.center + this->glmVectors->translation));
 
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
