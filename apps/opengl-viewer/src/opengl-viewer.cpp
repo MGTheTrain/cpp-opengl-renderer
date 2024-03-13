@@ -326,7 +326,7 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
  * @brief Update settings trough ImGui widgets.
  */
 void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
-  ImGui::Begin("opengl-viewer");
+  ImGui::Begin("Settings");
   if (ImGui::BeginTabBar("Settings")) {
     if (ImGui::BeginTabItem("Scene")) {
       if (ImGui::Button("Select glTF scene")) {
