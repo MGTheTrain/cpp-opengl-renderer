@@ -23,8 +23,8 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <mesh-primitive.h>
 #include <aabb.h>
+#include <mesh-primitive.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>
