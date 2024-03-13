@@ -146,7 +146,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     auto [scrWidth, scrHeight] = this->glfwWindow->GetWindowSize();
     ImGui::SetNextWindowSize(ImVec2((float)scrWidth * 0.3f, (float)scrHeight));
     ImGui::SetNextWindowPos(ImVec2((float)scrWidth * 0.7f, 0.0f));
-    this->UpdateTransformationAttributes();
+    this->UpdateSettings();
 
     for (auto& node : this->mgttScene.nodes) {
       this->TraverseSceneNode(node);
@@ -323,11 +323,27 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
 }
 
 /**
- * @brief Update transformation attributes trough ImGui widgets.
+ * @brief Update settings trough ImGui widgets.
  */
-void Mgtt::Apps::OpenGlViewer::UpdateTransformationAttributes() {
+void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
   ImGui::Begin("opengl-viewer");
   if (ImGui::BeginTabBar("Settings")) {
+    if (ImGui::BeginTabItem("Scene")) {
+      if (ImGui::Button("Select glTF scene")) {
+        nfdchar_t *selectedPath = NULL;
+				nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
+        if (result == NFD_OKAY) {
+          this->gltfSceneImporter->Clear(this->mgttScene);
+          std::pair<std::string, std::string> pbrShaderPathes = {
+              "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+          this->mgttScene.shader.Compile(pbrShaderPathes);
+          std::string mgttScenePath = std::string(selectedPath);
+          this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
+        }
+      }
+      ImGui::EndTabItem();
+    }
+
     if (ImGui::BeginTabItem("Model matrix")) {
       this->glmMatrices->model = glm::mat4(1.0f);
       ImGui::SliderFloat3("Translation", (float*)&this->glmVectors->translation,
