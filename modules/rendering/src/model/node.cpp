@@ -37,7 +37,9 @@ Mgtt::Rendering::Node::Node() {
  * @brief Clear releases resources.
  */
 void Mgtt::Rendering::Node::Clear() {
-  this->mesh->Clear();
+  if(this->mesh) {
+    this->mesh->Clear();
+  }
   this->index = 0;
   this->pos = glm::vec3(0.0f);
   // this->rot = glm::quat();
