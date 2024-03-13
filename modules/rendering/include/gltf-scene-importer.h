@@ -187,6 +187,47 @@ class GltfSceneImporter : public ISceneImporter {
    * should be cleared.
    */
   void ClearRAM(Mgtt::Rendering::Texture& texture);
+
+  /**
+   * @brief Updates the mesh matrices of the given node and its child nodes recursively when calling
+   * the InitialTransform() method
+   *
+   * @param node A shared pointer to the node whose mesh matrices need to be updated.
+   */
+  void UpdateNodeMeshMatrices(std::shared_ptr<Mgtt::Rendering::Node> node);
+
+  /**
+   * @brief Calculates the dimensions of the entire scene.
+   *
+   * This function calculates the dimensions of the entire scene by utilizing the CalculateSceneAABB() and CalculateSceneNodeAABBs()
+   * methods. It traverses the nodes of the scene recursively to determine the overall size of the scene.
+   * The calculated dimensions typically include the minimum and maximum extents along each axis.
+   * 
+   * @param scene Reference to the updated 3D scene after loading nodes.
+   */
+  void CalculateSceneDimensions(Mgtt::Rendering::Scene& scene);
+
+  /**
+   * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
+   *
+   * This function calculates the axis-aligned bounding box (AABB) of the entire scene. It traverses all nodes
+   * in the scene recursively and computes the AABB that encapsulates all geometry within the scene.
+   * The AABB represents the minimum volume box that entirely contains all objects in the scene.
+   * 
+   * @param scene Reference to the updated 3D scene after loading nodes.
+   * @param node A shared pointer to the node
+   */
+  void CalculateSceneAABB(Mgtt::Rendering::Scene& scene, std::shared_ptr<Mgtt::Rendering::Node> node);
+
+  /**
+   * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in the scene.
+   *
+   * This function calculates the axis-aligned bounding boxes (AABBs) for each node in the scene. It traverses
+   * all nodes recursively and computes the AABB for each individual node based on its geometry.
+   * 
+   * @param node A shared pointer to the node
+   */
+  void CalculateSceneNodesAABBs(std::shared_ptr<Mgtt::Rendering::Node> node);
 };
 
 /**
@@ -300,6 +341,6 @@ class TextureManager {
    * generated irradiance map.
    */
   void GenerateIrradianceMap(
-      Mgtt::Rendering::RenderTexturesContainer& container);
+      Mgtt::Rendering::RenderTexturesContainer& container);;
 };
 }  // namespace Mgtt::Rendering

@@ -84,8 +84,13 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
               .scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
       for (size_t i = 0; i < scene.nodes.size(); i++) {
         const tinygltf::Node node = gltfModel.nodes[scene.nodes[i]];
-        LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
+        this->LoadNode(nullptr, mgttScene, node, scene.nodes[i], gltfModel);
       }
+
+      for (auto & node : mgttScene.nodes) {
+        this->UpdateNodeMeshMatrices(node);
+      }
+      this->CalculateSceneDimensions(mgttScene);
     } else {
       throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " +
                                path);
@@ -165,7 +170,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
     Mgtt::Rendering::Texture texture;
     tinygltf::Image image = gltfModel.images[tex.source];
 
-    // Consider primarily gltf with non-embedded inmages
+    // Consider primarily gltf files with non-embedded images
     texture.name = image.name;
     texture.path = efp + image.uri;
     texture.width = image.width;
@@ -630,6 +635,83 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     scene.nodes.push_back(newNode);
     std::cout << "LOAD NODE INFO: Successfully loaded node for scene "
               << newNode->name << " with index " << nodeIndex << std::endl;
+  }
+}
+
+/**
+ * @brief Updates the mesh matrices of the given node and its child nodes recursively when calling
+ * the InitialTransform() method
+ *
+ * @param node A shared pointer to the node whose mesh matrices need to be updated.
+ */
+void Mgtt::Rendering::GltfSceneImporter::UpdateNodeMeshMatrices(std::shared_ptr<Mgtt::Rendering::Node> node) {
+  if (node->mesh) {
+    node->InitialTransform();
+  }
+
+  if (node->children.size() > 0) {
+    for (auto child : node->children) {
+      UpdateNodeMeshMatrices(child);
+    }
+  }
+}
+
+/**
+ * @brief Calculates the dimensions of the entire scene.
+ *
+ * This function calculates the dimensions of the entire scene by utilizing the CalculateSceneAABB() and CalculateSceneNodeAABBs()
+ * methods. It traverses the nodes of the scene recursively to determine the overall size of the scene.
+ * The calculated dimensions typically include the minimum and maximum extents along each axis.
+ * 
+ * @param scene Reference to the updated 3D scene after loading nodes.
+ */
+void Mgtt::Rendering::GltfSceneImporter::CalculateSceneDimensions(Mgtt::Rendering::Scene& scene) {
+  for (auto & node : scene.nodes) {
+    this->CalculateSceneNodesAABBs(node);
+  }
+  scene.aabb.min = glm::vec3(FLT_MAX);
+  scene.aabb.max = glm::vec3(-FLT_MAX);
+  for (auto & node : scene.nodes) {
+    this->CalculateSceneAABB(scene, node);
+  }
+}
+
+/**
+ * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
+ *
+ * This function calculates the axis-aligned bounding box (AABB) of the entire scene. It traverses all nodes
+ * in the scene recursively and computes the AABB that encapsulates all geometry within the scene.
+ * The AABB represents the minimum volume box that entirely contains all objects in the scene.
+ * 
+ * @param scene Reference to the updated 3D scene after loading nodes.
+ * @param node A shared pointer to the node
+ */
+void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(Mgtt::Rendering::Scene& scene, std::shared_ptr<Mgtt::Rendering::Node> node) {
+  if (node->mesh) {
+    scene.aabb.min = glm::min(scene.aabb.min, node->mesh->aabb.min);
+    scene.aabb.max = glm::max(scene.aabb.max, node->mesh->aabb.max);
+  }
+  if (node->children.size() > 0) {
+    for (auto child : node->children) {
+      this->CalculateSceneAABB(scene, child);
+    }
+  }
+}
+
+/**
+ * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in the scene.
+ *
+ * This function calculates the axis-aligned bounding boxes (AABBs) for each node in the scene. It traverses
+ * all nodes recursively and computes the AABB for each individual node based on its geometry.
+ * 
+ * @param node A shared pointer to the node
+ */
+void Mgtt::Rendering::GltfSceneImporter::CalculateSceneNodesAABBs(std::shared_ptr<Mgtt::Rendering::Node> node) {
+  if (node->mesh) {
+    node->mesh->aabb.CalculateBoundingBox(node->GetGlobalMatrix());
+  }
+  for (auto & child : node->children) {
+    this->CalculateSceneNodesAABBs(child);
   }
 }
 
