@@ -357,12 +357,12 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
     if (ImGui::BeginTabItem("Model space transformation")) {
       this->glmMatrices->model = glm::mat4(1.0f);
       ImGui::SliderFloat3("Translation", (float*)&this->glmVectors->translation,
-                          -1.0f, 1.0f);
+                          -10.0f, 10.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::SliderFloat3("Rotation", (float*)&this->glmVectors->rotation, 0.0f,
                           360.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::SliderFloat3("Scale", (float*)&this->glmVectors->scale, 0.1f,
+      ImGui::SliderFloat3("Scale", (float*)&this->glmVectors->scale, 0.01f,
                           3.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       glm::mat4 translationMatrix =
