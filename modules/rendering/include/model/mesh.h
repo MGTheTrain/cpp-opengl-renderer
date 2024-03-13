@@ -23,6 +23,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <aabb.h>
 #include <mesh-primitive.h>
 #include <opengl-shader.h>
 
@@ -68,5 +69,7 @@ struct Mesh {
   uint32_t tex;
   // uint32_t joint;
   // uint32_t weight;
+
+  Mgtt::Rendering::AABB aabb;
 };
 }  // namespace Mgtt::Rendering

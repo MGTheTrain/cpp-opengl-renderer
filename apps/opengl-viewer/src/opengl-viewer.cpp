@@ -42,7 +42,7 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
  * @brief Constructs an OpenGlViewer object.
  */
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
-  this->cameraPosition = glm::vec3(0.0f, 0.0f, -1.0f);
+  this->cameraPosition = glm::vec3(0.0f, 0.0f, -3.0f);
   std::string appName = "opengl-viewer";
   float windowWidth = 1000.0f;
   float windowHeight = 1000.0f;
@@ -114,6 +114,27 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
+    // Model space transformations
+    this->glmMatrices->model = glm::scale(
+        glm::mat4(1.0f), glm::vec3(1.0f / this->mgttScene.aabb.scale));
+    this->glmMatrices->model =
+        glm::scale(this->glmMatrices->model, this->glmVectors->scale);
+    glm::vec3 offset =
+        -this->mgttScene.aabb.center + this->glmVectors->translation;
+    this->glmMatrices->model = glm::translate(this->glmMatrices->model, offset);
+    this->glmMatrices->model = glm::rotate(
+        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.x),
+        glm::vec3(1.0f, 0.0f, 0.0f));
+    this->glmMatrices->model = glm::rotate(
+        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.y),
+        glm::vec3(0.0f, 1.0f, 0.0f));
+    this->glmMatrices->model = glm::rotate(
+        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.z),
+        glm::vec3(0.0f, 0.0f, 1.0f));
+    this->glmMatrices->model =
+        glm::translate(this->glmMatrices->model, -offset);
+    this->glmMatrices->model = glm::translate(this->glmMatrices->model, offset);
+
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
 
@@ -146,7 +167,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     auto [scrWidth, scrHeight] = this->glfwWindow->GetWindowSize();
     ImGui::SetNextWindowSize(ImVec2((float)scrWidth * 0.3f, (float)scrHeight));
     ImGui::SetNextWindowPos(ImVec2((float)scrWidth * 0.7f, 0.0f));
-    this->UpdateTransformationAttributes();
+    this->UpdateSettings();
 
     for (auto& node : this->mgttScene.nodes) {
       this->TraverseSceneNode(node);
@@ -323,37 +344,47 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
 }
 
 /**
- * @brief Update transformation attributes trough ImGui widgets.
+ * @brief Update settings trough ImGui widgets.
  */
-void Mgtt::Apps::OpenGlViewer::UpdateTransformationAttributes() {
-  ImGui::Begin("opengl-viewer");
+void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
+  ImGui::Begin("Settings");
   if (ImGui::BeginTabBar("Settings")) {
-    if (ImGui::BeginTabItem("Model matrix")) {
+    if (ImGui::BeginTabItem("Scene")) {
+      if (ImGui::Button("Select glTF scene")) {
+        nfdchar_t* selectedPath = NULL;
+        nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
+        if (result == NFD_OKAY) {
+          this->gltfSceneImporter->Clear(this->mgttScene);
+          std::pair<std::string, std::string> pbrShaderPathes = {
+              "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+          this->mgttScene.shader.Compile(pbrShaderPathes);
+          std::string mgttScenePath = std::string(selectedPath);
+          this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
+
+          // Reset attributes
+          this->scaleIblAmbient = 1.0f;
+          this->showEnvMap = false;
+
+          this->glmVectors->translation = glm::vec3(0.0f);
+          this->glmVectors->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+          this->glmVectors->scale = glm::vec3(1.0f);
+        }
+      }
+      ImGui::EndTabItem();
+    }
+
+    if (ImGui::BeginTabItem("Model space transformation")) {
       this->glmMatrices->model = glm::mat4(1.0f);
       ImGui::SliderFloat3("Translation", (float*)&this->glmVectors->translation,
-                          -1.0f, 1.0f);
+                          -this->mgttScene.aabb.scale,
+                          this->mgttScene.aabb.scale);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::SliderFloat3("Rotation", (float*)&this->glmVectors->rotation, 0.0f,
                           360.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::SliderFloat3("Scale", (float*)&this->glmVectors->scale, 0.1f,
+      ImGui::SliderFloat3("Scale", (float*)&this->glmVectors->scale, 0.01f,
                           3.0f);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      glm::mat4 translationMatrix =
-          glm::translate(glm::mat4(1.0f), this->glmVectors->translation);
-      glm::mat4 rotationMatrix = glm::rotate(
-          glm::mat4(1.0f), glm::radians(this->glmVectors->rotation.x),
-          glm::vec3(1.0f, 0.0f, 0.0f));
-      rotationMatrix = glm::rotate(rotationMatrix,
-                                   glm::radians(this->glmVectors->rotation.y),
-                                   glm::vec3(0.0f, 1.0f, 0.0f));
-      rotationMatrix = glm::rotate(rotationMatrix,
-                                   glm::radians(this->glmVectors->rotation.z),
-                                   glm::vec3(0.0f, 0.0f, 1.0f));
-      glm::mat4 scaleMatrix =
-          glm::scale(glm::mat4(1.0f), this->glmVectors->scale);
-      this->glmMatrices->model =
-          translationMatrix * rotationMatrix * scaleMatrix;
       ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem("Light")) {
