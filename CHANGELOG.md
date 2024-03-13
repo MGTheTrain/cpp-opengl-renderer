@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 13-04-2024
+
+### Added
+
+- [Feature] Native file dialog support for loading new glTF scenes
+
+## Updated
+
+- Proper initial scene and scene node mesh transformations
+- Proper centering of the model based on the scene AABB
+
 ## [0.4.0] - 12-04-2024
 
 ### Added
