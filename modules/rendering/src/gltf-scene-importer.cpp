@@ -626,21 +626,16 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
       newPrimitive.hasIndices = true;
       newPrimitive.vertexCount = vertexCount;
       if (primitive.material > -1) {
-        // newPrimitive.pbrMaterial =
         newPrimitive.pbrMaterial = scene.materials[primitive.material];
       }
-      // else {
-      //     newPrimitive.pbrMaterial =
-      //     std::make_shared<Mgtt::Rendering::PbrMaterial>();
-      // }
       newPrimitive.aabb.min = posMin;
       newPrimitive.aabb.max = posMax;
       newPrimitive.name = node.name;
       newMesh->meshPrimitives.push_back(newPrimitive);
     }
-    for (auto& p : newMesh->meshPrimitives) {
-      newMesh->aabb.min = glm::min(newMesh->aabb.min, p.aabb.min);
-      newMesh->aabb.max = glm::max(newMesh->aabb.max, p.aabb.max);
+    for (auto& meshPrimitive : newMesh->meshPrimitives) {
+      newMesh->aabb.min = glm::min(newMesh->aabb.min, meshPrimitive.aabb.min);
+      newMesh->aabb.max = glm::max(newMesh->aabb.max, meshPrimitive.aabb.max);
     }
     this->SetupMesh(newMesh, scene.shader.GetProgramId());
     newNode->mesh = newMesh;
@@ -667,10 +662,8 @@ void Mgtt::Rendering::GltfSceneImporter::UpdateNodeMeshMatrices(
     node->InitialTransform();
   }
 
-  if (node->children.size() > 0) {
-    for (auto child : node->children) {
-      UpdateNodeMeshMatrices(child);
-    }
+  for (auto child : node->children) {
+    UpdateNodeMeshMatrices(child);
   }
 }
 
@@ -690,8 +683,6 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneDimensions(
   for (auto& node : scene.nodes) {
     this->CalculateSceneNodesAABBs(node);
   }
-  scene.aabb.min = glm::vec3(FLT_MAX);
-  scene.aabb.max = glm::vec3(-FLT_MAX);
   for (auto& node : scene.nodes) {
     this->CalculateSceneAABB(scene, node);
   }

@@ -134,7 +134,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     this->glmMatrices->model =
         glm::translate(this->glmMatrices->model, -offset);
     this->glmMatrices->model =
-        glm::translate(this->glmMatrices->model, this->glmVectors->translation);
+        glm::translate(this->glmMatrices->model, offset);
 
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
