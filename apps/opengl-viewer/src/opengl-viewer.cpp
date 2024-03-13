@@ -114,28 +114,21 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
+    // Model space transformations
     this->glmMatrices->model = glm::scale(
         glm::mat4(1.0f), glm::vec3(1.0f / this->mgttScene.aabb.scale));
     this->glmMatrices->model =
         glm::scale(this->glmMatrices->model, this->glmVectors->scale);
-    this->glmMatrices->model = glm::translate(
-        this->glmMatrices->model,
-        -(this->mgttScene.aabb.center + this->glmVectors->translation));
-    this->glmMatrices->model = glm::translate(
-        this->glmMatrices->model,
-        (this->mgttScene.aabb.center + this->glmVectors->translation));
-    this->glmMatrices->model = glm::rotate(
-        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.x),
-        glm::vec3(1.0f, 0.0f, 0.0f));
-    this->glmMatrices->model = glm::rotate(
-        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.y),
-        glm::vec3(0.0f, 1.0f, 0.0f));
-    this->glmMatrices->model = glm::rotate(
-        this->glmMatrices->model, glm::radians(this->glmVectors->rotation.z),
-        glm::vec3(0.0f, 0.0f, 1.0f));
-    this->glmMatrices->model = glm::translate(
-        this->glmMatrices->model,
-        -(this->mgttScene.aabb.center + this->glmVectors->translation));
+    glm::vec3 offset = -this->mgttScene.aabb.center + this->glmVectors->translation;
+    this->glmMatrices->model = glm::translate(this->glmMatrices->model, offset);
+    this->glmMatrices->model = glm::rotate(this->glmMatrices->model, glm::radians(this->glmVectors->rotation.x),
+                                          glm::vec3(1.0f, 0.0f, 0.0f));
+    this->glmMatrices->model = glm::rotate(this->glmMatrices->model, glm::radians(this->glmVectors->rotation.y),
+                                          glm::vec3(0.0f, 1.0f, 0.0f));
+    this->glmMatrices->model = glm::rotate(this->glmMatrices->model, glm::radians(this->glmVectors->rotation.z),
+                                          glm::vec3(0.0f, 0.0f, 1.0f));
+    this->glmMatrices->model = glm::translate(this->glmMatrices->model, -offset);
+    this->glmMatrices->model = glm::translate(this->glmMatrices->model, this->glmVectors->translation);
 
     this->mgttScene.mvp = this->glmMatrices->projection *
                           this->glmMatrices->view * this->glmMatrices->model;
@@ -378,7 +371,7 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
     if (ImGui::BeginTabItem("Model space transformation")) {
       this->glmMatrices->model = glm::mat4(1.0f);
       ImGui::SliderFloat3("Translation", (float*)&this->glmVectors->translation,
-                          -10.0f, 10.0f);
+                          -this->mgttScene.aabb.scale, this->mgttScene.aabb.scale);
       ImGui::Dummy(ImVec2(0.0f, 5.0f));
       ImGui::SliderFloat3("Rotation", (float*)&this->glmVectors->rotation, 0.0f,
                           360.0f);
