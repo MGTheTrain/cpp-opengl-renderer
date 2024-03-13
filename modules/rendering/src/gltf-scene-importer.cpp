@@ -95,7 +95,7 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
       mgttScene.aabb.center = (mgttScene.aabb.min + mgttScene.aabb.max) * 0.5f;
     
 			glm::vec3 tmpScale = mgttScene.aabb.max - mgttScene.aabb.min;
-			if (tmpScale.x <= 0.0f && tmpScale.x <= 0.0f && tmpScale.x <= 0.0f) {
+			if (tmpScale.x <= 0.0f || tmpScale.y <= 0.0f || tmpScale.z <= 0.0f) {
 				mgttScene.aabb.scale = 1.0f;
 			}
 			else {
