@@ -37,7 +37,7 @@ Mgtt::Rendering::Node::Node() {
  * @brief Clear releases resources.
  */
 void Mgtt::Rendering::Node::Clear() {
-  if(this->mesh) {
+  if (this->mesh) {
     this->mesh->Clear();
   }
   this->index = 0;
