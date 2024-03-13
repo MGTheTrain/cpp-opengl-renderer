@@ -339,12 +339,22 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
           this->mgttScene.shader.Compile(pbrShaderPathes);
           std::string mgttScenePath = std::string(selectedPath);
           this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
+
+          // Reset attributes
+          this->scaleIblAmbient = 1.0f;
+          this->showEnvMap = false;
+
+          this->glmVectors->translation = glm::vec3(0.0f);
+          this->glmVectors->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+          this->glmVectors->scale = glm::vec3(1.0f);
+
+          this->glmMatrices->model = glm::mat4(1.0f);
         }
       }
       ImGui::EndTabItem();
     }
 
-    if (ImGui::BeginTabItem("Model matrix")) {
+    if (ImGui::BeginTabItem("Model space transformation")) {
       this->glmMatrices->model = glm::mat4(1.0f);
       ImGui::SliderFloat3("Translation", (float*)&this->glmVectors->translation,
                           -1.0f, 1.0f);
