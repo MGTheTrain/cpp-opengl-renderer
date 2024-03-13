@@ -91,6 +91,17 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
         this->UpdateNodeMeshMatrices(node);
       }
       this->CalculateSceneDimensions(mgttScene);
+
+      mgttScene.aabb.center = (mgttScene.aabb.min + mgttScene.aabb.max) * 0.5f;
+    
+			glm::vec3 tmpScale = mgttScene.aabb.max - mgttScene.aabb.min;
+			if (tmpScale.x <= 0.0f && tmpScale.x <= 0.0f && tmpScale.x <= 0.0f) {
+				mgttScene.aabb.scale = 1.0f;
+			}
+			else {
+				mgttScene.aabb.scale = glm::max(tmpScale.x, glm::max(tmpScale.y, tmpScale.z));
+			}
+      std::cout << "GLTF IMPORTER INFO: Scale " << std::to_string(mgttScene.aabb.scale)  << std::endl;
     } else {
       throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " +
                                path);
@@ -625,6 +636,10 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
       newPrimitive.aabb.max = posMax;
       newPrimitive.name = node.name;
       newMesh->meshPrimitives.push_back(newPrimitive);
+    }
+    for (auto& p : newMesh->meshPrimitives) {
+      newMesh->aabb.min = glm::min(newMesh->aabb.min, p.aabb.min);
+      newMesh->aabb.max = glm::max(newMesh->aabb.max, p.aabb.max);
     }
     this->SetupMesh(newMesh, scene.shader.GetProgramId());
     newNode->mesh = newMesh;
