@@ -16,9 +16,11 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/
+    - name: Install Xvfb
+      run: brew install xvfb-run
     - name: Build and Test on macOS
       run: |
-        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
+        xvfb-run ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
 
   # format-and-lint: 
