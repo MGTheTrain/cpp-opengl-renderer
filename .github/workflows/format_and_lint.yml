@@ -3,53 +3,27 @@ name: Format and lint C++ project with clang-format and commit changes
 on: push
 
 jobs:
-  build_and_test_macos:
-    runs-on: macos-latest
+  format-and-lint: 
+    name: Format and lint C++ project
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install third-party brew dependencies
-      run: |
-        brew install pkg-config cmake
-    - name: Install vcpkg
-      run: |
-        git clone https://github.com/Microsoft/vcpkg.git
-        ./vcpkg/bootstrap-vcpkg.sh
-      working-directory: /tmp/
-    - name: Install dependencies for test executables requiring a graphical environment in this ci workflow
-      run: |
-        brew install --cask xquartz
-        brew install xorg-server
-
-    - name: Build and Test on macOS
-      run: |
-        # Start Xvfb
-        Xvfb :99 &
-        export DISPLAY=:99
-        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
-      working-directory: ./devops/scripts/bash/
-
-  # format-and-lint: 
-  #   name: Format and lint C++ project
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Apply Auto formatting
-  #       run: |
-  #         sudo apt-get update 
-  #         sudo apt-get install -y python3 python3-pip
-  #         sudo pip3 install clang-format cpplint
-  #         sudo chmod +x *
-  #         ./format_and_lint.sh
-  #       working-directory: devops/scripts/bash
-  #     - name: Commit changes
-  #       run: |
-  #         git config --global user.name 'github-actions[bot]'
-  #         git config --global user.email github-actions[bot]@users.noreply.github.com
-  #         git pull
-  #         git add -A
-  #         git diff-index --quiet HEAD || git commit -m "Formatted cpp project with clang-format"
-  #         git push
-  #       env:
-  #         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Apply Auto formatting
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y python3 python3-pip
+          sudo pip3 install clang-format cpplint
+          sudo chmod +x *
+          ./format_and_lint.sh
+        working-directory: devops/scripts/bash
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+          git pull
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Formatted cpp project with clang-format"
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
