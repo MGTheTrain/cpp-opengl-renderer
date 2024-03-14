@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 14-04-2024
+
+### Added
+
+- [Feature] CI workflows ensuring continuous testing of the modules. Test executables rely on `glfw3` and `glew`, requiring a graphical environment. On Linux Ubuntu OS, a virtual framebuffer is established using `xvfb` for those tests. However, for MacOS and Windows OS, only builds are feasible due to the complexities or impossibility of replicating similar setups.
+
 ## [0.5.0] - 13-04-2024
 
 ### Added

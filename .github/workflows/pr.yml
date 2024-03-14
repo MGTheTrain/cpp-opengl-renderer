@@ -25,13 +25,19 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/   
+    - name: Install dependencies for test executables requiring a graphical environment in this ci workflow
+      run: sudo apt-get install -y xvfb
     - name: Build and Test on Linux
       run: |
-        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+        # Start Xvfb
+        Xvfb :99 &
+        export DISPLAY=:99
+        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
 
-  build_and_test_windows:
+  build_windows:
     runs-on: windows-latest
+    needs: [build_and_test_ubuntu]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -46,14 +52,15 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         .\vcpkg\bootstrap-vcpkg.bat 
 
-    - name: Build and Test on Windows
+    - name: Build on Windows
       shell: pwsh
       run: |
         .\compile_source_code.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake
       working-directory: .\devops\scripts\ps1\
   
-  build_and_test_macos:
+  build_macos:
     runs-on: macos-latest
+    needs: [build_and_test_ubuntu]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -65,7 +72,7 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/
-    - name: Build and Test on macOS
+    - name: Build on macOS
       run: |
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
       working-directory: ./devops/scripts/bash/
