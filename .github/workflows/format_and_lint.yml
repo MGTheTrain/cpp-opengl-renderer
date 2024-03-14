@@ -19,10 +19,11 @@ jobs:
     - name: Install dependencies for test executables requiring a graphical environment in this ci workflow
       run: |
         brew install --cask xquartz
-    - name: Start Xvfb
-      run: Xvfb :99 -screen 0 1280x1024x24 &
     - name: Build and Test on macOS
       run: |
+        # Start Xvfb
+        Xvfb :99 &
+        export DISPLAY=:99
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
 
