@@ -24,9 +24,14 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/   
+    - name: Install Xvfb
+      run: sudo apt-get install -y xvfb
     - name: Build and Test on Linux
       run: |
-        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+        # Start Xvfb
+        Xvfb :99 &
+        export DISPLAY=:99
+        ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
   create_git_tags_from_version_file_job:
     runs-on: ubuntu-latest
