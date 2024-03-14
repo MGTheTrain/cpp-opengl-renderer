@@ -16,9 +16,13 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/
+    - name: Install dependencies required for running applications requiring a graphical environment
+      run: |
+        brew install --cask xquartz
+        brew install xorg-server
     - name: Build and Test on macOS
       run: |
-        xvfb-run ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
+        xvfb-run -a ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
 
   # format-and-lint: 
