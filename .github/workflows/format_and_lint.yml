@@ -20,8 +20,7 @@ jobs:
       run: |
         brew install --cask xquartz
     - name: Start Xvfb
-      run: Xvfb :99 -screen 0 1280x1024x24
-      background: true
+      run: Xvfb :99 -screen 0 1280x1024x24 &
     - name: Build and Test on macOS
       run: |
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
