@@ -52,7 +52,7 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         .\vcpkg\bootstrap-vcpkg.bat 
 
-    - name: Build and Test on Windows
+    - name: Build on Windows
       shell: pwsh
       run: |
         .\compile_source_code.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake
@@ -72,7 +72,7 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/
-    - name: Build and Test on macOS
+    - name: Build on macOS
       run: |
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
       working-directory: ./devops/scripts/bash/
