@@ -28,7 +28,7 @@ cmake --build build
 
 if ($RunTests) {
     Set-Location -Path "build"
-    ctest
+    ctest --verbose
 }
 
 Set-Location -Path $currentDir

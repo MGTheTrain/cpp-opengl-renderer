@@ -50,7 +50,7 @@ echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries suc
 
 if [ "$NoTests" = false ]; then
   cd "build"
-  ctest
+  ctest --verbose
 fi
 cd "$currentDir"
 

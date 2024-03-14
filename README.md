@@ -23,7 +23,7 @@ TBD
 - [x] High code coverage with GoogleTest for methods in module structs and classes 
 - [x] Create `CMakeLists.txt` files for cross-platform build environment generation
 - [x] CI workflows ensuring cross-platform compilation primarily for Desktop operating systems 
-- [ ] CI workflows ensuring continuous testing of the modules
+- [x] CI workflows ensuring continuous testing of the modules 
 - [x] Cross-platform CPack packaging for Linux, MacOS and Windows OSes
 - [x] Integrated simple menu (e.g. with sliders and other widgets)
 - [x] Native file dialog support for loading new glTF scenes
