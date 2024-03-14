@@ -19,6 +19,8 @@ jobs:
     - name: Install dependencies for test executables requiring a graphical environment in this ci workflow
       run: |
         brew install --cask xquartz
+        brew install xorg-server
+
     - name: Build and Test on macOS
       run: |
         # Start Xvfb
