@@ -353,7 +353,7 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
   ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
 #ifndef __EMSCRIPTEN__
   ImGui_ImplOpenGL3_Init("#version 330 core");
-#else 
+#else
   ImGui_ImplOpenGL3_Init("#version 300 es");
   ResizeCanvas();
 #endif
