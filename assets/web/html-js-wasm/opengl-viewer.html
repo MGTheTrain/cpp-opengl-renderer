@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+      <style>
+          body {
+            font-family: arial;
+            margin: 0;
+            padding: none;
+          }
+      </style>      
+    </head>
+    <body>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <script type='text/javascript'>
+      var Module = {
+          canvas:  document.getElementById('canvas'), 
+      };
+      window.addEventListener('resize', resizeCanvas, false);
+
+      // Further glue code
+      function resizeCanvas() {
+            document.getElementById('canvas').width = window.innerWidth;
+            document.getElementById('canvas').height = window.innerHeight;
+      }
+      // Copy opengl-viewer.js and opengl-viewer.wasm here
+    </script>
+    <script type="text/javascript" src="opengl-viewer.js"></script>
+  </body>
+</html>
