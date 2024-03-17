@@ -7,6 +7,6 @@
 [submodule "assets/web/third-party/tinygltf"]
 	path = assets/web/third-party/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
-[submodule "assets/web/third-party/stb"]
-	path = assets/web/third-party/stb
-	url = https://github.com/nothings/stb.git
+[submodule "assets/web/third-party/imgui"]
+	path = assets/web/third-party/imgui
+	url = git@github.com:ocornut/imgui.git
