@@ -125,7 +125,12 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
  * OpenGL.
  */
 void Mgtt::Apps::OpenGlViewer::Render() {
+#ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
+    this->windowWidth = CanvasGetWidth();
+    this->windowHeight = CanvasGetHeight();
+    this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
+#endif
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -224,7 +229,9 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     this->glfwWindow->SwapBuffersAndPollEvents();
+#ifndef __EMSCRIPTEN__
   }
+#endif
 }
 
 /**
