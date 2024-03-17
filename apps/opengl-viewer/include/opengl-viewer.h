@@ -122,6 +122,8 @@ class OpenGlViewer {
   glm::vec3 cameraPosition;
   float scaleIblAmbient;
   bool showEnvMap;
+  float windowWidth;
+  float windowHeight;
 
   /**
    * @brief Iterates recursively over all nodes in the scene
