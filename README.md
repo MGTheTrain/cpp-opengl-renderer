@@ -4,16 +4,11 @@
 
 + [Summary](#summary)
 + [Features](#features)
-+ [References](#references)
 + [Getting started](#getting-started)
 
 ## Summary
 
 A cross-platform C++ OpenGL renderer
-
-## References
-
-TBD
 
 ## Features
 
@@ -30,7 +25,7 @@ TBD
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
 - [ ] Support for USD scene loading (**OPTIONAL**)
 - [ ] Skeletal animation support (**OPTIONAL**)
-- [ ] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
+- [x] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
 - [ ] Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)
 
 ## Getting started
@@ -41,6 +36,7 @@ TBD
 - Download and install [CMake from the official website](https://cmake.org/download/)  or trough a package manager
 - Install [vcpkg from the official website](https://vcpkg.io/en/getting-started.html) or trough a package manager
 - To obtain multiple glTF samples, ensure that you update the Git submodules: `git submodule update --init` 
+- For web builds the `emscripten SDK` needs to be installed. [Click here](https://github.com/emscripten-core/emsdk)
 
 ### Integrate vcpkg with Visual Studio
 
@@ -88,6 +84,17 @@ cd devops/scripts/bash/
 ./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file>
 ```
 
+For web builds ensure the `emscripten SDK` is installed and then run:
+
+```sh
+cd devops/scripts/bash/
+source <Path to emsdk folder>/emsdk_env.sh
+./compile_source_code.sh -WebBuild 
+# Copy build artifacts (.js, .wasm, .data) over to assets\web\html-js-wasm
+# Start the dev container within the `.devcontainer/nginx` directory. Once inside the container, copy the contents of the assets/web/html-js-wasm directory to /usr/share/nginx/html
+# Visit in a browser of choice `localhost:8090/rotating_texture_cube.html` or `localhost:8090/opengl_viewer.html`
+```
+
 In order to additionaly start the test executables in a Unix terminal: 
 
 ```sh
@@ -109,15 +116,26 @@ cd ../packages
 In order to compile the source code and link the binaries run in a PowerShell terminal:
 
 ```sh
-cd devops/scripts/ps1/
-./compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file>
+cd devops\scripts\ps1
+.\compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file>
+```
+
+For web builds ensure the `emscripten SDK` is installed, `ninja` or `mingw32-make` are available and then run:
+
+```sh
+cd devops\scripts\ps1
+source <Path to emsdk folder>\emsdk_env.bat
+.\compile_source_code.ps1 -WebBuild
+# Copy build artifacts (.js, .wasm, .data) over to assets/web/html-js-wasm
+# Start the dev container within the `.devcontainer/nginx` directory. Once inside the container, copy the contents of the assets/web/html-js-wasm directory to /usr/share/nginx/html
+# Visit in a browser of choice `localhost:8090/rotating_texture_cube.html` or `localhost:8090/opengl_viewer.html`
 ```
 
 In order to additionaly start the test executables in a PowerShell terminal: 
 
 ```sh
-cd devops/scripts/ps1/
-./compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
+cd devops\scripts\ps1
+.\compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
 ```
 
 In order to create compressed files or installers:

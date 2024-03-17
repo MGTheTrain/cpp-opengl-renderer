@@ -137,6 +137,17 @@ std::tuple<int, int> Mgtt::Window::GlfwWindow::GetWindowSize() {
 }
 
 /**
+ * @brief Sets the width and height of a GLFW window.
+ *
+ * @param width The new window width
+ * @param height The new window height
+ */
+void Mgtt::Window::GlfwWindow::SetWindowSize(const int32_t& width,
+                                             const int32_t& height) {
+  glfwSetWindowSize(window, width, height);
+}
+
+/**
  * @brief Checks if the GLFW window should close.
  *
  * This method queries GLFW to determine if the associated window should be

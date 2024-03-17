@@ -109,6 +109,14 @@ class GlfwWindow : public IWindow {
   std::tuple<int, int> GetWindowSize();
 
   /**
+   * @brief Sets the width and height of a GLFW window.
+   *
+   * @param width The new window width
+   * @param height The new window height
+   */
+  void SetWindowSize(const int32_t& width, const int32_t& height);
+
+  /**
    * @brief Checks if the GLFW window should close.
    *
    * This method queries GLFW to determine if the associated window should be

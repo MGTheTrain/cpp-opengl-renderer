@@ -23,6 +23,15 @@
 #ifdef MGTT_OPENGL_VIEWER
 #include <opengl-viewer.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+EM_JS(int, CanvasGetWidth, (), { return Module.canvas.width; });
+
+EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
+
+EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
+#endif
+
 /**
  * @brief Destructs the OpenGlViewer object.
  */
@@ -44,8 +53,8 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   this->cameraPosition = glm::vec3(0.0f, 0.0f, -3.0f);
   std::string appName = "opengl-viewer";
-  float windowWidth = 1000.0f;
-  float windowHeight = 1000.0f;
+  this->windowWidth = 1000.0f;
+  this->windowHeight = 1000.0f;
 
   this->glmMatrices = std::make_unique<GlmMatrices>();
   this->glmVectors = std::make_unique<GlmVectors>();
@@ -53,11 +62,10 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       appName, windowWidth, windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
+#ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
-  glEnable(GL_DEPTH_TEST);
-
   // Compile shaders and link to OpenGl program
   std::pair<std::string, std::string> pbrShaderPathes = {
       "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
@@ -71,6 +79,21 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"};
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
       eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+#else
+  // Compile shaders and link to OpenGl program
+  std::pair<std::string, std::string> pbrShaderPathes = {
+      "assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
+  this->mgttScene.shader.Compile(pbrShaderPathes);
+  std::pair<std::string, std::string> eq2BrdfLutShaderPathes = {
+      "assets/shader/es/eq2CubeMap.vert", "assets/shader/es/eq2CubeMap.frag"};
+  std::pair<std::string, std::string> brdfLutShaderPathes = {
+      "assets/shader/es/genBrdf.vert", "assets/shader/es/genBrdf.frag"};
+  std::pair<std::string, std::string> envMapShaderPathes = {
+      "assets/shader/es/envMap.vert", "assets/shader/es/envMap.frag"};
+  this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
+      eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+#endif
+  glEnable(GL_DEPTH_TEST);
 
   // scene
   this->gltfSceneImporter =
@@ -102,7 +125,14 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
  * OpenGL.
  */
 void Mgtt::Apps::OpenGlViewer::Render() {
+#ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
+#else
+  this->windowWidth = CanvasGetWidth();
+  this->windowHeight = CanvasGetHeight();
+  this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
+#endif
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -201,7 +231,9 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     this->glfwWindow->SwapBuffersAndPollEvents();
+#ifndef __EMSCRIPTEN__
   }
+#endif
 }
 
 /**
@@ -340,7 +372,12 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
   ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
+#ifndef __EMSCRIPTEN__
   ImGui_ImplOpenGL3_Init("#version 330 core");
+#else
+  ImGui_ImplOpenGL3_Init("#version 300 es");
+  ResizeCanvas();
+#endif
 }
 
 /**
@@ -351,6 +388,7 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
   if (ImGui::BeginTabBar("Settings")) {
     if (ImGui::BeginTabItem("Scene")) {
       if (ImGui::Button("Select glTF scene")) {
+#ifndef __EMSCRIPTEN__
         nfdchar_t* selectedPath = NULL;
         nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
         if (result == NFD_OKAY) {
@@ -369,6 +407,7 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
           this->glmVectors->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
           this->glmVectors->scale = glm::vec3(1.0f);
         }
+#endif
       }
       ImGui::EndTabItem();
     }
@@ -412,10 +451,21 @@ void Mgtt::Apps::OpenGlViewer::ClearImGui() {
   ImGui::DestroyContext();
 }
 
+Mgtt::Apps::OpenGlViewer openGlViewer;
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+// @ref
+// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+void EmscriptenMainLoop() { openGlViewer.Render(); }
+#endif
+
 int main() {
-  Mgtt::Apps::OpenGlViewer openGlViewer;
   try {
+#ifndef __EMSCRIPTEN__
     openGlViewer.Render();
+#else
+    emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
+#endif
   } catch (const std::runtime_error& ex) {
     std::cout << ex.what() << std::endl;
     openGlViewer.Clear();

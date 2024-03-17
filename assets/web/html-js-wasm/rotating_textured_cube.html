@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+      <style>
+          body {
+            font-family: arial;
+            margin: 0;
+            padding: none;
+          }
+      </style>      
+    </head>
+    <body>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <script type='text/javascript'>
+      var Module = {
+          canvas:  document.getElementById('canvas'), 
+      };
+      window.addEventListener('resize', resizeCanvas, false);
+      function resizeCanvas() {
+            document.getElementById('canvas').width = window.innerWidth;
+            document.getElementById('canvas').height = window.innerHeight;
+      }
+      // Copy rotating_textured_cube.js, rotating_textured_cube.wasm, rotating_textured_cube.data here
+    </script>
+    <script type="text/javascript" src="rotating_textured_cube.js"></script>
+  </body>
+</html>

@@ -23,6 +23,15 @@
 #ifdef MGTT_ROTATING_TEXTURED_CUBE
 #include <rotating-textured-cube.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+EM_JS(int, CanvasGetWidth, (), { return Module.canvas.width; });
+
+EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
+
+EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
+#endif
+
 /**
  * @brief Destructs the RotatingTexturedCube  object.
  */
@@ -38,21 +47,26 @@ Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube() {
  */
 Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
   std::string appName = "rotating-textured-cube";
-  float windowWidth = 1000.0f;
-  float windowHeight = 1000.0f;
+  this->windowWidth = 1000.0f;
+  this->windowHeight = 1000.0f;
 
   this->glmMatrices = std::make_unique<GlmMatrices>();
   this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(
-      appName, windowWidth, windowHeight);
+      appName, this->windowWidth, this->windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
+#ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
-  glEnable(GL_DEPTH_TEST);
-
   std::string vsPath = "assets/shader/core/coordinate.vert";
   std::string fsPath = "assets/shader/core/coordinate.frag";
+#else
+  std::string vsPath = "assets/shader/es/coordinate.vert";
+  std::string fsPath = "assets/shader/es/coordinate.frag";
+#endif
+  glEnable(GL_DEPTH_TEST);
+
   std::pair<std::string, std::string> shaderPathes =
       std::make_pair(vsPath, fsPath);
   auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
@@ -180,8 +194,15 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
  * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
+#ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
+#else
+  this->windowWidth = CanvasGetWidth();
+  this->windowHeight = CanvasGetHeight();
+  this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
+#endif
     this->ProcessInput();
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -210,7 +231,9 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     this->glfwWindow->SwapBuffersAndPollEvents();
+#ifndef __EMSCRIPTEN__
   }
+#endif
 }
 
 /**
@@ -247,10 +270,21 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
   glViewport(0, 0, width, height);
 }
 
+Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+// @ref
+// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
+#endif
+
 int main() {
   try {
-    Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
+#ifndef __EMSCRIPTEN__
     RotatingTexturedCube.Render();
+#else
+    emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
+#endif
   } catch (const std::exception& ex) {
     std::cout << ex.what() << std::endl;
     return 1;

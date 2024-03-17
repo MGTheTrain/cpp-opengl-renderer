@@ -1,0 +1,7 @@
+{
+    "name": "Nginx web server dev container",
+    "dockerFile": "./Dockerfile",
+    "appPort": [ "8090:80" ],
+    "remoteUser": "root",
+    "overrideCommand": false // Make sure the nginx container's default command runs, which starts up the web server in the background. Refer to: https://mjswensen.com/blog/simple-web-server-development-container-vs-code/
+}

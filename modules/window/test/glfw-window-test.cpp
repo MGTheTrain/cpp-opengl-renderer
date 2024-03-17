@@ -135,6 +135,19 @@ TEST_F(GlfwWindowTest, GetWindowSize) {
   }
 }
 
+// Test case for the SetWindowSize method
+TEST_F(GlfwWindowTest, SetWindowSize) {
+  RecordProperty("Test Description",
+                 "Checks if SetWindowSize method method works");
+  RecordProperty("Expected Result", "No exception is thrown.");
+
+  try {
+    GlfwWindowTest::glfwWindow->SetWindowSize(1000, 1000);
+  } catch (...) {
+    FAIL() << "An exception has been thrown" << std::endl;
+  }
+}
+
 // Test case for the WindowShouldClose method
 TEST_F(GlfwWindowTest, WindowShouldClose) {
   RecordProperty("Test Description",

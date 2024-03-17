@@ -22,18 +22,23 @@ cmake_minimum_required(VERSION 3.10)
 set(TARGET window)
 project(${TARGET})
 
-find_package(glfw3 CONFIG REQUIRED)
+if(${BUILD_WEB})
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s USE_GLFW=3 -fwasm-exceptions -s ASSERTIONS=2 \
+    -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+else()
+    find_package(glfw3 CONFIG REQUIRED)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+include_directories(../include) 
 
-if(${glfw3_FOUND})
-    include_directories(../include) 
-
-    set(WINDOW_SRC 
-        glfw-window.cpp
-    ) 
-
-    add_library(${TARGET} STATIC ${WINDOW_SRC})
+set(WINDOW_SRC 
+    glfw-window.cpp
+) 
+add_library(${TARGET} STATIC ${WINDOW_SRC})
+if(${BUILD_WEB})
+    # /
+else()
     target_link_libraries(${TARGET} PRIVATE glfw)
-    install(TARGETS ${TARGET})
 endif()
+install(TARGETS ${TARGET})

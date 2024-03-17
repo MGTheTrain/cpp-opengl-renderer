@@ -22,7 +22,11 @@
 
 #pragma once
 
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#else
 #include <GL/glew.h>
+#endif>
 #include <glfw-window.h>
 #include <mesh.h>
 #include <opengl-shader.h>
@@ -115,6 +119,8 @@ class RotatingTexturedCube {
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
   std::unique_ptr<GlmMatrices> glmMatrices;
   Mgtt::Rendering::Mesh mesh;
+  float windowWidth;
+  float windowHeight;
 };
 
 }  // namespace Mgtt::Apps
