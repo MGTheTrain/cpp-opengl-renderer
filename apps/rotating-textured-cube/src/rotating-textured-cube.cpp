@@ -196,14 +196,12 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
 void Mgtt::Apps::RotatingTexturedCube::Render() {
 #ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
-#endif
-    this->ProcessInput();
-
-#ifdef __EMSCRIPTEN__
+#else 
     this->windowWidth = CanvasGetWidth();
     this->windowHeight = CanvasGetHeight();
     this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
 #endif
+    this->ProcessInput();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
