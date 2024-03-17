@@ -27,7 +27,7 @@ add_definitions(-DMGTT_OPENGL_VIEWER)
 if(${BUILD_WEB})
     set(PROJECT_ROOT ../../..)
     set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
-    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -s USE_GLFW=3 --preload-file ./assets \
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -s USE_GLFW=3 --preload-file ../../../../assets \
     --exclude-file ../../../../assets/web --exclude-file ../../../../assets/scenes/glTF-Sample-Models \
     -fwasm-exceptions -s ASSERTIONS=2 -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
     include_directories(
@@ -41,6 +41,7 @@ if(${BUILD_WEB})
         ${WEB_THIRD_PARTY_FOLDER}/imgui/backends/imgui_impl_opengl3.cpp          
         ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_widgets.cpp
         ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui.cpp                       
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_tables.cpp                       
         ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_demo.cpp              
         ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_draw.cpp      
     )

@@ -23,6 +23,15 @@
 #ifdef MGTT_OPENGL_VIEWER
 #include <opengl-viewer.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+EM_JS(int, CanvasGetWidth, (), { return Module.canvas.width; });
+
+EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
+
+EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
+#endif
+
 /**
  * @brief Destructs the OpenGlViewer object.
  */
@@ -342,7 +351,12 @@ void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
   ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
+#ifndef __EMSCRIPTEN__
   ImGui_ImplOpenGL3_Init("#version 330 core");
+#else 
+  ImGui_ImplOpenGL3_Init("#version 300 es");
+  ResizeCanvas();
+#endif
 }
 
 /**
