@@ -22,9 +22,9 @@ A cross-platform C++ OpenGL renderer
 - [x] Cross-platform CPack packaging for Linux, MacOS and Windows OSes
 - [x] Integrated simple menu (e.g. with sliders and other widgets)
 - [x] Native file dialog support for loading new glTF scenes
-- [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)
-- [ ] Support for USD scene loading (**OPTIONAL**)
-- [ ] Skeletal animation support (**OPTIONAL**)
+- ~~[ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outcomes (**OPTIONAL**)~~
+- ~~[ ] Support for USD scene loading (**OPTIONAL**)~~
+- ~~[ ] Skeletal animation support (**OPTIONAL**)~~
 - [x] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
 - [ ] Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)
 
