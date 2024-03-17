@@ -24,7 +24,11 @@ project(${TARGET})
 
 add_definitions(-DMGTT_ROTATING_TEXTURED_CUBE)
 
-find_package(GLEW CONFIG REQUIRED)
+if(${BUILD_WEB})
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 --preload-file ../../assets")
+else()
+    find_package(GLEW CONFIG REQUIRED)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -33,20 +37,25 @@ include_directories(../include
                     ../../../modules/rendering/include/model
                     ../../../modules/window/include
                     ${GLEW_INCLUDE_DIRS}
-                    ${Stb_INCLUDE_DIR}
 )
 set(ROTATING_TEXTURED_CUBE_SRC rotating-textured-cube.cpp)                        
 add_executable(${TARGET} ${ROTATING_TEXTURED_CUBE_SRC})
-target_link_libraries(${TARGET} PRIVATE window rendering)
 
-if(WIN32)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
-elseif(APPLE OR UNIX)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+if(${BUILD_WEB})
+    # /
 else()
-    message(WARNING "Unsupported platform")
+    if(WIN32)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+    elseif(APPLE OR UNIX)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+    else()
+        message(WARNING "Unsupported platform")
+    endif()
+    target_link_libraries(${TARGET} PRIVATE window rendering)
 endif()
+
+
 
 install(TARGETS ${TARGET})

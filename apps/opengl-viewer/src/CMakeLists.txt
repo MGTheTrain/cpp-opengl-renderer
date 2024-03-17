@@ -24,9 +24,12 @@ project(${TARGET})
 
 add_definitions(-DMGTT_OPENGL_VIEWER)
 
-find_package(GLEW CONFIG REQUIRED)
-find_package(IMGUI CONFIG REQUIRED)
-find_package(unofficial-nativefiledialog CONFIG REQUIRED)
+if(${BUILD_WEB})
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 --preload-file ../../assets")
+else()
+    find_package(IMGUI CONFIG REQUIRED)
+    find_package(unofficial-nativefiledialog CONFIG REQUIRED)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -34,24 +37,24 @@ include_directories(../include
                     ../../../modules/rendering/include
                     ../../../modules/rendering/include/model
                     ../../../modules/window/include
-                    ${GLEW_INCLUDE_DIRS}
-                    ${Stb_INCLUDE_DIR}
-                    ${TINYGLTF_INCLUDE_DIRS}
                     ${IMGUI_INCLUDE_DIRS}
-                    # ${nativefiledialog_INCLUDE_DIR} # Explicitly setting this is not necessary; How to resolve this ? -> Potential fix for later
 )
 set(OPENGL_VIEWER_SRC opengl-viewer.cpp)                        
 add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
-target_link_libraries(${TARGET} PRIVATE window rendering imgui::imgui unofficial::nativefiledialog::nfd)
-
-if(WIN32)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
-elseif(APPLE OR UNIX)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+if(${BUILD_WEB})
+    # /
 else()
-    message(WARNING "Unsupported platform")
+    if(WIN32)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+    elseif(APPLE OR UNIX)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+    else()
+        message(WARNING "Unsupported platform")
+    endif()
+    target_link_libraries(${TARGET} PRIVATE window rendering imgui::imgui unofficial::nativefiledialog::nfd)
 endif()
+
 
 install(TARGETS ${TARGET})

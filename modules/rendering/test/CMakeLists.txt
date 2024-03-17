@@ -19,38 +19,44 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.10)
-set(TESTING_TARGET rendering_test)
-project(${TESTING_TARGET})
 
-add_definitions(-DMGTT_RENDERING_TEST)
+if(${BUILD_WEB})
+    # Tests only for Desktop builds 
+else()
+    set(TESTING_TARGET rendering_test)
+    project(${TESTING_TARGET})
 
-enable_testing()
-find_package(GTest CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
+    add_definitions(-DMGTT_RENDERING_TEST)
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+    enable_testing()
+    find_package(GTest CONFIG REQUIRED)
+    find_package(glfw3 CONFIG REQUIRED)
 
-if(${GTest_FOUND} AND ${glfw3_FOUND})
-    include_directories(${GTEST_INCLUDE_DIRS} 
-                        ../include 
-                        ../include/model
-                        ${Stb_INCLUDE_DIR}
-                        ${TINYGLTF_INCLUDE_DIRS})
-    set(RENDERING_TEST_SRC 
-        entrypoint.cpp
-        opengl-shader-test.cpp
-        gltf-scene-importer-test.cpp)                        
-    add_executable(${TESTING_TARGET} ${RENDERING_TEST_SRC})
-    target_link_libraries(${TESTING_TARGET} PRIVATE GTest::gtest GTest::gtest_main glfw rendering)
-    add_test(NAME ${TESTING_TARGET} COMMAND $<TARGET_FILE:${TESTING_TARGET}>)
+    list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-    if(WIN32)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
-     elseif(APPLE OR UNIX)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
-     else()
-        message(WARNING "Unsupported platform")
-     endif()
+    if(${GTest_FOUND} AND ${glfw3_FOUND})
+        include_directories(${GTEST_INCLUDE_DIRS} 
+                            ../include 
+                            ../include/model
+                            ${Stb_INCLUDE_DIR}
+        )
+        set(RENDERING_TEST_SRC 
+            entrypoint.cpp
+            opengl-shader-test.cpp
+            gltf-scene-importer-test.cpp)                        
+        add_executable(${TESTING_TARGET} ${RENDERING_TEST_SRC})
+        target_link_libraries(${TESTING_TARGET} PRIVATE GTest::gtest GTest::gtest_main glfw rendering)
+        add_test(NAME ${TESTING_TARGET} COMMAND $<TARGET_FILE:${TESTING_TARGET}>)
+
+        if(WIN32)
+            file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+        elseif(APPLE OR UNIX)
+            file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+        else()
+            message(WARNING "Unsupported platform")
+        endif()
+    endif()
 endif()
+
