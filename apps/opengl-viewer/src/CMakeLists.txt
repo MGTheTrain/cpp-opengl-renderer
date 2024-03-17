@@ -25,7 +25,8 @@ project(${TARGET})
 add_definitions(-DMGTT_OPENGL_VIEWER)
 
 if(${BUILD_WEB})
-    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 --preload-file ../../assets")
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 --preload-file ../../assets -fwasm-exceptions -s ASSERTIONS=2 \
+    -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
 else()
     find_package(IMGUI CONFIG REQUIRED)
     find_package(unofficial-nativefiledialog CONFIG REQUIRED)
