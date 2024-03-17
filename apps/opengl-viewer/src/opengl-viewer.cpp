@@ -127,10 +127,10 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 void Mgtt::Apps::OpenGlViewer::Render() {
 #ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
-#else 
-    this->windowWidth = CanvasGetWidth();
-    this->windowHeight = CanvasGetHeight();
-    this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
+#else
+  this->windowWidth = CanvasGetWidth();
+  this->windowHeight = CanvasGetHeight();
+  this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
 #endif
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
