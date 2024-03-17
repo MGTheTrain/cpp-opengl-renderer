@@ -26,13 +26,13 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
+#include <nfd.h>
 #endif>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <nfd.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>

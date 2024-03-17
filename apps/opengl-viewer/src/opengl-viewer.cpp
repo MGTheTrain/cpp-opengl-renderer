@@ -351,9 +351,11 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
   if (ImGui::BeginTabBar("Settings")) {
     if (ImGui::BeginTabItem("Scene")) {
       if (ImGui::Button("Select glTF scene")) {
+#ifndef __EMSCRIPTEN__
         nfdchar_t* selectedPath = NULL;
         nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
         if (result == NFD_OKAY) {
+#endif
           this->gltfSceneImporter->Clear(this->mgttScene);
           std::pair<std::string, std::string> pbrShaderPathes = {
               "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
@@ -368,7 +370,9 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
           this->glmVectors->translation = glm::vec3(0.0f);
           this->glmVectors->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
           this->glmVectors->scale = glm::vec3(1.0f);
+#ifndef __EMSCRIPTEN__
         }
+#endif
       }
       ImGui::EndTabItem();
     }

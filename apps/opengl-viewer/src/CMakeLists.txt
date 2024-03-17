@@ -25,8 +25,25 @@ project(${TARGET})
 add_definitions(-DMGTT_OPENGL_VIEWER)
 
 if(${BUILD_WEB})
-    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 --preload-file ../../assets -fwasm-exceptions -s ASSERTIONS=2 \
-    -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+    set(PROJECT_ROOT ../../..)
+    set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -s USE_GLFW=3 --preload-file ./assets \
+    --exclude-file ../../../../assets/web --exclude-file ../../../../assets/scenes/glTF-Sample-Models \
+    -fwasm-exceptions -s ASSERTIONS=2 -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+    include_directories(
+        ${WEB_THIRD_PARTY_FOLDER}/glm
+        ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
+        ${WEB_THIRD_PARTY_FOLDER}/imgui
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/backends
+    )
+    set(IMGUI_SRC
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/backends/imgui_impl_glfw.cpp     
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/backends/imgui_impl_opengl3.cpp          
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_widgets.cpp
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui.cpp                       
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_demo.cpp              
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_draw.cpp      
+    )
 else()
     find_package(IMGUI CONFIG REQUIRED)
     find_package(unofficial-nativefiledialog CONFIG REQUIRED)
@@ -41,10 +58,11 @@ include_directories(../include
                     ${IMGUI_INCLUDE_DIRS}
 )
 set(OPENGL_VIEWER_SRC opengl-viewer.cpp)                        
-add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
 if(${BUILD_WEB})
-    # /
+    add_executable(${TARGET} ${OPENGL_VIEWER_SRC} ${IMGUI_SRC})
+    target_link_libraries(${TARGET} PRIVATE window rendering)
 else()
+    add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
     if(WIN32)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
