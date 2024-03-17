@@ -22,20 +22,21 @@ $currentDir = Get-Location
 Set-Location -Path "$PSScriptRoot/../../.."
 
 if ($WebBuild) {
-    echo "source <Path to emsdk folder>/emsdk_env.bat"
-    cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON .
+    echo ""'$env:PATH += <Path to emsdk folder>/emsdk_env.bat'""
+    mkdir -f build
+    Set-Location -Path 
+    emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
+    emcmake --build build
 } else {
     if (-not $CMakeToolchainFile) {
         $CMakeToolchainFile = Read-Host "Enter the path to CMakeToolchainFile, e.g. 'D:\c++ repos\dependencies\vcpkg\scripts\buildsystems\vcpkg.cmake'"
     }
     cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
-}
-
-cmake --build build
-
-if ($RunTests) {
-    Set-Location -Path "build"
-    ctest --verbose
+    cmake --build build
+    if ($RunTests) {
+        Set-Location -Path "build"
+        ctest --verbose
+    }
 }
 
 Set-Location -Path $currentDir

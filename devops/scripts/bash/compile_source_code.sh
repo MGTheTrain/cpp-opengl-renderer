@@ -49,21 +49,27 @@ if [[ "$NoWebBuild" == true ]]; then
     read -p "Enter the path to CMakeToolchainFile, e.g. /d/c++ repos/dependencies/vcpkg/scripts/buildsystems/vcpkg.cmake" CMakeToolchainFile
   fi
   cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
+  echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
+
+  cmake --build build
+  echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
+
+  if [ "$NoTests" = false ]; then
+    cd "build"
+    ctest --verbose
+  fi
 else 
   echo "source <Path to emsdk folder>/emsdk_env.sh"
   # error: building glfw3:wasm32-emscripten failed with: BUILD_FAILED
-  cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON .
+  mkdir -vp build
+  cd build
+  emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
+  echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
+
+  emcmake --build build
+  echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
 fi
 
-echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
-
-cmake --build build
-echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
-
-if [ "$NoTests" = false ]; then
-  cd "build"
-  ctest --verbose
-fi
 cd "$currentDir"
 
 echo -e "$BLUE INFO: $NC Success"
