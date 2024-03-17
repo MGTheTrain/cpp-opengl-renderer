@@ -16,8 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 
-- Update bash and ps1 script to compile C++ code trough emscripten SDK to `js` and `wasm` for rendering in web browsers
-- Update `CMakeLists.txt` to support web builds trough `emscripten SDK`
+- Update `CMakeLists.txt` to support web builds. Update bash and ps1 script to compile C++ code trough the `emscripten SDK` for rendering in web browsers
 
 ### Fixed
 
