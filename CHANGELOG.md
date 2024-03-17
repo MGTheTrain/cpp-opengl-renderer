@@ -7,13 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.0] - 14-04-2024
+## [0.7.0] - 17-03-2024
+
+### Added
+
+- [Feature] Add nginx web server dev container
+- [Feature] Port Desktop application to the web trough emscripten SDK
+
+### Updated
+
+- Update bash and ps1 script to compile C++ code trough emscripten SDK to `js` and `wasm` for rendering in web browsers
+- Update `CMakeLists.txt` to support web builds trough `emscripten SDK`
+
+### Fixed
+
+- [Fix] Reset AABB attributes for newly loaded scenes
+- [Fix] Add vcpkg to dev containers with tools for C++ repos
+
+## [0.6.0] - 14-03-2024
 
 ### Added
 
 - [Feature] CI workflows ensuring continuous testing of the modules. Test executables rely on `glfw3` and `glew`, requiring a graphical environment. On Linux Ubuntu OS, a virtual framebuffer is established using `xvfb` for those tests. However, for MacOS and Windows OS, only builds are feasible due to the complexities or impossibility of replicating similar setups.
 
-## [0.5.0] - 13-04-2024
+## [0.5.0] - 13-03-2024
 
 ### Added
 
@@ -27,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [Fix] Ensure only node meshes are cleared when using the `Clear()` method in [node.cpp](modules/rendering/src/model/node.cpp)
 
-## [0.4.0] - 12-04-2024
+## [0.4.0] - 12-03-2024
 
 ### Added
 
