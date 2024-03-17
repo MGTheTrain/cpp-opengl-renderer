@@ -25,7 +25,7 @@ if ($WebBuild) {
     echo ""'$env:PATH += <Path to emsdk folder>/emsdk_env.bat'""
     mkdir -f build
     Set-Location -Path 
-    emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
+    emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON .. # ninja or mingw32-make generator required on Windows OS
     emcmake --build build
 } else {
     if (-not $CMakeToolchainFile) {
