@@ -51,7 +51,7 @@ if [[ "$NoWebBuild" == true ]]; then
   cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
   echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
 
-  cmake --build build
+  cmake --build build --parallel 8
   echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
 
   if [ "$NoTests" = false ]; then
@@ -63,10 +63,11 @@ else
   echo "Source the emscipten SDK, e.g. source <Path to emsdk folder>/emsdk_env.sh"
   mkdir -vp build
   cd build
-  emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
+  emcmake cmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
+
   echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
 
-  emcmake --build build
+  make -j8
   echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
 fi
 

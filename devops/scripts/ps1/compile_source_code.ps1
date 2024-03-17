@@ -25,14 +25,14 @@ if ($WebBuild) {
     echo "Source the emscipten SDK, e.g. "'$env:PATH += <Path to emsdk folder>/emsdk_env.bat'""
     mkdir -f build
     Set-Location -Path 
-    emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON .. # ninja or mingw32-make generator required on Windows OS
-    emcmake --build build
+    emcmake cmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON .. # ninja or mingw32-make generator required on Windows OS
+    mingw32-make -j8
 } else {
     if (-not $CMakeToolchainFile) {
         $CMakeToolchainFile = Read-Host "Enter the path to CMakeToolchainFile, e.g. 'D:\c++ repos\dependencies\vcpkg\scripts\buildsystems\vcpkg.cmake'"
     }
     cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
-    cmake --build build
+    cmake --build build --parallel 8
     if ($RunTests) {
         Set-Location -Path "build"
         ctest --verbose
