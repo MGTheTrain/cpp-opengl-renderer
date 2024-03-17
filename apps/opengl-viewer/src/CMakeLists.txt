@@ -56,5 +56,4 @@ else()
     target_link_libraries(${TARGET} PRIVATE window rendering imgui::imgui unofficial::nativefiledialog::nfd)
 endif()
 
-
 install(TARGETS ${TARGET})

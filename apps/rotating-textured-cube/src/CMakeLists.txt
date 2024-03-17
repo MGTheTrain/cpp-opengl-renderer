@@ -56,6 +56,4 @@ else()
     target_link_libraries(${TARGET} PRIVATE window rendering)
 endif()
 
-
-
 install(TARGETS ${TARGET})
