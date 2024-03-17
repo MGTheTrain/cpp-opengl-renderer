@@ -55,9 +55,11 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
       appName, this->windowWidth, this->windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
+#ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
+#endif
   glEnable(GL_DEPTH_TEST);
 
   std::string vsPath = "assets/shader/core/coordinate.vert";

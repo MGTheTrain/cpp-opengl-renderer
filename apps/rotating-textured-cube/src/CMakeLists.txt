@@ -25,8 +25,15 @@ project(${TARGET})
 add_definitions(-DMGTT_ROTATING_TEXTURED_CUBE)
 
 if(${BUILD_WEB})
-    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 --preload-file ../../assets -fwasm-exceptions -s ASSERTIONS=2 \
-    -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+    set(PROJECT_ROOT ../../..)
+    set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -s USE_GLFW=3 --preload-file ../../../../assets \
+    --exclude-file ../../../../assets/web --exclude-file ../../../../assets/scenes/glTF-Sample-Models -fwasm-exceptions \
+    -s ASSERTIONS=2 -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+    include_directories(
+        ${WEB_THIRD_PARTY_FOLDER}/glm
+        ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
+    )
 else()
     find_package(GLEW CONFIG REQUIRED)
 endif()
@@ -54,7 +61,6 @@ else()
     else()
         message(WARNING "Unsupported platform")
     endif()
-    target_link_libraries(${TARGET} PRIVATE window rendering)
 endif()
-
+target_link_libraries(${TARGET} PRIVATE window rendering)
 install(TARGETS ${TARGET})

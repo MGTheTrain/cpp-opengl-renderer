@@ -24,8 +24,13 @@ set(TARGET rendering)
 project(${TARGET})
 
 if(${BUILD_WEB})
+    set(WEB_THIRD_PARTY_FOLDER ../../../assets/web/third-party)
     set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -fwasm-exceptions -s ASSERTIONS=2 \
     -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+    include_directories(
+        ${WEB_THIRD_PARTY_FOLDER}/glm
+        ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
+    )
 else()
     find_package(OpenGL REQUIRED)
     find_package(GLEW CONFIG REQUIRED)
