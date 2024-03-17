@@ -90,7 +90,7 @@ For web builds ensure the `emscripten SDK` is installed and then run:
 cd devops/scripts/bash/
 source <Path to emsdk folder>/emsdk_env.sh
 ./compile_source_code.sh -WebBuild 
-# Copy build artifacts (.js, .wasm, .data) over to the assets\web\html-js-wasm
+# Copy build artifacts (.js, .wasm, .data) over to assets\web\html-js-wasm
 # Start the dev container under `.devcontainer\nginx` and copy contents of the assets\web\html-js-wasm over to /usr/share/nginx/html
 # Visit in a browser of choice `localhost:8090/rotating_texture_cube.html` or `localhost:8090/opengl_viewer.html`
 ```
@@ -126,7 +126,7 @@ For web builds ensure the `emscripten SDK` is installed, `ninja` or `mingw32-mak
 cd devops\scripts\ps1
 source <Path to emsdk folder>\emsdk_env.bat
 .\compile_source_code.ps1 -WebBuild
-# Copy build artifacts (.js, .wasm, .data) over to the assets/web/html-js-wasm
+# Copy build artifacts (.js, .wasm, .data) over to assets/web/html-js-wasm
 # Start the dev container under `.devcontainer/nginx` and copy contents of the assets/web/html-js-wasm over to /usr/share/nginx/html
 # Visit in a browser of choice `localhost:8090/rotating_texture_cube.html` or `localhost:8090/opengl_viewer.html`
 ```
