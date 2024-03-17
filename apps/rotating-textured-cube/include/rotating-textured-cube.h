@@ -115,6 +115,8 @@ class RotatingTexturedCube {
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
   std::unique_ptr<GlmMatrices> glmMatrices;
   Mgtt::Rendering::Mesh mesh;
+  float windowWidth;
+  float windowHeight;
 };
 
 }  // namespace Mgtt::Apps

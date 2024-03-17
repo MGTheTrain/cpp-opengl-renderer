@@ -23,6 +23,21 @@
 #ifdef MGTT_ROTATING_TEXTURED_CUBE
 #include <rotating-textured-cube.h>
 
+#ifdef __EMSCRIPTEN__
+	#include <emscripten/emscripten.h>
+	EM_JS(int, CanvasGetWidth, (), { 
+	  return Module.canvas.width; 
+	});
+
+	EM_JS(int, CanvasGetHeight, (), { 
+	  return Module.canvas.height; 
+	});
+
+	EM_JS(void, ResizeCanvas, (), { 
+	  resizeCanvas(); 
+	}); 
+#endif
+
 /**
  * @brief Destructs the RotatingTexturedCube  object.
  */
@@ -38,12 +53,12 @@ Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube() {
  */
 Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
   std::string appName = "rotating-textured-cube";
-  float windowWidth = 1000.0f;
-  float windowHeight = 1000.0f;
+  this->windowWidth = 1000.0f;
+  this->windowHeight = 1000.0f;
 
   this->glmMatrices = std::make_unique<GlmMatrices>();
   this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(
-      appName, windowWidth, windowHeight);
+      appName, this->windowWidth, this->windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
   if (glewInit() != GLEW_OK) {
@@ -180,8 +195,17 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
  * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
-  while (!this->glfwWindow->WindowShouldClose()) {
+#ifndef __EMSCRIPTEN__ 
+    while (!this->glfwWindow->WindowShouldClose()) {
+#endif
     this->ProcessInput();
+
+#ifdef __EMSCRIPTEN__
+    this->windowWidth = CanvasGetWidth();
+    this->windowHeight = CanvasGetHeight();
+    this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
+#endif
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -210,7 +234,9 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     this->glfwWindow->SwapBuffersAndPollEvents();
+#ifndef __EMSCRIPTEN__
   }
+#endif
 }
 
 /**
