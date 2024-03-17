@@ -66,9 +66,6 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
-#endif
-  glEnable(GL_DEPTH_TEST);
-
   // Compile shaders and link to OpenGl program
   std::pair<std::string, std::string> pbrShaderPathes = {
       "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
@@ -82,6 +79,23 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"};
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
       eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+#else 
+  // Compile shaders and link to OpenGl program
+  std::pair<std::string, std::string> pbrShaderPathes = {
+      "assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
+  this->mgttScene.shader.Compile(pbrShaderPathes);
+  std::pair<std::string, std::string> eq2BrdfLutShaderPathes = {
+      "assets/shader/es/eq2CubeMap.vert",
+      "assets/shader/es/eq2CubeMap.frag"};
+  std::pair<std::string, std::string> brdfLutShaderPathes = {
+      "assets/shader/es/genBrdf.vert", "assets/shader/es/genBrdf.frag"};
+  std::pair<std::string, std::string> envMapShaderPathes = {
+      "assets/shader/es/envMap.vert", "assets/shader/es/envMap.frag"};
+  this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
+      eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+#endif
+  glEnable(GL_DEPTH_TEST);
+
 
   // scene
   this->gltfSceneImporter =
