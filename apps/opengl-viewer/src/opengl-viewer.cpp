@@ -53,9 +53,11 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       appName, windowWidth, windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
+#ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
+#endif
   glEnable(GL_DEPTH_TEST);
 
   // Compile shaders and link to OpenGl program
@@ -355,7 +357,6 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
         nfdchar_t* selectedPath = NULL;
         nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
         if (result == NFD_OKAY) {
-#endif
           this->gltfSceneImporter->Clear(this->mgttScene);
           std::pair<std::string, std::string> pbrShaderPathes = {
               "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
@@ -370,7 +371,6 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
           this->glmVectors->translation = glm::vec3(0.0f);
           this->glmVectors->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
           this->glmVectors->scale = glm::vec3(1.0f);
-#ifndef __EMSCRIPTEN__
         }
 #endif
       }
@@ -416,10 +416,22 @@ void Mgtt::Apps::OpenGlViewer::ClearImGui() {
   ImGui::DestroyContext();
 }
 
+Mgtt::Apps::OpenGlViewer openGlViewer;
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+ // @ref https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop 
+void EmscriptenMainLoop() { 
+  openGlViewer.Render();
+}
+#endif
+
 int main() {
-  Mgtt::Apps::OpenGlViewer openGlViewer;
   try {
+#ifndef __EMSCRIPTEN__
     openGlViewer.Render();
+#else 
+    emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
+#endif
   } catch (const std::runtime_error& ex) {
     std::cout << ex.what() << std::endl;
     openGlViewer.Clear();
