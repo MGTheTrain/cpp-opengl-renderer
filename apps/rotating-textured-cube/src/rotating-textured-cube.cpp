@@ -61,7 +61,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
   }
   std::string vsPath = "assets/shader/core/coordinate.vert";
   std::string fsPath = "assets/shader/core/coordinate.frag";
-#else 
+#else
   std::string vsPath = "assets/shader/es/coordinate.vert";
   std::string fsPath = "assets/shader/es/coordinate.frag";
 #endif
