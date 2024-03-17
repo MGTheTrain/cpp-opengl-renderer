@@ -53,8 +53,8 @@ void Mgtt::Apps::OpenGlViewer::Clear() {
 Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   this->cameraPosition = glm::vec3(0.0f, 0.0f, -3.0f);
   std::string appName = "opengl-viewer";
-  float windowWidth = 1000.0f;
-  float windowHeight = 1000.0f;
+  this->windowWidth = 1000.0f;
+  this->windowHeight = 1000.0f;
 
   this->glmMatrices = std::make_unique<GlmMatrices>();
   this->glmVectors = std::make_unique<GlmVectors>();
@@ -127,10 +127,12 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 void Mgtt::Apps::OpenGlViewer::Render() {
 #ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
+#else 
     this->windowWidth = CanvasGetWidth();
     this->windowHeight = CanvasGetHeight();
     this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
 #endif
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
