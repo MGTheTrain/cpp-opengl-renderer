@@ -8,6 +8,7 @@ pip3 install clang-format cpplint
 
 cd /tmp/
 # vcpkg
+rm -rf vcpkg
 git clone https://github.com/Microsoft/vcpkg.git
 ./vcpkg/bootstrap-vcpkg.sh
 # emscripten SDK
