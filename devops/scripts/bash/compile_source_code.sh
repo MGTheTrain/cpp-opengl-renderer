@@ -59,8 +59,8 @@ if [[ "$NoWebBuild" == true ]]; then
     ctest --verbose
   fi
 else 
-  echo "source <Path to emsdk folder>/emsdk_env.sh"
-  # error: building glfw3:wasm32-emscripten failed with: BUILD_FAILED
+  # error: building glfw3:wasm32-emscripten failed with: BUILD_FAILED with vcpkg.json
+  echo "Source the emscipten SDK, e.g. source <Path to emsdk folder>/emsdk_env.sh"
   mkdir -vp build
   cd build
   emcmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
