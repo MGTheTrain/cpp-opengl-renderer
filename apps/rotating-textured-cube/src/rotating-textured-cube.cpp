@@ -272,17 +272,16 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
 Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
- // @ref https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop 
-void EmscriptenMainLoop() { 
-  RotatingTexturedCube.Render();
-}
+// @ref
+// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
 #endif
 
 int main() {
   try {
 #ifndef __EMSCRIPTEN__
     RotatingTexturedCube.Render();
-#else 
+#else
     emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
 #endif
   } catch (const std::exception& ex) {

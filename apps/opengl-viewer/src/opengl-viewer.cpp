@@ -433,17 +433,16 @@ void Mgtt::Apps::OpenGlViewer::ClearImGui() {
 Mgtt::Apps::OpenGlViewer openGlViewer;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
- // @ref https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop 
-void EmscriptenMainLoop() { 
-  openGlViewer.Render();
-}
+// @ref
+// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+void EmscriptenMainLoop() { openGlViewer.Render(); }
 #endif
 
 int main() {
   try {
 #ifndef __EMSCRIPTEN__
     openGlViewer.Render();
-#else 
+#else
     emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
 #endif
   } catch (const std::runtime_error& ex) {
