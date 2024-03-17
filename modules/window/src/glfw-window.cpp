@@ -138,11 +138,12 @@ std::tuple<int, int> Mgtt::Window::GlfwWindow::GetWindowSize() {
 
 /**
  * @brief Sets the width and height of a GLFW window.
- * 
+ *
  * @param width The new window width
  * @param height The new window height
  */
-void Mgtt::Window::GlfwWindow::SetWindowSize(const int32_t &width, const int32_t &height) {
+void Mgtt::Window::GlfwWindow::SetWindowSize(const int32_t& width,
+                                             const int32_t& height) {
   glfwSetWindowSize(window, width, height);
 }
 

@@ -110,11 +110,11 @@ class GlfwWindow : public IWindow {
 
   /**
    * @brief Sets the width and height of a GLFW window.
-   * 
+   *
    * @param width The new window width
    * @param height The new window height
    */
-  void SetWindowSize(const int32_t &width, const int32_t &height);
+  void SetWindowSize(const int32_t& width, const int32_t& height);
 
   /**
    * @brief Checks if the GLFW window should close.

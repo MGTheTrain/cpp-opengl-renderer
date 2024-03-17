@@ -24,18 +24,12 @@
 #include <rotating-textured-cube.h>
 
 #ifdef __EMSCRIPTEN__
-	#include <emscripten/emscripten.h>
-	EM_JS(int, CanvasGetWidth, (), { 
-	  return Module.canvas.width; 
-	});
+#include <emscripten/emscripten.h>
+EM_JS(int, CanvasGetWidth, (), { return Module.canvas.width; });
 
-	EM_JS(int, CanvasGetHeight, (), { 
-	  return Module.canvas.height; 
-	});
+EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
 
-	EM_JS(void, ResizeCanvas, (), { 
-	  resizeCanvas(); 
-	}); 
+EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
 #endif
 
 /**
@@ -195,8 +189,8 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
  * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
-#ifndef __EMSCRIPTEN__ 
-    while (!this->glfwWindow->WindowShouldClose()) {
+#ifndef __EMSCRIPTEN__
+  while (!this->glfwWindow->WindowShouldClose()) {
 #endif
     this->ProcessInput();
 
