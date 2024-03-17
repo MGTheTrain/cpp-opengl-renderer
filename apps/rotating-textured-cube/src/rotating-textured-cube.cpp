@@ -59,16 +59,14 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
-#endif
-  glEnable(GL_DEPTH_TEST);
-
-#ifndef __EMSCRIPTEN__
   std::string vsPath = "assets/shader/core/coordinate.vert";
   std::string fsPath = "assets/shader/core/coordinate.frag";
 #else 
   std::string vsPath = "assets/shader/es/coordinate.vert";
   std::string fsPath = "assets/shader/es/coordinate.frag";
 #endif
+  glEnable(GL_DEPTH_TEST);
+
   std::pair<std::string, std::string> shaderPathes =
       std::make_pair(vsPath, fsPath);
   auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
