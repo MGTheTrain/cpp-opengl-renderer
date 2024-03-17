@@ -62,8 +62,13 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
 #endif
   glEnable(GL_DEPTH_TEST);
 
+#ifndef __EMSCRIPTEN__
   std::string vsPath = "assets/shader/core/coordinate.vert";
   std::string fsPath = "assets/shader/core/coordinate.frag";
+#else 
+  std::string vsPath = "assets/shader/es/coordinate.vert";
+  std::string fsPath = "assets/shader/es/coordinate.frag";
+#endif
   std::pair<std::string, std::string> shaderPathes =
       std::make_pair(vsPath, fsPath);
   auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
