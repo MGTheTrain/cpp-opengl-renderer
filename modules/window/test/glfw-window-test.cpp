@@ -137,9 +137,8 @@ TEST_F(GlfwWindowTest, GetWindowSize) {
 
 // Test case for the SetWindowSize method
 TEST_F(GlfwWindowTest, SetWindowSize) {
-  RecordProperty(
-      "Test Description",
-      "Checks if SetWindowSize method method works");
+  RecordProperty("Test Description",
+                 "Checks if SetWindowSize method method works");
   RecordProperty("Expected Result", "No exception is thrown.");
 
   try {
