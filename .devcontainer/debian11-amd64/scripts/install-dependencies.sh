@@ -7,7 +7,9 @@ apt-get install -y libxmu-dev libxi-dev libgl-dev \
 pip3 install clang-format cpplint
 
 cd /tmp/
+# vcpkg
 git clone https://github.com/emscripten-core/emsdk.git
+# emscripten SDK
 cd emsdk
 ./emsdk install latest-upstream
 ./emsdk activate latest-upstream
