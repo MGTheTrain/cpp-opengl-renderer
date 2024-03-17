@@ -9,3 +9,9 @@ secrets.cfg
 *.zip
 *.tar
 packages
+rotating_textured_cube.js
+rotating_textured_cube.wasm
+rotating_textured_cube.data
+opengl_viewer.js
+opengl_viewer.wasm
+opengl_viewer.data

@@ -24,9 +24,31 @@ project(${TARGET})
 
 add_definitions(-DMGTT_OPENGL_VIEWER)
 
-find_package(GLEW CONFIG REQUIRED)
-find_package(IMGUI CONFIG REQUIRED)
-find_package(unofficial-nativefiledialog CONFIG REQUIRED)
+if(${BUILD_WEB})
+    set(PROJECT_ROOT ../../..)
+    set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
+    set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -s USE_GLFW=3 --preload-file ../../../../assets \
+    --exclude-file ../../../../assets/web --exclude-file ../../../../assets/scenes/glTF-Sample-Models \
+    -fwasm-exceptions -s ASSERTIONS=2 -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
+    include_directories(
+        ${WEB_THIRD_PARTY_FOLDER}/glm
+        ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
+        ${WEB_THIRD_PARTY_FOLDER}/imgui
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/backends
+    )
+    set(IMGUI_SRC
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/backends/imgui_impl_glfw.cpp     
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/backends/imgui_impl_opengl3.cpp          
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_widgets.cpp
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui.cpp                       
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_tables.cpp                       
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_demo.cpp              
+        ${WEB_THIRD_PARTY_FOLDER}/imgui/imgui_draw.cpp      
+    )
+else()
+    find_package(IMGUI CONFIG REQUIRED)
+    find_package(unofficial-nativefiledialog CONFIG REQUIRED)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -34,24 +56,24 @@ include_directories(../include
                     ../../../modules/rendering/include
                     ../../../modules/rendering/include/model
                     ../../../modules/window/include
-                    ${GLEW_INCLUDE_DIRS}
-                    ${Stb_INCLUDE_DIR}
-                    ${TINYGLTF_INCLUDE_DIRS}
                     ${IMGUI_INCLUDE_DIRS}
-                    # ${nativefiledialog_INCLUDE_DIR} # Explicitly setting this is not necessary; How to resolve this ? -> Potential fix for later
 )
 set(OPENGL_VIEWER_SRC opengl-viewer.cpp)                        
-add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
-target_link_libraries(${TARGET} PRIVATE window rendering imgui::imgui unofficial::nativefiledialog::nfd)
-
-if(WIN32)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
-elseif(APPLE OR UNIX)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+if(${BUILD_WEB})
+    add_executable(${TARGET} ${OPENGL_VIEWER_SRC} ${IMGUI_SRC})
+    target_link_libraries(${TARGET} PRIVATE window rendering)
 else()
-    message(WARNING "Unsupported platform")
+    add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
+    if(WIN32)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+    elseif(APPLE OR UNIX)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+    else()
+        message(WARNING "Unsupported platform")
+    endif()
+    target_link_libraries(${TARGET} PRIVATE window rendering imgui::imgui unofficial::nativefiledialog::nfd)
 endif()
 
 install(TARGETS ${TARGET})

@@ -27,10 +27,16 @@ option(BUILD_LIB "Compile module source files for static libraries" ON)
 option(BUILD_TEST "Compile source files for test executable and link compiled libraries" ON)
 option(BUILD_APP "Compile source file of main executable and link compiled libraries" ON) 
 option(BUILD_PACKAGE "Build the package" OFF)
+option(BUILD_WEB "Compile to js and wasm" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(AzureVcpkg)
-az_vcpkg_integrate()
+if(BUILD_WEB)
+    # /
+else()
+    include(AzureVcpkg)
+    az_vcpkg_integrate()
+endif()
+
 
 if(BUILD_TEST)
     include(CTestConfig)

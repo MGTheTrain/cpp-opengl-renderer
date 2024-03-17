@@ -22,13 +22,18 @@
 
 #pragma once
 
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#else
 #include <GL/glew.h>
+#include <nfd.h>
+#endif>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <nfd.h>
+#include <imgui_internal.h>
 #include <opengl-shader.h>
 
 #include <glm/glm.hpp>
@@ -117,6 +122,8 @@ class OpenGlViewer {
   glm::vec3 cameraPosition;
   float scaleIblAmbient;
   bool showEnvMap;
+  float windowWidth;
+  float windowHeight;
 
   /**
    * @brief Iterates recursively over all nodes in the scene
