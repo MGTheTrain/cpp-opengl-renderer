@@ -277,7 +277,9 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
 }
 #endif
 
+
 Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
+#ifndef __ANDROID__
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 // @ref
@@ -297,5 +299,29 @@ int main() {
     return 1;
   }
   return 0;
+}
+#endif
+#else
+extern "C" {
+    JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Init(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Render(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Clear(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_UpdateGLViewPort(JNIEnv * env, jobject obj, jint width, jint height);
+};
+
+JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Init(JNIEnv * env, jobject obj){
+    Init();
+}
+
+JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Render(JNIEnv * env, jobject obj){
+    Render();
+}
+
+JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Clear(JNIEnv * env, jobject obj){
+    Clear();
+}
+
+JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_UpdateGLViewPort(JNIEnv * env, jobject obj, jint width, jint height){
+    UpdateGLViewPort(width, height);
 }
 #endif
