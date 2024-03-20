@@ -27,7 +27,7 @@
 #else
 #include <GL/glew.h>
 #include <nfd.h>
-#endif>
+#endif
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
 #include <imgui.h>
