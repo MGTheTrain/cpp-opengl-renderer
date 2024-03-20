@@ -317,12 +317,12 @@ int main() {
 #else
 extern "C" {
 Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_Render(JNIEnv* env,
                                                           jobject obj) {
   rotatingTexturedCube.Render();
 }
 
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGlViewPort(
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_UpdateGlViewPort(
     JNIEnv* env, jobject obj, jint width, jint height) {
   rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
 }
