@@ -275,17 +275,18 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
     GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
-#else 
+#else
 /**
  * @brief Updates the OpenGL viewport dimensions.
  *
- * This function is responsible for updating the dimensions of the OpenGL viewport
- * to match the specified width and height.
+ * This function is responsible for updating the dimensions of the OpenGL
+ * viewport to match the specified width and height.
  *
  * @param width The new width of the viewport.
  * @param height The new height of the viewport.
  */
-void Mgtt::Apps::RotatingTexturedCube::UpdateOpenGlViewPort(int width, int height) {
+void Mgtt::Apps::RotatingTexturedCube::UpdateOpenGlViewPort(int width,
+                                                            int height) {
   glViewport(0, 0, width, height);
 }
 #endif
@@ -315,15 +316,15 @@ int main() {
 #endif
 #else
 extern "C" {
-  Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
-  JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
+Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
                                                           jobject obj) {
-    rotatingTexturedCube.Render();
-  }
+  rotatingTexturedCube.Render();
+}
 
-  JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
-      JNIEnv* env, jobject obj, jint width, jint height) {
-    rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
-  }
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
+    JNIEnv* env, jobject obj, jint width, jint height) {
+  rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
+}
 };
 #endif
