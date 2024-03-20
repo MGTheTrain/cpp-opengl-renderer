@@ -27,6 +27,9 @@
 #else
 #include <GL/glew.h>
 #endif
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

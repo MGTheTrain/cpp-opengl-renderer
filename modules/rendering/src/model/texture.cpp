@@ -264,7 +264,12 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
   this->brdfLutShader.Clear();
   this->envMapShader.Clear();
 
+#ifndef __ANDROID__
   std::cout << "CLEAR INFO: Successfully deleted the render texture container "
                "with IBL related components"
             << std::endl;
+#else
+    __android_log_write(ANDROID_LOG_INFO, 
+              "CLEAR INFO: Successfully deleted the render texture container with IBL related components");
+#endif
 }

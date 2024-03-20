@@ -27,6 +27,11 @@
 #else
 #include <GL/glew.h>
 #endif
+
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 #include <iscene-importer.h>
 #include <tiny_gltf.h>
 

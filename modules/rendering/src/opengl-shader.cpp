@@ -122,10 +122,15 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     this->Clear();
     std::cerr << ex.what() << std::endl;
   }
-  std::cout << "COMPILE INFO: Successfully linked to a shader program the "
-               "compiled vertex shader "
-            << shaderPathes.first << " and fragment shader "
-            << shaderPathes.second << std::endl;
+#ifndef __ANDROID__
+    std::cout << "COMPILE INFO: Successfully linked to a shader program the "
+                "compiled vertex shader "
+              << shaderPathes.first << " and fragment shader "
+              << shaderPathes.second << std::endl;
+#else
+    __android_log_write(ANDROID_LOG_INFO, "COMPILE INFO: Successfully linked to a shader program the compiled vertex shader ", 
+          shaderPathes.first, " and fragment shader ", shaderPathes.second);
+#endif
 }
 
 /**
@@ -134,8 +139,13 @@ void Mgtt::Rendering::OpenGlShader::Compile(
 void Mgtt::Rendering::OpenGlShader::Clear() {
   if (this->id > 0) {
     glDeleteProgram(this->id);
-    std::cout << "CLEAR INFO: Successfully deleted program with id " << this->id
+#ifndef __ANDROID__
+    std::cout << "CLEAR INFO: Successfully deleted program with id " << std::to_string(this->id)
               << std::endl;
+#else
+    __android_log_write(ANDROID_LOG_INFO, 
+              "CLEAR INFO: Successfully deleted program with id ", std::to_string(this->id));
+#endif
     this->id = 0;
   }
 }

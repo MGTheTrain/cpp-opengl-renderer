@@ -26,6 +26,9 @@
 #else
 #include <GL/glew.h>
 #endif
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
 #include <ishader.h>
 
 #include <fstream>
