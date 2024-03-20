@@ -322,7 +322,7 @@ JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
   rotatingTexturedCube.Render();
 }
 
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGlViewPort(
     JNIEnv* env, jobject obj, jint width, jint height) {
   rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
 }
