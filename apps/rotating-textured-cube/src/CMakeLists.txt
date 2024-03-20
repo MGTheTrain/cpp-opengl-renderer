@@ -46,8 +46,13 @@ include_directories(../include
                     ../../../modules/window/include
                     ${GLEW_INCLUDE_DIRS}
 )
-set(ROTATING_TEXTURED_CUBE_SRC rotating-textured-cube.cpp)                        
-add_executable(${TARGET} ${ROTATING_TEXTURED_CUBE_SRC})
+set(ROTATING_TEXTURED_CUBE_SRC rotating-textured-cube.cpp)      
+
+if(ANDROID)
+    add_library(${TARGET} SHARED ${ROTATING_TEXTURED_CUBE_SRC})
+else()
+    add_executable(${TARGET} ${ROTATING_TEXTURED_CUBE_SRC})
+endif()
 
 if(${BUILD_WEB})
     # /
@@ -55,6 +60,9 @@ else()
     if(WIN32)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+    elseif(ANDROID)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
     elseif(APPLE OR UNIX)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
@@ -62,5 +70,18 @@ else()
         message(WARNING "Unsupported platform")
     endif()
 endif()
-target_link_libraries(${TARGET} PRIVATE window rendering)
+
+if(ANDROID)    
+    find_package(log)
+    target_link_libraries(${TARGET}
+          android
+          EGL
+          GLESv3
+          window 
+          rendering
+          log)
+else()
+    target_link_libraries(${TARGET} PRIVATE window rendering)
+endif()
+
 install(TARGETS ${TARGET})
