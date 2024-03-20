@@ -25,7 +25,7 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
-#endif>
+#endif
 #include <GLFW/glfw3.h>
 #include <gltf-scene-importer.h>
 #include <gtest/gtest.h>

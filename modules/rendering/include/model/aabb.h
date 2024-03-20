@@ -26,7 +26,7 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
-#endif>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

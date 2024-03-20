@@ -26,7 +26,7 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
-#endif>
+#endif
 #include <iscene-importer.h>
 #include <tiny_gltf.h>
 
