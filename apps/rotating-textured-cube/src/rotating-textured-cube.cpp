@@ -302,32 +302,32 @@ int main() {
 #endif
 #else
 extern "C" {
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Init(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Init(JNIEnv* env,
                                                         jobject obj);
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Render(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
                                                           jobject obj);
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Clear(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Clear(JNIEnv* env,
                                                          jobject obj);
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_UpdateGLViewPort(
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
     JNIEnv* env, jobject obj, jint width, jint height);
 };
 
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Init(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Init(JNIEnv* env,
                                                         jobject obj) {
   Init();
 }
 
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Render(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
                                                           jobject obj) {
   Render();
 }
 
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_Clear(JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Clear(JNIEnv* env,
                                                          jobject obj) {
   Clear();
 }
 
-JNIEXPORT void JNICALL Java_com_mgtt_stc_GL2JNILib_UpdateGLViewPort(
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
     JNIEnv* env, jobject obj, jint width, jint height) {
   UpdateGLViewPort(width, height);
 }
