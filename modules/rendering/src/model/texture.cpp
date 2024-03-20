@@ -269,7 +269,8 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
                "with IBL related components"
             << std::endl;
 #else
-    __android_log_write(ANDROID_LOG_INFO, 
-              "CLEAR INFO: Successfully deleted the render texture container with IBL related components");
+  __android_log_write(ANDROID_LOG_INFO,
+                      "CLEAR INFO: Successfully deleted the render texture "
+                      "container with IBL related components");
 #endif
 }

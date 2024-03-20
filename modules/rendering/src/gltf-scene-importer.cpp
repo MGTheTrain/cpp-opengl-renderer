@@ -106,7 +106,7 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
                 << std::to_string(mgttScene.aabb.scale) << std::endl;
 #else
       __android_log_write(ANDROID_LOG_INFO, "GLTF IMPORTER INFO: Scale ",
-                std::to_string(mgttScene.aabb.scale));
+                          std::to_string(mgttScene.aabb.scale));
 #endif
     } else {
       throw std::runtime_error("GLTF IMPORTER ERROR: Could not load file: " +
@@ -209,8 +209,10 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
   std::cout << "LOAD TEXTURES INFO: Successfully loaded all textures for scene "
             << scene.path << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
-            "LOAD TEXTURES INFO: Successfully loaded all textures for scene ", scene.path);
+  __android_log_write(
+      ANDROID_LOG_INFO,
+      "LOAD TEXTURES INFO: Successfully loaded all textures for scene ",
+      scene.path);
 #endif
 }
 
@@ -251,9 +253,10 @@ void Mgtt::Rendering::GltfSceneImporter::SetupTexture(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   } else {
 #ifndef __ANDROID__
-  std::cout << "SETUP TEXTURE INFO: Texture data is a nullptr" << std::endl;
+    std::cout << "SETUP TEXTURE INFO: Texture data is a nullptr" << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, "SETUP TEXTURE INFO: Texture data is a nullptr");
+    __android_log_write(ANDROID_LOG_INFO,
+                        "SETUP TEXTURE INFO: Texture data is a nullptr");
 #endif
   }
 }
@@ -368,8 +371,9 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
       << "LOAD MATERIALS INFO: Successfully loaded all materials for scene "
       << scene.path << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
-      "LOAD MATERIALS INFO: Successfully loaded all materials for scene ", 
+  __android_log_write(
+      ANDROID_LOG_INFO,
+      "LOAD MATERIALS INFO: Successfully loaded all materials for scene ",
       scene.path);
 #endif
 }
@@ -461,12 +465,12 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     glBindVertexArray(0);
   } else {
 #ifndef __ANDROID__
-  std::cout
-      << "SETUP MESH INFO: Node is not a mesh"
-      << std::endl;  // We might utilize spdlog as an improvement for logging
+    std::cout
+        << "SETUP MESH INFO: Node is not a mesh"
+        << std::endl;  // We might utilize spdlog as an improvement for logging
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
-      "SETUP MESH INFO: Node is not a mesh");
+    __android_log_write(ANDROID_LOG_INFO,
+                        "SETUP MESH INFO: Node is not a mesh");
 #endif
   }
 }
@@ -670,12 +674,12 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
   } else {
     scene.nodes.push_back(newNode);
 #ifndef __ANDROID__
-  std::cout << "LOAD NODE INFO: Successfully loaded node for scene "
-            << newNode->name << " with index " << nodeIndex << std::endl;
+    std::cout << "LOAD NODE INFO: Successfully loaded node for scene "
+              << newNode->name << " with index " << nodeIndex << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
-      "LOAD NODE INFO: Successfully loaded node for scene ", 
-      newNode->name, " with index ", nodeIndex);
+    __android_log_write(ANDROID_LOG_INFO,
+                        "LOAD NODE INFO: Successfully loaded node for scene ",
+                        newNode->name, " with index ", nodeIndex);
 #endif
   }
 }
@@ -781,11 +785,12 @@ void Mgtt::Rendering::TextureManager::LoadFromEnvMap(
   // TBD
   for (auto& texturePath : texturePathes) {
 #ifndef __ANDROID__
-  std::cout << "LOAD FROM ENV INFO: Successfully loaded env map "
+    std::cout << "LOAD FROM ENV INFO: Successfully loaded env map "
               << texturePath << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
-      "LOAD FROM ENV INFO: Successfully loaded env map ", texturePath);
+    __android_log_write(ANDROID_LOG_INFO,
+                        "LOAD FROM ENV INFO: Successfully loaded env map ",
+                        texturePath);
 #endif
   }
 }
@@ -914,7 +919,8 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
   std::cout << "LOAD FROM HDR INFO: Successfully loaded env map from hdr "
             << texturePath << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
+  __android_log_write(
+      ANDROID_LOG_INFO,
       "LOAD FROM HDR INFO: Successfully loaded env map from hdr ", texturePath);
 #endif
 }
@@ -1046,12 +1052,13 @@ void Mgtt::Rendering::TextureManager::SetupQuad(
     glBindVertexArray(0);
   } else {
 #ifndef __ANDROID__
-  std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already "
+    std::cout << "TEXTURE MANAGER ERROR: OpenGl resources have been already "
                  "allocated. Check for: [quadVao, quadVbo]"
               << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_ERROR, 
-      "TEXTURE MANAGER ERROR: OpenGl resources have been already allocated. Check for: [quadVao, quadVbo]");
+    __android_log_write(ANDROID_LOG_ERROR,
+                        "TEXTURE MANAGER ERROR: OpenGl resources have been "
+                        "already allocated. Check for: [quadVao, quadVbo]");
 #endif
   }
 }
@@ -1102,16 +1109,17 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(
                  "allocated. Check for: [brdfLutTextureId]"
               << std::endl;
 #else
-    __android_log_write(ANDROID_LOG_ERROR, 
-        "LOAD FROM HDR ERROR: OpenGl resources have been already allocated. Check for: [brdfLutTextureId]");
+    __android_log_write(ANDROID_LOG_ERROR,
+                        "LOAD FROM HDR ERROR: OpenGl resources have been "
+                        "already allocated. Check for: [brdfLutTextureId]");
 #endif
-
   }
 #ifndef __ANDROID__
   std::cout << "LOAD FROM HDR INFO: Successfully loaded brdf lut texture"
             << std::endl;
 #else
-  __android_log_write(ANDROID_LOG_INFO, 
+  __android_log_write(
+      ANDROID_LOG_INFO,
       "LOAD FROM HDR INFO: Successfully loaded brdf lut texture");
 #endif
 }
