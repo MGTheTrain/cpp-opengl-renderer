@@ -31,7 +31,6 @@
 #include <glfw-window.h>
 #else
 #include <jni.h>
-#include <android/log.h>
 #endif
 #include <mesh.h>
 #include <opengl-shader.h>
