@@ -22,13 +22,15 @@
 
 #pragma once
 
-#ifdef __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__) || defined(__ANDROID__) 
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
 #endif>
 #ifndef __ANDROID__
 #include <glfw-window.h>
+#else 
+#include <jni.h> 
 #endif
 #include <mesh.h>
 #include <opengl-shader.h>
