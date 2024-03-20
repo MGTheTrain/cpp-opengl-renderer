@@ -5,6 +5,6 @@ object GL3JNILib {
     external fun UpdateGlViewPort(width: Int, height: Int)
 
     init {
-        System.loadLibrary("rtc")
+        System.loadLibrary("rotating_textured_cube")
     }
 }
