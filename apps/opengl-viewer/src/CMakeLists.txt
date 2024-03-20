@@ -65,11 +65,19 @@ if(${BUILD_WEB})
 else()
     add_executable(${TARGET} ${OPENGL_VIEWER_SRC})
     if(WIN32)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/scenes/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/scenes/)
     elseif(APPLE OR UNIX)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/scenes/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/scenes/)
     else()
         message(WARNING "Unsupported platform")
     endif()

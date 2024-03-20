@@ -58,14 +58,20 @@ if(${BUILD_WEB})
     # /
 else()
     if(WIN32)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/)
-    elseif(ANDROID)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
     elseif(APPLE OR UNIX)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
+    elseif(ANDROID)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/es/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/es/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
     else()
         message(WARNING "Unsupported platform")
     endif()
