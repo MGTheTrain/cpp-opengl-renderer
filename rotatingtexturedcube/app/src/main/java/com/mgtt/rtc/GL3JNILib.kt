@@ -1,8 +1,8 @@
 package com.mgtt.rtc
 
-class GL3JNILib {
+object GL3JNILib {
     external fun Render()
-    external fun UpdateGlViewPort()
+    external fun UpdateGlViewPort(width: Int, height: Int)
 
     init {
         System.loadLibrary("rtc")
