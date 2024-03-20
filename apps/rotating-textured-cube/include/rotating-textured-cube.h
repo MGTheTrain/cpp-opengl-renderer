@@ -123,6 +123,17 @@ class RotatingTexturedCube {
                                       int height);
 
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+#else 
+  /**
+   * @brief Updates the OpenGL viewport dimensions.
+   *
+   * This function is responsible for updating the dimensions of the OpenGL viewport
+   * to match the specified width and height.
+   *
+   * @param width The new width of the viewport.
+   * @param height The new height of the viewport.
+   */
+  void UpdateOpenGlViewPort(int width, int height);
 #endif
 
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;

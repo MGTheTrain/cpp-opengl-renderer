@@ -275,21 +275,34 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
     GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
+#else 
+/**
+ * @brief Updates the OpenGL viewport dimensions.
+ *
+ * This function is responsible for updating the dimensions of the OpenGL viewport
+ * to match the specified width and height.
+ *
+ * @param width The new width of the viewport.
+ * @param height The new height of the viewport.
+ */
+void Mgtt::Apps::RotatingTexturedCube::UpdateOpenGlViewPort(int width, int height) {
+  glViewport(0, 0, width, height);
+}
 #endif
 
-Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
 #ifndef __ANDROID__
+Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 // @ref
 // https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
-void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
+void EmscriptenMainLoop() { rotatingTexturedCube.Render(); }
 #endif
 
 int main() {
   try {
 #ifndef __EMSCRIPTEN__
-    RotatingTexturedCube.Render();
+    rotatingTexturedCube.Render();
 #else
     emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
 #endif
@@ -302,33 +315,15 @@ int main() {
 #endif
 #else
 extern "C" {
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Init(JNIEnv* env,
-                                                        jobject obj);
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
-                                                          jobject obj);
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Clear(JNIEnv* env,
-                                                         jobject obj);
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
-    JNIEnv* env, jobject obj, jint width, jint height);
-};
-
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Init(JNIEnv* env,
-                                                        jobject obj) {
-  Init();
-}
-
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
+  Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
+  JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Render(JNIEnv* env,
                                                           jobject obj) {
-  Render();
-}
+    rotatingTexturedCube.Render();
+  }
 
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_Clear(JNIEnv* env,
-                                                         jobject obj) {
-  Clear();
-}
-
-JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
-    JNIEnv* env, jobject obj, jint width, jint height) {
-  UpdateGLViewPort(width, height);
-}
+  JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL2JNILib_UpdateGLViewPort(
+      JNIEnv* env, jobject obj, jint width, jint height) {
+    rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
+  }
+};
 #endif
