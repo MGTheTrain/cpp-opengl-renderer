@@ -51,10 +51,13 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
   this->windowHeight = 1000.0f;
 
   this->glmMatrices = std::make_unique<GlmMatrices>();
+
+#ifndef __ANDROID__
   this->glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(
       appName, this->windowWidth, this->windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
+#endif
 #ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
@@ -194,12 +197,14 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
  * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
+#ifndef __ANDROID__
 #ifndef __EMSCRIPTEN__
   while (!this->glfwWindow->WindowShouldClose()) {
 #else
   this->windowWidth = CanvasGetWidth();
   this->windowHeight = CanvasGetHeight();
   this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
+#endif
 #endif
     this->ProcessInput();
 
@@ -236,6 +241,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 #endif
 }
 
+#ifndef __ANDROID__
 /**
  * @brief Process input for the GLFW window.
  *
@@ -269,6 +275,7 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
     GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
+#endif
 
 Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
 #ifdef __EMSCRIPTEN__

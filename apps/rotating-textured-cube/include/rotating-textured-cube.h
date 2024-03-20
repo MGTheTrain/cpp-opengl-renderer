@@ -27,7 +27,9 @@
 #else
 #include <GL/glew.h>
 #endif>
+#ifndef __ANDROID__
 #include <glfw-window.h>
+#endif
 #include <mesh.h>
 #include <opengl-shader.h>
 #include <scene.h>
@@ -89,6 +91,7 @@ class RotatingTexturedCube {
    */
   void Render();
 
+#ifndef __ANDROID__
   /**
    * @brief Process input for the GLFW window.
    *
@@ -97,8 +100,10 @@ class RotatingTexturedCube {
    * accordingly.
    */
   void ProcessInput();
+#endif
 
  private:
+#ifndef __ANDROID__
   /**
    * @brief Callback function for framebuffer size changes.
    *
@@ -116,6 +121,8 @@ class RotatingTexturedCube {
                                       int height);
 
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
+#endif
+
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
   std::unique_ptr<GlmMatrices> glmMatrices;
   Mgtt::Rendering::Mesh mesh;
