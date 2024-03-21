@@ -225,15 +225,15 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         glm::rotate(this->glmMatrices->model, static_cast<float>(glfwGetTime()),
                     glm::vec3(0.5f, 1.0f, 0.0f));
 #else
-    if(this->timeInSeconds > 0.0f) {
-        this->timeInSeconds = this->timeInSeconds - 0.1f;
-    }
-    if(this->timeInSeconds < 5.0f) {
-        this->timeInSeconds = this->timeInSeconds + 0.1f;
-    }
-    this->glmMatrices->model =
-        glm::rotate(this->glmMatrices->model, this->timeInSeconds,
-                    glm::vec3(0.5f, 1.0f, 0.0f));
+  if (this->timeInSeconds > 0.0f) {
+    this->timeInSeconds = this->timeInSeconds - 0.1f;
+  }
+  if (this->timeInSeconds < 5.0f) {
+    this->timeInSeconds = this->timeInSeconds + 0.1f;
+  }
+  this->glmMatrices->model =
+      glm::rotate(this->glmMatrices->model, this->timeInSeconds,
+                  glm::vec3(0.5f, 1.0f, 0.0f));
 #endif
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -244,8 +244,8 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
         glm::radians(45.0f),
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
 #else
-    this->glmMatrices->projection = glm::perspective(
-        glm::radians(45.0f), 1.0f, 0.1f, 1000.0f);
+  this->glmMatrices->projection =
+      glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1000.0f);
 #endif
     this->glmMatrices->mvp = this->glmMatrices->projection *
                              this->glmMatrices->view * this->glmMatrices->model;
@@ -257,7 +257,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
     this->glfwWindow->SwapBuffersAndPollEvents();
 #endif
 
-#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__) 
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
   }
 #endif
 }
