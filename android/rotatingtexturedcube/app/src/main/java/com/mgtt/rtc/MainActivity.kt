@@ -25,12 +25,12 @@ class MainActivity : Activity() {
 
     override fun onPause() {
         super.onPause()
-        mView!!.onPause()
+        gl3JniView!!.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mView!!.onResume()
+        gl3JniView!!.onResume()
     }
 
     companion object {
