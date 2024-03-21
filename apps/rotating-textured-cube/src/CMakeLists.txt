@@ -86,9 +86,9 @@ else()
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
     elseif(ANDROID)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/es/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/es/)
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/es/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
     else()
         message(WARNING "Unsupported platform")
     endif()
