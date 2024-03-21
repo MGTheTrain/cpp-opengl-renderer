@@ -336,7 +336,6 @@ int main() {
   }
   return 0;
 }
-#endif
 #else
 extern "C" {
 Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
@@ -350,4 +349,5 @@ JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_UpdateGlViewPort(
   rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
 }
 };
+#endif
 #endif

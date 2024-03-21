@@ -102,6 +102,19 @@ class RotatingTexturedCube {
    */
   void ProcessInput();
 
+#ifdef __ANDROID__
+    /**
+   * @brief Updates the OpenGL viewport dimensions.
+   *
+   * This function is responsible for updating the dimensions of the OpenGL
+   * viewport to match the specified width and height.
+   *
+   * @param width The new width of the viewport.
+   * @param height The new height of the viewport.
+   */
+  void UpdateOpenGlViewPort(int width, int height);
+#endif
+
  private:
 #ifndef __ANDROID__
   /**
@@ -122,16 +135,6 @@ class RotatingTexturedCube {
 
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
 #else
-  /**
-   * @brief Updates the OpenGL viewport dimensions.
-   *
-   * This function is responsible for updating the dimensions of the OpenGL
-   * viewport to match the specified width and height.
-   *
-   * @param width The new width of the viewport.
-   * @param height The new height of the viewport.
-   */
-  void UpdateOpenGlViewPort(int width, int height);
   float timeInSeconds;
 #endif
 
