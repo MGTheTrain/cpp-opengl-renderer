@@ -44,6 +44,7 @@ if(${BUILD_WEB})
     target_link_libraries(${TARGET} PRIVATE window rendering)
 else()
     if(ANDROID)
+        find_library(log-lib log)
         set(PROJECT_ROOT ../../..)
         set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
         include_directories(
@@ -53,13 +54,22 @@ else()
             ${WEB_THIRD_PARTY_FOLDER}/glm
             ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
         )
-        add_library(${TARGET} SHARED ${ROTATING_TEXTURED_CUBE_SRC})
-        find_package(log)
+        set(RENDERING_SRC 
+            ../../../modules/rendering/src/opengl-shader.cpp
+            ../../../modules/rendering/src/gltf-scene-importer.cpp
+            ../../../modules/rendering/src/model/aabb.cpp
+            ../../../modules/rendering/src/model/material.cpp
+            ../../../modules/rendering/src/model/mesh-primitive.cpp
+            ../../../modules/rendering/src/model/mesh.cpp
+            ../../../modules/rendering/src/model/node.cpp
+            ../../../modules/rendering/src/model/scene.cpp
+            ../../../modules/rendering/src/model/texture.cpp
+        )   
+        add_library(${TARGET} SHARED ${ROTATING_TEXTURED_CUBE_SRC} ${RENDERING_SRC})
         target_link_libraries(${TARGET}
             android
             EGL
             GLESv3
-            rendering
             log)
     else() # WIN32, APPLE, UNIX
         find_package(GLEW CONFIG REQUIRED)
@@ -79,19 +89,20 @@ else()
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
+        install(TARGETS ${TARGET})
+    elseif(ANDROID)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/es/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/es/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
+        install(TARGETS ${TARGET} LIBRARY DESTINATION lib)
     elseif(APPLE OR UNIX)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
-    elseif(ANDROID)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/es/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/es/)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
+        install(TARGETS ${TARGET})
     else()
         message(WARNING "Unsupported platform")
     endif()
 endif()
-
-install(TARGETS ${TARGET})
