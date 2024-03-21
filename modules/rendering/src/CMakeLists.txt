@@ -35,29 +35,19 @@ if(${BUILD_WEB})
         ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
     )
 else()
-    if(ANDROID)
-        set(PROJECT_ROOT ../../..)
-        set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
-        include_directories(
-            ${PROJECT_SOURCE_DIR}/../include
-            ${PROJECT_SOURCE_DIR}/../include/model
-            ${WEB_THIRD_PARTY_FOLDER}/glm
-            ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
-        )
-    else() # WIN32, APPLE, UNIX
-        find_package(OpenGL REQUIRED)
-        find_package(GLEW CONFIG REQUIRED)
-        find_package(glm CONFIG REQUIRED)
-        find_package(Stb REQUIRED)
-        find_path(tinygltf "tiny_gltf.h")
+     # WIN32, APPLE, UNIX
+    find_package(OpenGL REQUIRED)
+    find_package(GLEW CONFIG REQUIRED)
+    find_package(glm CONFIG REQUIRED)
+    find_package(Stb REQUIRED)
+    find_path(tinygltf "tiny_gltf.h")
 
-        include_directories(
-            ${PROJECT_SOURCE_DIR}/../include
-            ${PROJECT_SOURCE_DIR}/../include/model
-            ${Stb_INCLUDE_DIR}
-            ${GLEW_INCLUDE_DIRS}
-        )
-    endif()
+    include_directories(
+        ${PROJECT_SOURCE_DIR}/../include
+        ${PROJECT_SOURCE_DIR}/../include/model
+        ${Stb_INCLUDE_DIR}
+        ${GLEW_INCLUDE_DIRS}
+    )
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -78,10 +68,6 @@ add_library(${TARGET} STATIC ${RENDERING_SRC})
 if(${BUILD_WEB})
     # /
 else()
-    if(ANDROID)
-        target_link_libraries(${TARGET} PRIVATE GLESv3)
-    else()
-        target_link_libraries(${TARGET} PRIVATE GLEW::GLEW glm::glm-header-only)
-    endif()
+    target_link_libraries(${TARGET} PRIVATE GLEW::GLEW glm::glm-header-only)
 endif()
 install(TARGETS ${TARGET})
