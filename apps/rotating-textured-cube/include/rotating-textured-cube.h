@@ -103,7 +103,7 @@ class RotatingTexturedCube {
   void ProcessInput();
 
 #ifdef __ANDROID__
-    /**
+  /**
    * @brief Updates the OpenGL viewport dimensions.
    *
    * This function is responsible for updating the dimensions of the OpenGL
