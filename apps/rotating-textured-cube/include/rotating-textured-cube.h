@@ -93,7 +93,6 @@ class RotatingTexturedCube {
    */
   void Render();
 
-#ifndef __ANDROID__
   /**
    * @brief Process input for the GLFW window.
    *
@@ -102,7 +101,6 @@ class RotatingTexturedCube {
    * accordingly.
    */
   void ProcessInput();
-#endif
 
  private:
 #ifndef __ANDROID__
@@ -134,6 +132,7 @@ class RotatingTexturedCube {
    * @param height The new height of the viewport.
    */
   void UpdateOpenGlViewPort(int width, int height);
+  float timeInSeconds;
 #endif
 
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;

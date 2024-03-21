@@ -57,8 +57,10 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
       appName, this->windowWidth, this->windowHeight);
   this->glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
+#else
+  this->timeInSeconds = 0.0f;
 #endif
-#ifndef __EMSCRIPTEN__
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
@@ -197,14 +199,12 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
  * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
-#ifndef __ANDROID__
-#ifndef __EMSCRIPTEN__
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
   while (!this->glfwWindow->WindowShouldClose()) {
-#else
+#elif defined(__EMSCRIPTEN__)
   this->windowWidth = CanvasGetWidth();
   this->windowHeight = CanvasGetHeight();
   this->glfwWindow->SetWindowSize(this->windowWidth, this->windowHeight);
-#endif
 #endif
     this->ProcessInput();
 
@@ -220,28 +220,48 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
     this->glmMatrices->model = glm::mat4(1.0f);
     this->glmMatrices->view = glm::mat4(1.0f);
     this->glmMatrices->projection = glm::mat4(1.0f);
+#ifndef __ANDROID__
     this->glmMatrices->model =
         glm::rotate(this->glmMatrices->model, static_cast<float>(glfwGetTime()),
                     glm::vec3(0.5f, 1.0f, 0.0f));
+#else
+    if(this->timeInSeconds > 0.0f) {
+        this->timeInSeconds = this->timeInSeconds - 0.1f;
+    }
+    if(this->timeInSeconds < 5.0f) {
+        this->timeInSeconds = this->timeInSeconds + 0.1f;
+    }
+    this->glmMatrices->model =
+        glm::rotate(this->glmMatrices->model, this->timeInSeconds,
+                    glm::vec3(0.5f, 1.0f, 0.0f));
+#endif
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+#ifndef __ANDROID__
     auto [width, height] = glfwWindow->GetWindowSize();
     this->glmMatrices->projection = glm::perspective(
         glm::radians(45.0f),
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
+#else
+    this->glmMatrices->projection = glm::perspective(
+        glm::radians(45.0f), 1.0f, 0.1f, 1000.0f);
+#endif
     this->glmMatrices->mvp = this->glmMatrices->projection *
                              this->glmMatrices->view * this->glmMatrices->model;
     this->openGlShaders[0].SetMat4("mvp", this->glmMatrices->mvp);
     glBindVertexArray(this->mesh.vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
+#ifndef __ANDROID__
     this->glfwWindow->SwapBuffersAndPollEvents();
-#ifndef __EMSCRIPTEN__
+#endif
+
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__) 
   }
 #endif
 }
 
-#ifndef __ANDROID__
 /**
  * @brief Process input for the GLFW window.
  *
@@ -252,12 +272,15 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
  * processed.
  */
 void Mgtt::Apps::RotatingTexturedCube::ProcessInput() {
+#ifndef __ANDROID__
   if (glfwGetKey(this->glfwWindow->GetWindow(), GLFW_KEY_ESCAPE) ==
       GLFW_PRESS) {
     glfwSetWindowShouldClose(this->glfwWindow->GetWindow(), true);
   }
+#endif
 }
 
+#ifndef __ANDROID__
 /**
  * @brief Callback function for framebuffer size changes.
  *
