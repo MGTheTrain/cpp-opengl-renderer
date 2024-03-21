@@ -24,29 +24,43 @@ set(TARGET rendering)
 project(${TARGET})
 
 if(${BUILD_WEB})
-    set(WEB_THIRD_PARTY_FOLDER ../../../assets/web/third-party)
+    set(PROJECT_ROOT ../../..)
+    set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
     set(CMAKE_CXX_FLAGS "-s WASM=1 -std=c++17 -s FULL_ES3=1 -fwasm-exceptions -s ASSERTIONS=2 \
     -s SAFE_HEAP=1 -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
     include_directories(
+        ${PROJECT_SOURCE_DIR}/../include
+        ${PROJECT_SOURCE_DIR}/../include/model
         ${WEB_THIRD_PARTY_FOLDER}/glm
         ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
     )
 else()
-    find_package(OpenGL REQUIRED)
-    find_package(GLEW CONFIG REQUIRED)
-    find_package(glm CONFIG REQUIRED)
-    find_package(Stb REQUIRED)
-    find_path(tinygltf "tiny_gltf.h")
+    if(ANDROID)
+        set(PROJECT_ROOT ../../..)
+        set(WEB_THIRD_PARTY_FOLDER ${PROJECT_ROOT}/assets/web/third-party)
+        include_directories(
+            ${PROJECT_SOURCE_DIR}/../include
+            ${PROJECT_SOURCE_DIR}/../include/model
+            ${WEB_THIRD_PARTY_FOLDER}/glm
+            ${WEB_THIRD_PARTY_FOLDER}/tinygltf # has stb_image.h
+        )
+    else() # WIN32, APPLE, UNIX
+        find_package(OpenGL REQUIRED)
+        find_package(GLEW CONFIG REQUIRED)
+        find_package(glm CONFIG REQUIRED)
+        find_package(Stb REQUIRED)
+        find_path(tinygltf "tiny_gltf.h")
+
+        include_directories(
+            ${PROJECT_SOURCE_DIR}/../include
+            ${PROJECT_SOURCE_DIR}/../include/model
+            ${Stb_INCLUDE_DIR}
+            ${GLEW_INCLUDE_DIRS}
+        )
+    endif()
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-
-include_directories(
-    ${PROJECT_SOURCE_DIR}/../include
-    ${PROJECT_SOURCE_DIR}/../include/model
-    ${Stb_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIRS}
-)
 
 set(RENDERING_SRC 
     opengl-shader.cpp
@@ -64,6 +78,10 @@ add_library(${TARGET} STATIC ${RENDERING_SRC})
 if(${BUILD_WEB})
     # /
 else()
-    target_link_libraries(${TARGET} PRIVATE GLEW::GLEW glm::glm-header-only)
+    if(ANDROID)
+        target_link_libraries(${TARGET} PRIVATE GLESv3)
+    else()
+        target_link_libraries(${TARGET} PRIVATE GLEW::GLEW glm::glm-header-only)
+    endif()
 endif()
 install(TARGETS ${TARGET})
