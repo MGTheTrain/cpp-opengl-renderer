@@ -105,7 +105,7 @@ class GltfSceneImporter : public ISceneImporter {
 
  private:
 #ifdef __ANDROID__
-    std::string logMessage;
+  std::string logMessage;
 #endif
   /**
    * @brief Extracts the folder path from a given file path.
@@ -312,7 +312,7 @@ class TextureManager {
 
  private:
 #ifdef __ANDROID__
-    std::string logMessage;
+  std::string logMessage;
 #endif
   /**
    * @brief Check if any value in the given vector is greater than zero.
