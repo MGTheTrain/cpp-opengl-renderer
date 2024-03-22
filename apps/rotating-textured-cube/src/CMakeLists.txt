@@ -50,10 +50,6 @@ if(ANDROID)
     add_library(${TARGET} SHARED ${ROTATING_TEXTURED_CUBE_SRC} ${RENDERING_SRC})
     target_link_libraries(${TARGET} android EGL GLESv3 log)
 
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/shader/es/
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/es/)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/texture/
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
     install(TARGETS ${TARGET} LIBRARY DESTINATION lib)
 else()
     if(${BUILD_WEB})

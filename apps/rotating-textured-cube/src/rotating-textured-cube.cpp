@@ -75,8 +75,15 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   std::string vsPath = "assets/shader/core/coordinate.vert";
   std::string fsPath = "assets/shader/core/coordinate.frag";
 #else
+#ifdef __ANDROID__
+  // Copy to the emulator or real device files over via adb cli tool: 
+  // adb push <assets folder path>/shader/es/ /sdcard/Download/assets/shader/es/
+  std::string vsPath = "/sdcard/Download/assets/shader/es/coordinate.vert";
+  std::string fsPath = "/sdcard/Download/assets/shader/es/coordinate.frag";
+#else
   std::string vsPath = "assets/shader/es/coordinate.vert";
   std::string fsPath = "assets/shader/es/coordinate.frag";
+#endif
 #endif
   glEnable(GL_DEPTH_TEST);
 
@@ -160,7 +167,13 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+#ifdef __ANDROID__
+  // Copy to the emulator or real device files over via adb cli tool: 
+  // adb push <assets folder path>/texture/ /sdcard/Download/assets/texture/ 
+  std::string texturePath = "/sdcard/Download/assets/texture/surgery.jpg";
+#else
   std::string texturePath = "assets/texture/surgery.jpg";
+#endif
   this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data = stbi_load(
       texturePath.c_str(),
       &this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.width,
