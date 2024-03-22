@@ -21,7 +21,7 @@ class GL3JNIView(context: Context?): GLSurfaceView(context) {
         }
 
         override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-            // GL3JNILib.Init()
+            GL3JNILib.Init()
         }
     }
 
