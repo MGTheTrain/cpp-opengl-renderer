@@ -76,7 +76,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   std::string fsPath = "assets/shader/core/coordinate.frag";
 #else
 #ifdef __ANDROID__
-  // Copy to the emulator or real device files over via adb cli tool: 
+  // Copy to the emulator or an actual Android OS device files via adb cli tool: 
   // adb push <assets folder path>/shader/es/ /sdcard/Download/assets/shader/es/
   std::string vsPath = "/sdcard/Download/assets/shader/es/coordinate.vert";
   std::string fsPath = "/sdcard/Download/assets/shader/es/coordinate.frag";
@@ -168,7 +168,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 #ifdef __ANDROID__
-  // Copy to the emulator or real device files over via adb cli tool: 
+  // Copy to the emulator or an actual Android OS device files via adb cli tool: 
   // adb push <assets folder path>/texture/ /sdcard/Download/assets/texture/ 
   std::string texturePath = "/sdcard/Download/assets/texture/surgery.jpg";
 #else
