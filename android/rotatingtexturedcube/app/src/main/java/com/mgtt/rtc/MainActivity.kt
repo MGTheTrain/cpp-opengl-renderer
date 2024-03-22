@@ -8,6 +8,7 @@ import android.widget.RelativeLayout
 
 class MainActivity : Activity() {
     var gl3JniView: GL3JNIView? = null
+    var touchView: TouchView? = null
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
 
@@ -21,6 +22,11 @@ class MainActivity : Activity() {
         gl3JniView = GL3JNIView(application)
         gl3JniView!!.layoutParams = RelativeLayout.LayoutParams(width, height)
         layout.addView(gl3JniView)
+        touchView = TouchView(this)
+        touchView!!.tag = 1
+        touchView!!.layoutParams = RelativeLayout.LayoutParams(width, height)
+        touchView!!.setBackgroundColor(TRANSPARENT)
+        layout.addView(touchView)
     }
 
     override fun onPause() {
