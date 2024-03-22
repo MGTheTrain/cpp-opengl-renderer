@@ -88,8 +88,8 @@ class RotatingTexturedCube {
   /**
    * @brief Initializes objects required for scene rendering using OpenGL.
    *
-   * This method is responsible for initializing objects required for scene rendering using
-   * OpenGL.
+   * This method is responsible for initializing objects required for scene
+   * rendering using OpenGL.
    */
   void Init();
 

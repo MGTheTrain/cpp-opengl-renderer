@@ -50,8 +50,8 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {}
 /**
  * @brief Initializes objects required for scene rendering using OpenGL.
  *
- * This method is responsible for initializing objects required for scene rendering using
- * OpenGL.
+ * This method is responsible for initializing objects required for scene
+ * rendering using OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Init() {
   std::string appName = "rotating-textured-cube";
@@ -350,7 +350,7 @@ extern "C" {
 Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
 
 JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_Init(JNIEnv* env,
-                                                          jobject obj) {
+                                                        jobject obj) {
   rotatingTexturedCube.Init();
 }
 
