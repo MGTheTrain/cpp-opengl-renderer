@@ -360,8 +360,15 @@ int main() {
 }
 #else
 extern "C" {
-Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_Init(JNIEnv* env,
+                                                        jobject obj);
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_Render(JNIEnv* env,
+                                                          jobject obj);
+JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_UpdateGlViewPort(
+    JNIEnv* env, jobject obj, jint width, jint height);
+};
 
+Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
 JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_Init(JNIEnv* env,
                                                         jobject obj) {
   rotatingTexturedCube.Init();
@@ -376,6 +383,5 @@ JNIEXPORT void JNICALL Java_com_mgtt_rtc_GL3JNILib_UpdateGlViewPort(
     JNIEnv* env, jobject obj, jint width, jint height) {
   rotatingTexturedCube.UpdateOpenGlViewPort(width, height);
 }
-};
 #endif
 #endif
