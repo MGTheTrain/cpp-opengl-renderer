@@ -120,7 +120,11 @@ void Mgtt::Rendering::OpenGlShader::Compile(
       fragment = 0;
     }
     this->Clear();
+#ifndef __ANDROID__
     std::cerr << ex.what() << std::endl;
+#else
+    __android_log_write(ANDROID_LOG_INFO, "COMPILE ERROR", ex.what());
+#endif
   }
 #ifndef __ANDROID__
   std::cout << "COMPILE INFO: Successfully linked to a shader program the "
