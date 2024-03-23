@@ -1,5 +1,8 @@
 //
-//  Use this file to import your target's public headers that you would like to expose to Swift.
+//  OpenGLWrapper.h
+//  RotatingTexturedCube
+//
+//  Created by Marvin Gajek on 23.03.24.
 //
 
 #import <Foundation/Foundation.h>
