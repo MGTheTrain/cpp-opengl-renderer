@@ -9,6 +9,6 @@
 - (void)Init;
 - (void)Render;
 - (void)Clear;
-- (void)UpdateGlViewPort;
+- (void)UpdateGlViewPort: (int)width height:(int)height;
 
 @end
