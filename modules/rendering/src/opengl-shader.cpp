@@ -52,6 +52,10 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     const std::pair<std::string, std::string> shaderPathes) {
   this->Clear();
 
+#ifdef __ANDROID__
+  __android_log_write(ANDROID_LOG_INFO, "COMPILE INFO", "About to compile shader files");
+#endif
+
   if (shaderPathes.first.size() == 0) {
     throw std::runtime_error(
         "OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " +
@@ -87,8 +91,12 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     }
     std::string errorMsg = "SHADER ERROR: Provided vertex shader file " +
                            shaderPathes.first + " and fragment shader file " +
-                           shaderPathes.second + "does not exist";
+                           shaderPathes.second + " does not exist";
+#ifndef __ANDROID__
     std::cerr << errorMsg.c_str() << std::endl;
+#else
+    __android_log_write(ANDROID_LOG_INFO, "COMILE INFO", errorMsg.c_str());
+#endif
     return;
   }
   const char* vShaderCode = vsCode.c_str();
