@@ -1,0 +1,582 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		78EC33BE2BAF176500593924 /* RotatingTexturedCubeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC33BD2BAF176500593924 /* RotatingTexturedCubeApp.swift */; };
+		78EC33C02BAF176500593924 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC33BF2BAF176500593924 /* ContentView.swift */; };
+		78EC33C22BAF176700593924 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78EC33C12BAF176700593924 /* Assets.xcassets */; };
+		78EC33C52BAF176700593924 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78EC33C42BAF176700593924 /* Preview Assets.xcassets */; };
+		78EC33CF2BAF176700593924 /* RotatingTexturedCubeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC33CE2BAF176700593924 /* RotatingTexturedCubeTests.swift */; };
+		78EC33D92BAF176700593924 /* RotatingTexturedCubeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC33D82BAF176700593924 /* RotatingTexturedCubeUITests.swift */; };
+		78EC33DB2BAF176700593924 /* RotatingTexturedCubeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC33DA2BAF176700593924 /* RotatingTexturedCubeUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		78EC33CB2BAF176700593924 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78EC33B22BAF176500593924 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78EC33B92BAF176500593924;
+			remoteInfo = RotatingTexturedCube;
+		};
+		78EC33D52BAF176700593924 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78EC33B22BAF176500593924 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78EC33B92BAF176500593924;
+			remoteInfo = RotatingTexturedCube;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		78EC33BA2BAF176500593924 /* RotatingTexturedCube.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RotatingTexturedCube.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		78EC33BD2BAF176500593924 /* RotatingTexturedCubeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingTexturedCubeApp.swift; sourceTree = "<group>"; };
+		78EC33BF2BAF176500593924 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		78EC33C12BAF176700593924 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78EC33C42BAF176700593924 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		78EC33CA2BAF176700593924 /* RotatingTexturedCubeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RotatingTexturedCubeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		78EC33CE2BAF176700593924 /* RotatingTexturedCubeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingTexturedCubeTests.swift; sourceTree = "<group>"; };
+		78EC33D42BAF176700593924 /* RotatingTexturedCubeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RotatingTexturedCubeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		78EC33D82BAF176700593924 /* RotatingTexturedCubeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingTexturedCubeUITests.swift; sourceTree = "<group>"; };
+		78EC33DA2BAF176700593924 /* RotatingTexturedCubeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingTexturedCubeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		78EC33B72BAF176500593924 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EC33C72BAF176700593924 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EC33D12BAF176700593924 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		78EC33B12BAF176500593924 = {
+			isa = PBXGroup;
+			children = (
+				78EC33BC2BAF176500593924 /* RotatingTexturedCube */,
+				78EC33CD2BAF176700593924 /* RotatingTexturedCubeTests */,
+				78EC33D72BAF176700593924 /* RotatingTexturedCubeUITests */,
+				78EC33BB2BAF176500593924 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		78EC33BB2BAF176500593924 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				78EC33BA2BAF176500593924 /* RotatingTexturedCube.app */,
+				78EC33CA2BAF176700593924 /* RotatingTexturedCubeTests.xctest */,
+				78EC33D42BAF176700593924 /* RotatingTexturedCubeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		78EC33BC2BAF176500593924 /* RotatingTexturedCube */ = {
+			isa = PBXGroup;
+			children = (
+				78EC33BD2BAF176500593924 /* RotatingTexturedCubeApp.swift */,
+				78EC33BF2BAF176500593924 /* ContentView.swift */,
+				78EC33C12BAF176700593924 /* Assets.xcassets */,
+				78EC33C32BAF176700593924 /* Preview Content */,
+			);
+			path = RotatingTexturedCube;
+			sourceTree = "<group>";
+		};
+		78EC33C32BAF176700593924 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				78EC33C42BAF176700593924 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		78EC33CD2BAF176700593924 /* RotatingTexturedCubeTests */ = {
+			isa = PBXGroup;
+			children = (
+				78EC33CE2BAF176700593924 /* RotatingTexturedCubeTests.swift */,
+			);
+			path = RotatingTexturedCubeTests;
+			sourceTree = "<group>";
+		};
+		78EC33D72BAF176700593924 /* RotatingTexturedCubeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				78EC33D82BAF176700593924 /* RotatingTexturedCubeUITests.swift */,
+				78EC33DA2BAF176700593924 /* RotatingTexturedCubeUITestsLaunchTests.swift */,
+			);
+			path = RotatingTexturedCubeUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		78EC33B92BAF176500593924 /* RotatingTexturedCube */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78EC33DE2BAF176700593924 /* Build configuration list for PBXNativeTarget "RotatingTexturedCube" */;
+			buildPhases = (
+				78EC33B62BAF176500593924 /* Sources */,
+				78EC33B72BAF176500593924 /* Frameworks */,
+				78EC33B82BAF176500593924 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RotatingTexturedCube;
+			productName = RotatingTexturedCube;
+			productReference = 78EC33BA2BAF176500593924 /* RotatingTexturedCube.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78EC33C92BAF176700593924 /* RotatingTexturedCubeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78EC33E12BAF176700593924 /* Build configuration list for PBXNativeTarget "RotatingTexturedCubeTests" */;
+			buildPhases = (
+				78EC33C62BAF176700593924 /* Sources */,
+				78EC33C72BAF176700593924 /* Frameworks */,
+				78EC33C82BAF176700593924 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78EC33CC2BAF176700593924 /* PBXTargetDependency */,
+			);
+			name = RotatingTexturedCubeTests;
+			productName = RotatingTexturedCubeTests;
+			productReference = 78EC33CA2BAF176700593924 /* RotatingTexturedCubeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		78EC33D32BAF176700593924 /* RotatingTexturedCubeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78EC33E42BAF176700593924 /* Build configuration list for PBXNativeTarget "RotatingTexturedCubeUITests" */;
+			buildPhases = (
+				78EC33D02BAF176700593924 /* Sources */,
+				78EC33D12BAF176700593924 /* Frameworks */,
+				78EC33D22BAF176700593924 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78EC33D62BAF176700593924 /* PBXTargetDependency */,
+			);
+			name = RotatingTexturedCubeUITests;
+			productName = RotatingTexturedCubeUITests;
+			productReference = 78EC33D42BAF176700593924 /* RotatingTexturedCubeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		78EC33B22BAF176500593924 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					78EC33B92BAF176500593924 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+					78EC33C92BAF176700593924 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 78EC33B92BAF176500593924;
+					};
+					78EC33D32BAF176700593924 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 78EC33B92BAF176500593924;
+					};
+				};
+			};
+			buildConfigurationList = 78EC33B52BAF176500593924 /* Build configuration list for PBXProject "RotatingTexturedCube" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 78EC33B12BAF176500593924;
+			productRefGroup = 78EC33BB2BAF176500593924 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				78EC33B92BAF176500593924 /* RotatingTexturedCube */,
+				78EC33C92BAF176700593924 /* RotatingTexturedCubeTests */,
+				78EC33D32BAF176700593924 /* RotatingTexturedCubeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		78EC33B82BAF176500593924 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78EC33C52BAF176700593924 /* Preview Assets.xcassets in Resources */,
+				78EC33C22BAF176700593924 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EC33C82BAF176700593924 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EC33D22BAF176700593924 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		78EC33B62BAF176500593924 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78EC33C02BAF176500593924 /* ContentView.swift in Sources */,
+				78EC33BE2BAF176500593924 /* RotatingTexturedCubeApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EC33C62BAF176700593924 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78EC33CF2BAF176700593924 /* RotatingTexturedCubeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78EC33D02BAF176700593924 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78EC33DB2BAF176700593924 /* RotatingTexturedCubeUITestsLaunchTests.swift in Sources */,
+				78EC33D92BAF176700593924 /* RotatingTexturedCubeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		78EC33CC2BAF176700593924 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78EC33B92BAF176500593924 /* RotatingTexturedCube */;
+			targetProxy = 78EC33CB2BAF176700593924 /* PBXContainerItemProxy */;
+		};
+		78EC33D62BAF176700593924 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78EC33B92BAF176500593924 /* RotatingTexturedCube */;
+			targetProxy = 78EC33D52BAF176700593924 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		78EC33DC2BAF176700593924 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		78EC33DD2BAF176700593924 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		78EC33DF2BAF176700593924 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RotatingTexturedCube/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mgtt.RotatingTexturedCube;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		78EC33E02BAF176700593924 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RotatingTexturedCube/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mgtt.RotatingTexturedCube;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		78EC33E22BAF176700593924 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mgtt.RotatingTexturedCubeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RotatingTexturedCube.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RotatingTexturedCube";
+			};
+			name = Debug;
+		};
+		78EC33E32BAF176700593924 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mgtt.RotatingTexturedCubeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RotatingTexturedCube.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RotatingTexturedCube";
+			};
+			name = Release;
+		};
+		78EC33E52BAF176700593924 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mgtt.RotatingTexturedCubeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RotatingTexturedCube;
+			};
+			name = Debug;
+		};
+		78EC33E62BAF176700593924 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mgtt.RotatingTexturedCubeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RotatingTexturedCube;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		78EC33B52BAF176500593924 /* Build configuration list for PBXProject "RotatingTexturedCube" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78EC33DC2BAF176700593924 /* Debug */,
+				78EC33DD2BAF176700593924 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78EC33DE2BAF176700593924 /* Build configuration list for PBXNativeTarget "RotatingTexturedCube" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78EC33DF2BAF176700593924 /* Debug */,
+				78EC33E02BAF176700593924 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78EC33E12BAF176700593924 /* Build configuration list for PBXNativeTarget "RotatingTexturedCubeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78EC33E22BAF176700593924 /* Debug */,
+				78EC33E32BAF176700593924 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78EC33E42BAF176700593924 /* Build configuration list for PBXNativeTarget "RotatingTexturedCubeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78EC33E52BAF176700593924 /* Debug */,
+				78EC33E62BAF176700593924 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 78EC33B22BAF176500593924 /* Project object */;
+}
