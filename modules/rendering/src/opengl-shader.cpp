@@ -53,7 +53,8 @@ void Mgtt::Rendering::OpenGlShader::Compile(
   this->Clear();
 
 #ifdef __ANDROID__
-  __android_log_write(ANDROID_LOG_INFO, "COMPILE INFO", "About to compile shader files");
+  __android_log_write(ANDROID_LOG_INFO, "COMPILE INFO",
+                      "About to compile shader files");
 #endif
 
   if (shaderPathes.first.size() == 0) {
