@@ -54,6 +54,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {}
  * rendering using OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Init() {
+#ifdef __ANDROID__
+  __android_log_write(ANDROID_LOG_INFO, "INIT INFO", "Initial log");
+#endif
   std::string appName = "rotating-textured-cube";
   this->windowWidth = 1000.0f;
   this->windowHeight = 1000.0f;
@@ -76,6 +79,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   std::string fsPath = "assets/shader/core/coordinate.frag";
 #else
 #ifdef __ANDROID__
+  __android_log_write(ANDROID_LOG_INFO, "INIT INFO", "About to compile shader files");
   // Copy to the emulator or an actual Android OS device files via adb cli tool:
   // adb push <assets folder path>/shader/es/ /sdcard/Download/assets/shader/es/
   std::string vsPath = "/sdcard/Download/assets/shader/es/coordinate.vert";

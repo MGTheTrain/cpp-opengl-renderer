@@ -30,6 +30,7 @@
 #ifndef __ANDROID__
 #include <glfw-window.h>
 #else
+#include <android/log.h>
 #include <jni.h>
 #endif
 #include <mesh.h>
