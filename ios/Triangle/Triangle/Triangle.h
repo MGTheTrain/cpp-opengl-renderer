@@ -15,7 +15,7 @@
 #include <TargetConditionals.h>
 #endif
 
-#if defined(TARGET_OS_IOS) || defined(TARGET_OS_SIMULATOR)
+#if defined(TARGET_OS_IOS) || defined(TARGET_IPHONE_SIMULATOR)
 #include <OpenGLES/ES3/gl.h>
 #endif
 /**
