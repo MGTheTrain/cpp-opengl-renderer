@@ -9,9 +9,15 @@
 #define TRIANGLE_H
 
 #include <stdio.h>
-#include <OpenGLES/ES3/gl.h>
 #include <string.h>
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+#if defined(TARGET_OS_IOS) || defined(TARGET_OS_SIMULATOR)
+#include <OpenGLES/ES3/gl.h>
+#endif
 /**
  * @brief Class representing a triangle in OpenGL.
  */
