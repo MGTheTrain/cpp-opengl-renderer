@@ -12,8 +12,6 @@
 #include <OpenGLES/ES3/gl.h>
 #include <string.h>
 
-// Refer to: https://www.sitepoint.com/using-c-and-c-in-an-ios-app-with-objective-c/
-
 class Triangle {
 public:
     Triangle();
