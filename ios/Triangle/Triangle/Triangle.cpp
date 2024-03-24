@@ -27,38 +27,20 @@ const GLchar* fragmentShaderSource =
     "    fragColor = vec4(0.0, 1.0, 0.0, 1.0); \n"
     "}\n";
 
+/**
+* @brief Constructor for the Triangle class.
+*/
 Triangle::Triangle() {}
 
+/**
+* @brief Destructor for the Triangle class.
+*/
 Triangle::~Triangle() {}
 
-void Triangle::compileShader(GLuint shader, const GLchar* source) {
-    glShaderSource(shader, 1, &source, NULL);
-    glCompileShader(shader);
-
-    GLint success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        GLchar infoLog[512];
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::COMPILATION_FAILED\n%s\n", infoLog);
-    }
-}
-
-void Triangle::linkProgram(GLuint program, GLuint vertexShader, GLuint fragmentShader) {
-    glAttachShader(program, vertexShader);
-    glAttachShader(program, fragmentShader);
-    glLinkProgram(program);
-
-    GLint success;
-    glGetProgramiv(program, GL_LINK_STATUS, &success);
-    if (!success) {
-        GLchar infoLog[512];
-        glGetProgramInfoLog(program, 512, NULL, infoLog);
-        printf("ERROR::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
-    }
-}
-
-void Triangle::initOpenGL() {
+/**
+* @brief Initializes OpenGL resources required to render the triangle.
+*/
+void Triangle::init() {
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     compileShader(vertexShader, vertexShaderSource);
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -85,14 +67,58 @@ void Triangle::initOpenGL() {
     glEnableVertexAttribArray(0);
 }
 
-void Triangle::drawOpenGL() {
+/**
+* @brief Draws the triangle using OpenGL.
+*/
+void Triangle::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(program);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void Triangle::clearOpenGL() {
+/**
+* @brief Clears OpenGL resources when they are no longer needed.
+*/
+void Triangle::clear() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+}
+
+/**
+* @brief Compiles a shader from its source code.
+* @param shader The shader object to compile.
+* @param source The source code of the shader.
+*/
+void Triangle::compileShader(GLuint shader, const GLchar* source) {
+    glShaderSource(shader, 1, &source, NULL);
+    glCompileShader(shader);
+
+    GLint success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        GLchar infoLog[512];
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        printf("ERROR::SHADER::COMPILATION_FAILED\n%s\n", infoLog);
+    }
+}
+
+/**
+* @brief Links vertex and fragment shaders into a shader program.
+* @param program The shader program object.
+* @param vertexShader The vertex shader object.
+* @param fragmentShader The fragment shader object.
+*/
+void Triangle::linkProgram(GLuint program, GLuint vertexShader, GLuint fragmentShader) {
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+    glLinkProgram(program);
+
+    GLint success;
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success) {
+        GLchar infoLog[512];
+        glGetProgramInfoLog(program, 512, NULL, infoLog);
+        printf("ERROR::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+    }
 }

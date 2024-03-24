@@ -60,12 +60,12 @@
     [self.view addSubview:self.glkView];
     
     // Initialize OpenGL content
-    triangle.initOpenGL();
+    triangle.init();
 }
 
 - (void)cleanupOpenGL {
     // Cleanup OpenGL
-    triangle.clearOpenGL();
+    triangle.clear();
     
     // Clear the context
     if ([EAGLContext currentContext] == self.context) {
@@ -76,7 +76,7 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     // Draw OpenGL content
-    triangle.drawOpenGL();
+    triangle.draw();
 }
 
 @end
