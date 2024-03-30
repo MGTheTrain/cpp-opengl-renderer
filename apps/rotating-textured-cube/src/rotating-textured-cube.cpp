@@ -75,19 +75,19 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
   }
-  std::string vsPath = "assets/shader/core/coordinate.vert";
-  std::string fsPath = "assets/shader/core/coordinate.frag";
+  std::string vsPath = "assets/shader/core330/coordinate.vert";
+  std::string fsPath = "assets/shader/core330/coordinate.frag";
 #else
 #ifdef __ANDROID__
   __android_log_write(ANDROID_LOG_INFO, "INIT INFO",
                       "About to compile shader files");
   // Copy to the emulator or an actual Android OS device files via adb cli tool:
-  // adb push <assets folder path>/shader/es/ /sdcard/Download/assets/shader/es/
-  std::string vsPath = "/sdcard/Download/assets/shader/es/coordinate.vert";
-  std::string fsPath = "/sdcard/Download/assets/shader/es/coordinate.frag";
+  // adb push <assets folder path>/shader/es30/ /sdcard/Download/assets/shader/es30/
+  std::string vsPath = "/sdcard/Download/assets/shader/es30/coordinate.vert";
+  std::string fsPath = "/sdcard/Download/assets/shader/es30/coordinate.frag";
 #else
-  std::string vsPath = "assets/shader/es/coordinate.vert";
-  std::string fsPath = "assets/shader/es/coordinate.frag";
+  std::string vsPath = "assets/shader/es30/coordinate.vert";
+  std::string fsPath = "assets/shader/es30/coordinate.frag";
 #endif
 #endif
   glEnable(GL_DEPTH_TEST);

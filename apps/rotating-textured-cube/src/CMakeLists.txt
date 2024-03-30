@@ -80,14 +80,14 @@ else()
         target_link_libraries(${TARGET} PRIVATE window rendering)
 
         if(WIN32)
-            file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/shader/core/
-                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core/)
+            file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/shader/core330/
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core330/)
             file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/texture/
                 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
             install(TARGETS ${TARGET})
         elseif(APPLE OR UNIX)
-            file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/shader/core/
-                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core/)
+            file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/shader/core330/
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core330/)
             file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_ROOT}/assets/texture/
                 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
             install(TARGETS ${TARGET})

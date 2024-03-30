@@ -21,10 +21,14 @@
 // SOFTWARE.
 
 #ifdef MGTT_RENDERING_TEST
-#if defined(__EMSCRIPTEN__) || defined(__ANDROID__)
+#if defined(__EMSCRIPTEN__)
 #include <GLES3/gl3.h>
 #else
+#if defined(__ANDROID__)
+#include <GLES2/gl2.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 #include <GLFW/glfw3.h>
 #include <gltf-scene-importer.h>
@@ -111,7 +115,7 @@ TEST_F(GltfSceneImporterTest, LoadValidGltfFile) {
 
   try {
     std::pair<std::string, std::string> shaderPathes = {
-        "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+        "assets/shader/core330/pbr.vert", "assets/shader/core330/pbr.frag"};
     GltfSceneImporterTest::mgttScene.shader.Compile(shaderPathes);
     GltfSceneImporterTest::gltfSceneImporter->Load(
         GltfSceneImporterTest::mgttScene,

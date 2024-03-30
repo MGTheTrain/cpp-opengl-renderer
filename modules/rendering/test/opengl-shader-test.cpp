@@ -21,10 +21,14 @@
 // SOFTWARE.
 
 #ifdef MGTT_RENDERING_TEST
-#if defined(__EMSCRIPTEN__) || defined(__ANDROID__)
+#if defined(__EMSCRIPTEN__) 
 #include <GLES3/gl3.h>
 #else
+#if defined(__ANDROID__)
+#include <GLES2/gl2.h>
+#else
 #include <GL/glew.h>
+#endif
 #endif
 #include <GLFW/glfw3.h>
 #include <gtest/gtest.h>
@@ -91,8 +95,8 @@ TEST_F(OpenGlShaderTest, Compile) {
 
   try {
     std::pair<std::string, std::string> shaderPathes = {
-        "assets/shader/core/coordinate.vert",
-        "assets/shader/core/coordinate.frag"};
+        "assets/shader/core330/coordinate.vert",
+        "assets/shader/core330/coordinate.frag"};
     OpenGlShaderTest::openGlShader->Compile(shaderPathes);
   } catch (...) {
     FAIL() << "An exception has been thrown" << std::endl;

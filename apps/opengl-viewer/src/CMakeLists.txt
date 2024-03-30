@@ -93,15 +93,15 @@ else()
     endif()
 
     if(WIN32)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core330/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/shader/core330/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/texture/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/scenes/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/assets/scenes/)
     elseif(APPLE OR UNIX)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core/)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/shader/core330/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/shader/core330/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/texture/
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets/texture/)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/scenes/
