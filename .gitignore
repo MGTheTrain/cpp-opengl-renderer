@@ -15,3 +15,4 @@ rotating_textured_cube.data
 opengl_viewer.js
 opengl_viewer.wasm
 opengl_viewer.data
+.DS_Store
