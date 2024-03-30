@@ -82,7 +82,8 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   __android_log_write(ANDROID_LOG_INFO, "INIT INFO",
                       "About to compile shader files");
   // Copy to the emulator or an actual Android OS device files via adb cli tool:
-  // adb push <assets folder path>/shader/es30/ /sdcard/Download/assets/shader/es30/
+  // adb push <assets folder path>/shader/es30/
+  // /sdcard/Download/assets/shader/es30/
   std::string vsPath = "/sdcard/Download/assets/shader/es30/coordinate.vert";
   std::string fsPath = "/sdcard/Download/assets/shader/es30/coordinate.frag";
 #else

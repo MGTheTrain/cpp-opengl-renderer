@@ -74,7 +74,8 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       "assets/shader/core330/eq2CubeMap.vert",
       "assets/shader/core330/eq2CubeMap.frag"};
   std::pair<std::string, std::string> brdfLutShaderPathes = {
-      "assets/shader/core330/genBrdf.vert", "assets/shader/core330/genBrdf.frag"};
+      "assets/shader/core330/genBrdf.vert",
+      "assets/shader/core330/genBrdf.frag"};
   std::pair<std::string, std::string> envMapShaderPathes = {
       "assets/shader/core330/envMap.vert", "assets/shader/core330/envMap.frag"};
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
@@ -85,7 +86,8 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       "assets/shader/es30/pbr.vert", "assets/shader/es30/pbr.frag"};
   this->mgttScene.shader.Compile(pbrShaderPathes);
   std::pair<std::string, std::string> eq2BrdfLutShaderPathes = {
-      "assets/shader/es30/eq2CubeMap.vert", "assets/shader/es30/eq2CubeMap.frag"};
+      "assets/shader/es30/eq2CubeMap.vert",
+      "assets/shader/es30/eq2CubeMap.frag"};
   std::pair<std::string, std::string> brdfLutShaderPathes = {
       "assets/shader/es30/genBrdf.vert", "assets/shader/es30/genBrdf.frag"};
   std::pair<std::string, std::string> envMapShaderPathes = {
@@ -394,7 +396,8 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
         if (result == NFD_OKAY) {
           this->gltfSceneImporter->Clear(this->mgttScene);
           std::pair<std::string, std::string> pbrShaderPathes = {
-              "assets/shader/core330/pbr.vert", "assets/shader/core330/pbr.frag"};
+              "assets/shader/core330/pbr.vert",
+              "assets/shader/core330/pbr.frag"};
           this->mgttScene.shader.Compile(pbrShaderPathes);
           std::string mgttScenePath = std::string(selectedPath);
           this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#if defined(__EMSCRIPTEN__) 
+#if defined(__EMSCRIPTEN__)
 #include <GLES3/gl3.h>
 #else
 #if defined(__ANDROID__)
