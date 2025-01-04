@@ -22,13 +22,6 @@
 
 #include <gltf-scene-importer.h>
 
-// Keep MACROS in one cpp file only
-// @note https://github.com/syoyo/tinygltf/issues/175
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#define TINYGLTF_IMPLEMENTATION
-#include <tiny_gltf.h>
-
 /**
  * @brief Load the 3D scene from a specified file path.
  *
@@ -45,8 +38,7 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
                                               const std::string& path) {
   try {
     if (mgttScene.shader.GetProgramId() == 0) {
-      throw std::runtime_error(
-          "LOAD ERROR: Ensure that a shader program for [scene.shader]exists");
+      throw std::runtime_error("Shader pbr scene program does not exist");
     }
 
     mgttScene.path = path;
@@ -57,8 +49,7 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
                           path.substr(path.size() - 4, 4) == ".glb");
 
     if (!hasGltfSuffix) {
-      throw std::runtime_error("GLTF IMPORTER ERROR: No proper suffix for: " +
-                               path);
+      throw std::runtime_error("Suffix forbidden: " + path);
     }
 
     bool binary = false;
@@ -199,7 +190,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
       scene.textureMap[image.uri] = texture;
     }
   }
-  std::cout << "LOAD TEXTURES INFO: Successfully loaded all textures for scene "
+  std::cout << "All textures allocated for scene "
             << scene.path << std::endl;
 }
 
@@ -239,7 +230,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupTexture(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   } else {
-    std::cout << "LOG INFO: Texture data is a nullptr" << std::endl;
+    std::cout << "Texture data is a nullptr" << std::endl;
   }
 }
 
@@ -635,7 +626,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     parent->children.push_back(newNode);
   } else {
     scene.nodes.push_back(newNode);
-    std::cout << "Loaded node " << newNode->name << " with index " << nodeIndex
+    std::cout << "Allocated node " << newNode->name << " with index " << nodeIndex
               << std::endl;
   }
 }

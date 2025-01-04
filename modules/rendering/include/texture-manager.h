@@ -28,7 +28,8 @@
 #include <GL/glew.h>
 #endif>
 
-#include <tiny_gltf.h>
+#include <stb_image.h>
+#include <texture.h>
 
 #include <iostream>
 #include <string>
