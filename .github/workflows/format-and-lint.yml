@@ -1,10 +1,10 @@
-name: Format and lint C++ project with clang-format and commit changes
+name: Format, lint C++ code with clang-format and commit changes
 
 on: push
 
 jobs:
   format-and-lint: 
-    name: Format and lint C++ project
+    name: Format and lint C++ code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,7 +23,7 @@ jobs:
           git config --global user.email github-actions[bot]@users.noreply.github.com
           git pull
           git add -A
-          git diff-index --quiet HEAD || git commit -m "Formatted cpp project with clang-format"
+          git diff-index --quiet HEAD || git commit -m "Formatted cpp code with clang-format"
           git push
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

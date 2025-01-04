@@ -50,7 +50,7 @@ struct AABB {
    */
   AABB();
 
-  ~AABB() {}
+  ~AABB() = default;
 
   glm::vec3 min;
   glm::vec3 max;

@@ -49,7 +49,7 @@ struct Mesh {
    */
   Mesh();
 
-  ~Mesh() {}
+  ~Mesh() = default;
 
   /**
    * @brief Clear releases resources.
