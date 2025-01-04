@@ -51,6 +51,7 @@ include_directories(
 set(RENDERING_SRC 
     opengl-shader.cpp
     gltf-scene-importer.cpp
+    texture-manager.cpp
     model/aabb.cpp
     model/material.cpp
     model/mesh-primitive.cpp

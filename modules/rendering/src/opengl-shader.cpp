@@ -53,14 +53,10 @@ void Mgtt::Rendering::OpenGlShader::Compile(
   this->Clear();
 
   if (shaderPathes.first.size() == 0) {
-    throw std::runtime_error(
-        "OPENGL SHADER ALLOCATOR ERROR: Empty vertex path: " +
-        shaderPathes.first);
+    throw std::runtime_error("Empty vertex path: " + shaderPathes.first);
   }
   if (shaderPathes.second.size() == 0) {
-    throw std::runtime_error(
-        "OPENGL SHADER ALLOCATOR ERROR: Empty fragment path: " +
-        shaderPathes.second);
+    throw std::runtime_error("Empty fragment path: " + shaderPathes.second);
   }
   std::string vsCode;
   std::string fsCode;
@@ -85,9 +81,9 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     if (fsFile.is_open()) {
       fsFile.close();
     }
-    std::string errorMsg = "SHADER ERROR: Provided vertex shader file " +
-                           shaderPathes.first + " and fragment shader file " +
-                           shaderPathes.second + "does not exist";
+    std::string errorMsg = "Either vertex shader file " +
+                           shaderPathes.first + " or fragment shader file " +
+                           shaderPathes.second + "missing";
     std::cerr << errorMsg.c_str() << std::endl;
     return;
   }
@@ -122,10 +118,8 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     this->Clear();
     std::cerr << ex.what() << std::endl;
   }
-  std::cout << "COMPILE INFO: Successfully linked to a shader program the "
-               "compiled vertex shader "
-            << shaderPathes.first << " and fragment shader "
-            << shaderPathes.second << std::endl;
+  std::cout << "Shader program allocated with vertex shader and fragment shader compiled from "
+          << shaderPathes.first << " and " << shaderPathes.second << std::endl;
 }
 
 /**
@@ -134,8 +128,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(
 void Mgtt::Rendering::OpenGlShader::Clear() {
   if (this->id > 0) {
     glDeleteProgram(this->id);
-    std::cout << "CLEAR INFO: Successfully deleted program with id " << this->id
-              << std::endl;
+    std::cout << "Deleted program with id " << this->id << std::endl;
     this->id = 0;
   }
 }
@@ -308,7 +301,7 @@ void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader,
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
       glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-      std::string errorMsg = "SHADER COMPILATION ERROR: Type: " + type + "\n" +
+      std::string errorMsg = "Shader compilation error: Type: " + type + "\n" +
                              infoLog +
                              "\n###############################################"
                              "######################################";
@@ -318,7 +311,7 @@ void Mgtt::Rendering::OpenGlShader::CheckCompileErrors(GLuint shader,
     glGetProgramiv(shader, GL_LINK_STATUS, &success);
     if (!success) {
       glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-      std::string errorMsg = "PROGRAM LINKING ERROR: Type: " + type + "\n" +
+      std::string errorMsg = "Program linking error: Type: " + type + "\n" +
                              infoLog +
                              "\n###############################################"
                              "######################################";
