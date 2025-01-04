@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added vcpkg git submodule 
+
+### Updated
+
+- Replaced deprecated nativefiledialog with nativefiledialog-extended package and adjusted implementation in OpenGL viewer app
+- Moved texture manager declarations and implementations in separate header and source files
+
 ## [0.7.0] - 17-03-2024
 
 ### Added
