@@ -422,7 +422,7 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
         } else if (result == NFD_CANCEL) {
         } else {
           std::string msg = std::string(NFD_GetError());
-          this->logger->Error(msg, "OpenGlViewerApp::SetupImGuiContextAndDraw");
+          std::cerr << msg;
         }
 
         NFD_Quit();
