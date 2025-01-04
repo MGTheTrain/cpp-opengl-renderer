@@ -101,8 +101,8 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
         mgttScene.aabb.scale =
             glm::max(tmpScale.x, glm::max(tmpScale.y, tmpScale.z));
       }
-      std::cout << "Scale equals "
-                << std::to_string(mgttScene.aabb.scale) << std::endl;
+      std::cout << "Scale equals " << std::to_string(mgttScene.aabb.scale)
+                << std::endl;
     } else {
       throw std::runtime_error("Failed to load glTF file: " + path);
     }
@@ -375,7 +375,8 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     } else if (mesh->tex > 0) {
       throw std::runtime_error("Mesh tex id needs to be equal 0");
     } else if (mesh->vertexPositionAttribs.size() == 0) {
-      throw std::runtime_error("Mesh vertex position attributes needs contain elements");
+      throw std::runtime_error(
+          "Mesh vertex position attributes needs contain elements");
     } else if (mesh->vertexPositionAttribs.size() == 0) {
       throw std::runtime_error(
           "Mesh vertex position attributes need to contain elements");
@@ -430,7 +431,9 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
 
     glBindVertexArray(0);
   } else {
-    std::cout << "Node is not a mesh" << std::endl;  // We might utilize spdlog as an improvement for logging
+    std::cout
+        << "Node is not a mesh"
+        << std::endl;  // We might utilize spdlog as an improvement for logging
   }
 }
 
@@ -632,7 +635,8 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     parent->children.push_back(newNode);
   } else {
     scene.nodes.push_back(newNode);
-    std::cout << "Loaded node " << newNode->name << " with index " << nodeIndex << std::endl;
+    std::cout << "Loaded node " << newNode->name << " with index " << nodeIndex
+              << std::endl;
   }
 }
 

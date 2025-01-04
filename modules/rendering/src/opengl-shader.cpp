@@ -81,9 +81,9 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     if (fsFile.is_open()) {
       fsFile.close();
     }
-    std::string errorMsg = "Either vertex shader file " +
-                           shaderPathes.first + " or fragment shader file " +
-                           shaderPathes.second + "missing";
+    std::string errorMsg = "Either vertex shader file " + shaderPathes.first +
+                           " or fragment shader file " + shaderPathes.second +
+                           "missing";
     std::cerr << errorMsg.c_str() << std::endl;
     return;
   }
@@ -118,8 +118,10 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     this->Clear();
     std::cerr << ex.what() << std::endl;
   }
-  std::cout << "Shader program allocated with vertex shader and fragment shader compiled from "
-          << shaderPathes.first << " and " << shaderPathes.second << std::endl;
+  std::cout << "Shader program allocated with vertex shader and fragment "
+               "shader compiled from "
+            << shaderPathes.first << " and " << shaderPathes.second
+            << std::endl;
 }
 
 /**

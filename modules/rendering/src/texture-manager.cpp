@@ -336,11 +336,9 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(
     this->SetupQuad(container);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   } else {
-    std::cout << "Brdf lut texture has already been allocated"
-              << std::endl;
+    std::cout << "Brdf lut texture has already been allocated" << std::endl;
   }
-  std::cout << "Brdf lut texture allocated"
-            << std::endl;
+  std::cout << "Brdf lut texture allocated" << std::endl;
 }
 
 /**
