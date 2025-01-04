@@ -28,8 +28,8 @@
 #include <GL/glew.h>
 #endif>
 #include <iscene-importer.h>
-#include <tiny_gltf.h>
 #include <stb_image.h>
+#include <tiny_gltf.h>
 
 #include <iostream>
 #include <memory>

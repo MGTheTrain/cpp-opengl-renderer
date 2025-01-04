@@ -190,8 +190,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
       scene.textureMap[image.uri] = texture;
     }
   }
-  std::cout << "All textures allocated for scene "
-            << scene.path << std::endl;
+  std::cout << "All textures allocated for scene " << scene.path << std::endl;
 }
 
 /**
@@ -626,8 +625,8 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     parent->children.push_back(newNode);
   } else {
     scene.nodes.push_back(newNode);
-    std::cout << "Allocated node " << newNode->name << " with index " << nodeIndex
-              << std::endl;
+    std::cout << "Allocated node " << newNode->name << " with index "
+              << nodeIndex << std::endl;
   }
 }
 
