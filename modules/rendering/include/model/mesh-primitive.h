@@ -38,7 +38,7 @@ struct MeshPrimitive {
    */
   MeshPrimitive();
 
-  ~MeshPrimitive() {}
+  ~MeshPrimitive() = default;
 
   /**
    * @brief Clear releases resources.

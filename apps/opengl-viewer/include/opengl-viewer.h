@@ -35,6 +35,7 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 #include <opengl-shader.h>
+#include <texture-manager.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

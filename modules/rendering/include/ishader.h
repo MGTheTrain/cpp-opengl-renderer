@@ -34,7 +34,7 @@ class IShader {
   /**
    * @brief Virtual destructor for the interface.
    */
-  virtual ~IShader() {}
+  virtual ~IShader() = default;
 
   /**
    * @brief Compile the shader program from specified vertex and fragment shader

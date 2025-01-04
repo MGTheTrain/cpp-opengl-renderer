@@ -32,10 +32,10 @@ if ($WebBuild) {
         $CMakeToolchainFile = Read-Host "Enter the path to CMakeToolchainFile, e.g. 'D:\c++ repos\dependencies\vcpkg\scripts\buildsystems\vcpkg.cmake'"
     }
     cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
-    cmake --build build --parallel 8
+    cmake --build build --parallel --config Debug
     if ($RunTests) {
         Set-Location -Path "build"
-        ctest --verbose
+        ctest -C Debug --verbose
     }
 }
 
