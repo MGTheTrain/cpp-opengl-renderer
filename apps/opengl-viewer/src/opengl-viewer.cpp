@@ -389,8 +389,19 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
     if (ImGui::BeginTabItem("Scene")) {
       if (ImGui::Button("Select glTF scene")) {
 #ifndef __EMSCRIPTEN__
-        nfdchar_t* selectedPath = NULL;
-        nfdresult_t result = NFD_OpenDialog("gltf", NULL, &selectedPath);
+        NFD_Init();
+
+        nfdu8filteritem_t filters[1] = {
+            {"3D Models", "gltf"}};
+
+        nfdopendialogu8args_t args = {0};
+        args.filterList = filters;
+        args.filterCount = 1;
+
+        nfdu8char_t *selectedPath = NULL;
+
+        nfdresult_t result = NFD_OpenDialogU8_With(&selectedPath, &args);
+
         if (result == NFD_OKAY) {
           this->gltfSceneImporter->Clear(this->mgttScene);
           std::pair<std::string, std::string> pbrShaderPathes = {
@@ -406,7 +417,15 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
           this->glmVectors->translation = glm::vec3(0.0f);
           this->glmVectors->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
           this->glmVectors->scale = glm::vec3(1.0f);
+
+          NFD_FreePathU8(selectedPath);
+        } else if (result == NFD_CANCEL) {
+        } else {
+          std::string msg = std::string(NFD_GetError());
+          this->logger->Error(msg, "OpenGlViewerApp::SetupImGuiContextAndDraw");
         }
+
+        NFD_Quit();
 #endif
       }
       ImGui::EndTabItem();

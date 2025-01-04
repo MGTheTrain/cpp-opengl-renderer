@@ -7,7 +7,7 @@
         "glm",
         "stb",
         "tinygltf",
-        "nativefiledialog",
+        "nativefiledialog-extended",
         "gtest",
         {
             "name": "imgui",
