@@ -391,14 +391,13 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
 #ifndef __EMSCRIPTEN__
         NFD_Init();
 
-        nfdu8filteritem_t filters[1] = {
-            {"3D Models", "gltf"}};
+        nfdu8filteritem_t filters[1] = {{"3D Models", "gltf"}};
 
         nfdopendialogu8args_t args = {0};
         args.filterList = filters;
         args.filterCount = 1;
 
-        nfdu8char_t *selectedPath = NULL;
+        nfdu8char_t* selectedPath = NULL;
 
         nfdresult_t result = NFD_OpenDialogU8_With(&selectedPath, &args);
 
