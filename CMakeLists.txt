@@ -30,13 +30,6 @@ option(BUILD_PACKAGE "Build the package" OFF)
 option(BUILD_WEB "Compile to js and wasm" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-if(BUILD_WEB)
-    # /
-else()
-    include(AzureVcpkg)
-    az_vcpkg_integrate()
-endif()
-
 
 if(BUILD_TEST)
     include(CTestConfig)
