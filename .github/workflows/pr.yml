@@ -7,7 +7,7 @@ on:
       - develop
 
 jobs:
-  build_and_test_ubuntu:
+  build-and-test-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -35,9 +35,9 @@ jobs:
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
 
-  build_windows:
+  build-windows:
     runs-on: windows-latest
-    needs: [build_and_test_ubuntu]
+    needs: [build-and-test-ubuntu]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -58,9 +58,9 @@ jobs:
         .\compile_source_code.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake
       working-directory: .\devops\scripts\ps1\
   
-  build_macos:
+  build-macos:
     runs-on: macos-latest
-    needs: [build_and_test_ubuntu]
+    needs: [build-and-test-ubuntu]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
