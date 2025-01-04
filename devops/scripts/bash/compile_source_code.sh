@@ -51,12 +51,12 @@ if [[ "$NoWebBuild" == true ]]; then
   cmake -B build -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" .
   echo -e "$BLUE INFO: $NC Build environment could be successfully generated"
 
-  cmake --build build --parallel 8
+  cmake --build build --parallel --config Debug
   echo -e "$BLUE INFO: $NC Compilation of the source code and linking binaries success"
 
   if [ "$NoTests" = false ]; then
     cd "build"
-    ctest --verbose
+    ctest -C Debug --verbose
   fi
 else 
   # error: building glfw3:wasm32-emscripten failed with: BUILD_FAILED with vcpkg.json
