@@ -76,7 +76,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Default constructor for the scene importer.
    */
-  GltfSceneImporter() {}
+  GltfSceneImporter() = default;
 
   /**
    * @brief Load the 3D scene from a specified file path.

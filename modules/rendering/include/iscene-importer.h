@@ -38,7 +38,7 @@ class ISceneImporter {
   /**
    * @brief Virtual destructor for the interface.
    */
-  virtual ~ISceneImporter() {}
+  virtual ~ISceneImporter() = default;
 
   /**
    * @brief Load the scene from a specified file path.

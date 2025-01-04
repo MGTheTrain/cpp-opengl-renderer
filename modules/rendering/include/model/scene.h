@@ -57,7 +57,7 @@ struct Scene {
    */
   Scene();
 
-  ~Scene() {}
+  ~Scene() = default;
 
   /**
    * @brief Clear releases resources.
