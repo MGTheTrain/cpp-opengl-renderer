@@ -27,20 +27,24 @@
 
 namespace Mgtt::Rendering {
 /**
- * @brief Checks if any value in the provided initializer list is greater than zero.
+ * @brief Checks if any value in the provided initializer list is greater than
+ * zero.
  *
  * This method iterates through the elements in the initializer list and returns
- * true if at least one element is greater than zero; otherwise, it returns false.
+ * true if at least one element is greater than zero; otherwise, it returns
+ * false.
  *
- * @param args A constant reference to an initializer list of unsigned integers to be checked.
+ * @param args A constant reference to an initializer list of unsigned integers
+ * to be checked.
  * @return true if any value in the list is greater than zero, false otherwise.
  */
-inline bool HasValuesGreaterThanZero(const std::initializer_list<uint32_t>& args) {
-    for (auto& val : args) {
-        if (val > 0) {
-            return true;
-        }
+inline bool HasValuesGreaterThanZero(
+    const std::initializer_list<uint32_t>& args) {
+  for (auto& val : args) {
+    if (val > 0) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 }  // namespace Mgtt::Rendering
