@@ -26,7 +26,7 @@ A cross-platform C++ OpenGL renderer
 - [ ] ~~Support for USD scene loading (**OPTIONAL**)~~
 - [ ] ~~Skeletal animation support (**OPTIONAL**)~~
 - [x] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
-- [ ] ~~Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)~~
+- [ ] Consider using a compiled library for mobile support through Java Native Interface (JNI) for Kotlin on Android and Swift interoperability for Swift on iOS (**OPTIONAL**)
 
 ## Getting started
 
