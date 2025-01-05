@@ -43,7 +43,7 @@ struct Material {
   /**
    * @brief Constructor for the Material structure.
    */
-  Material();
+  Material() = default;
 
   /**
    * @brief Virtual destructor for the Material structure.

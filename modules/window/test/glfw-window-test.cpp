@@ -34,23 +34,24 @@ class GlfwWindowTest : public ::testing::Test {
  protected:
   void SetUp() override {}
   void TearDown() override {}
-  static void FramebufferSizeCallback(GLFWwindow* window, int width,
-                                      int height);
+  static void FramebufferSizeCallback(GLFWwindow* window, int32_t width,
+                                      int32_t height);
   static void ScrollCallback(GLFWwindow* window, double xoffset,
                              double yoffset);
-  static void KeyCallback(GLFWwindow* window, int key, int scancode, int action,
-                          int mods);
+  static void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode,
+                          int32_t action, int32_t mods);
 };
 
 std::unique_ptr<Mgtt::Window::GlfwWindow> GlfwWindowTest::glfwWindow =
     std::make_unique<Mgtt::Window::GlfwWindow>("test-window", 800, 600);
 
-void GlfwWindowTest::FramebufferSizeCallback(GLFWwindow* window, int width,
-                                             int height) {}
+void GlfwWindowTest::FramebufferSizeCallback(GLFWwindow* window, int32_t width,
+                                             int32_t height) {}
 void GlfwWindowTest::ScrollCallback(GLFWwindow* window, double xoffset,
                                     double yoffset) {}
-void GlfwWindowTest::KeyCallback(GLFWwindow* window, int key, int scancode,
-                                 int action, int mods) {}
+void GlfwWindowTest::KeyCallback(GLFWwindow* window, int32_t key,
+                                 int32_t scancode, int32_t action,
+                                 int32_t mods) {}
 
 TEST_F(GlfwWindowTest, GetWindow) {
   RecordProperty(

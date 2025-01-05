@@ -322,7 +322,7 @@ void Mgtt::Apps::RotatingTexturedCube::ProcessInput() {
  * @param height The new height of the framebuffer.
  */
 void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
-    GLFWwindow* window, int width, int height) {
+    GLFWwindow* window, int32_t width, int32_t height) {
   glViewport(0, 0, width, height);
 }
 #else

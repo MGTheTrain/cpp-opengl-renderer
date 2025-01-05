@@ -76,7 +76,8 @@ class OpenGlShader : public IShader {
    *
    * @param shaderPathes The vertex and fragment shader pathes
    */
-  void Compile(const std::pair<std::string, std::string> shaderPathes) override;
+  void Compile(
+      const std::pair<std::string, std::string>& shaderPathes) override;
 
   /**
    * @brief Delete the shader program.
@@ -88,7 +89,7 @@ class OpenGlShader : public IShader {
    *
    * @return The ID of the shader program.
    */
-  unsigned int& GetProgramId();
+  uint32_t& GetProgramId();
 
   /**
    * @brief Activate the shader program.
@@ -109,7 +110,7 @@ class OpenGlShader : public IShader {
    * @param name The name of the integer uniform.
    * @param value The integer value to set.
    */
-  void SetInt(const std::string& name, int value) const;
+  void SetInt(const std::string& name, int32_t value) const;
 
   /**
    * @brief Set a floating-point uniform value in the shader program.
@@ -207,6 +208,6 @@ class OpenGlShader : public IShader {
    */
   void CheckCompileErrors(GLuint shader, std::string type);
 
-  unsigned int id;  // the OpenGL program id
+  uint32_t id;  // the OpenGL program id
 };
 }  // namespace Mgtt::Rendering

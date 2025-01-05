@@ -26,8 +26,6 @@
  * @brief Constructor for the TextureBase structure
  */
 Mgtt::Rendering::TextureBase::TextureBase() {
-  this->name = "";
-  this->path = "";
   this->width = 0;
   this->height = 0;
   this->nrComponents = 0;

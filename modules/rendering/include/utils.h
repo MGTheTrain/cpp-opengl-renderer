@@ -20,29 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <material.h>
+#pragma once
 
+#include <cstdint>
+#include <initializer_list>
+
+namespace Mgtt::Rendering {
 /**
- * @brief Constructor for the PbrMaterial structure.
+ * @brief Checks if any value in the provided initializer list is greater than
+ * zero.
+ *
+ * This method iterates through the elements in the initializer list and returns
+ * true if at least one element is greater than zero; otherwise, it returns
+ * false.
+ *
+ * @param args A constant reference to an initializer list of unsigned integers
+ * to be checked.
+ * @return true if any value in the list is greater than zero, false otherwise.
  */
-Mgtt::Rendering::PbrMaterial::PbrMaterial() {
-  this->alphaCutoff = 0.0f;
-  this->doubleSided = false;
-  this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
+inline bool HasValuesGreaterThanZero(
+    const std::initializer_list<uint32_t>& args) {
+  for (auto& val : args) {
+    if (val > 0) {
+      return true;
+    }
+  }
+  return false;
 }
-
-/**
- * @brief Clear releases resources.
- */
-void Mgtt::Rendering::PbrMaterial::Clear() {
-  this->baseColorTexture.Clear();
-  this->metallicRoughnessTexture.Clear();
-  this->normalTexture.Clear();
-  this->emissiveTexture.Clear();
-  this->occlusionTexture.Clear();
-
-  this->name = "";
-  this->alphaCutoff = 0.0f;
-  this->doubleSided = false;
-  this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
-}
+}  // namespace Mgtt::Rendering

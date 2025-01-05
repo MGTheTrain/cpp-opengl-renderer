@@ -26,8 +26,6 @@
  * @brief Constructor for the Scene structure.
  */
 Mgtt::Rendering::Scene::Scene() {
-  this->name = "";
-  this->path = "";
   this->pos = glm::vec3(0.0f);
   this->rot = glm::vec3(0.0f);
   this->scale = 1.0f;

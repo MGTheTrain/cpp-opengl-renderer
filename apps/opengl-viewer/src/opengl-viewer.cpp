@@ -341,7 +341,7 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
 
       glBindVertexArray(node->mesh->vao);
       glDrawElements(GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
-                     (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
+                     (void*)(meshPrimitve.firstIndex * sizeof(uint32_t)));
       glBindVertexArray(0);
     }
   }
@@ -361,7 +361,8 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
  * @param height The new height of the framebuffer.
  */
 void Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback(GLFWwindow* window,
-                                                       int width, int height) {
+                                                       int32_t width,
+                                                       int32_t height) {
   glViewport(0, 0, width, height);
 }
 
