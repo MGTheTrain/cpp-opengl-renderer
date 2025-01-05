@@ -43,4 +43,4 @@ inline bool HasValuesGreaterThanZero(const std::initializer_list<uint32_t>& args
     }
     return false;
 }
-}
+}  // namespace Mgtt::Rendering
