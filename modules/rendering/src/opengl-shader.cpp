@@ -89,7 +89,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(
   }
   const char* vShaderCode = vsCode.c_str();
   const char* fShaderCode = fsCode.c_str();
-  unsigned int vertex, fragment;
+  uint32_t vertex, fragment;
   try {
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
@@ -140,7 +140,7 @@ void Mgtt::Rendering::OpenGlShader::Clear() {
  *
  * @return The ID of the shader program.
  */
-unsigned int& Mgtt::Rendering::OpenGlShader::GetProgramId() { return this->id; }
+uint32_t& Mgtt::Rendering::OpenGlShader::GetProgramId() { return this->id; }
 
 /**
  * @brief Activate the shader program.

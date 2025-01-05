@@ -82,7 +82,7 @@ class OpenGlShader : public IShader {
    *
    * @return The ID of the shader program.
    */
-  unsigned int& GetProgramId();
+  uint32_t& GetProgramId();
 
   /**
    * @brief Activate the shader program.
@@ -201,6 +201,6 @@ class OpenGlShader : public IShader {
    */
   void CheckCompileErrors(GLuint shader, std::string type);
 
-  unsigned int id;  // the OpenGL program id
+  uint32_t id;  // the OpenGL program id
 };
 }  // namespace Mgtt::Rendering

@@ -178,27 +178,6 @@ void Mgtt::Rendering::TextureManager::Clear(
 }
 
 /**
- * @brief Check if any value in the given vector is greater than zero.
- *
- * The function iterates through the elements of the vector and returns true
- * if it finds at least one element greater than zero; otherwise, it returns
- * false.
- *
- * @param vec A const reference to a vector of unsigned integers to be checked.
- * @return true if any value in the vector is greater than zero, false
- * otherwise.
- */
-bool Mgtt::Rendering::TextureManager::HasValuesGreaterThanZero(
-    const std::vector<unsigned int>& vec) {
-  for (auto& val : vec) {
-    if (val > 0) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
  * @brief Set up rendering resources for a cube.
  *
  * The SetupCube function initializes and configures rendering resources
@@ -210,8 +189,7 @@ bool Mgtt::Rendering::TextureManager::HasValuesGreaterThanZero(
  */
 void Mgtt::Rendering::TextureManager::SetupCube(
     Mgtt::Rendering::RenderTexturesContainer& container) {
-  std::vector<uint32_t> vec{container.cubeVao, container.cubeVbo};
-  if (!this->HasValuesGreaterThanZero(vec)) {
+  if (!this->HasValuesGreaterThanZero(container.cubeVao, container.cubeVbo)) {
     glGenVertexArrays(1, &container.cubeVao);
     glGenBuffers(1, &container.cubeVbo);
   }
@@ -260,8 +238,7 @@ void Mgtt::Rendering::TextureManager::SetupCube(
  */
 void Mgtt::Rendering::TextureManager::SetupQuad(
     Mgtt::Rendering::RenderTexturesContainer& container) {
-  std::vector<uint32_t> vec{container.quadVao, container.quadVbo};
-  if (!this->HasValuesGreaterThanZero(vec)) {
+  if (!this->HasValuesGreaterThanZero(container.quadVao, container.quadVbo)) {
     uint32_t posLoc = glGetAttribLocation(
         container.brdfLutShader.GetProgramId(), "inVertexPosition");
     uint32_t texLoc = glGetAttribLocation(
@@ -312,8 +289,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(
         "LOAD BRDF LUT ERROR: Ensure that a shader program for "
         "[brdfLutShader]exists");
   }
-  std::vector<uint32_t> vec{container.brdfLutTextureId};
-  if (!this->HasValuesGreaterThanZero(vec)) {
+  if (!this->HasValuesGreaterThanZero(container.brdfLutTextureId)) {
     glGenTextures(1, &container.brdfLutTextureId);
     glBindTexture(GL_TEXTURE_2D, container.brdfLutTextureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 128, 128, 0, GL_RG, GL_UNSIGNED_BYTE,

@@ -58,7 +58,7 @@ struct Mesh {
 
   std::string name;
   std::vector<Mgtt::Rendering::MeshPrimitive> meshPrimitives;
-  std::vector<unsigned int> indices;
+  std::vector<uint32_t> indices;
   std::vector<glm::vec3> vertexPositionAttribs;
   std::vector<glm::vec3> vertexNormalAttribs;
   std::vector<glm::vec2> vertexTextureAttribs;

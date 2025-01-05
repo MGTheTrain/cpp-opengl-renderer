@@ -339,7 +339,7 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
 
       glBindVertexArray(node->mesh->vao);
       glDrawElements(GL_TRIANGLES, meshPrimitve.indexCount, GL_UNSIGNED_INT,
-                     (void*)(meshPrimitve.firstIndex * sizeof(unsigned int)));
+                     (void*)(meshPrimitve.firstIndex * sizeof(uint32_t)));
       glBindVertexArray(0);
     }
   }

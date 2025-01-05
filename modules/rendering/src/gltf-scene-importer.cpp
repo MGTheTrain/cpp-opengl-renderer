@@ -383,7 +383,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     // indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0],
+                 mesh->indices.size() * sizeof(uint32_t), &mesh->indices[0],
                  GL_STATIC_DRAW);
 
     // pos
@@ -569,7 +569,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
         const tinygltf::BufferView& bufferView =
             model.bufferViews[accessor.bufferView];
         const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
-        indexCount = static_cast<unsigned int>(accessor.count);
+        indexCount = static_cast<uint32_t>,accessor.count);
 
         const void* dataPtr =
             &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
