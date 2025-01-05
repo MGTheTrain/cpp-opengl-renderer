@@ -106,7 +106,7 @@ class GltfSceneImporter : public ISceneImporter {
    * This function takes a file path as input and extracts the folder path
    * by finding the last occurrence of the directory separator ('/' or '\\').
    *
-   * @param filePath The full file path from which to extract the folder path.
+   * @param path The full file path from which to extract the folder path.
    * @return The extracted folder path. If no directory separator is found,
    *         an empty string is returned.
    *
@@ -114,7 +114,7 @@ class GltfSceneImporter : public ISceneImporter {
    *'\\').
    * @note The returned folder path includes the trailing directory separator.
    **/
-  std::string ExtractFolderPath(const std::string& filePath);
+  std::string ExtractFolderPath(const std::string& path);
 
   /**
    * @brief Load texture from the provided glTF model.
@@ -164,7 +164,7 @@ class GltfSceneImporter : public ISceneImporter {
    */
   void LoadNode(std::shared_ptr<Mgtt::Rendering::Node> parent,
                 Mgtt::Rendering::Scene& scene, const tinygltf::Node& node,
-                const uint32_t nodeIndex, const tinygltf::Model& model);
+                uint32_t nodeIndex, const tinygltf::Model& model);
 
   /**
    * @brief Sets up a mesh for rendering, including vertex attribute
@@ -179,7 +179,7 @@ class GltfSceneImporter : public ISceneImporter {
    * @param shaderId An unsigned 32-bit integer representing the shader ID.
    */
   void SetupMesh(std::shared_ptr<Mgtt::Rendering::Mesh>& mesh,
-                 uint32_t& shaderId);
+                 uint32_t shaderId);
 
   /**
    * @brief Clear the RAM resources associated with the Texture object.

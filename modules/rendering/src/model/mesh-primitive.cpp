@@ -26,7 +26,6 @@
  * @brief Constructor for the MeshPrimitive structure.
  */
 Mgtt::Rendering::MeshPrimitive::MeshPrimitive() {
-  this->name = "";
   this->hasSkin = false;
   this->hasIndices = false;
   this->firstIndex = 0;

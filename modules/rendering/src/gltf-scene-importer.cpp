@@ -119,7 +119,7 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
  * This function takes a file path as input and extracts the folder path
  * by finding the last occurrence of the directory separator ('/' or '\\').
  *
- * @param filePath The full file path from which to extract the folder path.
+ * @param path The full file path from which to extract the folder path.
  * @return The extracted folder path. If no directory separator is found,
  *         an empty string is returned.
  *
@@ -128,11 +128,11 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
  * @note The returned folder path includes the trailing directory separator.
  **/
 std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(
-    const std::string& filePath) {
-  const size_t lastSeparatorIdx = filePath.find_last_of("\\/");
-  std::string folderPath = "";
+    const std::string& path) {
+  const size_t lastSeparatorIdx = path.find_last_of("\\/");
+  std::string folderPath;
   if (std::string::npos != lastSeparatorIdx) {
-    folderPath = filePath.substr(0, lastSeparatorIdx + 1);
+    folderPath = path.substr(0, lastSeparatorIdx + 1);
   }
 
   return folderPath;
@@ -354,7 +354,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
  * @param shaderId An unsigned 32-bit integer representing the shader ID.
  */
 void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
-    std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId) {
+    std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t shaderId) {
   if (mesh) {
     if (mesh->ebo > 0) {
       throw std::runtime_error("Mesh ebo needs to be equal 0");
@@ -442,7 +442,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
 void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     std::shared_ptr<Mgtt::Rendering::Node> parent,
     Mgtt::Rendering::Scene& scene, const tinygltf::Node& node,
-    const uint32_t nodeIndex, const tinygltf::Model& model) {
+    uint32_t nodeIndex, const tinygltf::Model& model) {
   std::shared_ptr<Mgtt::Rendering::Node> newNode =
       std::make_shared<Mgtt::Rendering::Node>();
   newNode->index = nodeIndex;

@@ -49,7 +49,7 @@ Mgtt::Rendering::OpenGlShader::OpenGlShader(
  * @param shaderPathes The vertex and fragment shader pathes
  */
 void Mgtt::Rendering::OpenGlShader::Compile(
-    const std::pair<std::string, std::string> shaderPathes) {
+    const std::pair<std::string, std::string>& shaderPathes) {
   this->Clear();
 
   if (shaderPathes.first.size() == 0) {
