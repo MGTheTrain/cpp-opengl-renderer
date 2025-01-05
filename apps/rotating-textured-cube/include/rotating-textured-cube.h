@@ -112,8 +112,8 @@ class RotatingTexturedCube {
    * @param width  The new width of the framebuffer.
    * @param height The new height of the framebuffer.
    */
-  static void FramebufferSizeCallback(GLFWwindow* window, int width,
-                                      int height);
+  static void FramebufferSizeCallback(GLFWwindow* window, int32_t width,
+                                      int32_t height);
 
   std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
   std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;

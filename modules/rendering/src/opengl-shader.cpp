@@ -166,7 +166,7 @@ void Mgtt::Rendering::OpenGlShader::SetBool(const std::string& name,
  * @param value The integer value to set.
  */
 void Mgtt::Rendering::OpenGlShader::SetInt(const std::string& name,
-                                           int value) const {
+                                           int32_t value) const {
   glUniform1i(glGetUniformLocation(this->id, name.c_str()), value);
 }
 

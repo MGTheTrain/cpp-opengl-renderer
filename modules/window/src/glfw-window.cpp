@@ -130,7 +130,7 @@ void Mgtt::Window::GlfwWindow::SwapBuffersAndPollEvents() {
  * @return A tuple containing the width and height of the window.
  */
 std::tuple<int, int> Mgtt::Window::GlfwWindow::GetWindowSize() {
-  int width, height;
+  int32_t width, height;
   glfwGetWindowSize(this->window, &width, &height);
   return std::make_tuple(width, height);
 }

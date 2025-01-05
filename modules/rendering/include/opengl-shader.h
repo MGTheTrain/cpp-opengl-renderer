@@ -103,7 +103,7 @@ class OpenGlShader : public IShader {
    * @param name The name of the integer uniform.
    * @param value The integer value to set.
    */
-  void SetInt(const std::string& name, int value) const;
+  void SetInt(const std::string& name, int32_t value) const;
 
   /**
    * @brief Set a floating-point uniform value in the shader program.

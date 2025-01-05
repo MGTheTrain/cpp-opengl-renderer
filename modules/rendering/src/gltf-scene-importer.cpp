@@ -497,9 +497,9 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
       const float* bufferNormals = nullptr;
       const float* bufferTexCoordSet = nullptr;
 
-      int posByteStride;
-      int normByteStride;
-      int uv0ByteStride;
+      int32_t posByteStride;
+      int32_t normByteStride;
+      int32_t uv0ByteStride;
 
       const tinygltf::Accessor& posAccessor =
           model.accessors[primitive.attributes.find("POSITION")->second];
