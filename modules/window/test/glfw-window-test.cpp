@@ -38,8 +38,8 @@ class GlfwWindowTest : public ::testing::Test {
                                       int32_t height);
   static void ScrollCallback(GLFWwindow* window, double xoffset,
                              double yoffset);
-  static void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action,
-                          int32_t mods);
+  static void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode,
+                          int32_t action, int32_t mods);
 };
 
 std::unique_ptr<Mgtt::Window::GlfwWindow> GlfwWindowTest::glfwWindow =
@@ -49,8 +49,9 @@ void GlfwWindowTest::FramebufferSizeCallback(GLFWwindow* window, int32_t width,
                                              int32_t height) {}
 void GlfwWindowTest::ScrollCallback(GLFWwindow* window, double xoffset,
                                     double yoffset) {}
-void GlfwWindowTest::KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode,
-                                 int32_t action, int32_t mods) {}
+void GlfwWindowTest::KeyCallback(GLFWwindow* window, int32_t key,
+                                 int32_t scancode, int32_t action,
+                                 int32_t mods) {}
 
 TEST_F(GlfwWindowTest, GetWindow) {
   RecordProperty(

@@ -359,7 +359,8 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
  * @param height The new height of the framebuffer.
  */
 void Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback(GLFWwindow* window,
-                                                       int32_t width, int32_t height) {
+                                                       int32_t width,
+                                                       int32_t height) {
   glViewport(0, 0, width, height);
 }
 
