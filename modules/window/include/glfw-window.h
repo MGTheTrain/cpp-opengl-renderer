@@ -45,8 +45,7 @@ class GlfwWindow : public IWindow {
    * @param width  The width of the window.
    * @param height The height of the window.
    */
-  GlfwWindow(const std::string& name, uint32_t width,
-             uint32_t height);
+  GlfwWindow(const std::string& name, uint32_t width, uint32_t height);
 
   /**
    * @brief Destructor for the GLFW window.
