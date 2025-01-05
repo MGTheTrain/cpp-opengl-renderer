@@ -27,7 +27,6 @@
  */
 Mgtt::Rendering::Mesh::Mesh() {
   this->matrix = glm::mat4(1.0f);
-  this->name = "";
   this->vao = 0;
   this->ebo = 0;
   this->pos = 0;

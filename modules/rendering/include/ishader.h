@@ -46,7 +46,7 @@ class IShader {
    * @param shaderPathes The vertex and fragment shader pathes
    */
   virtual void Compile(
-      const std::pair<std::string, std::string> shaderPathes) = 0;
+      const std::pair<std::string, std::string>& shaderPathes) = 0;
 
   /**
    * @brief Compile the shader program from specified vertex and fragment shader

@@ -158,8 +158,8 @@ class OpenGlViewer {
    * @param width  The new width of the framebuffer.
    * @param height The new height of the framebuffer.
    */
-  static void FramebufferSizeCallback(GLFWwindow* window, int width,
-                                      int height);
+  static void FramebufferSizeCallback(GLFWwindow* window, int32_t width,
+                                      int32_t height);
 
   /**
    * @brief Initializes ImGui for the OpenGL viewer.

@@ -119,7 +119,7 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
  * This function takes a file path as input and extracts the folder path
  * by finding the last occurrence of the directory separator ('/' or '\\').
  *
- * @param filePath The full file path from which to extract the folder path.
+ * @param path The full file path from which to extract the folder path.
  * @return The extracted folder path. If no directory separator is found,
  *         an empty string is returned.
  *
@@ -128,11 +128,11 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
  * @note The returned folder path includes the trailing directory separator.
  **/
 std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(
-    const std::string& filePath) {
-  const size_t lastSeparatorIdx = filePath.find_last_of("\\/");
-  std::string folderPath = "";
+    const std::string& path) {
+  const size_t lastSeparatorIdx = path.find_last_of("\\/");
+  std::string folderPath;
   if (std::string::npos != lastSeparatorIdx) {
-    folderPath = filePath.substr(0, lastSeparatorIdx + 1);
+    folderPath = path.substr(0, lastSeparatorIdx + 1);
   }
 
   return folderPath;
@@ -354,19 +354,19 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
  * @param shaderId An unsigned 32-bit integer representing the shader ID.
  */
 void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
-    std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t& shaderId) {
+    std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t shaderId) {
   if (mesh) {
-    if (mesh->ebo > 0) {
-      throw std::runtime_error("Mesh ebo needs to be equal 0");
-    } else if (mesh->pos > 0) {
+    if (HasValuesGreaterThanZero({mesh->ebo})) {
+      throw std::runtime_error("Mesh ebo id needs to be equal 0");
+    } else if (HasValuesGreaterThanZero({mesh->pos})) {
       throw std::runtime_error("Mesh pos id needs to be equal 0");
-    } else if (mesh->normal > 0) {
+    } else if (HasValuesGreaterThanZero({mesh->normal})) {
       throw std::runtime_error("Mesh normal id needs to be equal 0");
-    } else if (mesh->tex > 0) {
+    } else if (HasValuesGreaterThanZero({mesh->tex})) {
       throw std::runtime_error("Mesh tex id needs to be equal 0");
     } else if (mesh->vertexPositionAttribs.size() == 0) {
       throw std::runtime_error(
-          "Mesh vertex position attributes needs contain elements");
+          "Mesh vertex position attributes needs to contain elements");
     } else if (mesh->vertexPositionAttribs.size() == 0) {
       throw std::runtime_error(
           "Mesh vertex position attributes need to contain elements");
@@ -383,7 +383,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     // indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0],
+                 mesh->indices.size() * sizeof(uint32_t), &mesh->indices[0],
                  GL_STATIC_DRAW);
 
     // pos
@@ -442,7 +442,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
 void Mgtt::Rendering::GltfSceneImporter::LoadNode(
     std::shared_ptr<Mgtt::Rendering::Node> parent,
     Mgtt::Rendering::Scene& scene, const tinygltf::Node& node,
-    const uint32_t nodeIndex, const tinygltf::Model& model) {
+    uint32_t nodeIndex, const tinygltf::Model& model) {
   std::shared_ptr<Mgtt::Rendering::Node> newNode =
       std::make_shared<Mgtt::Rendering::Node>();
   newNode->index = nodeIndex;
@@ -497,9 +497,9 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
       const float* bufferNormals = nullptr;
       const float* bufferTexCoordSet = nullptr;
 
-      int posByteStride;
-      int normByteStride;
-      int uv0ByteStride;
+      int32_t posByteStride;
+      int32_t normByteStride;
+      int32_t uv0ByteStride;
 
       const tinygltf::Accessor& posAccessor =
           model.accessors[primitive.attributes.find("POSITION")->second];
@@ -569,7 +569,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
         const tinygltf::BufferView& bufferView =
             model.bufferViews[accessor.bufferView];
         const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
-        indexCount = static_cast<unsigned int>(accessor.count);
+        indexCount = static_cast<uint32_t>(accessor.count);
 
         const void* dataPtr =
             &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);

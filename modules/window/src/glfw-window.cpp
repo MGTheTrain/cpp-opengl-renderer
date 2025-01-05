@@ -29,9 +29,8 @@
  * @param width  The width of the window.
  * @param height The height of the window.
  */
-Mgtt::Window::GlfwWindow::GlfwWindow(const std::string& name,
-                                     const unsigned int& width,
-                                     const unsigned int& height) {
+Mgtt::Window::GlfwWindow::GlfwWindow(const std::string& name, uint32_t width,
+                                     uint32_t height) {
   if (!glfwInit()) {
     throw std::runtime_error("GLFW ERROR: Failed to initialize GLFW");
   }
@@ -131,7 +130,7 @@ void Mgtt::Window::GlfwWindow::SwapBuffersAndPollEvents() {
  * @return A tuple containing the width and height of the window.
  */
 std::tuple<int, int> Mgtt::Window::GlfwWindow::GetWindowSize() {
-  int width, height;
+  int32_t width, height;
   glfwGetWindowSize(this->window, &width, &height);
   return std::make_tuple(width, height);
 }
@@ -142,8 +141,7 @@ std::tuple<int, int> Mgtt::Window::GlfwWindow::GetWindowSize() {
  * @param width The new window width
  * @param height The new window height
  */
-void Mgtt::Window::GlfwWindow::SetWindowSize(const int32_t& width,
-                                             const int32_t& height) {
+void Mgtt::Window::GlfwWindow::SetWindowSize(uint32_t width, uint32_t height) {
   glfwSetWindowSize(window, width, height);
 }
 
