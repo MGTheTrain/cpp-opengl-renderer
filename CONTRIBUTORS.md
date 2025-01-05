@@ -1,5 +1,0 @@
-Maintainers:
-- MGTheTrain 
-
-Contributors:
-- TBD

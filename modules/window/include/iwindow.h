@@ -34,7 +34,7 @@ class IWindow {
   /**
    * @brief Virtual destructor for the window interface.
    */
-  virtual ~IWindow() {}
+  virtual ~IWindow() = default;
 };
 
 }  // namespace Mgtt::Window

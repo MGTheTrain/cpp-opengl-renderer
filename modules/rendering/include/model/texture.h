@@ -59,7 +59,7 @@ struct TextureBase {
    */
   TextureBase();
 
-  virtual ~TextureBase() {}
+  virtual ~TextureBase() = default;
 
   std::string name;
   std::string path;
@@ -79,7 +79,7 @@ struct Texture : public TextureBase {
    */
   Texture();
 
-  virtual ~Texture() {}
+  virtual ~Texture() = default;
 
   /**
    * @brief Copy Constructor for the Texture struct
@@ -109,7 +109,7 @@ struct NormalTexture : public Texture {
    */
   NormalTexture();
 
-  ~NormalTexture() {}
+  ~NormalTexture() = default;
 
   /**
    * @brief Constructor for the NormalTexture struct.
@@ -131,7 +131,7 @@ struct EmissiveTexture : public Texture {
    */
   EmissiveTexture();
 
-  ~EmissiveTexture() {}
+  ~EmissiveTexture() = default;
 
   /**
    * @brief Constructor for the Emissive struct.
@@ -153,7 +153,7 @@ struct MetallicRoughnessTexture : public Texture {
    */
   MetallicRoughnessTexture();
 
-  ~MetallicRoughnessTexture() {}
+  ~MetallicRoughnessTexture() = default;
 
   /**
    * @brief Constructor for the Metallic struct texture.
@@ -181,7 +181,7 @@ struct OcclusionTexture : public Texture {
    */
   OcclusionTexture();
 
-  ~OcclusionTexture() {}
+  ~OcclusionTexture() = default;
 
   /**
    * @brief Constructor for the Occlusion struct.
@@ -203,7 +203,7 @@ struct BaseColorTexture : public Texture {
    */
   BaseColorTexture();
 
-  ~BaseColorTexture() {}
+  ~BaseColorTexture() = default;
 
   /**
    * @brief Constructor for the BaseColor struct.
@@ -228,7 +228,7 @@ struct RenderTexturesContainer {
    */
   RenderTexturesContainer();
 
-  ~RenderTexturesContainer() {}
+  ~RenderTexturesContainer() = default;
 
   /**
    * @brief Constructor for the RenderTexturesContainer struct.

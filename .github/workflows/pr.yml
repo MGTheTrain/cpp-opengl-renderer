@@ -7,8 +7,8 @@ on:
       - develop
 
 jobs:
-  build_and_test_ubuntu:
-    runs-on: ubuntu-latest
+  build-and-test-ubuntu:
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -19,7 +19,7 @@ jobs:
         build-essential cmake \
         libxmu-dev libxi-dev libgl-dev \
         libxinerama-dev libxcursor-dev xorg-dev \
-        libglu1-mesa-dev pkg-config
+        libglu1-mesa-dev pkg-config autoconf automake libtool
     - name: Install vcpkg
       run: |
         git clone https://github.com/Microsoft/vcpkg.git
@@ -35,9 +35,8 @@ jobs:
         ./compile_source_code.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
       working-directory: ./devops/scripts/bash/
 
-  build_windows:
+  build-windows:
     runs-on: windows-latest
-    needs: [build_and_test_ubuntu]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -58,9 +57,8 @@ jobs:
         .\compile_source_code.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake
       working-directory: .\devops\scripts\ps1\
   
-  build_macos:
+  build-macos:
     runs-on: macos-latest
-    needs: [build_and_test_ubuntu]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2

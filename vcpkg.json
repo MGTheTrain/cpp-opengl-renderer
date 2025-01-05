@@ -1,13 +1,13 @@
 {
     "name": "cpp-opengl-renderer",
-    "version-string": "0.6.0",
+    "version-string": "0.8.0",
     "dependencies": [
         "glfw3",
         "glew",
         "glm",
         "stb",
         "tinygltf",
-        "nativefiledialog",
+        "nativefiledialog-extended",
         "gtest",
         {
             "name": "imgui",
@@ -16,5 +16,6 @@
                 "glfw-binding"
             ]
         }
-    ]
+    ],
+    "builtin-baseline": "65be7019941e1401e02daaba0738cab2c8a4a355"
 }

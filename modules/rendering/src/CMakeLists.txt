@@ -53,8 +53,10 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 set(RENDERING_SRC 
+    external-tinygltf-impl.cpp
     opengl-shader.cpp
     gltf-scene-importer.cpp
+    texture-manager.cpp
     model/aabb.cpp
     model/material.cpp
     model/mesh-primitive.cpp

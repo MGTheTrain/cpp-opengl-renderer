@@ -34,7 +34,7 @@ class ICamera {
   /**
    * @brief Virtual destructor for the camera interface.
    */
-  virtual ~ICamera() {}
+  virtual ~ICamera() = default;
 
   /**
    * @brief Initialize the camera.

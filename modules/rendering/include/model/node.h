@@ -55,7 +55,7 @@ struct Node {
    */
   Node();
 
-  ~Node() {}
+  ~Node() = default;
 
   /**
    * @brief Clear releases resources.

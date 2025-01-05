@@ -48,7 +48,7 @@ struct Material {
   /**
    * @brief Virtual destructor for the Material structure.
    */
-  virtual ~Material() {}
+  virtual ~Material() = default;
 
   std::string name;
 };
@@ -64,7 +64,7 @@ struct PbrMaterial : public Material {
    */
   PbrMaterial();
 
-  ~PbrMaterial() {}
+  ~PbrMaterial() = default;
 
   /**
    * @brief Clear releases resources.

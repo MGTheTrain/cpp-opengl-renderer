@@ -26,7 +26,7 @@ A cross-platform C++ OpenGL renderer
 - [ ] ~~Support for USD scene loading (**OPTIONAL**)~~
 - [ ] ~~Skeletal animation support (**OPTIONAL**)~~
 - [x] Port Desktop application to the web trough emscripten SDK (**OPTIONAL**)
-- [ ] Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)
+- [ ] ~~Consider compiled library for mobile support trough Java native interface (JNI) with kotlin and Swift native interface (SNI) with Swift (**OPTIONAL**)~~
 
 ## Getting started
 
@@ -34,15 +34,8 @@ A cross-platform C++ OpenGL renderer
 
 - Download and install [Visual Studio with components for building C and C++ apps](https://visualstudio.microsoft.com/vs/features/cplusplus/) on your target platform 
 - Download and install [CMake from the official website](https://cmake.org/download/)  or trough a package manager
-- Install [vcpkg from the official website](https://vcpkg.io/en/getting-started.html) or trough a package manager
 - To obtain multiple glTF samples, ensure that you update the Git submodules: `git submodule update --init` 
 - For web builds the `emscripten SDK` needs to be installed. [Click here](https://github.com/emscripten-core/emsdk)
-
-### Integrate vcpkg with Visual Studio
-
-Open a command prompt and navigate to the vcpkg directory. Run the following command to integrate vcpkg with Visual Studio: `<vcpkg installation path>/vcpkg integrate install`
-Run the following command from the vcpkg directory to install the dependencies specified in the vcpkg.json file: `<vcpkg installation path>/vcpkg install`
-
 
 #### Mac OS
 
@@ -63,7 +56,7 @@ If you encounter DLL-related errors, make sure to copy the necessary dynamic lib
 
 ### Google Test build configurations
 
-Make sure to configure the project settings appropriately for the `Debug|x64` build configuration by setting the correct library path and copying the required DLLs:
+Make sure to configure the project settings appropriately for the `Debug|x64` build configuration by setting the correct static library path and copying the required shared libraries:
 
 - **Library path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/debug/lib`
 - **Binary path:** `<vcpkg installation path>/vcpkg/packages/gtest_x64-windows/debug/bin`
@@ -81,7 +74,7 @@ In order to compile the source code and link the binaries run in a Unix terminal
 
 ```sh
 cd devops/scripts/bash/
-./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file>
+./compile_source_code.sh -CMakeToolchainFile third-party/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
 
 For web builds ensure the `emscripten SDK` is installed and then run:
@@ -99,7 +92,7 @@ In order to additionaly start the test executables in a Unix terminal:
 
 ```sh
 cd devops/scripts/bash/
-./compile_source_code.sh -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
+./compile_source_code.sh -CMakeToolchainFile third-party/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
 ```
 
 In order to create compressed files or packages:
@@ -117,7 +110,7 @@ In order to compile the source code and link the binaries run in a PowerShell te
 
 ```sh
 cd devops\scripts\ps1
-.\compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file>
+.\compile_source_code.ps1 -CMakeToolchainFile third-party/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
 
 For web builds ensure the `emscripten SDK` is installed, `ninja` or `mingw32-make` are available and then run:
@@ -135,7 +128,7 @@ In order to additionaly start the test executables in a PowerShell terminal:
 
 ```sh
 cd devops\scripts\ps1
-.\compile_source_code.ps1 -CMakeToolchainFile <path to the vcpkg.cmake file> -RunTests
+.\compile_source_code.ps1 -CMakeToolchainFile third-party/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
 ```
 
 In order to create compressed files or installers:
