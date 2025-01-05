@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Updated
-
-- Utilized fixed size unsigned and signed integers in modules
-- Replaced helper method in `gltf-scene-importer` with initalizer_list helper function in separate header file in modules
-- Considered passing default data types by value, objects by reference in modules
-- Avoided setting empty strings during construction in modules
-
 ## [0.8.0] - 05-01-2024
 
 ### Added
@@ -25,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced deprecated nativefiledialog with nativefiledialog-extended package and adjusted implementation in OpenGL viewer app
 - Moved texture manager declarations and implementations in separate header and source files
+- Utilized fixed size unsigned and signed integers in modules
+- Replaced helper method in `gltf-scene-importer` with initalizer_list helper function in separate header file in modules
+- Considered passing default data types by value, objects by reference in modules
+- Avoided setting empty strings during construction in modules
 
 ## [0.7.0] - 17-03-2024
 
