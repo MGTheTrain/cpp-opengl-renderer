@@ -569,7 +569,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
         const tinygltf::BufferView& bufferView =
             model.bufferViews[accessor.bufferView];
         const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
-        indexCount = static_cast<uint32_t>,accessor.count);
+        indexCount = static_cast<uint32_t>(accessor.count);
 
         const void* dataPtr =
             &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
