@@ -189,7 +189,7 @@ void Mgtt::Rendering::TextureManager::Clear(
  */
 void Mgtt::Rendering::TextureManager::SetupCube(
     Mgtt::Rendering::RenderTexturesContainer& container) {
-  if (!HasValuesGreaterThanZero(container.cubeVao, container.cubeVbo)) {
+  if (!HasValuesGreaterThanZero({container.cubeVao, container.cubeVbo})) {
     glGenVertexArrays(1, &container.cubeVao);
     glGenBuffers(1, &container.cubeVbo);
   }
@@ -238,7 +238,7 @@ void Mgtt::Rendering::TextureManager::SetupCube(
  */
 void Mgtt::Rendering::TextureManager::SetupQuad(
     Mgtt::Rendering::RenderTexturesContainer& container) {
-  if (!HasValuesGreaterThanZero(container.quadVao, container.quadVbo)) {
+  if (!HasValuesGreaterThanZero({container.quadVao, container.quadVbo})) {
     uint32_t posLoc = glGetAttribLocation(
         container.brdfLutShader.GetProgramId(), "inVertexPosition");
     uint32_t texLoc = glGetAttribLocation(
@@ -289,7 +289,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(
         "LOAD BRDF LUT ERROR: Ensure that a shader program for "
         "[brdfLutShader]exists");
   }
-  if (!HasValuesGreaterThanZero(container.brdfLutTextureId)) {
+  if (!HasValuesGreaterThanZero({container.brdfLutTextureId})) {
     glGenTextures(1, &container.brdfLutTextureId);
     glBindTexture(GL_TEXTURE_2D, container.brdfLutTextureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 128, 128, 0, GL_RG, GL_UNSIGNED_BYTE,
