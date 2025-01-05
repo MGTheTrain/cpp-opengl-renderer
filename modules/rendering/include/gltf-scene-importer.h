@@ -30,6 +30,7 @@
 #include <iscene-importer.h>
 #include <stb_image.h>
 #include <tiny_gltf.h>
+#include <utils.h>
 
 #include <iostream>
 #include <memory>

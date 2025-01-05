@@ -356,17 +356,17 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
 void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t shaderId) {
   if (mesh) {
-    if (mesh->ebo > 0) {
-      throw std::runtime_error("Mesh ebo needs to be equal 0");
-    } else if (mesh->pos > 0) {
+    if (!HasValuesGreaterThanZero(mesh->ebo)) {
+      throw std::runtime_error("Mesh ebo id needs to be equal 0");
+    } else if (!HasValuesGreaterThanZero(mesh->pos)) {
       throw std::runtime_error("Mesh pos id needs to be equal 0");
-    } else if (mesh->normal > 0) {
+    } else if (!HasValuesGreaterThanZero(mesh->normal)) {
       throw std::runtime_error("Mesh normal id needs to be equal 0");
-    } else if (mesh->tex > 0) {
+    } else if (!HasValuesGreaterThanZero(mesh->tex)) {
       throw std::runtime_error("Mesh tex id needs to be equal 0");
     } else if (mesh->vertexPositionAttribs.size() == 0) {
       throw std::runtime_error(
-          "Mesh vertex position attributes needs contain elements");
+          "Mesh vertex position attributes needs to contain elements");
     } else if (mesh->vertexPositionAttribs.size() == 0) {
       throw std::runtime_error(
           "Mesh vertex position attributes need to contain elements");
