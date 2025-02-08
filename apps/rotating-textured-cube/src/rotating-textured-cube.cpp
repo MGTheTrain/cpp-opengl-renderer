@@ -174,8 +174,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
     }
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
-    throw std::runtime_error("Failed to load texture " +
-                             texturePath);
+    throw std::runtime_error("Failed to load texture " + texturePath);
   }
   if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data) {
     stbi_image_free(
@@ -274,7 +273,8 @@ Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 /**
- * @ref https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+ * @ref
+ * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
  */
 void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
 #endif

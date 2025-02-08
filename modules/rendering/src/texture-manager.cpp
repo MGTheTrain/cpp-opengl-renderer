@@ -85,8 +85,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
 
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         container.Clear();
-        throw std::runtime_error(
-            "Framebuffer not complete");
+        throw std::runtime_error("Framebuffer not complete");
       }
 
       // Cube map texture id

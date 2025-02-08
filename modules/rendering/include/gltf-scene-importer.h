@@ -39,8 +39,9 @@
 #include <vector>
 
 namespace Mgtt::Rendering {
-/** 
- * Enum class representing component types used in GLTF (e.g. BYTE, UNSIGNED_INT).
+/**
+ * Enum class representing component types used in GLTF (e.g. BYTE,
+ * UNSIGNED_INT).
  */
 enum class GLTFParameterType {
   BYTE = 5120,
@@ -51,7 +52,6 @@ enum class GLTFParameterType {
   UNSIGNED_INT = 5125,
   FLOAT = 5126
 };
-
 
 /**
  * @brief Implementation of the ISceneImporter interface for importing 3D

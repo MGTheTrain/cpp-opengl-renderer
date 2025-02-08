@@ -574,8 +574,9 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
         const void* dataPtr =
             &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
 
-          switch (static_cast<Mgtt::Rendering::GLTFParameterType>(accessor.componentType)) {
-            case Mgtt::Rendering::GLTFParameterType::UNSIGNED_INT: {
+        switch (static_cast<Mgtt::Rendering::GLTFParameterType>(
+            accessor.componentType)) {
+          case Mgtt::Rendering::GLTFParameterType::UNSIGNED_INT: {
             const uint32_t* buf = static_cast<const uint32_t*>(dataPtr);
             for (size_t index = 0; index < accessor.count; index++) {
               newMesh->indices.push_back(buf[index] + vertexStart);
