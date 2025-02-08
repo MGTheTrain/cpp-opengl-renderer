@@ -61,7 +61,7 @@ struct AABB {
    * @brief CalculateBoundingBox calculates the bounding box of an object
    * transformed by the given matrix.
    *
-   * This function takes a 4x4 transformation matrix and calculates the bounding
+   * This method takes a 4x4 transformation matrix and calculates the bounding
    * box of an object after being transformed by the matrix. The resulting
    * bounding box can be used for various purposes, such as collision detection
    * or rendering optimizations.
@@ -69,7 +69,7 @@ struct AABB {
    * @param m A 4x4 transformation matrix representing the object's
    * transformation.
    *
-   * @return void This function does not return a value. The bounding box
+   * @return void This method does not return a value. The bounding box
    * information is typically stored or used internally within the calling code.
    *
    * @note The function assumes that the object's original bounding box is
