@@ -32,7 +32,7 @@
 Mgtt::Window::GlfwWindow::GlfwWindow(const std::string& name, uint32_t width,
                                      uint32_t height) {
   if (!glfwInit()) {
-    throw std::runtime_error("GLFW ERROR: Failed to initialize GLFW");
+    throw std::runtime_error("Failed to initialize GLFW");
   }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -50,7 +50,7 @@ Mgtt::Window::GlfwWindow::GlfwWindow(const std::string& name, uint32_t width,
       glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
   if (!this->window) {
     glfwTerminate();
-    throw std::runtime_error("GLFW ERROR: Failed to create GLFW window");
+    throw std::runtime_error("Failed to create GLFW window");
     return;
   }
   glfwMakeContextCurrent(this->window);

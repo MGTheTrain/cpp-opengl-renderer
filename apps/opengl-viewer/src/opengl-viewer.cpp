@@ -64,9 +64,9 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
 #ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
-    throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+    throw std::runtime_error("Glew could not be initialized");
   }
-  // Compile shaders and link to OpenGl program
+
   std::pair<std::string, std::string> pbrShaderPathes = {
       "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
   this->mgttScene.shader.Compile(pbrShaderPathes);
@@ -80,7 +80,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
       eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
 #else
-  // Compile shaders and link to OpenGl program
+
   std::pair<std::string, std::string> pbrShaderPathes = {
       "assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
   this->mgttScene.shader.Compile(pbrShaderPathes);
@@ -95,20 +95,16 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 #endif
   glEnable(GL_DEPTH_TEST);
 
-  // scene
   this->gltfSceneImporter =
       std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
   std::string mgttScenePath = "assets/scenes/water-bottle/WaterBottle.gltf";
-  // std::string mgttScenePath =
-  // "assets/scenes/glTF-Sample-Models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf";
+
   this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
-  // equirectangular to env map
   std::string hdrTexturePath = "assets/texture/surgery.jpg";
   this->textureManager->LoadFromHdr(this->renderTextureContainer,
                                     hdrTexturePath);
 
-  // brdf lut
   this->textureManager->LoadBrdfLut(this->renderTextureContainer);
 
   glViewport(0, 0, windowWidth, windowHeight);
@@ -144,7 +140,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
     this->glmMatrices->view =
         glm::translate(this->glmMatrices->view, this->cameraPosition);
-    // Model space transformations
+
     this->glmMatrices->model = glm::scale(
         glm::mat4(1.0f), glm::vec3(1.0f / this->mgttScene.aabb.scale));
     this->glmMatrices->model =
@@ -203,14 +199,6 @@ void Mgtt::Apps::OpenGlViewer::Render() {
       this->TraverseSceneNode(node);
     }
 
-    //// Check brdf lut
-    // this->renderTextureContainer.brdfLutShader.Use();
-
-    // glBindVertexArray(this->renderTextureContainer.quadVao);
-    // glDrawArrays(GL_TRIANGLES, 0, 6);
-    // glBindVertexArray(0);
-
-    // Check env map
     if (this->showEnvMap) {
       glDepthFunc(GL_LEQUAL);
       this->renderTextureContainer.envMapShader.Use();
@@ -239,7 +227,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 /**
  * @brief Iterates recursively over all nodes in the scene
  *
- * This function is responsible for iteraing recursively over all nodes in the
+ * This method is responsible for iteraing recursively over all nodes in the
  *scene
  *
  * @param node A shared pointer to the node.
@@ -255,7 +243,7 @@ void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
 /**
  * @brief Renders the mesh using the specified rendering technique.
  *
- * This function is responsible for rendering the mesh using the current
+ * This method is responsible for rendering the mesh using the current
  * rendering technique and associated settings. It should be called within the
  * rendering loop.
  */
@@ -266,7 +254,6 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
         glGetUniformLocation(this->mgttScene.shader.GetProgramId(), "matrix"),
         1, GL_FALSE, &node->mesh->matrix[0][0]);
     for (auto& meshPrimitve : node->mesh->meshPrimitives) {
-      // base color
       if (meshPrimitve.pbrMaterial.baseColorTexture.id > 0) {
         this->mgttScene.shader.SetBool("baseColorTextureSet", true);
         this->mgttScene.shader.SetInt("baseColorMap", 0);
@@ -277,7 +264,6 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
         this->mgttScene.shader.SetBool("baseColorTextureSet", false);
       }
 
-      // metallic roughness
       if (meshPrimitve.pbrMaterial.metallicRoughnessTexture.id > 0) {
         this->mgttScene.shader.SetBool("physicalDescriptorTextureSet", true);
         this->mgttScene.shader.SetInt("physicalDescriptorMap", 1);
@@ -288,7 +274,6 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
         this->mgttScene.shader.SetBool("physicalDescriptorTextureSet", false);
       }
 
-      // normal
       if (meshPrimitve.pbrMaterial.normalTexture.id > 0) {
         this->mgttScene.shader.SetBool("normalTextureSet", true);
         this->mgttScene.shader.SetInt("normalMap", 2);
@@ -298,7 +283,6 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
         this->mgttScene.shader.SetBool("normalTextureSet", false);
       }
 
-      // emissive
       if (meshPrimitve.pbrMaterial.emissiveTexture.id > 0) {
         this->mgttScene.shader.SetBool("emissiveTextureSet", true);
         this->mgttScene.shader.SetInt("emissiveMap", 3);
@@ -309,7 +293,6 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
         this->mgttScene.shader.SetBool("emissiveTextureSet", false);
       }
 
-      // ambient occlusion
       if (meshPrimitve.pbrMaterial.occlusionTexture.id > 0) {
         this->mgttScene.shader.SetBool("occlusionTextureSet", true);
         this->mgttScene.shader.SetInt("occlusionMap", 4);
@@ -410,7 +393,6 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
           std::string mgttScenePath = std::string(selectedPath);
           this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
-          // Reset attributes
           this->scaleIblAmbient = 1.0f;
           this->showEnvMap = false;
 
@@ -473,8 +455,10 @@ void Mgtt::Apps::OpenGlViewer::ClearImGui() {
 Mgtt::Apps::OpenGlViewer openGlViewer;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
-// @ref
-// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+/**
+ * @ref
+ * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+ */
 void EmscriptenMainLoop() { openGlViewer.Render(); }
 #endif
 
