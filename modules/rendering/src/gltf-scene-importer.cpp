@@ -116,7 +116,7 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
 /**
  * @brief Extracts the folder path from a given file path.
  *
- * This function takes a file path as input and extracts the folder path
+ * This method takes a file path as input and extracts the folder path
  * by finding the last occurrence of the directory separator ('/' or '\\').
  *
  * @param path The full file path from which to extract the folder path.
@@ -547,7 +547,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC2);
       }
 
-      // TBD: joints & weights for animation
+      // TODO: joints and weights for animation
       for (size_t v = 0; v < posAccessor.count; v++) {
         newMesh->vertexPositionAttribs.push_back(
             glm::make_vec3(&bufferPos[v * posByteStride]));
@@ -574,22 +574,22 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
         const void* dataPtr =
             &(buffer.data[accessor.byteOffset + bufferView.byteOffset]);
 
-        switch (accessor.componentType) {
-          case GLTF_PARAMETER_TYPE_UNSIGNED_INT: {
+          switch (static_cast<Mgtt::Rendering::GLTFParameterType>(accessor.componentType)) {
+            case Mgtt::Rendering::GLTFParameterType::UNSIGNED_INT: {
             const uint32_t* buf = static_cast<const uint32_t*>(dataPtr);
             for (size_t index = 0; index < accessor.count; index++) {
               newMesh->indices.push_back(buf[index] + vertexStart);
             }
             break;
           }
-          case GLTF_PARAMETER_TYPE_UNSIGNED_SHORT: {
+          case Mgtt::Rendering::GLTFParameterType::UNSIGNED_SHORT: {
             const uint16_t* buf = static_cast<const uint16_t*>(dataPtr);
             for (size_t index = 0; index < accessor.count; index++) {
               newMesh->indices.push_back(buf[index] + vertexStart);
             }
             break;
           }
-          case GLTF_PARAMETER_TYPE_UNSIGNED_BYTE: {
+          case Mgtt::Rendering::GLTFParameterType::UNSIGNED_BYTE: {
             const uint8_t* buf = static_cast<const uint8_t*>(dataPtr);
             for (size_t index = 0; index < accessor.count; index++) {
               newMesh->indices.push_back(buf[index] + vertexStart);
@@ -651,7 +651,7 @@ void Mgtt::Rendering::GltfSceneImporter::UpdateNodeMeshMatrices(
 /**
  * @brief Calculates the dimensions of the entire scene.
  *
- * This function calculates the dimensions of the entire scene by utilizing the
+ * This method calculates the dimensions of the entire scene by utilizing the
  * CalculateSceneAABB() and CalculateSceneNodeAABBs() methods. It traverses the
  * nodes of the scene recursively to determine the overall size of the scene.
  * The calculated dimensions typically include the minimum and maximum extents
@@ -672,7 +672,7 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneDimensions(
 /**
  * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
  *
- * This function calculates the axis-aligned bounding box (AABB) of the entire
+ * This method calculates the axis-aligned bounding box (AABB) of the entire
  * scene. It traverses all nodes in the scene recursively and computes the AABB
  * that encapsulates all geometry within the scene. The AABB represents the
  * minimum volume box that entirely contains all objects in the scene.
@@ -698,7 +698,7 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(
  * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in
  * the scene.
  *
- * This function calculates the axis-aligned bounding boxes (AABBs) for each
+ * This method calculates the axis-aligned bounding boxes (AABBs) for each
  * node in the scene. It traverses all nodes recursively and computes the AABB
  * for each individual node based on its geometry.
  *

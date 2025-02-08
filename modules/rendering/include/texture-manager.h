@@ -50,7 +50,7 @@ class TextureManager {
   /**
    * @brief Load cube map textures from the given folder path.
    *
-   * This function loads cube map textures and
+   * This method loads cube map textures and
    * associates it with the provided RenderTexturesContainer. It performs
    * necessary operations to make the textures available for use in rendering.
    *
@@ -64,7 +64,7 @@ class TextureManager {
   /**
    * @brief Load an HDR texture from the given file path.
    *
-   * This function loads an HDR texture from the specified file path and
+   * This method loads an HDR texture from the specified file path and
    * associates it with the provided RenderTexturesContainer. It performs
    * necessary operations to make the texture available for use in rendering.
    *
@@ -79,7 +79,7 @@ class TextureManager {
    * @brief Load the BRDF Lookup Texture into the provided HDR texture
    * container.
    *
-   * This function loads the BRDF Lookup Texture into the provided HDR texture
+   * This method loads the BRDF Lookup Texture into the provided HDR texture
    * container. It performs necessary operations to make the BRDF texture
    * available for use in rendering.
    *
@@ -91,7 +91,7 @@ class TextureManager {
   /**
    * @brief Clear the provided render textures container.
    *
-   * This function clears the contents of the provided RenderTexturesContainer,
+   * This method clears the contents of the provided RenderTexturesContainer,
    * releasing any resources associated with the textures.
    *
    * @param container The RenderTexturesContainer to clear.
@@ -126,7 +126,7 @@ class TextureManager {
   /**
    * @brief Generate the irradiance map for the provided HDR texture container.
    *
-   * This function generates the irradiance map for the provided HDR texture
+   * This method generates the irradiance map for the provided HDR texture
    * container. It performs necessary operations to make the irradiance map
    * available for use in rendering.
    *

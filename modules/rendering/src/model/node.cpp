@@ -74,7 +74,7 @@ glm::mat4 Mgtt::Rendering::Node::GetGlobalMatrix() {
  * @brief Applies the initial transformation to the specified node and its child
  * nodes recursively.
  *
- * This function applies the initial transformation to the given node and its
+ * This method applies the initial transformation to the given node and its
  * child nodes recursively. It ensures that the transformation is propagated
  * down the hierarchy of nodes, allowing for hierarchical transformations in the
  * scene graph.

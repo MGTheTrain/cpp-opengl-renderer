@@ -92,7 +92,7 @@ class RotatingTexturedCube {
   /**
    * @brief Process input for the GLFW window.
    *
-   * This function processes input for the specified GLFW window. It can handle
+   * This method processes input for the specified GLFW window. It can handle
    * keyboard and mouse input events and update the application state
    * accordingly.
    */

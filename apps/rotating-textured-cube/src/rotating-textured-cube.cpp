@@ -239,7 +239,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 /**
  * @brief Process input for the GLFW window.
  *
- * This function processes input for the specified GLFW window. It can handle
+ * This method processes input for the specified GLFW window. It can handle
  * keyboard and mouse input events and update the application state accordingly.
  *
  * @param window A pointer to the GLFW window for which input should be
@@ -273,8 +273,9 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(
 Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
-// @ref
-// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+/**
+ * @ref https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+ */
 void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
 #endif
 
