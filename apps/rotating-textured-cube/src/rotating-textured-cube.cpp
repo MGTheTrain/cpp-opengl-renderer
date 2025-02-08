@@ -57,7 +57,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
 #ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
-    throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+    throw std::runtime_error("Glew could not be initialized");
   }
   std::string vsPath = "assets/shader/core/coordinate.vert";
   std::string fsPath = "assets/shader/core/coordinate.frag";
@@ -174,7 +174,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
     }
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
-    throw std::runtime_error("TEXTURE ERROR: Failed to load texture " +
+    throw std::runtime_error("Failed to load texture " +
                              texturePath);
   }
   if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data) {

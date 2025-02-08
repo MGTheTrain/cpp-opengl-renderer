@@ -25,7 +25,7 @@
 /**
  * @brief Load cube map textures from the given folder path.
  *
- * This function loads cube map textures and
+ * This method loads cube map textures and
  * associates it with the provided RenderTexturesContainer. It performs
  * necessary operations to make the textures available for use in rendering.
  *
@@ -45,7 +45,7 @@ void Mgtt::Rendering::TextureManager::LoadFromEnvMap(
 /**
  * @brief Load an HDR texture from the given file path.
  *
- * This function loads an HDR texture from the specified file path and
+ * This method loads an HDR texture from the specified file path and
  * associates it with the provided RenderTexturesContainer. It performs
  * necessary operations to make the texture available for use in rendering.
  *
@@ -86,7 +86,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         container.Clear();
         throw std::runtime_error(
-            "OPENGL FRAMEBUFFER ERROR: Framebuffer not complete");
+            "Framebuffer not complete");
       }
 
       // Cube map texture id
@@ -167,7 +167,7 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
 /**
  * @brief Clear the provided render textures container.
  *
- * This function clears the contents of the provided RenderTexturesContainer,
+ * This method clears the contents of the provided RenderTexturesContainer,
  * releasing any resources associated with the textures.
  *
  * @param container The RenderTexturesContainer to clear.
@@ -180,7 +180,7 @@ void Mgtt::Rendering::TextureManager::Clear(
 /**
  * @brief Set up rendering resources for a cube.
  *
- * The SetupCube function initializes and configures rendering resources
+ * The SetupCube method initializes and configures rendering resources
  * for a cube, including textures and buffers. It uses the provided
  * RenderTexturesContainer to manage the associated textures.
  *
@@ -229,12 +229,12 @@ void Mgtt::Rendering::TextureManager::SetupCube(
 /**
  * @brief Set up rendering resources for a cube.
  *
- * The SetupQuad function initializes and configures rendering resources
- * for a quad, including textures and buffers. It uses the provided
+ * The SetupQuad method initializes and configures rendering resources
+ * for a quad. It uses the provided
  * RenderTexturesContainer to manage the associated textures.
  *
  * @param container A reference to a RenderTexturesContainer used to manage
- *                  rendering-related textures and resources.
+ *                  rendering-related resources.
  */
 void Mgtt::Rendering::TextureManager::SetupQuad(
     Mgtt::Rendering::RenderTexturesContainer& container) {
@@ -275,7 +275,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(
 /**
  * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
  *
- * This function loads the BRDF Lookup Texture into the provided HDR texture
+ * This method loads the BRDF Lookup Texture into the provided HDR texture
  * container. It performs necessary operations to make the BRDF texture
  * available for use in rendering.
  *
@@ -285,9 +285,7 @@ void Mgtt::Rendering::TextureManager::SetupQuad(
 void Mgtt::Rendering::TextureManager::LoadBrdfLut(
     Mgtt::Rendering::RenderTexturesContainer& container) {
   if (container.brdfLutShader.GetProgramId() == 0) {
-    throw std::runtime_error(
-        "LOAD BRDF LUT ERROR: Ensure that a shader program for "
-        "[brdfLutShader]exists");
+    throw std::runtime_error("Ensure that a BRDF lut shader program exists");
   }
   if (!HasValuesGreaterThanZero({container.brdfLutTextureId})) {
     glGenTextures(1, &container.brdfLutTextureId);
@@ -320,7 +318,7 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(
 /**
  * @brief Generate the irradiance map for the provided HDR texture container.
  *
- * This function generates the irradiance map for the provided HDR texture
+ * This method generates the irradiance map for the provided HDR texture
  * container. It performs necessary operations to make the irradiance map
  * available for use in rendering.
  *

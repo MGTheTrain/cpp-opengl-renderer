@@ -64,7 +64,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
 #ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
-    throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+    throw std::runtime_error("Glew could not be initialized");
   }
   // Compile shaders and link to OpenGl program
   std::pair<std::string, std::string> pbrShaderPathes = {
