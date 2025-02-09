@@ -48,7 +48,7 @@ namespace Mgtt::Rendering {
  */
 struct TextureBase {
   /**
-   * @brief Constructor for the TextureBase struct
+   * @brief Constructor
    */
   TextureBase();
 
@@ -68,23 +68,21 @@ struct TextureBase {
  */
 struct Texture : public TextureBase {
   /**
-   * @brief Constructor for the Texture struct
+   * @brief Constructor
    */
   Texture();
 
   virtual ~Texture() = default;
 
   /**
-   * @brief Copy Constructor for the Texture struct
+   * @brief Copy Constructor
    *
    * @param texture The texture to be associated with this struct.
    */
   Texture(const Texture& texture);
 
   /**
-   * @brief Clear releases resources.
-   *
-   * This method clears the resources associated with the Texture object,
+   * @brief This method clears the resources associated with the Texture object,
    * freeing up memory. It is recommended to call this method when the Texture
    * is no longer needed.
    */
@@ -98,19 +96,19 @@ struct Texture : public TextureBase {
  */
 struct NormalTexture : public Texture {
   /**
-   * @brief Constructor for the NormalTexture struct.
+   * @brief Constructor
    */
   NormalTexture();
 
   ~NormalTexture() = default;
 
   /**
-   * @brief Constructor for the NormalTexture struct.
+   * @brief Constructor
    *
    * @param texture The normal texture to be associated with this struct.
    * @param scale The scale factor applied to the normal texture.
    */
-  NormalTexture(const Texture& texture, const float& scale);
+  NormalTexture(const Texture& texture, float scale);
 
   float scale;
 };
@@ -120,14 +118,14 @@ struct NormalTexture : public Texture {
  */
 struct EmissiveTexture : public Texture {
   /**
-   * @brief Constructor for the Emissive struct.
+   * @brief Constructor
    */
   EmissiveTexture();
 
   ~EmissiveTexture() = default;
 
   /**
-   * @brief Constructor for the Emissive struct.
+   * @brief Constructor
    *
    * @param texture The emissive texture to be associated with this struct.
    * @param scale The emissive color applied to the normal texture.
@@ -142,14 +140,14 @@ struct EmissiveTexture : public Texture {
  */
 struct MetallicRoughnessTexture : public Texture {
   /**
-   * @brief Constructor for the MetallicRoughnessTexture struct.
+   * @brief Constructor
    */
   MetallicRoughnessTexture();
 
   ~MetallicRoughnessTexture() = default;
 
   /**
-   * @brief Constructor for the Metallic struct texture.
+   * @brief Constructor
    *
    * @param texture The Metallic roughness texture to be associated with this
    * struct.
@@ -158,8 +156,8 @@ struct MetallicRoughnessTexture : public Texture {
    * @param roughnnessFactor The roughness factor applied to the Metallic
    * roughness texture.
    */
-  MetallicRoughnessTexture(const Texture& texture, const float& metallicFactor,
-                           const float& roughnessFactor);
+  MetallicRoughnessTexture(const Texture& texture, float metallicFactor,
+                           float roughnessFactor);
 
   float metallicFactor;
   float roughnessFactor;
@@ -170,19 +168,19 @@ struct MetallicRoughnessTexture : public Texture {
  */
 struct OcclusionTexture : public Texture {
   /**
-   * @brief Constructor for the OcclusionTexture struct.
+   * @brief Constructor
    */
   OcclusionTexture();
 
   ~OcclusionTexture() = default;
 
   /**
-   * @brief Constructor for the Occlusion struct.
+   * @brief Constructor
    *
    * @param texture The occlusion texture to be associated with this struct.
    * @param scale The occlusion color applied to the occlusion texture.
    */
-  OcclusionTexture(const Texture& texture, const float& color);
+  OcclusionTexture(const Texture& texture, float color);
 
   float strength;
 };
@@ -192,14 +190,14 @@ struct OcclusionTexture : public Texture {
  */
 struct BaseColorTexture : public Texture {
   /**
-   * @brief Constructor for the BaseColorTexture struct.
+   * @brief Constructor
    */
   BaseColorTexture();
 
   ~BaseColorTexture() = default;
 
   /**
-   * @brief Constructor for the BaseColor struct.
+   * @brief Constructor
    *
    * @param texture The base color texture to be associated with this struct.
    * @param scale The base color applied to the base color texture.
@@ -217,31 +215,29 @@ struct BaseColorTexture : public Texture {
  */
 struct RenderTexturesContainer {
   /**
-   * @brief Constructor for the RenderTexturesContainer struct.
+   * @brief Constructor
    */
   RenderTexturesContainer();
 
   ~RenderTexturesContainer() = default;
 
   /**
-   * @brief Constructor for the RenderTexturesContainer struct.
+   * @brief Constructor
    *
-   * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and
+   * @param eq2CubeMapshaderPaths The equirectangular to cube map vertex and
    * fragment shader path
-   * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
-   * @param envMapShaderPathes The env map vertex and fragment shader path
+   * @param eq2CubeMapshaderPaths The brdf lut vertex and fragment shader path
+   * @param envMapshaderPaths The env map vertex and fragment shader path
    */
   RenderTexturesContainer(
-      const std::pair<std::string, std::string>& eq2CubeMapShaderPathes,
-      const std::pair<std::string, std::string>& brdfLutShaderPathes,
-      const std::pair<std::string, std::string>& envMapShaderPathes);
+      const std::pair<std::string, std::string>& eq2CubeMapshaderPaths,
+      const std::pair<std::string, std::string>& brdfLutshaderPaths,
+      const std::pair<std::string, std::string>& envMapshaderPaths);
 
   /**
-   * @brief Clear releases resources.
-   *
-   * This method clears the resources associated with the RenderTextureContainer
-   * object, freeing up memory. It is recommended to call this method when the
-   * RenderTextureContainer is no longer needed.
+   * @brief This method clears the resources associated with the
+   * RenderTextureContainer object, freeing up memory. It is recommended to call
+   * this method when the RenderTextureContainer is no longer needed.
    */
   void Clear();
 
@@ -256,12 +252,11 @@ struct RenderTexturesContainer {
   uint32_t quadVao;
   uint32_t quadVbo;
   std::vector<TextureBase>
-      textures;  // @note This vector can be used to store either a single HDR
+      textures;  // NOTE: This vector can be used to store either a single HDR
                  // texture or multiple cube map textures.
 
-  Mgtt::Rendering::OpenGlShader
-      eq2CubeMapShader;  // equirectangular to cubemap shader
-  Mgtt::Rendering::OpenGlShader brdfLutShader;  // brdf lut shader
-  Mgtt::Rendering::OpenGlShader envMapShader;   // env map shader
+  Mgtt::Rendering::OpenGlShader eq2CubeMapShader;
+  Mgtt::Rendering::OpenGlShader brdfLutShader;
+  Mgtt::Rendering::OpenGlShader envMapShader;
 };
 }  // namespace Mgtt::Rendering

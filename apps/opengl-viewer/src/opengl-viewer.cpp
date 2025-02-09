@@ -67,31 +67,31 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
     throw std::runtime_error("Glew could not be initialized");
   }
 
-  std::pair<std::string, std::string> pbrShaderPathes = {
+  std::pair<std::string, std::string> pbrshaderPaths = {
       "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-  this->mgttScene.shader.Compile(pbrShaderPathes);
-  std::pair<std::string, std::string> eq2BrdfLutShaderPathes = {
+  this->mgttScene.shader.Compile(pbrshaderPaths);
+  std::pair<std::string, std::string> eq2BrdfLutshaderPaths = {
       "assets/shader/core/eq2CubeMap.vert",
       "assets/shader/core/eq2CubeMap.frag"};
-  std::pair<std::string, std::string> brdfLutShaderPathes = {
+  std::pair<std::string, std::string> brdfLutshaderPaths = {
       "assets/shader/core/genBrdf.vert", "assets/shader/core/genBrdf.frag"};
-  std::pair<std::string, std::string> envMapShaderPathes = {
+  std::pair<std::string, std::string> envMapshaderPaths = {
       "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"};
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
-      eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+      eq2BrdfLutshaderPaths, brdfLutshaderPaths, envMapshaderPaths);
 #else
 
-  std::pair<std::string, std::string> pbrShaderPathes = {
+  std::pair<std::string, std::string> pbrshaderPaths = {
       "assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
-  this->mgttScene.shader.Compile(pbrShaderPathes);
-  std::pair<std::string, std::string> eq2BrdfLutShaderPathes = {
+  this->mgttScene.shader.Compile(pbrshaderPaths);
+  std::pair<std::string, std::string> eq2BrdfLutshaderPaths = {
       "assets/shader/es/eq2CubeMap.vert", "assets/shader/es/eq2CubeMap.frag"};
-  std::pair<std::string, std::string> brdfLutShaderPathes = {
+  std::pair<std::string, std::string> brdfLutshaderPaths = {
       "assets/shader/es/genBrdf.vert", "assets/shader/es/genBrdf.frag"};
-  std::pair<std::string, std::string> envMapShaderPathes = {
+  std::pair<std::string, std::string> envMapshaderPaths = {
       "assets/shader/es/envMap.vert", "assets/shader/es/envMap.frag"};
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
-      eq2BrdfLutShaderPathes, brdfLutShaderPathes, envMapShaderPathes);
+      eq2BrdfLutshaderPaths, brdfLutshaderPaths, envMapshaderPaths);
 #endif
   glEnable(GL_DEPTH_TEST);
 
@@ -116,9 +116,6 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
 
 /**
  * @brief Renders the scene using OpenGL.
- *
- * This method is responsible for rendering the contents of the scene using
- * OpenGL.
  */
 void Mgtt::Apps::OpenGlViewer::Render() {
 #ifndef __EMSCRIPTEN__
@@ -227,9 +224,6 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 /**
  * @brief Iterates recursively over all nodes in the scene
  *
- * This method is responsible for iteraing recursively over all nodes in the
- *scene
- *
  * @param node A shared pointer to the node.
  **/
 void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
@@ -243,9 +237,7 @@ void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
 /**
  * @brief Renders the mesh using the specified rendering technique.
  *
- * This method is responsible for rendering the mesh using the current
- * rendering technique and associated settings. It should be called within the
- * rendering loop.
+ * @param node A shared pointer to the node.
  */
 void Mgtt::Apps::OpenGlViewer::RenderMesh(
     std::shared_ptr<Mgtt::Rendering::Node> node) {
@@ -331,11 +323,6 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
 /**
  * @brief Callback function for framebuffer size changes.
  *
- * This static callback function is invoked when the framebuffer size of the
- * GLFW window changes. It is typically registered using
- * `glfwSetFramebufferSizeCallback`. The function updates the viewport size
- * based on the new width and height.
- *
  * @param window A pointer to the GLFW window whose framebuffer size has
  * changed.
  * @param width  The new width of the framebuffer.
@@ -387,9 +374,9 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
 
         if (result == NFD_OKAY) {
           this->gltfSceneImporter->Clear(this->mgttScene);
-          std::pair<std::string, std::string> pbrShaderPathes = {
+          std::pair<std::string, std::string> pbrshaderPaths = {
               "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-          this->mgttScene.shader.Compile(pbrShaderPathes);
+          this->mgttScene.shader.Compile(pbrshaderPaths);
           std::string mgttScenePath = std::string(selectedPath);
           this->gltfSceneImporter->Load(this->mgttScene, mgttScenePath);
 
@@ -456,7 +443,7 @@ Mgtt::Apps::OpenGlViewer openGlViewer;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 /**
- * @ref
+ * NOTE: See
  * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
  */
 void EmscriptenMainLoop() { openGlViewer.Render(); }
