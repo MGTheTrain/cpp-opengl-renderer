@@ -81,7 +81,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
 #ifdef __ANDROID__
   __android_log_write(ANDROID_LOG_INFO, "INIT INFO",
                       "About to compile shader files");
-  // Copy to the emulator or an actual Android OS device files via adb cli tool:
+  // HINT: Copy to the emulator or an actual Android OS device files via adb cli tool:
   // adb push <assets folder path>/shader/es30/
   // /sdcard/Download/assets/shader/es30/
   std::string vsPath = "/sdcard/Download/assets/shader/es30/coordinate.vert";
@@ -93,9 +93,9 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
 #endif
   glEnable(GL_DEPTH_TEST);
 
-  std::pair<std::string, std::string> shaderPathes =
+  std::pair<std::string, std::string> shaderPaths =
       std::make_pair(vsPath, fsPath);
-  auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
+  auto shader = Mgtt::Rendering::OpenGlShader(shaderPaths);
   this->openGlShaders.push_back(shader);
 
   this->mesh.vertexPositionAttribs = {
@@ -174,7 +174,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 #ifdef __ANDROID__
-  // Copy to the emulator or an actual Android OS device files via adb cli tool:
+  // HINT: Copy to the emulator or an actual Android OS device files via adb cli tool:
   // adb push <assets folder path>/texture/ /sdcard/Download/assets/texture/
   std::string texturePath = "/sdcard/Download/assets/texture/surgery.jpg";
 #else
@@ -220,9 +220,6 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
 
 /**
  * @brief Renders the scene using OpenGL.
- *
- * This method is responsible for rendering the contents of the scene using
- * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
 #if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
@@ -291,9 +288,6 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 /**
  * @brief Process input for the GLFW window.
  *
- * This method processes input for the specified GLFW window. It can handle
- * keyboard and mouse input events and update the application state accordingly.
- *
  * @param window A pointer to the GLFW window for which input should be
  * processed.
  */
@@ -309,11 +303,6 @@ void Mgtt::Apps::RotatingTexturedCube::ProcessInput() {
 #ifndef __ANDROID__
 /**
  * @brief Callback function for framebuffer size changes.
- *
- * This static callback function is invoked when the framebuffer size of the
- * GLFW window changes. It is typically registered using
- * `glfwSetFramebufferSizeCallback`. The function updates the viewport size
- * based on the new width and height.
  *
  * @param window A pointer to the GLFW window whose framebuffer size has
  * changed.
@@ -345,7 +334,7 @@ Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 /**
- * @ref
+ * NOTE: See
  * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
  */
 void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }

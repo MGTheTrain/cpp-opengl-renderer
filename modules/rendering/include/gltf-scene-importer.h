@@ -40,7 +40,7 @@
 
 namespace Mgtt::Rendering {
 /**
- * Enum class representing component types used in GLTF (e.g. BYTE,
+ * Enum class representing parameter types used in GLTF (e.g. BYTE,
  * UNSIGNED_INT).
  */
 enum class GLTFParameterType {
@@ -56,9 +56,6 @@ enum class GLTFParameterType {
 /**
  * @brief Implementation of the ISceneImporter interface for importing 3D
  * scenes.
- *
- * This class provides concrete implementation details for loading and clearing
- * 3D scenes.
  */
 class GltfSceneImporter : public ISceneImporter {
  public:
@@ -70,11 +67,8 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Load the 3D scene from a specified file path.
    *
-   * This method overrides the corresponding method in the ISceneImporter
-   * interface. It loads the 3D scene from the specified file path.
-   *
    * @param path The file path from which to load the 3D scene.
-   * @paramAn instance of the loaded 3D scene.
+   * @param scene Reference to an instance of the loaded 3D scene.
    */
   void Load(Mgtt::Rendering::Scene& mgttScene,
             const std::string& path) override;
@@ -82,8 +76,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Clear the allocated resources in RAM and VRAM for the scene object.
    *
-   * This method is used to reset the internal state of the scene.
-   * @param scene A unique pointer to the scene to clear.
+   * @param scene Reference to an instance of a 3D scene to be cleared.
    */
   void Clear(Mgtt::Rendering::Scene& scene) override;
 
@@ -91,26 +84,16 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Extracts the folder path from a given file path.
    *
-   * This method takes a file path as input and extracts the folder path
-   * by finding the last occurrence of the directory separator ('/' or '\\').
-   *
    * @param path The full file path from which to extract the folder path.
    * @return The extracted folder path. If no directory separator is found,
    *         an empty string is returned.
-   *
-   * @note The function uses the platform-specific directory separator ('/' or
-   *'\\').
-   * @note The returned folder path includes the trailing directory separator.
    **/
   std::string ExtractFolderPath(const std::string& path);
 
   /**
    * @brief Load texture from the provided glTF model.
    *
-   * This method loads texture from the given glTF model and updates the
-   * internal representation of the 3D scene accordingly.
-   *
-   * @param scene A reference to the updated 3D scene after loading nodes.
+   * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param gltfModel The glTF model containing node information.
    *
    */
@@ -118,9 +101,6 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Sets up a texture for rendering.
-   *
-   * It ensures that the texture data is properly uploaded to video memory
-   * (VRAM) for efficient rendering.
    *
    * @param texture A reference to the `Mgtt::Rendering::Texture` object to
    * modify.
@@ -130,10 +110,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Load materials from the provided glTF model.
    *
-   * This method loads materials from the given glTF model and updates the
-   * internal representation of the 3D scene accordingly.
-   *
-   * @param scene A reference to the updated 3D scene after loading nodes.
+   * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param gltfModel The glTF model containing node information.
    */
   void LoadMaterials(Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel);
@@ -141,11 +118,8 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Load nodes from the provided glTF model.
    *
-   * This method loads nodes from the given glTF model and updates the
-   * internal representation of the 3D scene accordingly.
-   *
    * @param parent A shared pointer to the parent node in the 3D scene.
-   * @param scene Reference to the updated 3D scene after loading nodes.
+   * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param node Reference to the glTF node containing information.
    * @param nodeIndex Index of the current node in the glTF model.
    * @param model Reference to the glTF model containing node information.
@@ -158,10 +132,6 @@ class GltfSceneImporter : public ISceneImporter {
    * @brief Sets up a mesh for rendering, including vertex attribute
    * configuration.
    *
-   * This method prepares a mesh for rendering by configuring its vertex
-   * attributes, associating it with the specified shader, and potentially
-   * moving vertex data to VRAM.
-   *
    * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object
    * representing the mesh.
    * @param shaderId An unsigned 32-bit integer representing the shader ID.
@@ -172,10 +142,6 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Clear the RAM resources associated with the Texture object.
    *
-   * This method releases the memory resources in RAM associated with the
-   * Texture object, freeing up memory. It is recommended to call this method
-   * when the Texture is no longer needed to avoid unnecessary memory usage.
-   *
    * @param texture Reference to the Texture object for which RAM resources
    * should be cleared.
    */
@@ -183,7 +149,7 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Updates the mesh matrices of the given node and its child nodes
-   * recursively when calling the InitialTransform() method
+   * recursively
    *
    * @param node A shared pointer to the node whose mesh matrices need to be
    * updated.
@@ -193,25 +159,14 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Calculates the dimensions of the entire scene.
    *
-   * This method calculates the dimensions of the entire scene by utilizing
-   * the CalculateSceneAABB() and CalculateSceneNodeAABBs() methods. It
-   * traverses the nodes of the scene recursively to determine the overall size
-   * of the scene. The calculated dimensions typically include the minimum and
-   * maximum extents along each axis.
-   *
-   * @param scene Reference to the updated 3D scene after loading nodes.
+   * @param scene Reference to an instance of the loaded 3D scene to be updated.
    */
   void CalculateSceneDimensions(Mgtt::Rendering::Scene& scene);
 
   /**
    * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
    *
-   * This method calculates the axis-aligned bounding box (AABB) of the entire
-   * scene. It traverses all nodes in the scene recursively and computes the
-   * AABB that encapsulates all geometry within the scene. The AABB represents
-   * the minimum volume box that entirely contains all objects in the scene.
-   *
-   * @param scene Reference to the updated 3D scene after loading nodes.
+   * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param node A shared pointer to the node
    */
   void CalculateSceneAABB(Mgtt::Rendering::Scene& scene,
@@ -220,10 +175,6 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in
    * the scene.
-   *
-   * This method calculates the axis-aligned bounding boxes (AABBs) for each
-   * node in the scene. It traverses all nodes recursively and computes the AABB
-   * for each individual node based on its geometry.
    *
    * @param node A shared pointer to the node
    */

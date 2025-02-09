@@ -31,23 +31,19 @@
  *
  * @param container The RenderTexturesContainer to associate with the loaded
  * cube map.
- * @param texturePathes The cube map texture pathes
+ * @param texturePaths The cube map texture Paths
  */
 void Mgtt::Rendering::TextureManager::LoadFromEnvMap(
     Mgtt::Rendering::RenderTexturesContainer& container,
-    const std::vector<std::string>& texturePathes) {
+    const std::vector<std::string>& texturePaths) {
   // TBD
-  for (auto& texturePath : texturePathes) {
+  for (auto& texturePath : texturePaths) {
     std::cout << "Allocated env map " << texturePath << std::endl;
   }
 }
 
 /**
  * @brief Load an HDR texture from the given file path.
- *
- * This method loads an HDR texture from the specified file path and
- * associates it with the provided RenderTexturesContainer. It performs
- * necessary operations to make the texture available for use in rendering.
  *
  * @param container The RenderTexturesContainer to associate with the loaded HDR
  * texture.
@@ -88,7 +84,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
         throw std::runtime_error("Framebuffer not complete");
       }
 
-      // Cube map texture id
       glGenTextures(1, &container.cubeMapTextureId);
       glBindTexture(GL_TEXTURE_CUBE_MAP, container.cubeMapTextureId);
       for (uint32_t i = 0; i < 6; ++i) {
@@ -101,8 +96,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-      // Set up projection and view matrices capturing image data onto the 6
-      // cubemap faces
       glm::mat4 captureProjection =
           glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
       std::vector<glm::mat4> captureViews = {
@@ -152,9 +145,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-      // glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureId);
-      // glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-
       glDeleteTextures(1, &container.hdrTextureId);
       container.hdrTextureId = 0;
       container.textures.push_back(texture);
@@ -166,9 +156,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
 /**
  * @brief Clear the provided render textures container.
  *
- * This method clears the contents of the provided RenderTexturesContainer,
- * releasing any resources associated with the textures.
- *
  * @param container The RenderTexturesContainer to clear.
  */
 void Mgtt::Rendering::TextureManager::Clear(
@@ -178,10 +165,6 @@ void Mgtt::Rendering::TextureManager::Clear(
 
 /**
  * @brief Set up rendering resources for a cube.
- *
- * The SetupCube method initializes and configures rendering resources
- * for a cube, including textures and buffers. It uses the provided
- * RenderTexturesContainer to manage the associated textures.
  *
  * @param container A reference to a RenderTexturesContainer used to manage
  *                  rendering-related textures and resources.
@@ -228,10 +211,6 @@ void Mgtt::Rendering::TextureManager::SetupCube(
 /**
  * @brief Set up rendering resources for a cube.
  *
- * The SetupQuad method initializes and configures rendering resources
- * for a quad. It uses the provided
- * RenderTexturesContainer to manage the associated textures.
- *
  * @param container A reference to a RenderTexturesContainer used to manage
  *                  rendering-related resources.
  */
@@ -274,10 +253,6 @@ void Mgtt::Rendering::TextureManager::SetupQuad(
 /**
  * @brief Load the BRDF Lookup Texture into the provided HDR texture container.
  *
- * This method loads the BRDF Lookup Texture into the provided HDR texture
- * container. It performs necessary operations to make the BRDF texture
- * available for use in rendering.
- *
  * @param container The RenderTexturesContainer to associate with the loaded
  * BRDF texture.
  */
@@ -316,10 +291,6 @@ void Mgtt::Rendering::TextureManager::LoadBrdfLut(
 
 /**
  * @brief Generate the irradiance map for the provided HDR texture container.
- *
- * This method generates the irradiance map for the provided HDR texture
- * container. It performs necessary operations to make the irradiance map
- * available for use in rendering.
  *
  * @param container The RenderTexturesContainer to associate with the generated
  * irradiance map.

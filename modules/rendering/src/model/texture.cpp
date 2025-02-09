@@ -23,7 +23,7 @@
 #include <texture.h>
 
 /**
- * @brief Constructor for the TextureBase structure
+ * @brief Constructor
  */
 Mgtt::Rendering::TextureBase::TextureBase() {
   this->width = 0;
@@ -34,16 +34,12 @@ Mgtt::Rendering::TextureBase::TextureBase() {
 }
 
 /**
- * @brief Constructor for the Texture structure.
- *
- * This constructor initializes a Texture object with the specified texture
- *path.
- *
+ * @brief Constructor
  **/
 Mgtt::Rendering::Texture::Texture() : TextureBase(), id(0) {}
 
 /**
- * @brief Copy Constructor for the Texture structure
+ * @brief Copy Constructor
  *
  * @param texture The texture to be associated with this structure.
  */
@@ -59,11 +55,9 @@ Mgtt::Rendering::Texture::Texture(const Texture& texture) {
 }
 
 /**
- * @brief Clear releases resources.
- *
- * This method clears the resources associated with the Texture object, freeing
- * up memory. It is recommended to call this method when the Texture is no
- * longer needed.
+ * @brief This method clears the resources associated with the Texture object,
+ * freeing up memory. It is recommended to call this method when the Texture is
+ * no longer needed.
  */
 void Mgtt::Rendering::Texture::Clear() {
   if (this->id > 0) {
@@ -73,29 +67,29 @@ void Mgtt::Rendering::Texture::Clear() {
 }
 
 /**
- * @brief Constructor for the NormalTexture structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::NormalTexture::NormalTexture() { this->scale = 1.0f; }
 
 /**
- * @brief Constructor for the NormalTexture structure.
+ * @brief Constructor
  *
  * @param texture The normal texture to be associated with this structure.
  * @param scale The scale factor applied to the normal texture.
  */
 Mgtt::Rendering::NormalTexture::NormalTexture(const Texture& texture,
-                                              const float& scale)
+                                              float scale)
     : Texture(texture), scale(scale) {}
 
 /**
- * @brief Constructor for the EmissiveTexture structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::EmissiveTexture::EmissiveTexture() {
   this->color = glm::vec3(0.0f);
 }
 
 /**
- * @brief Constructor for the Emissive Texture structure.
+ * @brief Constructor
  *
  * @param texture The emissive texture to be associated with this structure.
  * @param scale The emissive color applied to the normal texture.
@@ -105,7 +99,7 @@ Mgtt::Rendering::EmissiveTexture::EmissiveTexture(const Texture& texture,
     : Texture(texture), color(color) {}
 
 /**
- * @brief Constructor for the MetallicRoughnessTexture structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
   this->metallicFactor = 0.0f;
@@ -113,7 +107,7 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
 }
 
 /**
- * @brief Constructor for the Metallic roughness texture.
+ * @brief Constructor
  *
  * @param texture The Metallic roughness texture to be associated with this
  * structure.
@@ -123,36 +117,35 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
  * roughness texture.
  */
 Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(
-    const Texture& texture, const float& metallicFactor,
-    const float& roughnessFactor)
+    const Texture& texture, float metallicFactor, float roughnessFactor)
     : Texture(texture),
       metallicFactor(metallicFactor),
       roughnessFactor(roughnessFactor) {}
 
 /**
- * @brief Constructor for the OcclusionTexture structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::OcclusionTexture::OcclusionTexture() { this->strength = 0.0f; }
 
 /**
- * @brief Constructor for the Occlusion Texture structure.
+ * @brief Constructor
  *
  * @param texture The occlusion texture to be associated with this structure.
  * @param scale The occlusion color applied to the occlusion texture.
  */
 Mgtt::Rendering::OcclusionTexture::OcclusionTexture(const Texture& texture,
-                                                    const float& strength)
+                                                    float strength)
     : Texture(texture), strength(strength) {}
 
 /**
- * @brief Constructor for the BaseColorTexture structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::BaseColorTexture::BaseColorTexture() {
   this->color = glm::vec4(1.0f);
 }
 
 /**
- * @brief Constructor for the BaseColor Texture structure.
+ * @brief Constructor
  *
  * @param texture The base color texture to be associated with this structure.
  * @param scale The base color applied to the base color texture.
@@ -162,7 +155,7 @@ Mgtt::Rendering::BaseColorTexture::BaseColorTexture(const Texture& texture,
     : Texture(texture), color(color) {}
 
 /**
- * @brief Constructor for the RenderTexturesContainer structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
     : cubeMapTextureId(0),
@@ -177,17 +170,17 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer()
       quadVbo(0) {}
 
 /**
- * @brief Constructor for the RenderTexturesContainer structure.
+ * @brief Constructor
  *
- * @param eq2CubeMapShaderPathes The equirectangular to cube map vertex and
+ * @param eq2CubeMapshaderPaths The equirectangular to cube map vertex and
  * fragment shader path
- * @param eq2CubeMapShaderPathes The brdf lut vertex and fragment shader path
- * @param envMapShaderPathes The env map vertex and fragment shader path
+ * @param eq2CubeMapshaderPaths The brdf lut vertex and fragment shader path
+ * @param envMapshaderPaths The env map vertex and fragment shader path
  */
 Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
-    const std::pair<std::string, std::string>& eq2CubeMapShaderPathes,
-    const std::pair<std::string, std::string>& brdfLutShaderPathes,
-    const std::pair<std::string, std::string>& envMapShaderPathes)
+    const std::pair<std::string, std::string>& eq2CubeMapshaderPaths,
+    const std::pair<std::string, std::string>& brdfLutshaderPaths,
+    const std::pair<std::string, std::string>& envMapshaderPaths)
     : cubeMapTextureId(0),
       irradianceMapTextureId(0),
       brdfLutTextureId(0),
@@ -198,19 +191,16 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
       cubeVbo(0),
       quadVao(0),
       quadVbo(0),
-      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPathes)),
-      brdfLutShader(OpenGlShader(brdfLutShaderPathes)),
-      envMapShader(OpenGlShader(envMapShaderPathes)) {}
+      eq2CubeMapShader(OpenGlShader(eq2CubeMapshaderPaths)),
+      brdfLutShader(OpenGlShader(brdfLutshaderPaths)),
+      envMapShader(OpenGlShader(envMapshaderPaths)) {}
 
 /**
- * @brief Clear releases resources.
- *
- * This method clears the resources associated with the RenderTextureContainer
- * object, freeing up memory. It is recommended to call this method when the
- * RenderTextureContainer is no longer needed.
+ * @brief This method clears the resources associated with the
+ * RenderTextureContainer object, freeing up memory. It is recommended to call
+ * this method when the RenderTextureContainer is no longer needed.
  */
 void Mgtt::Rendering::RenderTexturesContainer::Clear() {
-  // textures
   if (this->cubeMapTextureId > 0) {
     glDeleteTextures(1, &this->cubeMapTextureId);
     this->cubeMapTextureId = 0;
@@ -227,7 +217,6 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     glDeleteTextures(1, &this->hdrTextureId);
     this->hdrTextureId = 0;
   }
-  // framebuffer
   if (this->fboId > 0) {
     glDeleteFramebuffers(1, &this->fboId);
     this->fboId = 0;
@@ -237,7 +226,6 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     this->rboId = 0;
   }
 
-  // vao
   if (this->cubeVao > 0) {
     glDeleteVertexArrays(1, &this->cubeVao);
     this->cubeVao = 0;
@@ -247,7 +235,6 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     this->quadVao = 0;
   }
 
-  // vbo
   if (this->cubeVbo > 0) {
     glDeleteBuffers(1, &this->cubeVbo);
     this->cubeVbo = 0;
@@ -257,17 +244,18 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
     this->quadVbo = 0;
   }
 
-  // shader
   this->eq2CubeMapShader.Clear();
   this->brdfLutShader.Clear();
   this->envMapShader.Clear();
 
-  std::cout << "Successfully deleted the render texture container "
-               "with IBL related components"
-            << std::endl;
-#else
+#ifdef __ANDROID__
   __android_log_write(ANDROID_LOG_INFO, "CLEAR INFO",
                       "Successfully deleted the render texture container with "
                       "IBL related components");
+#else
+  std::cout << "Successfully deleted the render texture container "
+               "with IBL related components"
+            << std::endl;
 #endif
+
 }

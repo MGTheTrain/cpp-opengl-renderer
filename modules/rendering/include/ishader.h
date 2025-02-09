@@ -32,7 +32,7 @@ namespace Mgtt::Rendering {
 class IShader {
  public:
   /**
-   * @brief Virtual destructor for the interface.
+   * @brief Virtual destructor
    */
   virtual ~IShader() = default;
 
@@ -40,23 +40,13 @@ class IShader {
    * @brief Compile the shader program from specified vertex and fragment shader
    * files.
    *
-   * This method compiles the vertex and fragment shaders, linking them into a
-   * shader program.
-   *
-   * @param shaderPathes The vertex and fragment shader pathes
+   * @param shaderPaths The vertex and fragment shader paths
    */
   virtual void Compile(
-      const std::pair<std::string, std::string>& shaderPathes) = 0;
+      const std::pair<std::string, std::string>& shaderPaths) = 0;
 
   /**
-   * @brief Compile the shader program from specified vertex and fragment shader
-   * files.
-   *
-   * This method compiles the vertex and fragment shaders, linking them into a
-   * shader program.
-   *
-   * @param vsPath The file path to the vertex shader source code.
-   * @param fsPath The file path to the fragment shader source code.
+   * @brief Delete the shader program.
    */
   virtual void Clear() = 0;
 };

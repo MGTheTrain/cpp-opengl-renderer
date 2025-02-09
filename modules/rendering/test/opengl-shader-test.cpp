@@ -94,10 +94,10 @@ TEST_F(OpenGlShaderTest, Compile) {
   RecordProperty("Expected Result", "No exception is thrown.");
 
   try {
-    std::pair<std::string, std::string> shaderPathes = {
+    std::pair<std::string, std::string> shaderPaths = {
         "assets/shader/core330/coordinate.vert",
         "assets/shader/core330/coordinate.frag"};
-    OpenGlShaderTest::openGlShader->Compile(shaderPathes);
+    OpenGlShaderTest::openGlShader->Compile(shaderPaths);
   } catch (...) {
     FAIL() << "An exception has been thrown" << std::endl;
   }

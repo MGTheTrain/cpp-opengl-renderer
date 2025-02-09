@@ -86,9 +86,6 @@ struct GlmVectors {
 
 /**
  * @brief The OpenGlViewer class represents a simple OpenGL viewer.
- *
- * This class provides basic functionality for initializing an OpenGL context,
- * rendering scenes, and clearing the rendering buffer.
  */
 class OpenGlViewer {
  public:
@@ -110,9 +107,6 @@ class OpenGlViewer {
 
   /**
    * @brief Renders the scene using OpenGL.
-   *
-   * This method is responsible for rendering the contents of the scene using
-   * OpenGL.
    */
   void Render();
 
@@ -133,9 +127,6 @@ class OpenGlViewer {
   /**
    * @brief Iterates recursively over all nodes in the scene
    *
-   * This method is responsible for iteraing recursively over all nodes in the
-   *scene
-   *
    * @param node A shared pointer to the node.
    **/
   void TraverseSceneNode(std::shared_ptr<Mgtt::Rendering::Node> node);
@@ -143,19 +134,12 @@ class OpenGlViewer {
   /**
    * @brief Renders the mesh using the specified rendering technique.
    *
-   * This method is responsible for rendering the mesh using the current
-   * rendering technique and associated settings. It should be called within the
-   * rendering loop.
+   * @param node A shared pointer to the node.
    */
   void RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node);
 
   /**
    * @brief Callback function for framebuffer size changes.
-   *
-   * This static callback function is invoked when the framebuffer size of the
-   * GLFW window changes. It is typically registered using
-   * `glfwSetFramebufferSizeCallback`. The function updates the viewport size
-   * based on the new width and height.
    *
    * @param window A pointer to the GLFW window whose framebuffer size has
    * changed.

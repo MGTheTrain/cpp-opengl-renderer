@@ -63,21 +63,17 @@ class OpenGlShader : public IShader {
   /**
    * @brief Constructor for the OpenGlShader class.
    *
-   * @param shaderPathes The vertex and fragment shader pathes
+   * @param shaderPaths The vertex and fragment shader Paths
    */
-  explicit OpenGlShader(const std::pair<std::string, std::string> shaderPathes);
+  explicit OpenGlShader(const std::pair<std::string, std::string> shaderPaths);
 
   /**
    * @brief Compile the shader program from specified vertex and fragment shader
    * files.
    *
-   * This method compiles the vertex and fragment shaders, linking them into a
-   * shader program.
-   *
-   * @param shaderPathes The vertex and fragment shader pathes
+   * @param shaderPaths The vertex and fragment shader Paths
    */
-  void Compile(
-      const std::pair<std::string, std::string>& shaderPathes) override;
+  void Compile(const std::pair<std::string, std::string>& shaderPaths) override;
 
   /**
    * @brief Delete the shader program.

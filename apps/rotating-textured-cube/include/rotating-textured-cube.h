@@ -74,9 +74,6 @@ struct GlmMatrices {
 
 /**
  * @brief The RotatingTexturedCube  class represents a simple OpenGL viewer.
- *
- * This class provides basic functionality for initializing an OpenGL context,
- * rendering scenes, and clearing the rendering buffer.
  */
 class RotatingTexturedCube {
  public:
@@ -100,18 +97,11 @@ class RotatingTexturedCube {
 
   /**
    * @brief Renders the scene using OpenGL.
-   *
-   * This method is responsible for rendering the contents of the scene using
-   * OpenGL.
    */
   void Render();
 
   /**
    * @brief Process input for the GLFW window.
-   *
-   * This method processes input for the specified GLFW window. It can handle
-   * keyboard and mouse input events and update the application state
-   * accordingly.
    */
   void ProcessInput();
 
@@ -132,11 +122,6 @@ class RotatingTexturedCube {
 #ifndef __ANDROID__
   /**
    * @brief Callback function for framebuffer size changes.
-   *
-   * This static callback function is invoked when the framebuffer size of the
-   * GLFW window changes. It is typically registered using
-   * `glfwSetFramebufferSizeCallback`. The function updates the viewport size
-   * based on the new width and height.
    *
    * @param window A pointer to the GLFW window whose framebuffer size has
    * changed.

@@ -31,12 +31,12 @@ Mgtt::Rendering::OpenGlShader::OpenGlShader() { this->id = 0; }
 /**
  * @brief Constructor for the OpenGlShader class.
  *
- * @param shaderPathes The vertex and fragment shader pathes
+ * @param shaderPaths The vertex and fragment shader Paths
  */
 Mgtt::Rendering::OpenGlShader::OpenGlShader(
-    const std::pair<std::string, std::string> shaderPathes) {
+    const std::pair<std::string, std::string> shaderPaths) {
   this->id = 0;
-  this->Compile(shaderPathes);
+  this->Compile(shaderPaths);
 }
 
 /**
@@ -46,17 +46,17 @@ Mgtt::Rendering::OpenGlShader::OpenGlShader(
  * This method compiles the vertex and fragment shaders, linking them into a
  * shader program.
  *
- * @param shaderPathes The vertex and fragment shader pathes
+ * @param shaderPaths The vertex and fragment shader Paths
  */
 void Mgtt::Rendering::OpenGlShader::Compile(
-    const std::pair<std::string, std::string>& shaderPathes) {
+    const std::pair<std::string, std::string>& shaderPaths) {
   this->Clear();
 
-  if (shaderPathes.first.size() == 0) {
-    throw std::runtime_error("Empty vertex path: " + shaderPathes.first);
+  if (shaderPaths.first.size() == 0) {
+    throw std::runtime_error("Empty vertex path: " + shaderPaths.first);
   }
-  if (shaderPathes.second.size() == 0) {
-    throw std::runtime_error("Empty fragment path: " + shaderPathes.second);
+  if (shaderPaths.second.size() == 0) {
+    throw std::runtime_error("Empty fragment path: " + shaderPaths.second);
   }
   std::string vsCode;
   std::string fsCode;
@@ -65,8 +65,8 @@ void Mgtt::Rendering::OpenGlShader::Compile(
   vsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   fsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
-    vsFile.open(shaderPathes.first.c_str());
-    fsFile.open(shaderPathes.second.c_str());
+    vsFile.open(shaderPaths.first.c_str());
+    fsFile.open(shaderPaths.second.c_str());
     std::stringstream vShaderStream, fShaderStream;
     vShaderStream << vsFile.rdbuf();
     fShaderStream << fsFile.rdbuf();
@@ -81,8 +81,8 @@ void Mgtt::Rendering::OpenGlShader::Compile(
     if (fsFile.is_open()) {
       fsFile.close();
     }
-    std::string errorMsg = "Either vertex shader file " + shaderPathes.first +
-                           " or fragment shader file " + shaderPathes.second +
+    std::string errorMsg = "Either vertex shader file " + shaderPaths.first +
+                           " or fragment shader file " + shaderPaths.second +
                            "missing";
     std::cerr << errorMsg.c_str() << std::endl;
     return;
@@ -120,8 +120,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(
   }
   std::cout << "Shader program allocated with vertex shader and fragment "
                "shader compiled from "
-            << shaderPathes.first << " and " << shaderPathes.second
-            << std::endl;
+            << shaderPaths.first << " and " << shaderPaths.second << std::endl;
 }
 
 /**
