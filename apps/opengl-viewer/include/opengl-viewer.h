@@ -129,7 +129,7 @@ class OpenGlViewer {
 
   /**
    * @brief Renders the mesh using the specified rendering technique.
-   * 
+   *
    * @param node A shared pointer to the node.
    */
   void RenderMesh(std::shared_ptr<Mgtt::Rendering::Node> node);

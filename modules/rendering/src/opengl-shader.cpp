@@ -120,8 +120,7 @@ void Mgtt::Rendering::OpenGlShader::Compile(
   }
   std::cout << "Shader program allocated with vertex shader and fragment "
                "shader compiled from "
-            << shaderPaths.first << " and " << shaderPaths.second
-            << std::endl;
+            << shaderPaths.first << " and " << shaderPaths.second << std::endl;
 }
 
 /**

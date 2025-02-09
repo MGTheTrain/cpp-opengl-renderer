@@ -75,7 +75,7 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-   * 
+   *
    * @param scene Reference to an instance of a 3D scene to be cleared.
    */
   void Clear(Mgtt::Rendering::Scene& scene) override;
@@ -83,7 +83,7 @@ class GltfSceneImporter : public ISceneImporter {
  private:
   /**
    * @brief Extracts the folder path from a given file path.
-   * 
+   *
    * @param path The full file path from which to extract the folder path.
    * @return The extracted folder path. If no directory separator is found,
    *         an empty string is returned.
@@ -101,7 +101,7 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Sets up a texture for rendering.
-   * 
+   *
    * @param texture A reference to the `Mgtt::Rendering::Texture` object to
    * modify.
    */
@@ -109,7 +109,7 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Load materials from the provided glTF model.
-   * 
+   *
    * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param gltfModel The glTF model containing node information.
    */
@@ -117,7 +117,7 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Load nodes from the provided glTF model.
-   * 
+   *
    * @param parent A shared pointer to the parent node in the 3D scene.
    * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param node Reference to the glTF node containing information.
@@ -131,7 +131,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Sets up a mesh for rendering, including vertex attribute
    * configuration.
-   * 
+   *
    * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object
    * representing the mesh.
    * @param shaderId An unsigned 32-bit integer representing the shader ID.
@@ -141,7 +141,7 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Clear the RAM resources associated with the Texture object.
-   * 
+   *
    * @param texture Reference to the Texture object for which RAM resources
    * should be cleared.
    */
@@ -158,14 +158,14 @@ class GltfSceneImporter : public ISceneImporter {
 
   /**
    * @brief Calculates the dimensions of the entire scene.
-   * 
+   *
    * @param scene Reference to an instance of the loaded 3D scene to be updated.
    */
   void CalculateSceneDimensions(Mgtt::Rendering::Scene& scene);
 
   /**
    * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
-   * 
+   *
    * @param scene Reference to an instance of the loaded 3D scene to be updated.
    * @param node A shared pointer to the node
    */
@@ -175,7 +175,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in
    * the scene.
-   * 
+   *
    * @param node A shared pointer to the node
    */
   void CalculateSceneNodesAABBs(std::shared_ptr<Mgtt::Rendering::Node> node);

@@ -53,9 +53,8 @@ void Mgtt::Rendering::Scene::Clear() {
   this->materials.shrink_to_fit();
 
   this->shader.Clear();
-  std::cout
-      << "Successfully cleared scene with all it's components "
-      << this->path << std::endl;
+  std::cout << "Successfully cleared scene with all it's components "
+            << this->path << std::endl;
 
   this->name = "";
   this->path = "";

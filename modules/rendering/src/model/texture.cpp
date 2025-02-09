@@ -55,9 +55,9 @@ Mgtt::Rendering::Texture::Texture(const Texture& texture) {
 }
 
 /**
- * @brief This method clears the resources associated with the Texture object, freeing
- * up memory. It is recommended to call this method when the Texture is no
- * longer needed.
+ * @brief This method clears the resources associated with the Texture object,
+ * freeing up memory. It is recommended to call this method when the Texture is
+ * no longer needed.
  */
 void Mgtt::Rendering::Texture::Clear() {
   if (this->id > 0) {
@@ -117,8 +117,7 @@ Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture() {
  * roughness texture.
  */
 Mgtt::Rendering::MetallicRoughnessTexture::MetallicRoughnessTexture(
-    const Texture& texture, float metallicFactor,
-    float roughnessFactor)
+    const Texture& texture, float metallicFactor, float roughnessFactor)
     : Texture(texture),
       metallicFactor(metallicFactor),
       roughnessFactor(roughnessFactor) {}
@@ -197,9 +196,9 @@ Mgtt::Rendering::RenderTexturesContainer::RenderTexturesContainer(
       envMapShader(OpenGlShader(envMapshaderPaths)) {}
 
 /**
- * @brief This method clears the resources associated with the RenderTextureContainer
- * object, freeing up memory. It is recommended to call this method when the
- * RenderTextureContainer is no longer needed.
+ * @brief This method clears the resources associated with the
+ * RenderTextureContainer object, freeing up memory. It is recommended to call
+ * this method when the RenderTextureContainer is no longer needed.
  */
 void Mgtt::Rendering::RenderTexturesContainer::Clear() {
   if (this->cubeMapTextureId > 0) {

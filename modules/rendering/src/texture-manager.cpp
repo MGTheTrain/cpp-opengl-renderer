@@ -84,7 +84,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
         throw std::runtime_error("Framebuffer not complete");
       }
 
-      
       glGenTextures(1, &container.cubeMapTextureId);
       glBindTexture(GL_TEXTURE_CUBE_MAP, container.cubeMapTextureId);
       for (uint32_t i = 0; i < 6; ++i) {
@@ -97,8 +96,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-      
-      
       glm::mat4 captureProjection =
           glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
       std::vector<glm::mat4> captureViews = {
@@ -147,9 +144,6 @@ void Mgtt::Rendering::TextureManager::LoadFromHdr(
         this->SetupCube(container);
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-      
-      
 
       glDeleteTextures(1, &container.hdrTextureId);
       container.hdrTextureId = 0;

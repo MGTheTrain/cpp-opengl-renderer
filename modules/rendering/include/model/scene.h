@@ -71,8 +71,8 @@ struct Scene {
   glm::mat4 mvp;
   glm::mat4 matrix;
   std::map<std::string, Mgtt::Rendering::Texture>
-      textureMap;  // NOTE: optimization in which we want to prevent loading the same texture
-                   // into RAM
+      textureMap;  // NOTE: optimization in which we want to prevent loading the
+                   // same texture into RAM
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> nodes;
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> linearNodes;
   std::vector<Mgtt::Rendering::PbrMaterial> materials;

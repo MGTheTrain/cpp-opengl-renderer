@@ -235,9 +235,9 @@ struct RenderTexturesContainer {
       const std::pair<std::string, std::string>& envMapshaderPaths);
 
   /**
-   * @brief This method clears the resources associated with the RenderTextureContainer
-   * object, freeing up memory. It is recommended to call this method when the
-   * RenderTextureContainer is no longer needed.
+   * @brief This method clears the resources associated with the
+   * RenderTextureContainer object, freeing up memory. It is recommended to call
+   * this method when the RenderTextureContainer is no longer needed.
    */
   void Clear();
 
@@ -255,9 +255,8 @@ struct RenderTexturesContainer {
       textures;  // NOTE: This vector can be used to store either a single HDR
                  // texture or multiple cube map textures.
 
-  Mgtt::Rendering::OpenGlShader
-      eq2CubeMapShader;  
-  Mgtt::Rendering::OpenGlShader brdfLutShader;  
-  Mgtt::Rendering::OpenGlShader envMapShader;   
+  Mgtt::Rendering::OpenGlShader eq2CubeMapShader;
+  Mgtt::Rendering::OpenGlShader brdfLutShader;
+  Mgtt::Rendering::OpenGlShader envMapShader;
 };
 }  // namespace Mgtt::Rendering

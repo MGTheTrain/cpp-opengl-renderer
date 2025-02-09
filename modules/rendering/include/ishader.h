@@ -44,7 +44,7 @@ class IShader {
    */
   virtual void Compile(
       const std::pair<std::string, std::string>& shaderPaths) = 0;
-  
+
   /**
    * @brief Delete the shader program.
    */

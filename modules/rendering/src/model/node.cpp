@@ -47,7 +47,7 @@ void Mgtt::Rendering::Node::Clear() {
 
 /**
  * @brief Calculates the local transformation matrix of the node.
- * 
+ *
  * @return Local transformation matrix.
  */
 glm::mat4 Mgtt::Rendering::Node::LocalMatrix() {
@@ -57,7 +57,7 @@ glm::mat4 Mgtt::Rendering::Node::LocalMatrix() {
 
 /**
  * @brief Calculates the global transformation matrix of the node.
- * 
+ *
  * @return Global transformation matrix.
  */
 glm::mat4 Mgtt::Rendering::Node::GetGlobalMatrix() {

@@ -51,7 +51,7 @@ class ISceneImporter {
 
   /**
    * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-   * 
+   *
    * @param scene Reference to an instance of a 3D scene to be cleared.
    */
   virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;

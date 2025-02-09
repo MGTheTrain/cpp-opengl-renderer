@@ -154,7 +154,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
     Mgtt::Rendering::Texture texture;
     tinygltf::Image image = gltfModel.images[tex.source];
 
-
     texture.name = image.name;
     texture.path = efp + image.uri;
     texture.width = image.width;
@@ -234,7 +233,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
       pbrMaterial.alphaMode = Mgtt::Rendering::AlphaMode::NONE;
     }
 
-
     if (material.pbrMetallicRoughness.baseColorTexture.index > -1) {
       pbrMaterial.baseColorTexture = BaseColorTexture(
           scene.textureMap
@@ -251,7 +249,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
           glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
     }
 
-
     if (material.normalTexture.index > -1) {
       pbrMaterial.normalTexture = NormalTexture(
           scene.textureMap
@@ -264,7 +261,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
       pbrMaterial.normalTexture =
           NormalTexture(Texture(), material.normalTexture.scale);
     }
-
 
     if (material.occlusionTexture.index > -1) {
       pbrMaterial.occlusionTexture = OcclusionTexture(
@@ -279,7 +275,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
           OcclusionTexture(Texture(), material.occlusionTexture.strength);
     }
 
-
     if (material.emissiveTexture.index > -1) {
       pbrMaterial.emissiveTexture = EmissiveTexture(
           scene.textureMap
@@ -292,7 +287,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
       pbrMaterial.emissiveTexture = EmissiveTexture(
           Texture(), glm::make_vec3(material.emissiveFactor.data()));
     }
-
 
     if (material.pbrMetallicRoughness.metallicRoughnessTexture.index > -1) {
       pbrMaterial.metallicRoughnessTexture = MetallicRoughnessTexture(
@@ -352,12 +346,10 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
 
     glBindVertexArray(mesh->vao);
 
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  mesh->indices.size() * sizeof(uint32_t), &mesh->indices[0],
                  GL_STATIC_DRAW);
-
 
     glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
     glBufferData(GL_ARRAY_BUFFER,
@@ -368,7 +360,6 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
                           reinterpret_cast<void*>(0));
 
-
     glBindBuffer(GL_ARRAY_BUFFER, mesh->normal);
     glBufferData(GL_ARRAY_BUFFER,
                  mesh->vertexNormalAttribs.size() * sizeof(glm::vec3),
@@ -377,7 +368,6 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     glEnableVertexAttribArray(normalLoc);
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
                           reinterpret_cast<void*>(0));
-
 
     glBindBuffer(GL_ARRAY_BUFFER, mesh->tex);
     glBufferData(GL_ARRAY_BUFFER,
@@ -516,7 +506,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC2);
       }
 
-  
       for (size_t v = 0; v < posAccessor.count; v++) {
         newMesh->vertexPositionAttribs.push_back(
             glm::make_vec3(&bufferPos[v * posByteStride]));

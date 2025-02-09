@@ -236,7 +236,7 @@ void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
 
 /**
  * @brief Renders the mesh using the specified rendering technique.
- * 
+ *
  * @param node A shared pointer to the node.
  */
 void Mgtt::Apps::OpenGlViewer::RenderMesh(
@@ -443,7 +443,8 @@ Mgtt::Apps::OpenGlViewer openGlViewer;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 /**
- * NOTE: See https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+ * NOTE: See
+ * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
  */
 void EmscriptenMainLoop() { openGlViewer.Render(); }
 #endif

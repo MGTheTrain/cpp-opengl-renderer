@@ -66,8 +66,7 @@ class OpenGlShader : public IShader {
    *
    * @param shaderPaths The vertex and fragment shader pathes
    */
-  void Compile(
-      const std::pair<std::string, std::string>& shaderPaths) override;
+  void Compile(const std::pair<std::string, std::string>& shaderPaths) override;
 
   /**
    * @brief Delete the shader program.
