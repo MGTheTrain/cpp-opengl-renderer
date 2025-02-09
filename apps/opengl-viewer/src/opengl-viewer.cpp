@@ -68,7 +68,7 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
   }
 
   std::pair<std::string, std::string> pbrShaderPaths = {
-    "assets/shader/core330/pbr.vert", "assets/shader/core330/pbr.frag"};
+      "assets/shader/core330/pbr.vert", "assets/shader/core330/pbr.frag"};
   this->mgttScene.shader.Compile(pbrShaderPaths);
 
   std::pair<std::string, std::string> eq2BrdfLutShaderPaths = {
@@ -84,19 +84,19 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer() {
       eq2BrdfLutShaderPaths, brdfLutShaderPaths, envMapShaderPaths);
 #else
   std::pair<std::string, std::string> pbrShaderPaths = {
-    "assets/shader/es30/pbr.vert", "assets/shader/es30/pbr.frag"};
+      "assets/shader/es30/pbr.vert", "assets/shader/es30/pbr.frag"};
   this->mgttScene.shader.Compile(pbrShaderPaths);
 
   std::pair<std::string, std::string> eq2BrdfLutShaderPaths = {
-    "assets/shader/es30/eq2CubeMap.vert",
-    "assets/shader/es30/eq2CubeMap.frag"};
+      "assets/shader/es30/eq2CubeMap.vert",
+      "assets/shader/es30/eq2CubeMap.frag"};
   std::pair<std::string, std::string> brdfLutShaderPaths = {
-    "assets/shader/es30/genBrdf.vert", "assets/shader/es30/genBrdf.frag"};
+      "assets/shader/es30/genBrdf.vert", "assets/shader/es30/genBrdf.frag"};
   std::pair<std::string, std::string> envMapShaderPaths = {
-    "assets/shader/es30/envMap.vert", "assets/shader/es30/envMap.frag"};
+      "assets/shader/es30/envMap.vert", "assets/shader/es30/envMap.frag"};
 
   this->renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
-    eq2BrdfLutShaderPaths, brdfLutShaderPaths, envMapShaderPaths);
+      eq2BrdfLutShaderPaths, brdfLutShaderPaths, envMapShaderPaths);
 #endif
   glEnable(GL_DEPTH_TEST);
 
