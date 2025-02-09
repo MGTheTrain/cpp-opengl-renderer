@@ -71,8 +71,8 @@ struct Scene {
   glm::mat4 mvp;
   glm::mat4 matrix;
   std::map<std::string, Mgtt::Rendering::Texture>
-      textureMap;  // case in which we want to prevent loading the same texture
-                   // into RAM which is time consuming
+      textureMap;  // NOTE: optimization in which we want to prevent loading the
+                   // same texture into RAM
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> nodes;
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> linearNodes;
   std::vector<Mgtt::Rendering::PbrMaterial> materials;
@@ -83,9 +83,6 @@ struct Scene {
   /**
    * @brief Recursively linearizes the scene hierarchy starting from the given
    * node.
-   *
-   * This method flattens the hierarchical struct of the scene, storing nodes in
-   * a linearNodes vector.
    *
    * @param node The starting node to linearize.
    */

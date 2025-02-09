@@ -71,8 +71,8 @@ struct Mesh {
   uint32_t pos;
   uint32_t normal;
   uint32_t tex;
-  // uint32_t joint;
-  // uint32_t weight;
+  // uint32_t joint; // TODO: support animations
+  // uint32_t weight; // TODO: support animations
 
   Mgtt::Rendering::AABB aabb;
 };

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 09-02-2025
+
+### Fixed
+
+- Considered passing default data types by value (e.g. `float`) in modules
+- Refined and simplified method descriptions
+- Removed outdated comments and addressed TODO comments
+
 ## [0.8.1] - 08-02-2025
 
 ### Fixed

@@ -40,19 +40,12 @@ namespace Mgtt::Rendering {
 /**
  * @brief Class for importing and managing various textures.
  *
- * The TextureManager class provides functionality for loading and managing
- * different textures, including cube maps and High Dynamic Range (HDR)
- * textures.
  * @note Take a read on: https://learnopengl.com/PBR/IBL/Diffuse-irradiance
  */
 class TextureManager {
  public:
   /**
    * @brief Load cube map textures from the given folder path.
-   *
-   * This method loads cube map textures and
-   * associates it with the provided RenderTexturesContainer. It performs
-   * necessary operations to make the textures available for use in rendering.
    *
    * @param container The RenderTexturesContainer to associate with the loaded
    * cube map.
@@ -63,10 +56,6 @@ class TextureManager {
 
   /**
    * @brief Load an HDR texture from the given file path.
-   *
-   * This method loads an HDR texture from the specified file path and
-   * associates it with the provided RenderTexturesContainer. It performs
-   * necessary operations to make the texture available for use in rendering.
    *
    * @param container The RenderTexturesContainer to associate with the loaded
    * HDR texture.
@@ -79,10 +68,6 @@ class TextureManager {
    * @brief Load the BRDF Lookup Texture into the provided HDR texture
    * container.
    *
-   * This method loads the BRDF Lookup Texture into the provided HDR texture
-   * container. It performs necessary operations to make the BRDF texture
-   * available for use in rendering.
-   *
    * @param container The RenderTexturesContainer to associate with the loaded
    * BRDF texture.
    */
@@ -90,9 +75,6 @@ class TextureManager {
 
   /**
    * @brief Clear the provided render textures container.
-   *
-   * This method clears the contents of the provided RenderTexturesContainer,
-   * releasing any resources associated with the textures.
    *
    * @param container The RenderTexturesContainer to clear.
    */
@@ -102,10 +84,6 @@ class TextureManager {
   /**
    * @brief Set up rendering resources for a cube.
    *
-   * The SetupCube function initializes and configures rendering resources
-   * for a cube, including textures and buffers. It uses the provided
-   * RenderTexturesContainer to manage the associated textures.
-   *
    * @param container A reference to a RenderTexturesContainer used to manage
    *                  rendering-related textures and resources.
    */
@@ -114,10 +92,6 @@ class TextureManager {
   /**
    * @brief Set up rendering resources for a cube.
    *
-   * The SetupQuad function initializes and configures rendering resources
-   * for a quad, including textures and buffers. It uses the provided
-   * RenderTexturesContainer to manage the associated textures.
-   *
    * @param container A reference to a RenderTexturesContainer used to manage
    *                  rendering-related textures and resources.
    */
@@ -125,10 +99,6 @@ class TextureManager {
 
   /**
    * @brief Generate the irradiance map for the provided HDR texture container.
-   *
-   * This method generates the irradiance map for the provided HDR texture
-   * container. It performs necessary operations to make the irradiance map
-   * available for use in rendering.
    *
    * @param container The RenderTexturesContainer to associate with the
    * generated irradiance map.
