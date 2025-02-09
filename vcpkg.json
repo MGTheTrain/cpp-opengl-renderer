@@ -1,6 +1,6 @@
 {
     "name": "cpp-opengl-renderer",
-    "version-string": "0.8.1",
+    "version-string": "0.8.2",
     "dependencies": [
         "glfw3",
         "glew",
