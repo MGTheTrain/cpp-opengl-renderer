@@ -602,7 +602,7 @@ void Mgtt::Rendering::GltfSceneImporter::UpdateNodeMeshMatrices(
     node->InitialTransform();
   }
 
-  for (auto child : node->children) {
+  for (auto& child : node->children) {
     UpdateNodeMeshMatrices(child);
   }
 }
@@ -636,7 +636,7 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(
     scene.aabb.max = glm::max(scene.aabb.max, node->mesh->aabb.max);
   }
   if (node->children.size() > 0) {
-    for (auto child : node->children) {
+    for (auto& child : node->children) {
       this->CalculateSceneAABB(scene, child);
     }
   }
