@@ -30,10 +30,6 @@ namespace Mgtt::Rendering {
  * @brief Checks if any value in the provided initializer list is greater than
  * zero.
  *
- * This method iterates through the elements in the initializer list and returns
- * true if at least one element is greater than zero; otherwise, it returns
- * false.
- *
  * @param args A constant reference to an initializer list of unsigned integers
  * to be checked.
  * @return true if any value in the list is greater than zero, false otherwise.

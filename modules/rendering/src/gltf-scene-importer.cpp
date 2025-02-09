@@ -25,9 +25,6 @@
 /**
  * @brief Load the 3D scene from a specified file path.
  *
- * This method overrides the corresponding method in the ISceneImporter
- * interface. It loads the 3D scene from the specified file path.
- *
  * @param path The file path from which to load the 3D scene.
  * @param An instance of the loaded 3D scene.
  *
@@ -106,8 +103,7 @@ void Mgtt::Rendering::GltfSceneImporter::Load(Mgtt::Rendering::Scene& mgttScene,
 /**
  * @brief Clear the allocated resources in RAM and VRAM for the scene object.
  *
- * This method is used to reset the internal state of the scene.
- * @param scene A unique pointer to the scene to clear.
+ * @param scene Reference to an instance of a 3D scene to be cleared.
  */
 void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
   scene.Clear();
@@ -116,16 +112,9 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
 /**
  * @brief Extracts the folder path from a given file path.
  *
- * This method takes a file path as input and extracts the folder path
- * by finding the last occurrence of the directory separator ('/' or '\\').
- *
  * @param path The full file path from which to extract the folder path.
  * @return The extracted folder path. If no directory separator is found,
  *         an empty string is returned.
- *
- * @note The function uses the platform-specific directory separator ('/' or
- *'\\').
- * @note The returned folder path includes the trailing directory separator.
  **/
 std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(
     const std::string& path) {
@@ -141,10 +130,6 @@ std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(
 /**
  * @brief Clear the RAM resources associated with the Texture object.
  *
- * This method releases the memory resources in RAM associated with the Texture
- * object, freeing up memory. It is recommended to call this method when the
- * Texture is no longer needed to avoid unnecessary memory usage.
- *
  * @param texture Reference to the Texture object for which RAM resources should
  * be cleared.
  */
@@ -159,10 +144,7 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(
 /**
  * @brief Load texture from the provided glTF model.
  *
- * This method loads texture from the given glTF model and updates the
- * internal representation of the 3D scene accordingly.
- *
- * @param scene A reference to the updated 3D scene after loading nodes.
+ * @param scene A Reference to an instance of the loaded 3D scene to be updated.
  * @param gltfModel The glTF model containing node information.
  */
 void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
@@ -172,7 +154,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
     Mgtt::Rendering::Texture texture;
     tinygltf::Image image = gltfModel.images[tex.source];
 
-    // Consider primarily gltf files with non-embedded images
+
     texture.name = image.name;
     texture.path = efp + image.uri;
     texture.width = image.width;
@@ -195,9 +177,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadTextures(
 
 /**
  * @brief Sets up a texture for rendering.
- *
- * It ensures that the texture data is properly uploaded to video memory (VRAM)
- * for efficient rendering.
  *
  * @param texture A reference to the `Mgtt::Rendering::Texture` object to
  * modify.
@@ -236,10 +215,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupTexture(
 /**
  * @brief Load materials from the provided glTF model.
  *
- * This method loads materials from the given glTF model and updates the
- * internal representation of the 3D scene accordingly.
- *
- * @param scene A reference to the updated 3D scene after loading nodes.
+ * @param scene A Reference to an instance of the loaded 3D scene to be updated.
  * @param gltfModel The glTF model containing node information.
  */
 void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
@@ -258,7 +234,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
       pbrMaterial.alphaMode = Mgtt::Rendering::AlphaMode::NONE;
     }
 
-    // Base color
+
     if (material.pbrMetallicRoughness.baseColorTexture.index > -1) {
       pbrMaterial.baseColorTexture = BaseColorTexture(
           scene.textureMap
@@ -275,7 +251,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
           glm::make_vec4(material.pbrMetallicRoughness.baseColorFactor.data()));
     }
 
-    // Normal
+
     if (material.normalTexture.index > -1) {
       pbrMaterial.normalTexture = NormalTexture(
           scene.textureMap
@@ -289,7 +265,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
           NormalTexture(Texture(), material.normalTexture.scale);
     }
 
-    // Normal
+
     if (material.occlusionTexture.index > -1) {
       pbrMaterial.occlusionTexture = OcclusionTexture(
           scene.textureMap
@@ -303,7 +279,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
           OcclusionTexture(Texture(), material.occlusionTexture.strength);
     }
 
-    // Emissive
+
     if (material.emissiveTexture.index > -1) {
       pbrMaterial.emissiveTexture = EmissiveTexture(
           scene.textureMap
@@ -317,7 +293,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
           Texture(), glm::make_vec3(material.emissiveFactor.data()));
     }
 
-    // Metallic roughness
+
     if (material.pbrMetallicRoughness.metallicRoughnessTexture.index > -1) {
       pbrMaterial.metallicRoughnessTexture = MetallicRoughnessTexture(
           scene.textureMap
@@ -344,10 +320,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
 /**
  * @brief Sets up a mesh for rendering, including vertex attribute
  * configuration.
- *
- * This method prepares a mesh for rendering by configuring its vertex
- * attributes, associating it with the specified shader, and potentially moving
- * vertex data to VRAM.
  *
  * @param mesh A shared pointer to the `Mgtt::Rendering::Mesh` object
  * representing the mesh.
@@ -380,13 +352,13 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
 
     glBindVertexArray(mesh->vao);
 
-    // indices
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  mesh->indices.size() * sizeof(uint32_t), &mesh->indices[0],
                  GL_STATIC_DRAW);
 
-    // pos
+
     glBindBuffer(GL_ARRAY_BUFFER, mesh->pos);
     glBufferData(GL_ARRAY_BUFFER,
                  mesh->vertexPositionAttribs.size() * sizeof(glm::vec3),
@@ -396,7 +368,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
                           reinterpret_cast<void*>(0));
 
-    // normal
+
     glBindBuffer(GL_ARRAY_BUFFER, mesh->normal);
     glBufferData(GL_ARRAY_BUFFER,
                  mesh->vertexNormalAttribs.size() * sizeof(glm::vec3),
@@ -406,7 +378,7 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
                           reinterpret_cast<void*>(0));
 
-    // uv
+
     glBindBuffer(GL_ARRAY_BUFFER, mesh->tex);
     glBufferData(GL_ARRAY_BUFFER,
                  mesh->vertexTextureAttribs.size() * sizeof(glm::vec2),
@@ -423,18 +395,15 @@ void Mgtt::Rendering::GltfSceneImporter::SetupMesh(
   } else {
     std::cout
         << "Node is not a mesh"
-        << std::endl;  // We might utilize spdlog as an improvement for logging
+        << std::endl;  // TODO: Utilize spdlog or other library for logging
   }
 }
 
 /**
  * @brief Load nodes from the provided glTF model.
  *
- * This method loads nodes from the given glTF model and updates the
- * internal representation of the 3D scene accordingly.
- *
  * @param parent A shared pointer to the parent node in the 3D scene.
- * @param scene Reference to the updated 3D scene after loading nodes.
+ * @param scene Reference to an instance of the loaded 3D scene to be updated.
  * @param node Reference to the glTF node containing information.
  * @param nodeIndex Index of the current node in the glTF model.
  * @param model Reference to the glTF model containing node information.
@@ -547,7 +516,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC2);
       }
 
-      // TODO: joints and weights for animation
+  
       for (size_t v = 0; v < posAccessor.count; v++) {
         newMesh->vertexPositionAttribs.push_back(
             glm::make_vec3(&bufferPos[v * posByteStride]));
@@ -633,7 +602,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadNode(
 
 /**
  * @brief Updates the mesh matrices of the given node and its child nodes
- * recursively when calling the InitialTransform() method
+ * recursively
  *
  * @param node A shared pointer to the node whose mesh matrices need to be
  * updated.
@@ -652,13 +621,7 @@ void Mgtt::Rendering::GltfSceneImporter::UpdateNodeMeshMatrices(
 /**
  * @brief Calculates the dimensions of the entire scene.
  *
- * This method calculates the dimensions of the entire scene by utilizing the
- * CalculateSceneAABB() and CalculateSceneNodeAABBs() methods. It traverses the
- * nodes of the scene recursively to determine the overall size of the scene.
- * The calculated dimensions typically include the minimum and maximum extents
- * along each axis.
- *
- * @param scene Reference to the updated 3D scene after loading nodes.
+ * @param scene Reference to an instance of the loaded 3D scene to be updated.
  */
 void Mgtt::Rendering::GltfSceneImporter::CalculateSceneDimensions(
     Mgtt::Rendering::Scene& scene) {
@@ -673,12 +636,7 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneDimensions(
 /**
  * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
  *
- * This method calculates the axis-aligned bounding box (AABB) of the entire
- * scene. It traverses all nodes in the scene recursively and computes the AABB
- * that encapsulates all geometry within the scene. The AABB represents the
- * minimum volume box that entirely contains all objects in the scene.
- *
- * @param scene Reference to the updated 3D scene after loading nodes.
+ * @param scene Reference to an instance of the loaded 3D scene to be updated.
  * @param node A shared pointer to the node
  */
 void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(
@@ -698,10 +656,6 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(
 /**
  * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in
  * the scene.
- *
- * This method calculates the axis-aligned bounding boxes (AABBs) for each
- * node in the scene. It traverses all nodes recursively and computes the AABB
- * for each individual node based on its geometry.
  *
  * @param node A shared pointer to the node
  */

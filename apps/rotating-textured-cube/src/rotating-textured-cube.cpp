@@ -67,9 +67,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
 #endif
   glEnable(GL_DEPTH_TEST);
 
-  std::pair<std::string, std::string> shaderPathes =
+  std::pair<std::string, std::string> shaderPaths =
       std::make_pair(vsPath, fsPath);
-  auto shader = Mgtt::Rendering::OpenGlShader(shaderPathes);
+  auto shader = Mgtt::Rendering::OpenGlShader(shaderPaths);
   this->openGlShaders.push_back(shader);
 
   this->mesh.vertexPositionAttribs = {
@@ -188,9 +188,6 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube() {
 
 /**
  * @brief Renders the scene using OpenGL.
- *
- * This method is responsible for rendering the contents of the scene using
- * OpenGL.
  */
 void Mgtt::Apps::RotatingTexturedCube::Render() {
 #ifndef __EMSCRIPTEN__
@@ -238,9 +235,6 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 /**
  * @brief Process input for the GLFW window.
  *
- * This method processes input for the specified GLFW window. It can handle
- * keyboard and mouse input events and update the application state accordingly.
- *
  * @param window A pointer to the GLFW window for which input should be
  * processed.
  */
@@ -253,11 +247,6 @@ void Mgtt::Apps::RotatingTexturedCube::ProcessInput() {
 
 /**
  * @brief Callback function for framebuffer size changes.
- *
- * This static callback function is invoked when the framebuffer size of the
- * GLFW window changes. It is typically registered using
- * `glfwSetFramebufferSizeCallback`. The function updates the viewport size
- * based on the new width and height.
  *
  * @param window A pointer to the GLFW window whose framebuffer size has
  * changed.
@@ -273,8 +262,7 @@ Mgtt::Apps::RotatingTexturedCube RotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 /**
- * @ref
- * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+ * NOTE: See https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
  */
 void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
 #endif

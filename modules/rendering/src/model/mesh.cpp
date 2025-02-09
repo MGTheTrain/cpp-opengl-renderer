@@ -32,8 +32,8 @@ Mgtt::Rendering::Mesh::Mesh() {
   this->pos = 0;
   this->normal = 0;
   this->tex = 0;
-  // this->joint = 0;
-  // this->weight = 0;
+  // this->joint = 0; // TODO: Support animations
+  // this->weight = 0; // TODO: Support animations
   this->matrix = glm::mat4(1.0f);
 }
 

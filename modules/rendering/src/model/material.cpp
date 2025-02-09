@@ -23,7 +23,7 @@
 #include <material.h>
 
 /**
- * @brief Constructor for the PbrMaterial structure.
+ * @brief Constructor
  */
 Mgtt::Rendering::PbrMaterial::PbrMaterial() {
   this->alphaCutoff = 0.0f;

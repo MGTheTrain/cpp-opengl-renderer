@@ -46,10 +46,10 @@ struct MeshPrimitive {
   void Clear();
 
   std::string name;
-  uint32_t firstIndex;  // required for glDrawElements(...)
-  uint32_t indexCount;  // required for glDrawElements(...)
+  uint32_t firstIndex;  // NOTE: utilized in glDrawElements(...)
+  uint32_t indexCount;  // NOTE: utilized in glDrawElements(...)
   uint32_t
-      vertexCount;  // required for glDrawElements(...) or glDrawArrays(...)
+      vertexCount;  // NOTE: utilized in glDrawElements(...) or glDrawArrays(...)
   bool hasSkin;
   bool hasIndices;
   Mgtt::Rendering::PbrMaterial pbrMaterial;

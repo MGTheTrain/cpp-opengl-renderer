@@ -110,9 +110,9 @@ TEST_F(GltfSceneImporterTest, LoadValidGltfFile) {
   RecordProperty("Expected Result", "No exception is thrown");
 
   try {
-    std::pair<std::string, std::string> shaderPathes = {
+    std::pair<std::string, std::string> shaderPaths = {
         "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-    GltfSceneImporterTest::mgttScene.shader.Compile(shaderPathes);
+    GltfSceneImporterTest::mgttScene.shader.Compile(shaderPaths);
     GltfSceneImporterTest::gltfSceneImporter->Load(
         GltfSceneImporterTest::mgttScene,
         "assets/scenes/water-bottle/WaterBottle.gltf");

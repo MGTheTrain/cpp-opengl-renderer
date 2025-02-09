@@ -54,7 +54,7 @@ void Mgtt::Rendering::Scene::Clear() {
 
   this->shader.Clear();
   std::cout
-      << "CLEAR INFO: Successfully cleared scene with all it's components "
+      << "Successfully cleared scene with all it's components "
       << this->path << std::endl;
 
   this->name = "";
@@ -74,9 +74,6 @@ void Mgtt::Rendering::Scene::Clear() {
 /**
  * @brief Recursively linearizes the scene hierarchy starting from the given
  * node.
- *
- * This method flattens the hierarchical structure of the scene, storing nodes
- * in a linearNodes vector.
  *
  * @param node The starting node to linearize.
  */

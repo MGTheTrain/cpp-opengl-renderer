@@ -36,24 +36,23 @@ namespace Mgtt::Rendering {
 class ISceneImporter {
  public:
   /**
-   * @brief Virtual destructor for the interface.
+   * @brief Virtual destructor
    */
   virtual ~ISceneImporter() = default;
 
   /**
    * @brief Load the scene from a specified file path.
    *
+   * @param scene Reference to the updated 3D scene.
    * @param path The file path from which to load the scene.
-   * @param An instance of the loaded scene.
    */
   virtual void Load(Mgtt::Rendering::Scene& mgttScene,
                     const std::string& path) = 0;
 
   /**
    * @brief Clear the allocated resources in RAM and VRAM for the scene object.
-   *
-   * This method is used to reset the internal state of the scene.
-   * @param scene A unique pointer to the scene to clear.
+   * 
+   * @param scene Reference to an instance of a 3D scene to be cleared.
    */
   virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
 };
