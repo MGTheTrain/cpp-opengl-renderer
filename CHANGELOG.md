@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 08-02-2025
+
+### Fixed
+
+- Streamlined console logging for better clarity
+- Replaced `#define` macros in `gltf-scene-importer` with `enum class` for improved type safety and readability
+
 ## [0.8.0] - 05-01-2024
 
 ### Added

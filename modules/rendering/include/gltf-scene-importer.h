@@ -38,34 +38,21 @@
 #include <string>
 #include <vector>
 
-#define GLTF_COMPONENT_TYPE_BYTE (5120)
-#define GLTF_COMPONENT_TYPE_UNSIGNED_BYTE (5121)
-#define GLTF_COMPONENT_TYPE_SHORT (5122)
-#define GLTF_COMPONENT_TYPE_UNSIGNED_SHORT (5123)
-#define GLTF_COMPONENT_TYPE_INT (5124)
-#define GLTF_COMPONENT_TYPE_UNSIGNED_INT (5125)
-#define GLTF_COMPONENT_TYPE_FLOAT (5126)
-#define GLTF_COMPONENT_TYPE_DOUBLE (5130)
-
-#define GLTF_PARAMETER_TYPE_BYTE (5120)
-#define GLTF_PARAMETER_TYPE_UNSIGNED_BYTE (5121)
-#define GLTF_PARAMETER_TYPE_SHORT (5122)
-#define GLTF_PARAMETER_TYPE_UNSIGNED_SHORT (5123)
-#define GLTF_PARAMETER_TYPE_INT (5124)
-#define GLTF_PARAMETER_TYPE_UNSIGNED_INT (5125)
-#define GLTF_PARAMETER_TYPE_FLOAT (5126)
-
-#define GLTF_TYPE_VEC2 (2)
-#define GLTF_TYPE_VEC3 (3)
-#define GLTF_TYPE_VEC4 (4)
-#define GLTF_TYPE_MAT2 (32 + 2)
-#define GLTF_TYPE_MAT3 (32 + 3)
-#define GLTF_TYPE_MAT4 (32 + 4)
-#define GLTF_TYPE_SCALAR (64 + 1)
-#define GLTF_TYPE_VECTOR (64 + 4)
-#define GLTF_TYPE_MATRIX (64 + 16)
-
 namespace Mgtt::Rendering {
+/**
+ * Enum class representing component types used in GLTF (e.g. BYTE,
+ * UNSIGNED_INT).
+ */
+enum class GLTFParameterType {
+  BYTE = 5120,
+  UNSIGNED_BYTE = 5121,
+  SHORT = 5122,
+  UNSIGNED_SHORT = 5123,
+  INT = 5124,
+  UNSIGNED_INT = 5125,
+  FLOAT = 5126
+};
+
 /**
  * @brief Implementation of the ISceneImporter interface for importing 3D
  * scenes.
@@ -104,7 +91,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Extracts the folder path from a given file path.
    *
-   * This function takes a file path as input and extracts the folder path
+   * This method takes a file path as input and extracts the folder path
    * by finding the last occurrence of the directory separator ('/' or '\\').
    *
    * @param path The full file path from which to extract the folder path.
@@ -206,7 +193,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Calculates the dimensions of the entire scene.
    *
-   * This function calculates the dimensions of the entire scene by utilizing
+   * This method calculates the dimensions of the entire scene by utilizing
    * the CalculateSceneAABB() and CalculateSceneNodeAABBs() methods. It
    * traverses the nodes of the scene recursively to determine the overall size
    * of the scene. The calculated dimensions typically include the minimum and
@@ -219,7 +206,7 @@ class GltfSceneImporter : public ISceneImporter {
   /**
    * @brief Calculates the axis-aligned bounding box (AABB) of the entire scene.
    *
-   * This function calculates the axis-aligned bounding box (AABB) of the entire
+   * This method calculates the axis-aligned bounding box (AABB) of the entire
    * scene. It traverses all nodes in the scene recursively and computes the
    * AABB that encapsulates all geometry within the scene. The AABB represents
    * the minimum volume box that entirely contains all objects in the scene.
@@ -234,7 +221,7 @@ class GltfSceneImporter : public ISceneImporter {
    * @brief Calculates the axis-aligned bounding boxes (AABBs) for each node in
    * the scene.
    *
-   * This function calculates the axis-aligned bounding boxes (AABBs) for each
+   * This method calculates the axis-aligned bounding boxes (AABBs) for each
    * node in the scene. It traverses all nodes recursively and computes the AABB
    * for each individual node based on its geometry.
    *

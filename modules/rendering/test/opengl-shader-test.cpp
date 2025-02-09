@@ -46,7 +46,7 @@ class OpenGlShaderTest : public ::testing::Test {
   void SetUp() override {
     try {
       if (!glfwInit()) {
-        throw std::runtime_error("GLFW ERROR: Failed to initialize GLFW");
+        throw std::runtime_error("Failed to initialize GLFW");
       }
 
       glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -64,12 +64,12 @@ class OpenGlShaderTest : public ::testing::Test {
           glfwCreateWindow(800, 600, "test-window", nullptr, nullptr);
       if (!OpenGlShaderTest::window) {
         glfwTerminate();
-        throw std::runtime_error("GLFW ERROR: Failed to create GLFW window");
+        throw std::runtime_error("Failed to create GLFW window");
         return;
       }
       glfwMakeContextCurrent(OpenGlShaderTest::window);
       if (glewInit() != GLEW_OK) {
-        throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+        throw std::runtime_error("Glew could not be initialized");
       }
     } catch (const std::runtime_error& ex) {
       std::cerr << ex.what();

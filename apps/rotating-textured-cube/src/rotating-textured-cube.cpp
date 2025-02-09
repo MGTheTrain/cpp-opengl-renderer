@@ -73,7 +73,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
 #endif
 #if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
   if (glewInit() != GLEW_OK) {
-    throw std::runtime_error("GLEW ERROR: Glew could not be initialized");
+    throw std::runtime_error("Glew could not be initialized");
   }
   std::string vsPath = "assets/shader/core330/coordinate.vert";
   std::string fsPath = "assets/shader/core330/coordinate.frag";
@@ -206,8 +206,7 @@ void Mgtt::Apps::RotatingTexturedCube::Init() {
     }
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
-    throw std::runtime_error("TEXTURE ERROR: Failed to load texture " +
-                             texturePath);
+    throw std::runtime_error("Failed to load texture " + texturePath);
   }
   if (this->mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.data) {
     stbi_image_free(
@@ -292,7 +291,7 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 /**
  * @brief Process input for the GLFW window.
  *
- * This function processes input for the specified GLFW window. It can handle
+ * This method processes input for the specified GLFW window. It can handle
  * keyboard and mouse input events and update the application state accordingly.
  *
  * @param window A pointer to the GLFW window for which input should be
@@ -345,9 +344,11 @@ void Mgtt::Apps::RotatingTexturedCube::UpdateOpenGlViewPort(int width,
 Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
-// @ref
-// https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
-void EmscriptenMainLoop() { rotatingTexturedCube.Render(); }
+/**
+ * @ref
+ * https://stackoverflow.com/questions/55415179/unable-to-pass-a-proper-lambda-to-emscripten-set-main-loop
+ */
+void EmscriptenMainLoop() { RotatingTexturedCube.Render(); }
 #endif
 
 int main() {

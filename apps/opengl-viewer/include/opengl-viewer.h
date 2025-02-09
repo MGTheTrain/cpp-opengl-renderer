@@ -133,7 +133,7 @@ class OpenGlViewer {
   /**
    * @brief Iterates recursively over all nodes in the scene
    *
-   * This function is responsible for iteraing recursively over all nodes in the
+   * This method is responsible for iteraing recursively over all nodes in the
    *scene
    *
    * @param node A shared pointer to the node.
@@ -143,7 +143,7 @@ class OpenGlViewer {
   /**
    * @brief Renders the mesh using the specified rendering technique.
    *
-   * This function is responsible for rendering the mesh using the current
+   * This method is responsible for rendering the mesh using the current
    * rendering technique and associated settings. It should be called within the
    * rendering loop.
    */
