@@ -257,5 +257,4 @@ void Mgtt::Rendering::RenderTexturesContainer::Clear() {
                "with IBL related components"
             << std::endl;
 #endif
-
 }
