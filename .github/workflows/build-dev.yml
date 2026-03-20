@@ -1,0 +1,14 @@
+name: Build Dev
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-reusable.yml
+    with:
+      run_tests: true
+
+  # Push dev package (e.g. CloudSmith)

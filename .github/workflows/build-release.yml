@@ -1,0 +1,14 @@
+name: Build Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-reusable.yml
+    with:
+      run_tests: true
+
+  # Push release package to package repository (e.g. CloudSmith)

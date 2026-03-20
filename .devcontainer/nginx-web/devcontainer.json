@@ -1,0 +1,7 @@
+{
+    "name": "NGINX Web Server",
+    "dockerFile": "./Dockerfile",
+    "appPort": [ "8090:80" ],
+    "remoteUser": "root",
+    "overrideCommand": false
+}

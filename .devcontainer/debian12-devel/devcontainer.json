@@ -1,0 +1,11 @@
+{
+    // Docker images officially provided by Microsoft that can utilized as base images: https://hub.docker.com/_/microsoft-vscode-devcontainers
+    "name": "C++ Development in Debian 12 OS",
+    "image": "mcr.microsoft.com/vscode/devcontainers/cpp:debian-12",
+    // Features to add to the dev container. More info: https://containers.dev/features
+    "features": {
+		"ghcr.io/prulloac/devcontainer-features/pre-commit:1": {}
+    },
+    "postCreateCommand": "bash .devcontainer/debian12-devel/scripts/install-dependencies.sh",
+    "remoteUser": "root"
+}

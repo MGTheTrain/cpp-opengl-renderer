@@ -1,0 +1,6 @@
+function(split_version_string version_string)
+    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" version_components ${version_string})
+    set(CMAKE_PROJECT_VERSION_MAJOR ${CMAKE_MATCH_1} CACHE STRING "The resulting CMAKE_PROJECT_VERSION_MAJOR")
+    set(CMAKE_PROJECT_VERSION_MINOR ${CMAKE_MATCH_2} CACHE STRING "The resulting CMAKE_PROJECT_VERSION_MINOR")
+    set(CMAKE_PROJECT_VERSION_PATCH ${CMAKE_MATCH_3} CACHE STRING "The resulting CMAKE_PROJECT_VERSION_PATCH")
+endfunction()

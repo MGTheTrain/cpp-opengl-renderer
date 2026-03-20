@@ -1,0 +1,94 @@
+name: Build Reusable
+
+on:
+  workflow_call:
+    inputs:
+      run_tests:
+        type: boolean
+        default: false
+
+jobs:
+  build-and-test-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install third-party apt dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+        build-essential cmake \
+        libxmu-dev libxi-dev libgl-dev \
+        libxinerama-dev libxcursor-dev xorg-dev \
+        libglu1-mesa-dev pkg-config \
+        autoconf autoconf-archive automake libtool libltdl-dev
+    - name: Install vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+      working-directory: /tmp/
+    - name: Install dependencies for test executables requiring a graphical environment
+      run: sudo apt-get install -y xvfb
+    - name: Build and Test on Linux
+      run: |
+        Xvfb :99 &
+        export DISPLAY=:99
+        FLAGS="-CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        if [ "${{ inputs.run_tests }}" = "true" ]; then
+          FLAGS="$FLAGS -RunTests"
+        fi
+        ./build.sh $FLAGS
+      working-directory: ./scripts/
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install third-party choco dependencies
+      run: choco install cmake
+    - name: Install vcpkg
+      run: |
+        cd $env:TEMP
+        git clone https://github.com/Microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+    - name: Build on Windows
+      shell: pwsh
+      run: |
+        .\build.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake
+      working-directory: .\scripts\
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install third-party brew dependencies
+      run: brew install pkg-config cmake
+    - name: Install vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+      working-directory: /tmp/
+    - name: Build on macOS
+      run: |
+        ./build.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+      working-directory: ./scripts/
+
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Install Emscripten SDK
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git /tmp/emsdk
+        /tmp/emsdk/emsdk install latest
+        /tmp/emsdk/emsdk activate latest
+    - name: Build for web
+      run: |
+        source /tmp/emsdk/emsdk_env.sh
+        ./build.sh -WebBuild
+      working-directory: ./scripts/
