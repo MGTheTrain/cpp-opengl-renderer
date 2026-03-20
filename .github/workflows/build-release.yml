@@ -51,6 +51,4 @@ jobs:
             release-artifacts/linux/*
             release-artifacts/macos/*
             release-artifacts/windows/*
-            release-artifacts/web/*.js
-            release-artifacts/web/*.wasm
-            release-artifacts/web/*.data
+            release-artifacts/web/*
