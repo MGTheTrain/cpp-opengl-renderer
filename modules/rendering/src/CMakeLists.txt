@@ -78,3 +78,7 @@ target_include_directories(${TARGET} PRIVATE
 )
 
 install(TARGETS ${TARGET})
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/
+    DESTINATION include/rendering
+    FILES_MATCHING PATTERN "*.h"
+)

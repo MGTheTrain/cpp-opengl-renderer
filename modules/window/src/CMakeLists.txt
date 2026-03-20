@@ -43,3 +43,7 @@ target_include_directories(${TARGET} PUBLIC
 )
 
 install(TARGETS ${TARGET})
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/
+    DESTINATION include/window
+    FILES_MATCHING PATTERN "*.h"
+)
