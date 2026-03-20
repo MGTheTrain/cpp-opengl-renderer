@@ -5,6 +5,7 @@ set -euo pipefail
 NoTests=true
 NoWebBuild=true
 BuildType="Debug"
+RevisionNumber=""
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -24,13 +25,18 @@ while [ "$#" -gt 0 ]; do
       BuildType="Release"
       shift
       ;;
+    -RevisionNumber)
+      RevisionNumber="$2"
+      shift 2
+      ;;
     -h|--help)
-      echo "Usage: $0 [-CMakeToolchainFile <path>] [-WebBuild] [-RunTests] [-Release] [-h|--help]"
+      echo "Usage: $0 [-CMakeToolchainFile <path>] [-WebBuild] [-RunTests] [-Release] [-RevisionNumber <rev>] [-h|--help]"
       echo "Options:"
       echo "  -CMakeToolchainFile          Path to CMAKE_TOOLCHAIN_FILE"
       echo "  -RunTests                    Run tests after building (always uses Debug)"
       echo "  -WebBuild                    Build for web (with emscripten) instead of Desktop"
       echo "  -Release                     Build in Release mode (default: Debug)"
+      echo "  -RevisionNumber              Revision suffix appended to package version (e.g. alpha-42)"
       echo "  -h, --help                   Display this help message"
       exit 0
       ;;
@@ -54,6 +60,11 @@ if [[ "$NoWebBuild" == true ]]; then
     read -p "Enter the path to CMakeToolchainFile: " CMakeToolchainFile
   fi
 
+  REVISION_ARG=""
+  if [ -n "$RevisionNumber" ]; then
+    REVISION_ARG="-DREVISION_NUMBER=${RevisionNumber}"
+  fi
+
   # Tests always build in Debug regardless of -Release flag
   if [ "$NoTests" = false ]; then
     echo -e "$BLUE INFO: $NC Configuring test build (Debug)"
@@ -72,6 +83,7 @@ if [[ "$NoWebBuild" == true ]]; then
     -DBUILD_LIB=ON -DBUILD_TEST=OFF -DBUILD_APP=ON -DBUILD_PACKAGE=ON \
     -DCMAKE_BUILD_TYPE="${BuildType}" \
     -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" \
+    ${REVISION_ARG} \
     .
   cmake --build build --parallel --config "${BuildType}"
   echo -e "$BLUE INFO: $NC Build (${BuildType}) complete"
@@ -80,7 +92,16 @@ else
   echo "Source the emscripten SDK first, e.g. source <path>/emsdk_env.sh"
   mkdir -vp build
   cd build
-  emcmake cmake -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON ..
+
+  REVISION_ARG=""
+  if [ -n "$RevisionNumber" ]; then
+    REVISION_ARG="-DREVISION_NUMBER=${RevisionNumber}"
+  fi
+
+  emcmake cmake \
+    -DBUILD_LIB=ON -DBUILD_TEST=OFF -DBUILD_APP=ON -DBUILD_PACKAGE=ON -DBUILD_WEB=ON \
+    ${REVISION_ARG} \
+    ..
   make -j8
   echo -e "$BLUE INFO: $NC Web build complete"
 fi

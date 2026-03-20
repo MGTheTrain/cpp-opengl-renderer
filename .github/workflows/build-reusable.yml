@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Install third-party apt dependencies
       run: |
         sudo apt-get update
@@ -43,20 +43,16 @@ jobs:
         if [ "${{ inputs.run_tests }}" = "true" ]; then
           FLAGS="$FLAGS -RunTests"
         fi
+        if [ -n "${{ inputs.revision_number }}" ]; then
+          FLAGS="$FLAGS -RevisionNumber ${{ inputs.revision_number }}"
+        fi
         ./build.sh $FLAGS
       working-directory: ./scripts/
     - name: Create Linux packages
       if: ${{ inputs.upload_packages }}
       run: |
-        REVISION="${{ inputs.revision_number }}"
-        EXTRA_ARGS=""
-        if [ -n "$REVISION" ]; then
-          EXTRA_ARGS="-DREVISION_NUMBER=$REVISION"
-        fi
-        cmake $EXTRA_ARGS -DBUILD_PACKAGE=ON .
-        cpack -G TGZ
-        cpack -G DEB
-      working-directory: ./build/
+        cpack --config build/CPackConfig.cmake -G ZIP
+        cpack --config build/CPackConfig.cmake -G DEB
     - name: Upload Linux packages
       if: ${{ inputs.upload_packages }}
       uses: actions/upload-artifact@v4
@@ -69,7 +65,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Install third-party choco dependencies
       run: choco install cmake
     - name: Install vcpkg
@@ -80,17 +76,19 @@ jobs:
     - name: Build on Windows
       shell: pwsh
       run: |
-        .\build.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake -Release
+        $params = @{
+          CMakeToolchainFile = "$env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake"
+          Release = $true
+        }
+        if ("${{ inputs.revision_number }}") {
+          $params["RevisionNumber"] = "${{ inputs.revision_number }}"
+        }
+        .\build.ps1 @params
       working-directory: .\scripts\
     - name: Create Windows packages
       if: ${{ inputs.upload_packages }}
       shell: pwsh
-      run: |
-        $revision = "${{ inputs.revision_number }}"
-        $extraArgs = if ($revision) { "-DREVISION_NUMBER=$revision" } else { "" }
-        cmake $extraArgs -DBUILD_PACKAGE=ON .
-        cpack -G ZIP
-      working-directory: .\build\
+      run: cpack --config build/CPackConfig.cmake -G ZIP
     - name: Upload Windows packages
       if: ${{ inputs.upload_packages }}
       uses: actions/upload-artifact@v4
@@ -103,7 +101,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Install third-party brew dependencies
       run: brew install pkg-config cmake
     - name: Install vcpkg
@@ -113,19 +111,15 @@ jobs:
       working-directory: /tmp/
     - name: Build on macOS
       run: |
-        ./build.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -Release
+        FLAGS="-CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -Release"
+        if [ -n "${{ inputs.revision_number }}" ]; then
+          FLAGS="$FLAGS -RevisionNumber ${{ inputs.revision_number }}"
+        fi
+        ./build.sh $FLAGS
       working-directory: ./scripts/
     - name: Create macOS packages
       if: ${{ inputs.upload_packages }}
-      run: |
-        REVISION="${{ inputs.revision_number }}"
-        EXTRA_ARGS=""
-        if [ -n "$REVISION" ]; then
-          EXTRA_ARGS="-DREVISION_NUMBER=$REVISION"
-        fi
-        cmake $EXTRA_ARGS -DBUILD_PACKAGE=ON .
-        cpack -G TGZ
-      working-directory: ./build/
+      run: cpack --config build/CPackConfig.cmake -G ZIP
     - name: Upload macOS packages
       if: ${{ inputs.upload_packages }}
       uses: actions/upload-artifact@v4
@@ -138,7 +132,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Install Emscripten SDK
@@ -149,12 +143,19 @@ jobs:
     - name: Build for web
       run: |
         source /tmp/emsdk/emsdk_env.sh
-        ./build.sh -WebBuild
+        FLAGS="-WebBuild"
+        if [ -n "${{ inputs.revision_number }}" ]; then
+          FLAGS="$FLAGS -RevisionNumber ${{ inputs.revision_number }}"
+        fi
+        ./build.sh $FLAGS
       working-directory: ./scripts/
-    - name: Upload web artifacts
+    - name: Create web package
+      if: ${{ inputs.upload_packages }}
+      run: cpack --config build/CPackConfig.cmake -G ZIP
+    - name: Upload web package
       if: ${{ inputs.upload_packages }}
       uses: actions/upload-artifact@v4
       with:
-        name: web-artifacts
-        path: build/
+        name: web-packages
+        path: packages/
         retention-days: 1

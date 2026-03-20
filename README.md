@@ -13,8 +13,8 @@ A cross-platform C++ OpenGL renderer supporting glTF scene loading with a PBR me
 - [x] ImGui settings panel (sliders, checkboxes, native file dialog for scene selection)
 - [x] GoogleTest coverage for module structs and classes
 - [x] CMake + vcpkg cross-platform build system
-- [x] CI workflows for cross-platform compilation and continuous testing
-- [x] CPack packaging for Linux (DEB, TGZ), macOS, and Windows (ZIP, NSIS)
+- [x] CI workflows for cross-platform compilation and continuous testing with versioned packages
+- [x] CPack packaging for Linux (DEB, TGZ), macOS (TGZ), Windows (ZIP) and Web (TGZ)
 - [x] Web port via Emscripten
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outputs *(optional)*
 - [ ] USD scene loading *(optional)*
@@ -44,8 +44,15 @@ cd scripts/
 ./build.sh -CMakeToolchainFile ../third-party/vcpkg/scripts/buildsystems/vcpkg.cmake -RunTests
 ```
 
+**With versioned package suffix:**
+```sh
+cd scripts/
+./build.sh -CMakeToolchainFile ../third-party/vcpkg/scripts/buildsystems/vcpkg.cmake -Release -RevisionNumber alpha-1
+```
+
 **Web build:**
 ```sh
+cd scripts/
 source <path-to-emsdk>/emsdk_env.sh
 ./build.sh -WebBuild
 # Copy build artifacts (.js, .wasm, .data) to assets/web/html-js-wasm
@@ -56,8 +63,9 @@ source <path-to-emsdk>/emsdk_env.sh
 **Packaging:**
 ```sh
 cd build/
-cpack -G DEB   # Linux — also TGZ, TXZ
-cpack -G ZIP   # macOS — also TGZ
+cpack --config CPackConfig.cmake -G DEB   # Linux
+cpack --config CPackConfig.cmake -G TGZ   # Linux / macOS
+cpack --config CPackConfig.cmake -G ZIP   # Linux / macOS
 ```
 
 ### Windows
@@ -74,10 +82,16 @@ cd scripts\
 .\build.ps1 -CMakeToolchainFile ..\third-party\vcpkg\scripts\buildsystems\vcpkg.cmake -RunTests
 ```
 
+**With versioned package suffix:**
+```powershell
+cd scripts\
+.\build.ps1 -CMakeToolchainFile ..\third-party\vcpkg\scripts\buildsystems\vcpkg.cmake -Release -RevisionNumber alpha-1
+```
+
 **Packaging:**
 ```powershell
 cd build\
-cpack -G ZIP    # also NSIS, NSIS64
+cpack --config CPackConfig.cmake -G ZIP
 ```
 
 ## Apps

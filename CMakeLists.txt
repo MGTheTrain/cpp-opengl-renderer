@@ -43,22 +43,29 @@ if(BUILD_PACKAGE)
     include(CustomFunctions)
 
     set(PACKAGE_NAME "cpp-opengl-renderer")
-    set(PACKAGING_INSTALL_PREFIX "/opt/mgtt/cpp-opengl-renderer/")
+    set(PACKAGING_INSTALL_PREFIX "/opt/mgtt/cpp-opengl-renderer")
 
     set(file_path "version")
     file(READ "${file_path}" file_content)
-    message(${file_content})
+    string(STRIP "${file_content}" file_content)
     split_version_string(${file_content})
-    message("CMAKE_PROJECT_VERSION_MAJOR: ${CMAKE_PROJECT_VERSION_MAJOR}")
-    message("CMAKE_PROJECT_VERSION_MINOR: ${CMAKE_PROJECT_VERSION_MINOR}")
-    message("CMAKE_PROJECT_VERSION_PATCH: ${CMAKE_PROJECT_VERSION_PATCH}")
 
-    if(REVISION_NUMBER)
+    message("VERSION from file: ${file_content}")
+    message("MAJOR: ${CMAKE_PROJECT_VERSION_MAJOR}")
+    message("MINOR: ${CMAKE_PROJECT_VERSION_MINOR}")
+    message("PATCH: ${CMAKE_PROJECT_VERSION_PATCH}")
+
+    # Safer check. Guards against empty string passed from CI
+    if(DEFINED REVISION_NUMBER AND NOT REVISION_NUMBER STREQUAL "")
         set(CMAKE_PROJECT_VERSION_TWEAK "-${REVISION_NUMBER}")
+    else()
+        set(CMAKE_PROJECT_VERSION_TWEAK "")
     endif()
     message("CMAKE_PROJECT_VERSION_TWEAK: ${CMAKE_PROJECT_VERSION_TWEAK}")
 
-    set(PROJECT_VERSION ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH}${CMAKE_PROJECT_VERSION_TWEAK}
-        CACHE STRING "The version of the debian package")
+    set(PROJECT_VERSION
+        "${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH}${CMAKE_PROJECT_VERSION_TWEAK}"
+        CACHE STRING "The version of the package" FORCE)
+
     include(Packing)
 endif()
