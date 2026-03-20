@@ -1,6 +1,16 @@
 # Checklist
-- [ ] I adhere the [Gitflow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
-- [ ] I verify that the `CHANGELOG.md` includes comprehensive documentation for the implemented features or fixed bugs. Increment the minor version such as `from 0.1.0 to 0.2.0` for implemented features and increment the patch version `from 0.1.0 to 0.1.1` for bug fixes. If any breaking changes occur, increment the major version, like `from 0.1.0 to 1.0.0`. Also see [Semantic Versioning 2.0.0](https://semver.org/lang/de/)
-- [ ] I ensure that all merge conflicts are resolved before asking for a PR reviewer
 
-# Reference/Link to the issue solved with this PR (if any)
+- [ ] Pre-commit hook is installed and all checks pass locally (`pre-commit run --all-files`)
+- [ ] Tests pass locally for the same OS as the CI target
+- [ ] All merge conflicts are resolved
+- [ ] `version` file is updated if this PR prepares a release
+- [ ] PR title follows conventional commits (e.g. `feat:`, `fix:`, `chore:`, `docs:`)
+- [ ] Code follows the project [coding guidelines](../docs/coding-guidelines.md)
+
+# Description
+
+<!-- Briefly describe what this PR changes and why -->
+
+# Reference
+
+<!-- Link to the issue this PR resolves, if any. e.g. Closes #42 -->
