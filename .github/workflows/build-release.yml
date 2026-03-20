@@ -2,13 +2,13 @@ name: Build Release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
     uses: ./.github/workflows/build-reusable.yml
     with:
       run_tests: true
-
-  # Push release package to package repository (e.g. CloudSmith)
+      upload_packages: true
+      revision_number: ''

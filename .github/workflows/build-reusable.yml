@@ -6,6 +6,12 @@ on:
       run_tests:
         type: boolean
         default: false
+      upload_packages:
+        type: boolean
+        default: false
+      revision_number:
+        type: string
+        default: ''
 
 jobs:
   build-and-test-ubuntu:
@@ -33,12 +39,31 @@ jobs:
       run: |
         Xvfb :99 &
         export DISPLAY=:99
-        FLAGS="-CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        FLAGS="-CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -Release"
         if [ "${{ inputs.run_tests }}" = "true" ]; then
           FLAGS="$FLAGS -RunTests"
         fi
         ./build.sh $FLAGS
       working-directory: ./scripts/
+    - name: Create Linux packages
+      if: ${{ inputs.upload_packages }}
+      run: |
+        REVISION="${{ inputs.revision_number }}"
+        EXTRA_ARGS=""
+        if [ -n "$REVISION" ]; then
+          EXTRA_ARGS="-DREVISION_NUMBER=$REVISION"
+        fi
+        cmake $EXTRA_ARGS -DBUILD_PACKAGE=ON .
+        cpack -G TGZ
+        cpack -G DEB
+      working-directory: ./build/
+    - name: Upload Linux packages
+      if: ${{ inputs.upload_packages }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-packages
+        path: packages/
+        retention-days: 1
 
   build-windows:
     runs-on: windows-latest
@@ -55,8 +80,24 @@ jobs:
     - name: Build on Windows
       shell: pwsh
       run: |
-        .\build.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake
+        .\build.ps1 -CMakeToolchainFile $env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake -Release
       working-directory: .\scripts\
+    - name: Create Windows packages
+      if: ${{ inputs.upload_packages }}
+      shell: pwsh
+      run: |
+        $revision = "${{ inputs.revision_number }}"
+        $extraArgs = if ($revision) { "-DREVISION_NUMBER=$revision" } else { "" }
+        cmake $extraArgs -DBUILD_PACKAGE=ON .
+        cpack -G ZIP
+      working-directory: .\build\
+    - name: Upload Windows packages
+      if: ${{ inputs.upload_packages }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-packages
+        path: packages/
+        retention-days: 1
 
   build-macos:
     runs-on: macos-latest
@@ -72,8 +113,26 @@ jobs:
       working-directory: /tmp/
     - name: Build on macOS
       run: |
-        ./build.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+        ./build.sh -CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -Release
       working-directory: ./scripts/
+    - name: Create macOS packages
+      if: ${{ inputs.upload_packages }}
+      run: |
+        REVISION="${{ inputs.revision_number }}"
+        EXTRA_ARGS=""
+        if [ -n "$REVISION" ]; then
+          EXTRA_ARGS="-DREVISION_NUMBER=$REVISION"
+        fi
+        cmake $EXTRA_ARGS -DBUILD_PACKAGE=ON .
+        cpack -G TGZ
+      working-directory: ./build/
+    - name: Upload macOS packages
+      if: ${{ inputs.upload_packages }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-packages
+        path: packages/
+        retention-days: 1
 
   build-web:
     runs-on: ubuntu-latest
@@ -92,3 +151,10 @@ jobs:
         source /tmp/emsdk/emsdk_env.sh
         ./build.sh -WebBuild
       working-directory: ./scripts/
+    - name: Upload web artifacts
+      if: ${{ inputs.upload_packages }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-artifacts
+        path: build/
+        retention-days: 1

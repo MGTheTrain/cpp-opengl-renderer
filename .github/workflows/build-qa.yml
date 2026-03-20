@@ -1,7 +1,7 @@
-name: Build Dev
+name: Build QA
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -11,4 +11,4 @@ jobs:
     with:
       run_tests: true
       upload_packages: true
-      revision_number: beta-${{ github.run_number }}
+      revision_number: alpha-${{ github.run_number }}
