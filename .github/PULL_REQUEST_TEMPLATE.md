@@ -1,6 +1,7 @@
 # Checklist
 
 - [ ] Pre-commit hook is installed and all checks pass locally (`pre-commit run --all-files`)
+- [ ] clang-tidy passes locally (`find modules apps -name '*.cpp' | grep -v third-party | xargs clang-tidy -p build --config-file=.clang-tidy`)
 - [ ] Tests pass locally for the same OS as the CI target
 - [ ] All merge conflicts are resolved
 - [ ] `version` file is updated if this PR prepares a release

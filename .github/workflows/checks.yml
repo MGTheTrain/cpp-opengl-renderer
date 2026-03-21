@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -29,3 +29,40 @@ jobs:
             git diff
             exit 1
           fi
+
+  clang-tidy:
+    name: Run clang-tidy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+          build-essential cmake clang clang-tidy \
+          libxmu-dev libxi-dev libgl-dev \
+          libxinerama-dev libxcursor-dev xorg-dev \
+          libglu1-mesa-dev pkg-config \
+          autoconf autoconf-archive automake libtool libltdl-dev
+
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.sh
+        working-directory: /tmp/
+
+      - name: Generate compilation database
+        run: |
+          cmake -B build \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_LIB=ON -DBUILD_APP=ON -DBUILD_TEST=OFF \
+            -DCMAKE_TOOLCHAIN_FILE=/tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Run clang-tidy
+        run: |
+          find modules apps -name '*.cpp' \
+            | grep -v third-party \
+            | xargs -P$(nproc) clang-tidy -p build --config-file=.clang-tidy

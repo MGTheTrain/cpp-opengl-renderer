@@ -6,7 +6,7 @@ A cross-platform C++ OpenGL renderer supporting glTF scene loading with a PBR me
 
 ## Features
 
-- [x] Compilation on macOS, Ubuntu 20.04/22.04, Debian 11, Windows 10/11
+- [x] Compilation on macOS, Ubuntu 24.04, Debian 12, Windows 11
 - [x] glTF scene loading via tinygltf
 - [x] PBR shader pipeline (metal-roughness workflow)
 - [x] Image-based lighting (IBL) with equirectangular HDR environment maps
@@ -14,7 +14,7 @@ A cross-platform C++ OpenGL renderer supporting glTF scene loading with a PBR me
 - [x] GoogleTest coverage for module structs and classes
 - [x] CMake + vcpkg cross-platform build system
 - [x] CI workflows for cross-platform compilation and continuous testing with versioned packages
-- [x] CPack packaging for Linux (DEB, TGZ), macOS (TGZ), Windows (ZIP) and Web (TGZ)
+- [x] CPack packaging for Linux (DEB, TGZ, ZIP), macOS (TGZ, ZIP), Windows (ZIP) and Web (TGZ)
 - [x] Web port via Emscripten
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outputs *(optional)*
 - [ ] USD scene loading *(optional)*
@@ -27,6 +27,33 @@ A cross-platform C++ OpenGL renderer supporting glTF scene loading with a PBR me
 - vcpkg (bootstrapped via `third-party/vcpkg` submodule)
 - For glTF sample scenes: `git submodule update --init assets/scenes/glTF-Sample-Models`
 - For web builds: [Emscripten SDK](https://github.com/emscripten-core/emsdk)
+
+## Code Quality
+
+**pre-commit** (formatting and linting — no build required):
+```sh
+pip install pre-commit
+pre-commit run --all-files
+```
+
+**clang-tidy** (static analysis — requires a compilation database):
+```sh
+cmake -B build \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DBUILD_LIB=ON -DBUILD_APP=ON -DBUILD_TEST=OFF \
+    -DCMAKE_TOOLCHAIN_FILE=/tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+# All files
+find modules apps -name '*.cpp' | grep -v third-party \
+  | xargs -P$(nproc) clang-tidy -p build --config-file=.clang-tidy
+
+# Changed files only (faster during development)
+git diff --name-only HEAD | grep '\.cpp$' \
+  | xargs clang-tidy -p build --config-file=.clang-tidy
+```
+
+Both checks run automatically in CI on every pull request and push to main.
 
 ## Getting Started
 
