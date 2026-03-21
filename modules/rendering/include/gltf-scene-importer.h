@@ -128,7 +128,7 @@ class GltfSceneImporter : public ISceneImporter {
    * @return Ok on success, Err if mesh setup fails.
    */
   [[nodiscard]] Mgtt::Common::Result<void> LoadNode(
-      std::shared_ptr<Mgtt::Rendering::Node> parent,
+      const std::shared_ptr<Mgtt::Rendering::Node>& parent,
       Mgtt::Rendering::Scene& scene, const tinygltf::Node& node,
       uint32_t nodeIndex, const tinygltf::Model& model);
 

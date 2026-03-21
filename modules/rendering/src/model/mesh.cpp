@@ -22,50 +22,40 @@
 
 #include <mesh.h>
 
-Mgtt::Rendering::Mesh::Mesh() {
-  this->matrix = glm::mat4(1.0f);
-  this->vao = 0;
-  this->ebo = 0;
-  this->pos = 0;
-  this->normal = 0;
-  this->tex = 0;
-  // this->joint = 0; // TODO: Support animations
-  // this->weight = 0; // TODO: Support animations
-  this->matrix = glm::mat4(1.0f);
+namespace Mgtt::Rendering {
+
+void Mesh::Clear() {
+  auto delBuf = [](uint32_t& bufId) {
+    if (bufId > 0) {
+      glDeleteBuffers(1, &bufId);
+      bufId = 0;
+    }
+  };
+
+  delBuf(pos);
+  delBuf(normal);
+  delBuf(tex);
+  delBuf(ebo);
+
+  if (vao > 0) {
+    glDeleteVertexArrays(1, &vao);
+    vao = 0;
+  }
+
+  for (auto& primitive : meshPrimitives) {
+    primitive.Clear();
+  }
+
+  meshPrimitives.clear();
+  indices.clear();
+  vertexPositionAttribs.clear();
+  vertexNormalAttribs.clear();
+  vertexTextureAttribs.clear();
+  vertexJointAttribs.clear();
+  vertexWeightAttribs.clear();
+
+  matrix = glm::mat4(1.0f);
+  name = "";
 }
 
-void Mgtt::Rendering::Mesh::Clear() {
-  if (this->pos > 0) {
-    glDeleteBuffers(1, &this->pos);
-    this->pos = 0;
-  }
-  if (this->normal > 0) {
-    glDeleteBuffers(1, &this->normal);
-    this->normal = 0;
-  }
-  if (this->tex > 0) {
-    glDeleteBuffers(1, &this->tex);
-    this->tex = 0;
-  }
-  if (this->ebo > 0) {
-    glDeleteBuffers(1, &this->ebo);
-    this->ebo = 0;
-  }
-  if (this->vao > 0) {
-    glDeleteVertexArrays(1, &this->vao);
-    this->vao = 0;
-  }
-  for (auto mehsPrimitive : this->meshPrimitives) {
-    mehsPrimitive.Clear();
-  }
-  this->meshPrimitives.clear();
-  this->indices.clear();
-  this->vertexPositionAttribs.clear();
-  this->vertexNormalAttribs.clear();
-  this->vertexTextureAttribs.clear();
-  this->vertexJointAttribs.clear();
-  this->vertexWeightAttribs.clear();
-
-  this->matrix = glm::mat4(1.0f);
-  this->name = "";
-}
+}  // namespace Mgtt::Rendering

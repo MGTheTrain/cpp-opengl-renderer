@@ -38,10 +38,10 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::Load(
   const std::string pathStr(path);
   mgttScene.path = pathStr;
 
-  // --- validate suffix ---
-  auto hasSuffix = [&](std::string_view s) {
-    return pathStr.size() >= s.size() &&
-           pathStr.compare(pathStr.size() - s.size(), s.size(), s) == 0;
+  auto hasSuffix = [&](std::string_view suffix) {
+    return pathStr.size() >= suffix.size() &&
+           pathStr.compare(pathStr.size() - suffix.size(), suffix.size(),
+                           suffix) == 0;
   };
   if (!hasSuffix(".gltf") && !hasSuffix(".GLTF") && !hasSuffix(".glb") &&
       !hasSuffix(".GLB")) {
@@ -51,15 +51,14 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::Load(
 
   const bool binary = hasSuffix(".glb") || hasSuffix(".GLB");
 
-  std::string err, warn;
+  std::string err;
+  std::string warn;
   tinygltf::Model gltfModel;
   tinygltf::TinyGLTF gltfContext;
 
-  const bool fileLoaded = binary
-                              ? gltfContext.LoadBinaryFromFile(
-                                    &gltfModel, &err, &warn, pathStr.c_str())
-                              : gltfContext.LoadASCIIFromFile(
-                                    &gltfModel, &err, &warn, pathStr.c_str());
+  const bool fileLoaded =
+      binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, pathStr)
+             : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, pathStr);
 
   if (!fileLoaded) {
     Clear(mgttScene);
@@ -68,25 +67,25 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::Load(
         (err.empty() ? "" : " — " + err));
   }
 
-  // --- textures & materials ---
-  if (auto r = LoadTextures(mgttScene, gltfModel); r.err()) {
+  if (auto result = LoadTextures(mgttScene, gltfModel); result.err()) {
     Clear(mgttScene);
-    return r;
+    return result;
   }
   LoadMaterials(mgttScene, gltfModel);
 
-  // --- nodes ---
   const tinygltf::Scene& scene =
       gltfModel
           .scenes[gltfModel.defaultScene > -1 ? gltfModel.defaultScene : 0];
 
-  for (size_t i = 0; i < scene.nodes.size(); ++i) {
-    const tinygltf::Node& node = gltfModel.nodes[scene.nodes[i]];
-    if (auto r = LoadNode(nullptr, mgttScene, node,
-                          static_cast<uint32_t>(scene.nodes[i]), gltfModel);
-        r.err()) {
+  // NOLINTNEXTLINE(modernize-loop-convert) — idx used as both array index and
+  for (size_t idx = 0; idx < scene.nodes.size(); ++idx) {
+    const tinygltf::Node& node = gltfModel.nodes[scene.nodes[idx]];
+    if (auto result =
+            LoadNode(nullptr, mgttScene, node,
+                     static_cast<uint32_t>(scene.nodes[idx]), gltfModel);
+        result.err()) {
       Clear(mgttScene);
-      return r;
+      return result;
     }
   }
 
@@ -120,7 +119,7 @@ std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(
 
 void Mgtt::Rendering::GltfSceneImporter::FreeTextureData(
     Mgtt::Rendering::Texture& texture) {
-  if (texture.data) {
+  if (texture.data != nullptr) {
     stbi_image_free(texture.data);
     texture.data = nullptr;
   }
@@ -142,7 +141,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadTextures(
     texture.data = stbi_load(texture.path.c_str(), &texture.width,
                              &texture.height, &texture.nrComponents, 0);
 
-    if (!texture.data) {
+    if (texture.data == nullptr) {
       return Mgtt::Common::Result<void>::Err("Failed to load texture: " +
                                              texture.path);
     }
@@ -158,7 +157,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadTextures(
 
 void Mgtt::Rendering::GltfSceneImporter::SetupTexture(
     Mgtt::Rendering::Texture& texture) {
-  if (!texture.data) {
+  if (texture.data == nullptr) {
     std::cout << "SetupTexture: data is null, skipping\n";
     return;
   }
@@ -193,10 +192,12 @@ void Mgtt::Rendering::GltfSceneImporter::SetupTexture(
 void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
     Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
   auto lookupTex = [&](int texIndex) -> Mgtt::Rendering::Texture {
-    if (texIndex < 0) return Texture{};
+    if (texIndex < 0) {
+      return Texture{};
+    }
     const auto& uri = gltfModel.images[gltfModel.textures[texIndex].source].uri;
-    auto it = scene.textureMap.find(uri);
-    return it != scene.textureMap.end() ? it->second : Texture{};
+    auto iter = scene.textureMap.find(uri);
+    return iter != scene.textureMap.end() ? iter->second : Texture{};
   };
 
   for (const tinygltf::Material& material : gltfModel.materials) {
@@ -204,33 +205,30 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
     pbr.alphaCutoff = static_cast<float>(material.alphaCutoff);
     pbr.doubleSided = material.doubleSided;
 
-    if (material.alphaMode == "MASK")
+    if (material.alphaMode == "MASK") {
       pbr.alphaMode = AlphaMode::MASK;
-    else if (material.alphaMode == "BLEND")
+    } else if (material.alphaMode == "BLEND") {
       pbr.alphaMode = AlphaMode::BLEND;
-    else if (material.alphaMode == "OPAQUE")
+    } else if (material.alphaMode == "OPAQUE") {
       pbr.alphaMode = AlphaMode::OPAQ;
-    else
+    } else {
       pbr.alphaMode = AlphaMode::NONE;
+    }
 
     const auto& pbrmr = material.pbrMetallicRoughness;
 
     pbr.baseColorTexture =
         BaseColorTexture(lookupTex(pbrmr.baseColorTexture.index),
                          glm::make_vec4(pbrmr.baseColorFactor.data()));
-
     pbr.normalTexture =
         NormalTexture(lookupTex(material.normalTexture.index),
                       static_cast<float>(material.normalTexture.scale));
-
     pbr.occlusionTexture = OcclusionTexture(
         lookupTex(material.occlusionTexture.index),
         static_cast<float>(material.occlusionTexture.strength));
-
     pbr.emissiveTexture =
         EmissiveTexture(lookupTex(material.emissiveTexture.index),
                         glm::make_vec3(material.emissiveFactor.data()));
-
     pbr.metallicRoughnessTexture = MetallicRoughnessTexture(
         lookupTex(pbrmr.metallicRoughnessTexture.index),
         static_cast<float>(pbrmr.metallicFactor),
@@ -243,8 +241,7 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
 
 Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t shaderId) {
-  if (!mesh) {
-    // Not an error — a node simply has no geometry.
+  if (mesh == nullptr) {
     return Mgtt::Common::Result<void>::Ok();
   }
   if (HasValuesGreaterThanZero(
@@ -270,14 +267,14 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::SetupMesh(
                static_cast<GLsizeiptr>(mesh->indices.size() * sizeof(uint32_t)),
                mesh->indices.data(), GL_STATIC_DRAW);
 
-  auto uploadAttrib = [&](uint32_t buf, auto& attribs, const char* name,
+  auto uploadAttrib = [&](uint32_t buf, auto& attribs, const char* attrName,
                           GLint components) {
     using T = typename std::decay_t<decltype(attribs)>::value_type;
     glBindBuffer(GL_ARRAY_BUFFER, buf);
     glBufferData(GL_ARRAY_BUFFER,
                  static_cast<GLsizeiptr>(attribs.size() * sizeof(T)),
                  attribs.data(), GL_STATIC_DRAW);
-    const uint32_t loc = glGetAttribLocation(shaderId, name);
+    const uint32_t loc = glGetAttribLocation(shaderId, attrName);
     glEnableVertexAttribArray(loc);
     glVertexAttribPointer(loc, components, GL_FLOAT, GL_FALSE, sizeof(T),
                           nullptr);
@@ -288,7 +285,6 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::SetupMesh(
   uploadAttrib(mesh->tex, mesh->vertexTextureAttribs,
                "inVertexTextureCoordinates", 2);
 
-  // Re-bind EBO inside the VAO so it is recorded in the VAO state.
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
   glBindVertexArray(0);
 
@@ -296,7 +292,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::SetupMesh(
 }
 
 Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
-    std::shared_ptr<Mgtt::Rendering::Node> parent,
+    const std::shared_ptr<Mgtt::Rendering::Node>& parent,
     Mgtt::Rendering::Scene& scene, const tinygltf::Node& node,
     uint32_t nodeIndex, const tinygltf::Model& model) {
   auto newNode = std::make_shared<Mgtt::Rendering::Node>();
@@ -317,10 +313,10 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
   }
 
   for (int childIdx : node.children) {
-    if (auto r = LoadNode(newNode, scene, model.nodes[childIdx],
-                          static_cast<uint32_t>(childIdx), model);
-        r.err()) {
-      return r;
+    if (auto result = LoadNode(newNode, scene, model.nodes[childIdx],
+                               static_cast<uint32_t>(childIdx), model);
+        result.err()) {
+      return result;
     }
   }
 
@@ -339,7 +335,6 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       glm::vec3 posMin(FLT_MAX);
       glm::vec3 posMax(-FLT_MAX);
 
-      // --- position (required) ---
       const auto& posAccessor =
           model.accessors[primitive.attributes.at("POSITION")];
       const auto& posView = model.bufferViews[posAccessor.bufferView];
@@ -347,7 +342,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
           model.buffers[posView.buffer].data.data() + posAccessor.byteOffset +
           posView.byteOffset);
       const int32_t posByteStride =
-          posAccessor.ByteStride(posView)
+          (posAccessor.ByteStride(posView) != 0)
               ? posAccessor.ByteStride(posView) /
                     static_cast<int32_t>(sizeof(float))
               : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC3);
@@ -355,77 +350,78 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       posMax = glm::make_vec3(posAccessor.maxValues.data());
       vertexCount = static_cast<uint32_t>(posAccessor.count);
 
-      // --- normal (optional) ---
       const float* bufferNormals = nullptr;
       int32_t normByteStride = 0;
-      if (auto it = primitive.attributes.find("NORMAL");
-          it != primitive.attributes.end()) {
-        const auto& acc = model.accessors[it->second];
+      if (auto iter = primitive.attributes.find("NORMAL");
+          iter != primitive.attributes.end()) {
+        const auto& acc = model.accessors[iter->second];
         const auto& view = model.bufferViews[acc.bufferView];
         bufferNormals = reinterpret_cast<const float*>(
             model.buffers[view.buffer].data.data() + acc.byteOffset +
             view.byteOffset);
         normByteStride =
-            acc.ByteStride(view)
+            (acc.ByteStride(view) != 0)
                 ? acc.ByteStride(view) / static_cast<int32_t>(sizeof(float))
                 : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC3);
       }
 
-      // --- texcoord (optional) ---
       const float* bufferUV = nullptr;
       int32_t uvByteStride = 0;
-      if (auto it = primitive.attributes.find("TEXCOORD_0");
-          it != primitive.attributes.end()) {
-        const auto& acc = model.accessors[it->second];
+      if (auto iter = primitive.attributes.find("TEXCOORD_0");
+          iter != primitive.attributes.end()) {
+        const auto& acc = model.accessors[iter->second];
         const auto& view = model.bufferViews[acc.bufferView];
         bufferUV = reinterpret_cast<const float*>(
             model.buffers[view.buffer].data.data() + acc.byteOffset +
             view.byteOffset);
         uvByteStride =
-            acc.ByteStride(view)
+            (acc.ByteStride(view) != 0)
                 ? acc.ByteStride(view) / static_cast<int32_t>(sizeof(float))
                 : tinygltf::GetNumComponentsInType(TINYGLTF_TYPE_VEC2);
       }
 
-      // --- fill vertex arrays ---
-      for (size_t v = 0; v < posAccessor.count; ++v) {
+      for (size_t vtx = 0; vtx < posAccessor.count; ++vtx) {
         newMesh->vertexPositionAttribs.push_back(
-            glm::make_vec3(&bufferPos[v * posByteStride]));
+            glm::make_vec3(&bufferPos[vtx * posByteStride]));
         newMesh->vertexNormalAttribs.push_back(
-            bufferNormals ? glm::normalize(glm::make_vec3(
-                                &bufferNormals[v * normByteStride]))
-                          : glm::vec3(0.0f));
+            (bufferNormals != nullptr)
+                ? glm::normalize(
+                      glm::make_vec3(&bufferNormals[vtx * normByteStride]))
+                : glm::vec3(0.0f));
         newMesh->vertexTextureAttribs.push_back(
-            bufferUV ? glm::make_vec2(&bufferUV[v * uvByteStride])
-                     : glm::vec2(0.0f));
+            (bufferUV != nullptr)
+                ? glm::make_vec2(&bufferUV[vtx * uvByteStride])
+                : glm::vec2(0.0f));
       }
 
-      // --- indices ---
       const bool hasIndices = primitive.indices > -1;
       if (hasIndices) {
         const auto& acc = model.accessors[primitive.indices];
-        const auto& bv = model.bufferViews[acc.bufferView];
+        const auto& bufView = model.bufferViews[acc.bufferView];
         indexCount = static_cast<uint32_t>(acc.count);
-        const void* dataPtr = model.buffers[bv.buffer].data.data() +
-                              acc.byteOffset + bv.byteOffset;
+        const void* dataPtr = model.buffers[bufView.buffer].data.data() +
+                              acc.byteOffset + bufView.byteOffset;
 
         switch (static_cast<GLTFParameterType>(acc.componentType)) {
           case GLTFParameterType::UNSIGNED_INT: {
             const auto* buf = static_cast<const uint32_t*>(dataPtr);
-            for (size_t i = 0; i < acc.count; ++i)
-              newMesh->indices.push_back(buf[i] + vertexStart);
+            for (size_t idx = 0; idx < acc.count; ++idx) {
+              newMesh->indices.push_back(buf[idx] + vertexStart);
+            }
             break;
           }
           case GLTFParameterType::UNSIGNED_SHORT: {
             const auto* buf = static_cast<const uint16_t*>(dataPtr);
-            for (size_t i = 0; i < acc.count; ++i)
-              newMesh->indices.push_back(buf[i] + vertexStart);
+            for (size_t idx = 0; idx < acc.count; ++idx) {
+              newMesh->indices.push_back(buf[idx] + vertexStart);
+            }
             break;
           }
           case GLTFParameterType::UNSIGNED_BYTE: {
             const auto* buf = static_cast<const uint8_t*>(dataPtr);
-            for (size_t i = 0; i < acc.count; ++i)
-              newMesh->indices.push_back(buf[i] + vertexStart);
+            for (size_t idx = 0; idx < acc.count; ++idx) {
+              newMesh->indices.push_back(buf[idx] + vertexStart);
+            }
             break;
           }
           default:
@@ -448,18 +444,19 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       newMesh->meshPrimitives.push_back(std::move(prim));
     }
 
-    for (const auto& mp : newMesh->meshPrimitives) {
-      newMesh->aabb.min = glm::min(newMesh->aabb.min, mp.aabb.min);
-      newMesh->aabb.max = glm::max(newMesh->aabb.max, mp.aabb.max);
+    for (const auto& meshPrim : newMesh->meshPrimitives) {
+      newMesh->aabb.min = glm::min(newMesh->aabb.min, meshPrim.aabb.min);
+      newMesh->aabb.max = glm::max(newMesh->aabb.max, meshPrim.aabb.max);
     }
 
-    if (auto r = SetupMesh(newMesh, scene.shader.GetProgramId()); r.err()) {
-      return r;
+    if (auto result = SetupMesh(newMesh, scene.shader.GetProgramId());
+        result.err()) {
+      return result;
     }
     newNode->mesh = std::move(newMesh);
   }
 
-  if (parent) {
+  if (parent != nullptr) {
     parent->children.push_back(std::move(newNode));
   } else {
     std::cout << "Allocated node " << newNode->name << " with index "
@@ -471,7 +468,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
 
 void Mgtt::Rendering::GltfSceneImporter::UpdateNodeMeshMatrices(
     const std::shared_ptr<Mgtt::Rendering::Node>& node) {
-  if (node->mesh) {
+  if (node->mesh != nullptr) {
     node->InitialTransform();
   }
   for (const auto& child : node->children) {
@@ -492,7 +489,7 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneDimensions(
 void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(
     Mgtt::Rendering::Scene& scene,
     const std::shared_ptr<Mgtt::Rendering::Node>& node) {
-  if (node->mesh) {
+  if (node->mesh != nullptr) {
     scene.aabb.min = glm::min(scene.aabb.min, node->mesh->aabb.min);
     scene.aabb.max = glm::max(scene.aabb.max, node->mesh->aabb.max);
   }
@@ -503,7 +500,7 @@ void Mgtt::Rendering::GltfSceneImporter::CalculateSceneAABB(
 
 void Mgtt::Rendering::GltfSceneImporter::CalculateSceneNodesAABBs(
     const std::shared_ptr<Mgtt::Rendering::Node>& node) {
-  if (node->mesh) {
+  if (node->mesh != nullptr) {
     node->mesh->aabb.CalculateBoundingBox(node->GetGlobalMatrix());
   }
   for (const auto& child : node->children) {

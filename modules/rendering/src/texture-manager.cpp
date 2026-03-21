@@ -31,7 +31,7 @@ namespace Mgtt::Rendering {
 Mgtt::Common::Result<void> TextureManager::LoadFromEnvMap(
     Mgtt::Rendering::RenderTexturesContainer& container,
     const std::vector<std::string>& texturePaths) {
-  // TBD: upload individual cube faces
+  // TODO: upload individual cube faces
   for (const auto& path : texturePaths) {
     std::cout << "Allocated env map " << path << '\n';
   }
@@ -46,7 +46,7 @@ Mgtt::Common::Result<void> TextureManager::LoadFromHdr(
 
   texture.data = stbi_load(pathStr.c_str(), &texture.width, &texture.height,
                            &texture.nrComponents, 0);
-  if (!texture.data) {
+  if (texture.data == nullptr) {
     return Mgtt::Common::Result<void>::Err("Failed to load HDR texture: " +
                                            pathStr);
   }
@@ -250,6 +250,7 @@ void TextureManager::SetupQuad(
                         nullptr);
   glEnableVertexAttribArray(texLoc);
   glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                        // NOLINTNEXTLINE(performance-no-int-to-ptr)
                         reinterpret_cast<void*>(3 * sizeof(float)));
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   glBindVertexArray(0);
@@ -257,7 +258,7 @@ void TextureManager::SetupQuad(
 
 void TextureManager::GenerateIrradianceMap(
     Mgtt::Rendering::RenderTexturesContainer& container) {
-  // TBD
+  // TODO
 }
 
 }  // namespace Mgtt::Rendering

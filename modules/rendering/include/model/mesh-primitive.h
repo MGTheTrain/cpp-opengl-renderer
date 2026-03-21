@@ -22,37 +22,31 @@
 
 #pragma once
 
+#include <aabb.h>
 #include <material.h>
-#include <scene.h>
 
-#include <memory>
 #include <string>
 
 namespace Mgtt::Rendering {
+
 /**
- * @brief Represents a primitive mesh in the scene.
+ * @brief Represents a single draw-call unit within a mesh.
  */
 struct MeshPrimitive {
-  /**
-   * @brief Constructor for the MeshPrimitive structure.
-   */
-  MeshPrimitive();
-
+  MeshPrimitive() = default;
   ~MeshPrimitive() = default;
 
-  /**
-   * @brief Clear releases resources.
-   */
   void Clear();
 
   std::string name;
-  uint32_t firstIndex;   // NOTE: utilized in glDrawElements(...)
-  uint32_t indexCount;   // NOTE: utilized in glDrawElements(...)
-  uint32_t vertexCount;  // NOTE: utilized in glDrawElements(...) or
-                         // glDrawArrays(...)
-  bool hasSkin;
-  bool hasIndices;
+  uint32_t firstIndex{0};
+  uint32_t indexCount{0};
+  uint32_t vertexCount{0};
+  bool hasSkin{false};
+  bool hasIndices{false};
+
   Mgtt::Rendering::PbrMaterial pbrMaterial;
   AABB aabb;
 };
+
 }  // namespace Mgtt::Rendering

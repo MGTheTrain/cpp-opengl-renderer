@@ -26,10 +26,10 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
-#endif>
+#endif
+
 #include <aabb.h>
 #include <mesh-primitive.h>
-#include <opengl-shader.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -39,21 +39,21 @@
 #include <vector>
 
 namespace Mgtt::Rendering {
+
 struct MeshPrimitive;
+
 /**
  * @brief Represents a mesh in the scene.
  */
 struct Mesh {
-  /**
-   * @brief Constructor for the Mesh struct.
-   */
-  Mesh();
-
+  Mesh() = default;
   ~Mesh() = default;
 
-  /**
-   * @brief Clear releases resources.
-   */
+  Mesh(const Mesh&) = delete;
+  Mesh& operator=(const Mesh&) = delete;
+  Mesh(Mesh&&) = default;
+  Mesh& operator=(Mesh&&) = default;
+
   void Clear();
 
   std::string name;
@@ -64,16 +64,16 @@ struct Mesh {
   std::vector<glm::vec2> vertexTextureAttribs;
   std::vector<glm::ivec4> vertexJointAttribs;
   std::vector<glm::vec4> vertexWeightAttribs;
-  glm::mat4 matrix;
 
-  uint32_t vao;
-  uint32_t ebo;
-  uint32_t pos;
-  uint32_t normal;
-  uint32_t tex;
-  // uint32_t joint; // TODO: support animations
-  // uint32_t weight; // TODO: support animations
+  glm::mat4 matrix{1.0f};
+
+  uint32_t vao{0};
+  uint32_t ebo{0};
+  uint32_t pos{0};
+  uint32_t normal{0};
+  uint32_t tex{0};
 
   Mgtt::Rendering::AABB aabb;
 };
+
 }  // namespace Mgtt::Rendering

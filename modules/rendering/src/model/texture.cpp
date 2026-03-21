@@ -26,13 +26,6 @@
 
 namespace Mgtt::Rendering {
 
-TextureBase::TextureBase()
-    : width(0), height(0), nrComponents(0), data(nullptr), sizeInBytes(0) {}
-
-Texture::Texture() : TextureBase(), id(0) {}
-
-Texture::Texture(const Texture& other) : TextureBase(other), id(other.id) {}
-
 void Texture::Clear() {
   if (id > 0) {
     glDeleteTextures(1, &id);
@@ -40,18 +33,11 @@ void Texture::Clear() {
   }
 }
 
-NormalTexture::NormalTexture() : scale(1.0f) {}
-
 NormalTexture::NormalTexture(const Texture& texture, float scale)
     : Texture(texture), scale(scale) {}
 
-EmissiveTexture::EmissiveTexture() : color(0.0f) {}
-
 EmissiveTexture::EmissiveTexture(const Texture& texture, const glm::vec3& color)
     : Texture(texture), color(color) {}
-
-MetallicRoughnessTexture::MetallicRoughnessTexture()
-    : metallicFactor(0.0f), roughnessFactor(1.0f) {}
 
 MetallicRoughnessTexture::MetallicRoughnessTexture(const Texture& texture,
                                                    float metallicFactor,
@@ -60,44 +46,18 @@ MetallicRoughnessTexture::MetallicRoughnessTexture(const Texture& texture,
       metallicFactor(metallicFactor),
       roughnessFactor(roughnessFactor) {}
 
-OcclusionTexture::OcclusionTexture() : strength(0.0f) {}
-
 OcclusionTexture::OcclusionTexture(const Texture& texture, float strength)
     : Texture(texture), strength(strength) {}
-
-BaseColorTexture::BaseColorTexture() : color(1.0f) {}
 
 BaseColorTexture::BaseColorTexture(const Texture& texture,
                                    const glm::vec4& color)
     : Texture(texture), color(color) {}
 
-RenderTexturesContainer::RenderTexturesContainer()
-    : cubeMapTextureId(0),
-      irradianceMapTextureId(0),
-      brdfLutTextureId(0),
-      hdrTextureId(0),
-      fboId(0),
-      rboId(0),
-      cubeVao(0),
-      cubeVbo(0),
-      quadVao(0),
-      quadVbo(0) {}
-
 RenderTexturesContainer::RenderTexturesContainer(
     const std::pair<std::string, std::string>& eq2CubeMapShaderPaths,
     const std::pair<std::string, std::string>& brdfLutShaderPaths,
     const std::pair<std::string, std::string>& envMapShaderPaths)
-    : cubeMapTextureId(0),
-      irradianceMapTextureId(0),
-      brdfLutTextureId(0),
-      hdrTextureId(0),
-      fboId(0),
-      rboId(0),
-      cubeVao(0),
-      cubeVbo(0),
-      quadVao(0),
-      quadVbo(0),
-      eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPaths)),
+    : eq2CubeMapShader(OpenGlShader(eq2CubeMapShaderPaths)),
       brdfLutShader(OpenGlShader(brdfLutShaderPaths)),
       envMapShader(OpenGlShader(envMapShaderPaths)) {}
 
@@ -117,34 +77,34 @@ RenderTexturesContainer::RenderTexturesContainer(
               std::string(envMapShaderPaths.second)}) {}
 
 void RenderTexturesContainer::Clear() {
-  auto delTex = [](uint32_t& id) {
-    if (id > 0) {
-      glDeleteTextures(1, &id);
-      id = 0;
+  auto delTex = [](uint32_t& texId) {
+    if (texId > 0) {
+      glDeleteTextures(1, &texId);
+      texId = 0;
     }
   };
-  auto delFbo = [](uint32_t& id) {
-    if (id > 0) {
-      glDeleteFramebuffers(1, &id);
-      id = 0;
+  auto delFbo = [](uint32_t& fboId) {
+    if (fboId > 0) {
+      glDeleteFramebuffers(1, &fboId);
+      fboId = 0;
     }
   };
-  auto delRbo = [](uint32_t& id) {
-    if (id > 0) {
-      glDeleteRenderbuffers(1, &id);
-      id = 0;
+  auto delRbo = [](uint32_t& rboId) {
+    if (rboId > 0) {
+      glDeleteRenderbuffers(1, &rboId);
+      rboId = 0;
     }
   };
-  auto delVao = [](uint32_t& id) {
-    if (id > 0) {
-      glDeleteVertexArrays(1, &id);
-      id = 0;
+  auto delVao = [](uint32_t& vaoId) {
+    if (vaoId > 0) {
+      glDeleteVertexArrays(1, &vaoId);
+      vaoId = 0;
     }
   };
-  auto delVbo = [](uint32_t& id) {
-    if (id > 0) {
-      glDeleteBuffers(1, &id);
-      id = 0;
+  auto delVbo = [](uint32_t& vboId) {
+    if (vboId > 0) {
+      glDeleteBuffers(1, &vboId);
+      vboId = 0;
     }
   };
 

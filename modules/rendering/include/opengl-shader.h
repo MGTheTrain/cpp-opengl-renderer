@@ -41,12 +41,16 @@ namespace Mgtt::Rendering {
 /**
  * @brief OpenGL implementation of IShader.
  *
+ * Marked final so the compiler knows no further overrides exist,
+ * which silences clang-analyzer-optin.cplusplus.VirtualCall for
+ * calls to Clear() and Compile() in the constructor/destructor.
+ *
  * @note Essential parts from:
  * https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_m.h
  */
-class OpenGlShader : public IShader {
+class OpenGlShader final : public IShader {
  public:
-  OpenGlShader() noexcept;
+  OpenGlShader() noexcept = default;
   explicit OpenGlShader(
       const std::pair<std::string_view, std::string_view>& shaderPaths);
   ~OpenGlShader() override { Clear(); }
@@ -64,52 +68,31 @@ class OpenGlShader : public IShader {
     return *this;
   }
 
-  /**
-   * @brief Compile and link vertex + fragment shaders into a program.
-   *
-   * @param shaderPaths Pair of (vertex path, fragment path).
-   * @return Ok on success, Err with a descriptive message on failure.
-   */
   [[nodiscard]] Mgtt::Common::Result<void> Compile(
       const std::pair<std::string_view, std::string_view>& shaderPaths)
       override;
 
-  /**
-   * @brief Delete the GL program and reset id to 0.
-   */
   void Clear() override;
 
-  /**
-   * @brief Return the GL program id.
-   */
   [[nodiscard]] uint32_t GetProgramId() const noexcept { return id_; }
 
-  /**
-   * @brief Bind this shader program for subsequent draw calls.
-   */
   void Use() const noexcept;
 
   void SetBool(std::string_view name, bool value) const;
   void SetInt(std::string_view name, int32_t value) const;
   void SetFloat(std::string_view name, float value) const;
-  void SetVec2(std::string_view name, const glm::vec2& v) const;
-  void SetVec2(std::string_view name, float x, float y) const;
-  void SetVec3(std::string_view name, const glm::vec3& v) const;
-  void SetVec3(std::string_view name, float x, float y, float z) const;
-  void SetVec4(std::string_view name, const glm::vec4& v) const;
-  void SetVec4(std::string_view name, float x, float y, float z, float w) const;
-  void SetMat2(std::string_view name, const glm::mat2& m) const;
-  void SetMat3(std::string_view name, const glm::mat3& m) const;
-  void SetMat4(std::string_view name, const glm::mat4& m) const;
+  void SetVec2(std::string_view name, const glm::vec2& vec) const;
+  void SetVec2(std::string_view name, float xVal, float yVal) const;
+  void SetVec3(std::string_view name, const glm::vec3& vec) const;
+  void SetVec3(std::string_view name, float xVal, float yVal, float zVal) const;
+  void SetVec4(std::string_view name, const glm::vec4& vec) const;
+  void SetVec4(std::string_view name, float xVal, float yVal, float zVal,
+               float wVal) const;
+  void SetMat2(std::string_view name, const glm::mat2& mat) const;
+  void SetMat3(std::string_view name, const glm::mat3& mat) const;
+  void SetMat4(std::string_view name, const glm::mat4& mat) const;
 
  private:
-  /**
-   * @brief Query the GL info log and return an error string on failure.
-   *
-   * @param object  Shader or program object id.
-   * @param isProgram  True when checking a linked program, false for a shader.
-   * @return Ok when compilation/linking succeeded, Err with the info log.
-   */
   [[nodiscard]] static Mgtt::Common::Result<void> CheckCompileErrors(
       GLuint object, bool isProgram);
 

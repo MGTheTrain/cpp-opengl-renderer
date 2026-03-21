@@ -26,67 +26,72 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
-#endif>
+#endif
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <memory>
-#include <string>
-#include <vector>
-#define GLM_ENABLE_EXPERIMENTAL
 #include <aabb.h>
 #include <node.h>
 #include <opengl-shader.h>
 #include <texture.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-#include <iostream>
 #include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace Mgtt::Rendering {
+
 struct Node;
 struct Mesh;
 struct MeshPrimitive;
 struct PbrMaterial;
+
 /**
  * @brief Represents a 3D scene.
  */
 struct Scene {
-  /**
-   * @brief Constructor for the Scene struct.
-   */
-  Scene();
-
+  Scene() = default;
   ~Scene() = default;
 
+  Scene(const Scene&) = delete;
+  Scene& operator=(const Scene&) = delete;
+  Scene(Scene&&) = default;
+  Scene& operator=(Scene&&) = default;
+
   /**
-   * @brief Clear releases resources.
+   * @brief Release all RAM and VRAM resources held by the scene.
    */
   void Clear();
+
   std::string name;
   std::string path;
-  glm::vec3 pos;
-  glm::vec3 rot;
-  double scale;
-  glm::mat4 mvp;
-  glm::mat4 matrix;
-  std::map<std::string, Mgtt::Rendering::Texture>
-      textureMap;  // NOTE: optimization in which we want to prevent loading the
-                   // same texture into RAM
+  glm::vec3 pos{0.0f};
+  glm::vec3 rot{0.0f};
+  double scale{1.0};
+  glm::mat4 mvp{1.0f};
+  glm::mat4 matrix{1.0f};
+
+  // Prevents loading the same texture into RAM more than once
+  std::map<std::string, Mgtt::Rendering::Texture> textureMap;
+
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> nodes;
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> linearNodes;
   std::vector<Mgtt::Rendering::PbrMaterial> materials;
+
   Mgtt::Rendering::AABB aabb;
   Mgtt::Rendering::OpenGlShader shader;
 
  private:
   /**
-   * @brief Recursively linearizes the scene hierarchy starting from the given
-   * node.
+   * @brief Recursively flatten the scene hierarchy into linearNodes.
    *
-   * @param node The starting node to linearize.
+   * @param node Root of the subtree to linearize.
    */
-  void Linearize(std::shared_ptr<Mgtt::Rendering::Node> node);
+  void Linearize(const std::shared_ptr<Mgtt::Rendering::Node>& node);
 };
+
 }  // namespace Mgtt::Rendering

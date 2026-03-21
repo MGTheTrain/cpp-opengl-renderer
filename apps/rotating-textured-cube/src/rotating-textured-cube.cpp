@@ -36,13 +36,13 @@ EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
 EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
 #endif
 
-// ---------------------------------------------------------------------------
 // Construction / destruction
-// ---------------------------------------------------------------------------
 
 Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube() {
   mesh.Clear();
-  for (auto& shader : openGlShaders) shader.Clear();
+  for (auto& shader : openGlShaders) {
+    shader.Clear();
+  }
 }
 
 Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
@@ -54,8 +54,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
 
 #ifndef __EMSCRIPTEN__
-  if (glewInit() != GLEW_OK)
+  if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW could not be initialized");
+  }
 
   const std::pair<std::string_view, std::string_view> shaderPaths{
       "assets/shader/core/coordinate.vert",
@@ -69,8 +70,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
 
   // OpenGlShader is move-only — emplace_back constructs in-place
   openGlShaders.emplace_back(shaderPaths);
-  if (openGlShaders[0].GetProgramId() == 0)
+  if (openGlShaders[0].GetProgramId() == 0) {
     throw std::runtime_error("Coordinate shader failed to compile");
+  }
 
   // --- vertex data ---
   mesh.vertexPositionAttribs = {
@@ -160,8 +162,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
   const std::string texturePath = "assets/texture/surgery.jpg";
   tex.data = stbi_load(texturePath.c_str(), &tex.width, &tex.height,
                        &tex.nrComponents, 0);
-  if (!tex.data)
+  if (tex.data == nullptr) {
     throw std::runtime_error("Failed to load texture: " + texturePath);
+  }
 
   const GLenum format = (tex.nrComponents == 4) ? GL_RGBA : GL_RGB;
   glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format), tex.width,
@@ -174,14 +177,13 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
   openGlShaders[0].Use();
   openGlShaders[0].SetInt("textureMap", 0);
 
-  int fbWidth = 0, fbHeight = 0;
+  int fbWidth = 0;
+  int fbHeight = 0;
   glfwGetFramebufferSize(glfwWindow->GetWindow(), &fbWidth, &fbHeight);
   glViewport(0, 0, fbWidth, fbHeight);
 }
 
-// ---------------------------------------------------------------------------
 // Render loop
-// ---------------------------------------------------------------------------
 
 void Mgtt::Apps::RotatingTexturedCube::Render() {
 #ifndef __EMSCRIPTEN__
@@ -225,13 +227,12 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 #endif
 }
 
-// ---------------------------------------------------------------------------
 // Input / callbacks
-// ---------------------------------------------------------------------------
 
 void Mgtt::Apps::RotatingTexturedCube::ProcessInput() {
-  if (glfwGetKey(glfwWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(glfwWindow->GetWindow(), true);
+  if (glfwGetKey(glfwWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    glfwSetWindowShouldClose(glfwWindow->GetWindow(), 1);
+  }
 }
 
 void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow*,
@@ -240,9 +241,7 @@ void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow*,
   glViewport(0, 0, width, height);
 }
 
-// ---------------------------------------------------------------------------
 // Entry point
-// ---------------------------------------------------------------------------
 
 int main() {
   try {

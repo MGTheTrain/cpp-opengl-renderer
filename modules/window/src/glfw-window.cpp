@@ -27,7 +27,9 @@
 namespace Mgtt::Window {
 
 GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
-  if (!glfwInit()) throw std::runtime_error("Failed to initialize GLFW");
+  if (glfwInit() == 0) {
+    throw std::runtime_error("Failed to initialize GLFW");
+  }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 #ifdef __APPLE__
@@ -42,7 +44,7 @@ GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
   window_ = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height),
                              std::string(name).c_str(), nullptr, nullptr);
 
-  if (!window_) {
+  if (window_ == nullptr) {
     glfwTerminate();
     throw std::runtime_error("Failed to create GLFW window");
   }
@@ -51,7 +53,7 @@ GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
 }
 
 GlfwWindow::~GlfwWindow() {
-  if (window_) {
+  if (window_ != nullptr) {
     glfwDestroyWindow(window_);
     glfwTerminate();
   }
@@ -59,16 +61,17 @@ GlfwWindow::~GlfwWindow() {
 
 GLFWwindow* GlfwWindow::GetWindow() const noexcept { return window_; }
 
-void GlfwWindow::SetFramebufferSizeCallback(GLFWframebuffersizefun fn) {
-  glfwSetFramebufferSizeCallback(window_, fn);
+void GlfwWindow::SetFramebufferSizeCallback(
+    GLFWframebuffersizefun callbackFunc) {
+  glfwSetFramebufferSizeCallback(window_, callbackFunc);
 }
 
-void GlfwWindow::SetScrollCallback(GLFWscrollfun fn) {
-  glfwSetScrollCallback(window_, fn);
+void GlfwWindow::SetScrollCallback(GLFWscrollfun callbackFunc) {
+  glfwSetScrollCallback(window_, callbackFunc);
 }
 
-void GlfwWindow::SetKeyCallback(GLFWkeyfun fn) {
-  glfwSetKeyCallback(window_, fn);
+void GlfwWindow::SetKeyCallback(GLFWkeyfun callbackFunc) {
+  glfwSetKeyCallback(window_, callbackFunc);
 }
 
 void GlfwWindow::SwapBuffersAndPollEvents() {
@@ -77,9 +80,10 @@ void GlfwWindow::SwapBuffersAndPollEvents() {
 }
 
 std::tuple<int, int> GlfwWindow::GetWindowSize() const {
-  int w = 0, h = 0;
-  glfwGetWindowSize(window_, &w, &h);
-  return {w, h};
+  int width = 0;
+  int height = 0;
+  glfwGetWindowSize(window_, &width, &height);
+  return {width, height};
 }
 
 void GlfwWindow::SetWindowSize(uint32_t width, uint32_t height) {
@@ -87,7 +91,7 @@ void GlfwWindow::SetWindowSize(uint32_t width, uint32_t height) {
 }
 
 bool GlfwWindow::WindowShouldClose() const noexcept {
-  return glfwWindowShouldClose(window_);
+  return glfwWindowShouldClose(window_) != 0;
 }
 
 }  // namespace Mgtt::Window

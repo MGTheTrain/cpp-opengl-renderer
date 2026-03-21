@@ -115,7 +115,8 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer()
     throw std::runtime_error("BRDF LUT generation failed: " + r.error());
   }
 
-  int fbWidth = 0, fbHeight = 0;
+  int fbWidth = 0;
+  int fbHeight = 0;
   glfwGetFramebufferSize(glfwWindow->GetWindow(), &fbWidth, &fbHeight);
   glViewport(0, 0, fbWidth, fbHeight);
   InitializeImGui();
@@ -223,7 +224,7 @@ void Mgtt::Apps::OpenGlViewer::Render() {
 // Scene traversal
 
 void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
-    const std::shared_ptr<Mgtt::Rendering::Node>& node) {
+    const std::shared_ptr<Mgtt::Rendering::Node>& node) const {
   RenderMesh(node);
   for (const auto& child : node->children) {
     TraverseSceneNode(child);
@@ -231,8 +232,10 @@ void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
 }
 
 void Mgtt::Apps::OpenGlViewer::RenderMesh(
-    const std::shared_ptr<Mgtt::Rendering::Node>& node) {
-  if (!node->mesh) return;
+    const std::shared_ptr<Mgtt::Rendering::Node>& node) const {
+  if (node->mesh == nullptr) {
+    return;
+  }
 
   glUniformMatrix4fv(
       glGetUniformLocation(mgttScene.shader.GetProgramId(), "matrix"), 1,
@@ -273,6 +276,7 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
     glBindVertexArray(node->mesh->vao);
     glDrawElements(
         GL_TRIANGLES, static_cast<GLsizei>(prim.indexCount), GL_UNSIGNED_INT,
+        // NOLINTNEXTLINE(performance-no-int-to-ptr)
         reinterpret_cast<const void*>(prim.firstIndex * sizeof(uint32_t)));
     glBindVertexArray(0);
   }

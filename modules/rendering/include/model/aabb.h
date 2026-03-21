@@ -22,48 +22,29 @@
 
 #pragma once
 
-#ifdef __EMSCRIPTEN__
-#include <GLES3/gl3.h>
-#else
-#include <GL/glew.h>
-#endif>
-
+#include <cfloat>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <memory>
-#include <string>
-#include <vector>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <opengl-shader.h>
-
-#include <glm/gtx/quaternion.hpp>
-#include <map>
 
 namespace Mgtt::Rendering {
+
 /**
- * @brief Represents a collidable aabb
+ * @brief Axis-aligned bounding box.
  */
 struct AABB {
-  /**
-   * @brief Constructor for the AABB struct.
-   */
-  AABB();
-
+  AABB() = default;
   ~AABB() = default;
 
-  glm::vec3 min;
-  glm::vec3 max;
-  glm::vec3 center;
-  float scale;
+  glm::vec3 min{FLT_MAX};
+  glm::vec3 max{-FLT_MAX};
+  glm::vec3 center{0.0f};
+  float scale{1.0f};
 
   /**
-   * @brief CalculateBoundingBox calculates the bounding box of an object
-   * transformed by the given matrix.
+   * @brief Recompute min/max in world space by transforming with matrix m.
    *
-   * @param m A 4x4 transformation matrix representing the object's
-   * transformation.
+   * @param mat 4x4 world transform matrix.
    */
-  void CalculateBoundingBox(const glm::mat4& m);
+  void CalculateBoundingBox(const glm::mat4& mat);
 };
+
 }  // namespace Mgtt::Rendering

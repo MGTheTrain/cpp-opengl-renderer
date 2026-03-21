@@ -35,10 +35,10 @@ Pushing the tag triggers the release pipeline which builds all platforms, runs t
 
 | Platform | Format |
 |---|---|
-| Linux | `.deb`, `.tar.gz` |
-| macOS | `.tar.gz` |
+| Linux | `.deb`, `.zip` |
+| macOS | `.zip` |
 | Windows | `.zip` |
-| Web | `.js`, `.wasm`, `.data` |
+| Web | `.zip` |
 
 ## Package Installation
 
@@ -47,10 +47,12 @@ Pushing the tag triggers the release pipeline which builds all platforms, runs t
 sudo dpkg -i cpp-opengl-renderer-0.1.0.deb
 ```
 
-**Linux / macOS (TGZ):**
+**Linux / macOS (ZIP):**
 ```bash
-tar -xzf cpp-opengl-renderer-0.1.0.tar.gz -C /opt/mgtt/
+sudo unzip cpp-opengl-renderer-0.1.0.zip
 ```
 
 **Windows (ZIP):**
-Extract and run the installer or copy binaries manually.
+```powershell
+Expand-Archive -Path "cpp-opengl-renderer-0.1.0.zip" -DestinationPath "C:\path\to\destination" 
+```

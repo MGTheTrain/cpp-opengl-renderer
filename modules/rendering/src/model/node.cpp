@@ -22,43 +22,40 @@
 
 #include <node.h>
 
-Mgtt::Rendering::Node::Node() {
-  this->index = 0;
-  this->pos = glm::vec3(0.0f);
-  this->scale = glm::vec3(1.0f);
-  this->matrix = glm::mat4(1.0f);
-}
+namespace Mgtt::Rendering {
 
-void Mgtt::Rendering::Node::Clear() {
-  if (this->mesh) {
-    this->mesh->Clear();
+void Node::Clear() {
+  if (mesh) {
+    mesh->Clear();
   }
-  this->index = 0;
-  this->pos = glm::vec3(0.0f);
-  this->scale = glm::vec3(1.0f);
-  this->matrix = glm::mat4(1.0f);
+  index = 0;
+  pos = glm::vec3(0.0f);
+  scale = glm::vec3(1.0f);
+  matrix = glm::mat4(1.0f);
 }
 
-glm::mat4 Mgtt::Rendering::Node::LocalMatrix() {
-  return glm::translate(glm::mat4(1.0f), this->pos) * glm::toMat4(this->rot) *
-         glm::scale(glm::mat4(1.0f), this->scale) * this->matrix;
+glm::mat4 Node::LocalMatrix() const {
+  return glm::translate(glm::mat4(1.0f), pos) * glm::toMat4(rot) *
+         glm::scale(glm::mat4(1.0f), scale) * matrix;
 }
 
-glm::mat4 Mgtt::Rendering::Node::GetGlobalMatrix() {
-  glm::mat4 m = LocalMatrix();
-  std::shared_ptr<Mgtt::Rendering::Node> p = this->parent;
-  while (p) {
-    m = p->LocalMatrix() * m;
-    p = p->parent;
+glm::mat4 Node::GetGlobalMatrix() const {
+  glm::mat4 globalMatrix = LocalMatrix();
+  std::shared_ptr<Mgtt::Rendering::Node> currentParent = parent;
+  while (currentParent != nullptr) {
+    globalMatrix = currentParent->LocalMatrix() * globalMatrix;
+    currentParent = currentParent->parent;
   }
-  return m;
+  return globalMatrix;
 }
 
-void Mgtt::Rendering::Node::InitialTransform() {
-  if (this->mesh) {
-    this->mesh->matrix = this->GetGlobalMatrix();
+void Node::InitialTransform() {
+  if (mesh) {
+    mesh->matrix = GetGlobalMatrix();
   }
   for (auto& child : children) {
     child->InitialTransform();
   }
 }
+
+}  // namespace Mgtt::Rendering

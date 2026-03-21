@@ -81,8 +81,9 @@ class OpenGlViewer {
   float windowWidth;
   float windowHeight;
 
-  void TraverseSceneNode(const std::shared_ptr<Mgtt::Rendering::Node>& node);
-  void RenderMesh(const std::shared_ptr<Mgtt::Rendering::Node>& node);
+  void TraverseSceneNode(
+      const std::shared_ptr<Mgtt::Rendering::Node>& node) const;
+  void RenderMesh(const std::shared_ptr<Mgtt::Rendering::Node>& node) const;
 
   static void FramebufferSizeCallback(GLFWwindow* window, int32_t width,
                                       int32_t height);

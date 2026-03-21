@@ -26,24 +26,19 @@
 #include <GLES3/gl3.h>
 #else
 #include <GL/glew.h>
-#endif>
+#endif
+
 #include <texture.h>
 
 #include <string>
 
 namespace Mgtt::Rendering {
+
 /**
- * @brief Represents a generic material.
+ * @brief Base material type.
  */
 struct Material {
-  /**
-   * @brief Constructor for the Material structure.
-   */
   Material() = default;
-
-  /**
-   * @brief Virtual destructor for the Material structure.
-   */
   virtual ~Material() = default;
 
   std::string name;
@@ -52,30 +47,23 @@ struct Material {
 enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
 
 /**
- * @brief Represents a physically based rendering (PBR) material.
+ * @brief PBR metal-roughness material.
  */
 struct PbrMaterial : public Material {
-  /**
-   * @brief Constructor for the PbrMaterial structure.
-   */
-  PbrMaterial();
-
+  PbrMaterial() = default;
   ~PbrMaterial() = default;
 
-  /**
-   * @brief Clear releases resources.
-   */
   void Clear();
 
-  std::string name;
   NormalTexture normalTexture;
   OcclusionTexture occlusionTexture;
   EmissiveTexture emissiveTexture;
   BaseColorTexture baseColorTexture;
   MetallicRoughnessTexture metallicRoughnessTexture;
 
-  float alphaCutoff;
-  bool doubleSided;
-  AlphaMode alphaMode;
+  float alphaCutoff{0.0f};
+  bool doubleSided{false};
+  AlphaMode alphaMode{AlphaMode::OPAQ};
 };
+
 }  // namespace Mgtt::Rendering

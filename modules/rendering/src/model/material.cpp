@@ -22,21 +22,19 @@
 
 #include <material.h>
 
-Mgtt::Rendering::PbrMaterial::PbrMaterial() {
-  this->alphaCutoff = 0.0f;
-  this->doubleSided = false;
-  this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
+namespace Mgtt::Rendering {
+
+void PbrMaterial::Clear() {
+  baseColorTexture.Clear();
+  metallicRoughnessTexture.Clear();
+  normalTexture.Clear();
+  emissiveTexture.Clear();
+  occlusionTexture.Clear();
+
+  name = "";
+  alphaCutoff = 0.0f;
+  doubleSided = false;
+  alphaMode = AlphaMode::OPAQ;
 }
 
-void Mgtt::Rendering::PbrMaterial::Clear() {
-  this->baseColorTexture.Clear();
-  this->metallicRoughnessTexture.Clear();
-  this->normalTexture.Clear();
-  this->emissiveTexture.Clear();
-  this->occlusionTexture.Clear();
-
-  this->name = "";
-  this->alphaCutoff = 0.0f;
-  this->doubleSided = false;
-  this->alphaMode = Mgtt::Rendering::AlphaMode::OPAQ;
-}
+}  // namespace Mgtt::Rendering

@@ -47,7 +47,7 @@
 namespace Mgtt::Rendering {
 
 struct TextureBase {
-  TextureBase();
+  TextureBase() = default;
   virtual ~TextureBase() = default;
 
   std::string name;
@@ -60,9 +60,9 @@ struct TextureBase {
 };
 
 struct Texture : public TextureBase {
-  Texture();
+  Texture() = default;
   virtual ~Texture() = default;
-  Texture(const Texture& texture);
+  Texture(const Texture& texture) = default;
 
   void Clear();
 
@@ -70,21 +70,21 @@ struct Texture : public TextureBase {
 };
 
 struct NormalTexture : public Texture {
-  NormalTexture();
+  NormalTexture() = default;
   ~NormalTexture() = default;
   NormalTexture(const Texture& texture, float scale);
   float scale{1.0f};
 };
 
 struct EmissiveTexture : public Texture {
-  EmissiveTexture();
+  EmissiveTexture() = default;
   ~EmissiveTexture() = default;
   EmissiveTexture(const Texture& texture, const glm::vec3& color);
   glm::vec3 color{0.0f};
 };
 
 struct MetallicRoughnessTexture : public Texture {
-  MetallicRoughnessTexture();
+  MetallicRoughnessTexture() = default;
   ~MetallicRoughnessTexture() = default;
   MetallicRoughnessTexture(const Texture& texture, float metallicFactor,
                            float roughnessFactor);
@@ -93,14 +93,14 @@ struct MetallicRoughnessTexture : public Texture {
 };
 
 struct OcclusionTexture : public Texture {
-  OcclusionTexture();
+  OcclusionTexture() = default;
   ~OcclusionTexture() = default;
   OcclusionTexture(const Texture& texture, float strength);
   float strength{0.0f};
 };
 
 struct BaseColorTexture : public Texture {
-  BaseColorTexture();
+  BaseColorTexture() = default;
   ~BaseColorTexture() = default;
   BaseColorTexture(const Texture& texture, const glm::vec4& color);
   glm::vec4 color{1.0f};
@@ -110,7 +110,7 @@ struct BaseColorTexture : public Texture {
  * @brief Container for managing rendering-related textures and IBL resources.
  */
 struct RenderTexturesContainer {
-  RenderTexturesContainer();
+  RenderTexturesContainer() = default;
   ~RenderTexturesContainer() = default;
 
   // Move-only — OpenGlShader members are move-only

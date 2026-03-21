@@ -22,20 +22,16 @@
 
 #include <mesh-primitive.h>
 
-Mgtt::Rendering::MeshPrimitive::MeshPrimitive() {
-  this->hasSkin = false;
-  this->hasIndices = false;
-  this->firstIndex = 0;
-  this->indexCount = 0;
-  this->vertexCount = 0;
+namespace Mgtt::Rendering {
+
+void MeshPrimitive::Clear() {
+  pbrMaterial.Clear();
+  name = "";
+  hasSkin = false;
+  hasIndices = false;
+  firstIndex = 0;
+  indexCount = 0;
+  vertexCount = 0;
 }
 
-void Mgtt::Rendering::MeshPrimitive::Clear() {
-  this->pbrMaterial.Clear();
-  this->name = "";
-  this->hasSkin = false;
-  this->hasIndices = false;
-  this->firstIndex = 0;
-  this->indexCount = 0;
-  this->vertexCount = 0;
-}
+}  // namespace Mgtt::Rendering
