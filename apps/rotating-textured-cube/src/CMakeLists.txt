@@ -48,7 +48,7 @@ if(${BUILD_WEB})
 else()
     if(WIN32)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../assets/
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assets/
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/assets/
             PATTERN "glTF-Sample-Models" EXCLUDE
             PATTERN ".git" EXCLUDE)
     elseif(APPLE OR UNIX)
@@ -57,7 +57,7 @@ else()
             PATTERN "glTF-Sample-Models" EXCLUDE
             PATTERN ".git" EXCLUDE)
     else()
-        message(WARNING "Unsupfix platform")
+        message(WARNING "Unsupported platform")
     endif()
 endif()
 
