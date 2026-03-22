@@ -52,6 +52,8 @@ enum class AlphaMode { NONE, OPAQ, MASK, BLEND };
 struct PbrMaterial : public Material {
   PbrMaterial() = default;
   ~PbrMaterial() = default;
+  PbrMaterial(PbrMaterial&&) = default;
+  PbrMaterial& operator=(PbrMaterial&&) = default;
 
   void Clear();
 

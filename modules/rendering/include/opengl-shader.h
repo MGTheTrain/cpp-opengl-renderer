@@ -53,20 +53,13 @@ class OpenGlShader final : public IShader {
   OpenGlShader() noexcept = default;
   explicit OpenGlShader(
       const std::pair<std::string_view, std::string_view>& shaderPaths);
-  ~OpenGlShader() override { Clear(); }
+  ~OpenGlShader() override;
 
   OpenGlShader(const OpenGlShader&) = delete;
   OpenGlShader& operator=(const OpenGlShader&) = delete;
 
-  OpenGlShader(OpenGlShader&& other) noexcept
-      : id_(std::exchange(other.id_, 0)) {}
-  OpenGlShader& operator=(OpenGlShader&& other) noexcept {
-    if (this != &other) {
-      Clear();
-      id_ = std::exchange(other.id_, 0);
-    }
-    return *this;
-  }
+  OpenGlShader(OpenGlShader&& other) noexcept;
+  OpenGlShader& operator=(OpenGlShader&& other) noexcept;
 
   [[nodiscard]] Mgtt::Common::Result<void> Compile(
       const std::pair<std::string_view, std::string_view>& shaderPaths)
@@ -74,7 +67,7 @@ class OpenGlShader final : public IShader {
 
   void Clear() override;
 
-  [[nodiscard]] uint32_t GetProgramId() const noexcept { return id_; }
+  [[nodiscard]] uint32_t GetProgramId() const noexcept;
 
   void Use() const noexcept;
 

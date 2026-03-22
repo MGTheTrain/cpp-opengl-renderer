@@ -55,7 +55,7 @@ struct PbrMaterial;
  */
 struct Scene {
   Scene() = default;
-  ~Scene() = default;
+  ~Scene();
 
   Scene(const Scene&) = delete;
   Scene& operator=(const Scene&) = delete;

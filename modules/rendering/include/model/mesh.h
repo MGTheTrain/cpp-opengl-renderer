@@ -47,7 +47,7 @@ struct MeshPrimitive;
  */
 struct Mesh {
   Mesh() = default;
-  ~Mesh() = default;
+  ~Mesh();
 
   Mesh(const Mesh&) = delete;
   Mesh& operator=(const Mesh&) = delete;

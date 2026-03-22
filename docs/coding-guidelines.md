@@ -26,6 +26,15 @@ MyType(MyType&&)                 = default;
 MyType& operator=(MyType&&)      = default;
 ```
 
+**RAII applies only to types that directly own GL handles** (GL ids stored as member fields). For such types, the destructor must call `Clear()`:
+```cpp
+~OpenGlShader() override { Clear(); }  // deletes GL program
+~Mesh()                  { Clear(); }  // deletes VAO/VBO/EBO
+~Scene()                 { Clear(); }  // deletes shader + textures
+```
+
+Types that own GL handles only transitively through members (`PbrMaterial`, `MeshPrimitive`, `Node`) use `= default` destructors. Their `Clear()` methods exist for explicit reset semantics and are called through the `Scene::Clear()` chain, not from destructors, to avoid double-free when materials are moved between containers during scene loading.
+
 ## Attributes and Qualifiers
 
 - `[[nodiscard]]` on all functions returning `Result<T>`, handles, or computed values whose discard would silently hide errors

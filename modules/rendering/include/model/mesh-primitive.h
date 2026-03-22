@@ -35,6 +35,8 @@ namespace Mgtt::Rendering {
 struct MeshPrimitive {
   MeshPrimitive() = default;
   ~MeshPrimitive() = default;
+  MeshPrimitive(MeshPrimitive&&) = default;
+  MeshPrimitive& operator=(MeshPrimitive&&) = default;
 
   void Clear();
 

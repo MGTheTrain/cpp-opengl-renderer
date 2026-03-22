@@ -34,6 +34,21 @@ OpenGlShader::OpenGlShader(
   }
 }
 
+OpenGlShader::~OpenGlShader() { Clear(); }
+
+OpenGlShader::OpenGlShader(OpenGlShader&& other) noexcept
+    : id_(std::exchange(other.id_, 0)) {}
+
+OpenGlShader& OpenGlShader::operator=(OpenGlShader&& other) noexcept {
+  if (this != &other) {
+    Clear();
+    id_ = std::exchange(other.id_, 0);
+  }
+  return *this;
+}
+
+uint32_t OpenGlShader::GetProgramId() const noexcept { return id_; }
+
 Mgtt::Common::Result<void> OpenGlShader::Compile(
     const std::pair<std::string_view, std::string_view>& shaderPaths) {
   Clear();

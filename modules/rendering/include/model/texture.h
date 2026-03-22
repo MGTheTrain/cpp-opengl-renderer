@@ -62,31 +62,41 @@ struct TextureBase {
 struct Texture : public TextureBase {
   Texture() = default;
   virtual ~Texture() = default;
-  Texture(const Texture& texture) = default;
+
+  Texture(const Texture&) = default;
+  Texture& operator=(const Texture&) = default;
+
+  Texture(Texture&&) noexcept = default;
+  Texture& operator=(Texture&&) noexcept = default;
 
   void Clear();
-
   uint32_t id{0};
 };
 
 struct NormalTexture : public Texture {
   NormalTexture() = default;
   ~NormalTexture() = default;
-  NormalTexture(const Texture& texture, float scale);
+  NormalTexture(NormalTexture&&) = default;
+  NormalTexture& operator=(NormalTexture&&) = default;
+  NormalTexture(Texture&& texture, float scale);
   float scale{1.0f};
 };
 
 struct EmissiveTexture : public Texture {
   EmissiveTexture() = default;
   ~EmissiveTexture() = default;
-  EmissiveTexture(const Texture& texture, const glm::vec3& color);
+  EmissiveTexture(EmissiveTexture&&) = default;
+  EmissiveTexture& operator=(EmissiveTexture&&) = default;
+  EmissiveTexture(Texture&& texture, const glm::vec3& color);
   glm::vec3 color{0.0f};
 };
 
 struct MetallicRoughnessTexture : public Texture {
   MetallicRoughnessTexture() = default;
   ~MetallicRoughnessTexture() = default;
-  MetallicRoughnessTexture(const Texture& texture, float metallicFactor,
+  MetallicRoughnessTexture(MetallicRoughnessTexture&&) = default;
+  MetallicRoughnessTexture& operator=(MetallicRoughnessTexture&&) = default;
+  MetallicRoughnessTexture(Texture&& texture, float metallicFactor,
                            float roughnessFactor);
   float metallicFactor{0.0f};
   float roughnessFactor{1.0f};
@@ -95,14 +105,18 @@ struct MetallicRoughnessTexture : public Texture {
 struct OcclusionTexture : public Texture {
   OcclusionTexture() = default;
   ~OcclusionTexture() = default;
-  OcclusionTexture(const Texture& texture, float strength);
+  OcclusionTexture(OcclusionTexture&&) = default;
+  OcclusionTexture& operator=(OcclusionTexture&&) = default;
+  OcclusionTexture(Texture&& texture, float strength);
   float strength{0.0f};
 };
 
 struct BaseColorTexture : public Texture {
   BaseColorTexture() = default;
   ~BaseColorTexture() = default;
-  BaseColorTexture(const Texture& texture, const glm::vec4& color);
+  BaseColorTexture(BaseColorTexture&&) = default;
+  BaseColorTexture& operator=(BaseColorTexture&&) = default;
+  BaseColorTexture(Texture&& texture, const glm::vec4& color);
   glm::vec4 color{1.0f};
 };
 
@@ -111,7 +125,7 @@ struct BaseColorTexture : public Texture {
  */
 struct RenderTexturesContainer {
   RenderTexturesContainer() = default;
-  ~RenderTexturesContainer() = default;
+  ~RenderTexturesContainer();
 
   // Move-only — OpenGlShader members are move-only
   RenderTexturesContainer(RenderTexturesContainer&&) = default;

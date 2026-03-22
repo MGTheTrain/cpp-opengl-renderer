@@ -33,25 +33,26 @@ void Texture::Clear() {
   }
 }
 
-NormalTexture::NormalTexture(const Texture& texture, float scale)
-    : Texture(texture), scale(scale) {}
+NormalTexture::NormalTexture(Texture&& texture, float scale)
+    : Texture(std::move(texture)), scale(scale) {}
 
-EmissiveTexture::EmissiveTexture(const Texture& texture, const glm::vec3& color)
-    : Texture(texture), color(color) {}
+EmissiveTexture::EmissiveTexture(Texture&& texture, const glm::vec3& color)
+    : Texture(std::move(texture)), color(color) {}
 
-MetallicRoughnessTexture::MetallicRoughnessTexture(const Texture& texture,
+MetallicRoughnessTexture::MetallicRoughnessTexture(Texture&& texture,
                                                    float metallicFactor,
                                                    float roughnessFactor)
-    : Texture(texture),
+    : Texture(std::move(texture)),
       metallicFactor(metallicFactor),
       roughnessFactor(roughnessFactor) {}
 
-OcclusionTexture::OcclusionTexture(const Texture& texture, float strength)
-    : Texture(texture), strength(strength) {}
+OcclusionTexture::OcclusionTexture(Texture&& texture, float strength)
+    : Texture(std::move(texture)), strength(strength) {}
 
-BaseColorTexture::BaseColorTexture(const Texture& texture,
-                                   const glm::vec4& color)
-    : Texture(texture), color(color) {}
+BaseColorTexture::BaseColorTexture(Texture&& texture, const glm::vec4& color)
+    : Texture(std::move(texture)), color(color) {}
+
+RenderTexturesContainer::~RenderTexturesContainer() { Clear(); }
 
 RenderTexturesContainer::RenderTexturesContainer(
     const std::pair<std::string, std::string>& eq2CubeMapShaderPaths,

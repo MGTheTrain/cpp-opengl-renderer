@@ -26,6 +26,8 @@
 
 namespace Mgtt::Rendering {
 
+Scene::~Scene() { Clear(); }
+
 void Scene::Clear() {
   for (auto& node : nodes) {
     Linearize(node);

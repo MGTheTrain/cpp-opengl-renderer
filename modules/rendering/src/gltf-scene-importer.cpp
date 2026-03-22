@@ -148,7 +148,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadTextures(
 
     SetupTexture(texture);
     FreeTextureData(texture);
-    scene.textureMap[image.uri] = texture;
+    scene.textureMap[image.uri] = std::move(texture);
   }
 
   std::cout << "All textures allocated for scene " << scene.path << '\n';
@@ -439,7 +439,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       prim.aabb.min = posMin;
       prim.aabb.max = posMax;
       if (primitive.material > -1) {
-        prim.pbrMaterial = scene.materials[primitive.material];
+        prim.pbrMaterial = std::move(scene.materials[primitive.material]);
       }
       newMesh->meshPrimitives.push_back(std::move(prim));
     }

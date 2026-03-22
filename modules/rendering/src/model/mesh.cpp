@@ -24,6 +24,8 @@
 
 namespace Mgtt::Rendering {
 
+Mesh::~Mesh() { Clear(); }
+
 void Mesh::Clear() {
   auto delBuf = [](uint32_t& bufId) {
     if (bufId > 0) {
