@@ -41,14 +41,14 @@ Mgtt::Common::Result<void> TextureManager::LoadFromEnvMap(
 Mgtt::Common::Result<void> TextureManager::LoadFromHdr(
     Mgtt::Rendering::RenderTexturesContainer& container,
     std::string_view texturePath) {
-  const std::string pathStr(texturePath);
+  const std::string kPathStr(texturePath);
   Mgtt::Rendering::Texture texture;
 
-  texture.data = stbi_load(pathStr.c_str(), &texture.width, &texture.height,
+  texture.data = stbi_load(kPathStr.c_str(), &texture.width, &texture.height,
                            &texture.nrComponents, 0);
   if (texture.data == nullptr) {
     return Mgtt::Common::Result<void>::Err("Failed to load HDR texture: " +
-                                           pathStr);
+                                           kPathStr);
   }
 
   glGenTextures(1, &container.hdrTextureId);
@@ -95,10 +95,10 @@ Mgtt::Common::Result<void> TextureManager::LoadFromHdr(
         "eq2CubeMapShader program missing — compile it before LoadFromHdr");
   }
 
-  const glm::mat4 captureProjection =
+  const glm::mat4 kCaptureProjection =
       glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 
-  const std::vector<glm::mat4> captureViews = {
+  const std::vector<glm::mat4> kCaptureViews = {
       glm::lookAt(glm::vec3(0.f), glm::vec3(1.f, 0.f, 0.f),
                   glm::vec3(0.f, -1.f, 0.f)),
       glm::lookAt(glm::vec3(0.f), glm::vec3(-1.f, 0.f, 0.f),
@@ -113,19 +113,19 @@ Mgtt::Common::Result<void> TextureManager::LoadFromHdr(
                   glm::vec3(0.f, -1.f, 0.f)),
   };
 
-  const uint32_t progId = container.eq2CubeMapShader.GetProgramId();
-  glUseProgram(progId);
-  glUniform1i(glGetUniformLocation(progId, "equirectangularMap"), 0);
-  glUniformMatrix4fv(glGetUniformLocation(progId, "projection"), 1, GL_FALSE,
-                     &captureProjection[0][0]);
+  const uint32_t kProgId = container.eq2CubeMapShader.GetProgramId();
+  glUseProgram(kProgId);
+  glUniform1i(glGetUniformLocation(kProgId, "equirectangularMap"), 0);
+  glUniformMatrix4fv(glGetUniformLocation(kProgId, "projection"), 1, GL_FALSE,
+                     &kCaptureProjection[0][0]);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, container.hdrTextureId);
 
   glViewport(0, 0, 128, 128);
   glBindFramebuffer(GL_FRAMEBUFFER, container.fboId);
   for (uint32_t i = 0; i < 6; ++i) {
-    glUniformMatrix4fv(glGetUniformLocation(progId, "view"), 1, GL_FALSE,
-                       &captureViews[i][0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(kProgId, "view"), 1, GL_FALSE,
+                       &kCaptureViews[i][0][0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                            container.cubeMapTextureId, 0);
@@ -138,7 +138,7 @@ Mgtt::Common::Result<void> TextureManager::LoadFromHdr(
   container.hdrTextureId = 0;
   container.textures.push_back(texture);
 
-  std::cout << "Allocated env map from HDR: " << pathStr << '\n';
+  std::cout << "Allocated env map from HDR: " << kPathStr << '\n';
   return Mgtt::Common::Result<void>::Ok();
 }
 
@@ -210,14 +210,14 @@ void TextureManager::SetupCube(
       1.f,  -1.f, -1.f, -1.f, -1.f, 1.f,  1.f,  -1.f, 1.f,
   };
 
-  const uint32_t posLoc = glGetAttribLocation(
+  const uint32_t kPosLoc = glGetAttribLocation(
       container.envMapShader.GetProgramId(), "inVertexPosition");
 
   glBindVertexArray(container.cubeVao);
   glBindBuffer(GL_ARRAY_BUFFER, container.cubeVbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(kVertices), kVertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(posLoc);
-  glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+  glEnableVertexAttribArray(kPosLoc);
+  glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
                         nullptr);
   glDrawArrays(GL_TRIANGLES, 0, 36);
   glBindVertexArray(0);
@@ -235,9 +235,9 @@ void TextureManager::SetupQuad(
       1.f,  1.f, 0.f, 1.f, 1.f, 1.f,  -1.f, 0.f, 1.f, 0.f,
   };
 
-  const uint32_t posLoc = glGetAttribLocation(
+  const uint32_t kPosLoc = glGetAttribLocation(
       container.brdfLutShader.GetProgramId(), "inVertexPosition");
-  const uint32_t texLoc = glGetAttribLocation(
+  const uint32_t kTexLoc = glGetAttribLocation(
       container.brdfLutShader.GetProgramId(), "inVertexTextureCoordinates");
 
   glGenVertexArrays(1, &container.quadVao);
@@ -245,11 +245,11 @@ void TextureManager::SetupQuad(
   glBindVertexArray(container.quadVao);
   glBindBuffer(GL_ARRAY_BUFFER, container.quadVbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(kVertices), kVertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(posLoc);
-  glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+  glEnableVertexAttribArray(kPosLoc);
+  glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                         nullptr);
-  glEnableVertexAttribArray(texLoc);
-  glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+  glEnableVertexAttribArray(kTexLoc);
+  glVertexAttribPointer(kTexLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                         // NOLINTNEXTLINE(performance-no-int-to-ptr)
                         reinterpret_cast<void*>(3 * sizeof(float)));
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

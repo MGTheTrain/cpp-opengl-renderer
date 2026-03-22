@@ -35,35 +35,36 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::Load(
     return Mgtt::Common::Result<void>::Err("Shader program does not exist");
   }
 
-  const std::string pathStr(path);
-  mgttScene.path = pathStr;
+  const std::string kPathStr(path);
+  mgttScene.path = kPathStr;
 
   auto hasSuffix = [&](std::string_view suffix) {
-    return pathStr.size() >= suffix.size() &&
-           pathStr.compare(pathStr.size() - suffix.size(), suffix.size(),
-                           suffix) == 0;
+    return kPathStr.size() >= suffix.size() &&
+           kPathStr.compare(kPathStr.size() - suffix.size(), suffix.size(),
+                            suffix) == 0;
   };
   if (!hasSuffix(".gltf") && !hasSuffix(".GLTF") && !hasSuffix(".glb") &&
       !hasSuffix(".GLB")) {
     return Mgtt::Common::Result<void>::Err("Unsupported file suffix: " +
-                                           pathStr);
+                                           kPathStr);
   }
 
-  const bool binary = hasSuffix(".glb") || hasSuffix(".GLB");
+  const bool kBinary = hasSuffix(".glb") || hasSuffix(".GLB");
 
   std::string err;
   std::string warn;
   tinygltf::Model gltfModel;
   tinygltf::TinyGLTF gltfContext;
 
-  const bool fileLoaded =
-      binary ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, pathStr)
-             : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, pathStr);
+  const bool kFileLoaded =
+      kBinary
+          ? gltfContext.LoadBinaryFromFile(&gltfModel, &err, &warn, kPathStr)
+          : gltfContext.LoadASCIIFromFile(&gltfModel, &err, &warn, kPathStr);
 
-  if (!fileLoaded) {
+  if (!kFileLoaded) {
     Clear(mgttScene);
     return Mgtt::Common::Result<void>::Err(
-        "Failed to load glTF file: " + pathStr +
+        "Failed to load glTF file: " + kPathStr +
         (err.empty() ? "" : " — " + err));
   }
 
@@ -96,11 +97,11 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::Load(
 
   mgttScene.aabb.center = (mgttScene.aabb.min + mgttScene.aabb.max) * 0.5f;
 
-  const glm::vec3 tmpScale = mgttScene.aabb.max - mgttScene.aabb.min;
+  const glm::vec3 kTmpScale = mgttScene.aabb.max - mgttScene.aabb.min;
   mgttScene.aabb.scale =
-      (tmpScale.x <= 0.0f || tmpScale.y <= 0.0f || tmpScale.z <= 0.0f)
+      (kTmpScale.x <= 0.0f || kTmpScale.y <= 0.0f || kTmpScale.z <= 0.0f)
           ? 1.0f
-          : glm::max(tmpScale.x, glm::max(tmpScale.y, tmpScale.z));
+          : glm::max(kTmpScale.x, glm::max(kTmpScale.y, kTmpScale.z));
 
   std::cout << "Scale equals " << mgttScene.aabb.scale << '\n';
   return Mgtt::Common::Result<void>::Ok();
@@ -112,9 +113,9 @@ void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
 
 std::string Mgtt::Rendering::GltfSceneImporter::ExtractFolderPath(
     std::string_view path) const {
-  const std::string pathStr(path);
-  const size_t sep = pathStr.find_last_of("\\/");
-  return sep != std::string::npos ? pathStr.substr(0, sep + 1) : "";
+  const std::string kPathStr(path);
+  const size_t kSep = kPathStr.find_last_of("\\/");
+  return kSep != std::string::npos ? kPathStr.substr(0, kSep + 1) : "";
 }
 
 void Mgtt::Rendering::GltfSceneImporter::FreeTextureData(
@@ -127,14 +128,14 @@ void Mgtt::Rendering::GltfSceneImporter::FreeTextureData(
 
 Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadTextures(
     Mgtt::Rendering::Scene& scene, tinygltf::Model& gltfModel) {
-  const auto folderPath = ExtractFolderPath(scene.path);
+  const auto kFolderPath = ExtractFolderPath(scene.path);
 
   for (tinygltf::Texture& tex : gltfModel.textures) {
     tinygltf::Image& image = gltfModel.images[tex.source];
 
     Mgtt::Rendering::Texture texture;
     texture.name = image.name;
-    texture.path = folderPath + image.uri;
+    texture.path = kFolderPath + image.uri;
     texture.width = image.width;
     texture.height = image.height;
     texture.nrComponents = image.component;
@@ -274,9 +275,9 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::SetupMesh(
     glBufferData(GL_ARRAY_BUFFER,
                  static_cast<GLsizeiptr>(attribs.size() * sizeof(T)),
                  attribs.data(), GL_STATIC_DRAW);
-    const uint32_t loc = glGetAttribLocation(shaderId, attrName);
-    glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, components, GL_FLOAT, GL_FALSE, sizeof(T),
+    const uint32_t kLoc = glGetAttribLocation(shaderId, attrName);
+    glEnableVertexAttribArray(kLoc);
+    glVertexAttribPointer(kLoc, components, GL_FLOAT, GL_FALSE, sizeof(T),
                           nullptr);
   };
 
@@ -325,9 +326,9 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
     auto newMesh = std::make_shared<Mgtt::Rendering::Mesh>();
 
     for (const tinygltf::Primitive& primitive : gltfMesh.primitives) {
-      const uint32_t indexStart =
+      const uint32_t kIndexStart =
           static_cast<uint32_t>(newMesh->indices.size());
-      const uint32_t vertexStart =
+      const uint32_t kVertexStart =
           static_cast<uint32_t>(newMesh->vertexPositionAttribs.size());
       uint32_t indexCount = 0;
       uint32_t vertexCount = 0;
@@ -341,7 +342,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       const auto* bufferPos = reinterpret_cast<const float*>(
           model.buffers[posView.buffer].data.data() + posAccessor.byteOffset +
           posView.byteOffset);
-      const int32_t posByteStride =
+      const int32_t kPosByteStride =
           (posAccessor.ByteStride(posView) != 0)
               ? posAccessor.ByteStride(posView) /
                     static_cast<int32_t>(sizeof(float))
@@ -382,7 +383,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
 
       for (size_t vtx = 0; vtx < posAccessor.count; ++vtx) {
         newMesh->vertexPositionAttribs.push_back(
-            glm::make_vec3(&bufferPos[vtx * posByteStride]));
+            glm::make_vec3(&bufferPos[vtx * kPosByteStride]));
         newMesh->vertexNormalAttribs.push_back(
             (bufferNormals != nullptr)
                 ? glm::normalize(
@@ -394,8 +395,8 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
                 : glm::vec2(0.0f));
       }
 
-      const bool hasIndices = primitive.indices > -1;
-      if (hasIndices) {
+      const bool kHasIndices = primitive.indices > -1;
+      if (kHasIndices) {
         const auto& acc = model.accessors[primitive.indices];
         const auto& bufView = model.bufferViews[acc.bufferView];
         indexCount = static_cast<uint32_t>(acc.count);
@@ -406,21 +407,21 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
           case GLTFParameterType::UNSIGNED_INT: {
             const auto* buf = static_cast<const uint32_t*>(dataPtr);
             for (size_t idx = 0; idx < acc.count; ++idx) {
-              newMesh->indices.push_back(buf[idx] + vertexStart);
+              newMesh->indices.push_back(buf[idx] + kVertexStart);
             }
             break;
           }
           case GLTFParameterType::UNSIGNED_SHORT: {
             const auto* buf = static_cast<const uint16_t*>(dataPtr);
             for (size_t idx = 0; idx < acc.count; ++idx) {
-              newMesh->indices.push_back(buf[idx] + vertexStart);
+              newMesh->indices.push_back(buf[idx] + kVertexStart);
             }
             break;
           }
           case GLTFParameterType::UNSIGNED_BYTE: {
             const auto* buf = static_cast<const uint8_t*>(dataPtr);
             for (size_t idx = 0; idx < acc.count; ++idx) {
-              newMesh->indices.push_back(buf[idx] + vertexStart);
+              newMesh->indices.push_back(buf[idx] + kVertexStart);
             }
             break;
           }
@@ -431,10 +432,10 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       }
 
       Mgtt::Rendering::MeshPrimitive prim;
-      prim.firstIndex = indexStart;
+      prim.firstIndex = kIndexStart;
       prim.indexCount = indexCount;
       prim.vertexCount = vertexCount;
-      prim.hasIndices = hasIndices;
+      prim.hasIndices = kHasIndices;
       prim.name = node.name;
       prim.aabb.min = posMin;
       prim.aabb.max = posMax;

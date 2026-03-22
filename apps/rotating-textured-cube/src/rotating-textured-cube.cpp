@@ -47,8 +47,8 @@ Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube() {
 
 Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
     : glmMatrices(std::make_unique<GlmMatrices>()) {
-  const std::string appName = "rotating-textured-cube";
-  glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(appName, windowWidth,
+  const std::string kAppName = "rotating-textured-cube";
+  glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(kAppName, windowWidth,
                                                           windowHeight);
   glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
@@ -58,18 +58,18 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
     throw std::runtime_error("GLEW could not be initialized");
   }
 
-  const std::pair<std::string_view, std::string_view> shaderPaths{
+  const std::pair<std::string_view, std::string_view> kShaderPaths{
       "assets/shader/core/coordinate.vert",
       "assets/shader/core/coordinate.frag"};
 #else
-  const std::pair<std::string_view, std::string_view> shaderPaths{
+  const std::pair<std::string_view, std::string_view> kShaderPaths{
       "assets/shader/es/coordinate.vert", "assets/shader/es/coordinate.frag"};
 #endif
 
   glEnable(GL_DEPTH_TEST);
 
   // OpenGlShader is move-only — emplace_back constructs in-place
-  openGlShaders.emplace_back(shaderPaths);
+  openGlShaders.emplace_back(kShaderPaths);
   if (openGlShaders[0].GetProgramId() == 0) {
     throw std::runtime_error("Coordinate shader failed to compile");
   }
@@ -117,7 +117,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
   };
 
   // --- GPU upload ---
-  const uint32_t shaderId = openGlShaders[0].GetProgramId();
+  const uint32_t kShaderId = openGlShaders[0].GetProgramId();
 
   glGenVertexArrays(1, &mesh.vao);
   glBindVertexArray(mesh.vao);
@@ -128,9 +128,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
                static_cast<GLsizeiptr>(mesh.vertexPositionAttribs.size() *
                                        sizeof(glm::vec3)),
                mesh.vertexPositionAttribs.data(), GL_STATIC_DRAW);
-  const uint32_t posLoc = glGetAttribLocation(shaderId, "inVertexPosition");
-  glEnableVertexAttribArray(posLoc);
-  glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
+  const uint32_t kPosLoc = glGetAttribLocation(kShaderId, "inVertexPosition");
+  glEnableVertexAttribArray(kPosLoc);
+  glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
                         nullptr);
 
   glGenBuffers(1, &mesh.tex);
@@ -139,10 +139,10 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
                static_cast<GLsizeiptr>(mesh.vertexTextureAttribs.size() *
                                        sizeof(glm::vec2)),
                mesh.vertexTextureAttribs.data(), GL_STATIC_DRAW);
-  const uint32_t texLoc =
-      glGetAttribLocation(shaderId, "inVertexTextureCoordinates");
-  glEnableVertexAttribArray(texLoc);
-  glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),
+  const uint32_t kTexLoc =
+      glGetAttribLocation(kShaderId, "inVertexTextureCoordinates");
+  glEnableVertexAttribArray(kTexLoc);
+  glVertexAttribPointer(kTexLoc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),
                         nullptr);
 
   glBindVertexArray(0);
@@ -159,16 +159,16 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
                   GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  const std::string texturePath = "assets/texture/surgery.jpg";
-  tex.data = stbi_load(texturePath.c_str(), &tex.width, &tex.height,
+  const std::string kTexturePath = "assets/texture/surgery.jpg";
+  tex.data = stbi_load(kTexturePath.c_str(), &tex.width, &tex.height,
                        &tex.nrComponents, 0);
   if (tex.data == nullptr) {
-    throw std::runtime_error("Failed to load texture: " + texturePath);
+    throw std::runtime_error("Failed to load texture: " + kTexturePath);
   }
 
-  const GLenum format = (tex.nrComponents == 4) ? GL_RGBA : GL_RGB;
-  glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format), tex.width,
-               tex.height, 0, format, GL_UNSIGNED_BYTE, tex.data);
+  const GLenum kFormat = (tex.nrComponents == 4) ? GL_RGBA : GL_RGB;
+  glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(kFormat), tex.width,
+               tex.height, 0, kFormat, GL_UNSIGNED_BYTE, tex.data);
   glGenerateMipmap(GL_TEXTURE_2D);
 
   stbi_image_free(tex.data);

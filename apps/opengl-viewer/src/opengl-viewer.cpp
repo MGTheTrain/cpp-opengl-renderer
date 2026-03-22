@@ -54,8 +54,8 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer()
       glmVectors(std::make_unique<GlmVectors>()),
       gltfSceneImporter(std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
       textureManager(std::make_unique<Mgtt::Rendering::TextureManager>()) {
-  const std::string appName = "opengl-viewer";
-  glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(appName, windowWidth,
+  const std::string kAppName = "opengl-viewer";
+  glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(kAppName, windowWidth,
                                                           windowHeight);
   glfwWindow->SetFramebufferSizeCallback(
       Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
@@ -65,9 +65,9 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer()
     throw std::runtime_error("GLEW could not be initialized");
   }
 
-  const std::pair<std::string_view, std::string_view> pbrShaderPaths{
+  const std::pair<std::string_view, std::string_view> kPbrShaderPaths{
       "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-  if (auto r = mgttScene.shader.Compile(pbrShaderPaths); r.err()) {
+  if (auto r = mgttScene.shader.Compile(kPbrShaderPaths); r.err()) {
     throw std::runtime_error("PBR shader compile failed: " + r.error());
   }
 
@@ -82,9 +82,9 @@ Mgtt::Apps::OpenGlViewer::OpenGlViewer()
       std::pair<std::string_view, std::string_view>{
           "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"});
 #else
-  const std::pair<std::string_view, std::string_view> pbrShaderPaths{
+  const std::pair<std::string_view, std::string_view> kPbrShaderPaths{
       "assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
-  if (auto r = mgttScene.shader.Compile(pbrShaderPaths); r.err()) {
+  if (auto r = mgttScene.shader.Compile(kPbrShaderPaths); r.err()) {
     throw std::runtime_error("PBR shader compile failed: " + r.error());
   }
 
@@ -147,8 +147,8 @@ void Mgtt::Apps::OpenGlViewer::Render() {
         glm::scale(glm::mat4(1.0f), glm::vec3(1.0f / mgttScene.aabb.scale));
     glmMatrices->model = glm::scale(glmMatrices->model, glmVectors->scale);
 
-    const glm::vec3 offset = -mgttScene.aabb.center + glmVectors->translation;
-    glmMatrices->model = glm::translate(glmMatrices->model, offset);
+    const glm::vec3 kOffset = -mgttScene.aabb.center + glmVectors->translation;
+    glmMatrices->model = glm::translate(glmMatrices->model, kOffset);
     glmMatrices->model =
         glm::rotate(glmMatrices->model, glm::radians(glmVectors->rotation.x),
                     glm::vec3(1.0f, 0.0f, 0.0f));
@@ -158,8 +158,8 @@ void Mgtt::Apps::OpenGlViewer::Render() {
     glmMatrices->model =
         glm::rotate(glmMatrices->model, glm::radians(glmVectors->rotation.z),
                     glm::vec3(0.0f, 0.0f, 1.0f));
-    glmMatrices->model = glm::translate(glmMatrices->model, -offset);
-    glmMatrices->model = glm::translate(glmMatrices->model, offset);
+    glmMatrices->model = glm::translate(glmMatrices->model, -kOffset);
+    glmMatrices->model = glm::translate(glmMatrices->model, kOffset);
 
     mgttScene.mvp =
         glmMatrices->projection * glmMatrices->view * glmMatrices->model;
@@ -320,13 +320,13 @@ void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
         if (NFD_OpenDialogU8_With(&selectedPath, &args) == NFD_OKAY) {
           gltfSceneImporter->Clear(mgttScene);
 
-          const std::pair<std::string_view, std::string_view> paths{
+          const std::pair<std::string_view, std::string_view> kPaths{
               "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-          if (auto r = mgttScene.shader.Compile(paths); r.err()) {
+          if (auto r = mgttScene.shader.Compile(kPaths); r.err()) {
             std::cerr << "Shader recompile failed: " << r.error() << '\n';
           } else {
-            const std::string scenePath(selectedPath);
-            if (auto r = gltfSceneImporter->Load(mgttScene, scenePath);
+            const std::string kScenePath(selectedPath);
+            if (auto r = gltfSceneImporter->Load(mgttScene, kScenePath);
                 r.err()) {
               std::cerr << "Scene load failed: " << r.error() << '\n';
             }

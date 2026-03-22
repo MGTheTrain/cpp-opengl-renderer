@@ -28,21 +28,21 @@ void AABB::CalculateBoundingBox(const glm::mat4& mat) {
   glm::vec3 minCorner = glm::vec3(mat[3]);
   glm::vec3 maxCorner = minCorner;
 
-  const glm::vec3 right = glm::vec3(mat[0]);
-  glm::vec3 vec0 = right * min.x;
-  glm::vec3 vec1 = right * max.x;
+  const glm::vec3 kRight = glm::vec3(mat[0]);
+  glm::vec3 vec0 = kRight * min.x;
+  glm::vec3 vec1 = kRight * max.x;
   minCorner += glm::min(vec0, vec1);
   maxCorner += glm::max(vec0, vec1);
 
-  const glm::vec3 upDir = glm::vec3(mat[1]);
-  vec0 = upDir * min.y;
-  vec1 = upDir * max.y;
+  const glm::vec3 kUpDir = glm::vec3(mat[1]);
+  vec0 = kUpDir * min.y;
+  vec1 = kUpDir * max.y;
   minCorner += glm::min(vec0, vec1);
   maxCorner += glm::max(vec0, vec1);
 
-  const glm::vec3 back = glm::vec3(mat[2]);
-  vec0 = back * min.z;
-  vec1 = back * max.z;
+  const glm::vec3 kBack = glm::vec3(mat[2]);
+  vec0 = kBack * min.z;
+  vec1 = kBack * max.z;
   minCorner += glm::min(vec0, vec1);
   maxCorner += glm::max(vec0, vec1);
 
