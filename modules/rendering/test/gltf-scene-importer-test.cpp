@@ -45,7 +45,6 @@ class GltfSceneImporterTest : public ::testing::Test {
   void SetUp() override {
     if (!glfwInit()) {
       GTEST_SKIP() << "glfwInit failed — skipping GL test";
-      return;
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -63,7 +62,6 @@ class GltfSceneImporterTest : public ::testing::Test {
     if (!window) {
       glfwTerminate();
       GTEST_SKIP() << "glfwCreateWindow failed — skipping GL test";
-      return;
     }
 
     glfwMakeContextCurrent(window);
@@ -157,6 +155,100 @@ TEST_F(GltfSceneImporterTest, ClearScene) {
   EXPECT_TRUE(mgttScene.path.empty());
   EXPECT_TRUE(mgttScene.textureMap.empty());
   EXPECT_TRUE(mgttScene.nodes.empty());
+}
+
+TEST_F(GltfSceneImporterTest, LoadUnsupportedSuffix) {
+  RecordProperty("Test Description", "Load returns Err for unsupported suffix");
+  RecordProperty("Expected Result", "Result::err() is true");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+  ASSERT_TRUE(mgttScene.shader.Compile(shaderPaths).ok());
+
+  const auto result = gltfSceneImporter->Load(mgttScene, "scene.obj");
+  EXPECT_TRUE(result.err());
+}
+
+TEST_F(GltfSceneImporterTest, LoadWithoutShader) {
+  RecordProperty("Test Description",
+                 "Load returns Err when shader is not compiled");
+  RecordProperty("Expected Result", "Result::err() is true");
+
+  Mgtt::Rendering::Scene unshadedScene;
+  const auto result = gltfSceneImporter->Load(
+      unshadedScene, "assets/scenes/water-bottle/WaterBottle.gltf");
+  EXPECT_TRUE(result.err());
+}
+
+TEST_F(GltfSceneImporterTest, SceneMoveConstruct) {
+  RecordProperty("Test Description",
+                 "Scene move constructor transfers ownership");
+  RecordProperty("Expected Result",
+                 "moved scene has nodes, source scene is empty");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+  ASSERT_TRUE(mgttScene.shader.Compile(shaderPaths).ok());
+  ASSERT_TRUE(
+      gltfSceneImporter
+          ->Load(mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf")
+          .ok());
+
+  Mgtt::Rendering::Scene moved(std::move(mgttScene));
+
+  EXPECT_FALSE(moved.nodes.empty());
+  EXPECT_TRUE(mgttScene.nodes.empty());
+
+  gltfSceneImporter->Clear(moved);
+}
+
+TEST_F(GltfSceneImporterTest, SceneMoveAssign) {
+  RecordProperty("Test Description",
+                 "Scene move assignment transfers ownership");
+  RecordProperty("Expected Result",
+                 "assigned scene has nodes, source scene is empty");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+  ASSERT_TRUE(mgttScene.shader.Compile(shaderPaths).ok());
+  ASSERT_TRUE(
+      gltfSceneImporter
+          ->Load(mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf")
+          .ok());
+
+  Mgtt::Rendering::Scene other;
+  other = std::move(mgttScene);
+
+  EXPECT_FALSE(other.nodes.empty());
+  EXPECT_TRUE(mgttScene.nodes.empty());
+
+  gltfSceneImporter->Clear(other);
+}
+
+TEST_F(GltfSceneImporterTest, MeshMoveConstruct) {
+  RecordProperty("Test Description",
+                 "Mesh move constructor transfers GL handles");
+  RecordProperty("Expected Result", "moved mesh vao > 0, source mesh vao == 0");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+  ASSERT_TRUE(mgttScene.shader.Compile(shaderPaths).ok());
+  ASSERT_TRUE(
+      gltfSceneImporter
+          ->Load(mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf")
+          .ok());
+  ASSERT_FALSE(mgttScene.nodes.empty());
+  ASSERT_NE(mgttScene.nodes[0]->mesh, nullptr);
+
+  auto& srcMesh = *mgttScene.nodes[0]->mesh;
+  const uint32_t kOriginalVao = srcMesh.vao;
+
+  Mgtt::Rendering::Mesh moved(std::move(srcMesh));
+
+  EXPECT_EQ(moved.vao, kOriginalVao);
+  EXPECT_EQ(srcMesh.vao, 0u);
+
+  gltfSceneImporter->Clear(mgttScene);
 }
 
 }  // namespace Mgtt::Rendering::Test

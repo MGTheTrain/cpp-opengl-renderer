@@ -1,15 +1,28 @@
+# Build outputs
 build/
 build-test/
-*.exe
-*.vs
 x64/
-vcpkg_installed/
-secrets.cfg
-.vscode/
+
+# Packaging
 *.deb
 *.zip
 *.tar
-packages
+packages/
+
+# Platform binaries
+*.exe
+
+# Dependencies
+vcpkg_installed/
+
+# Secrets
+secrets.cfg
+
+# Coverage and analysis
+coverage/
+.scannerwork/
+
+# Web build artifacts
 rotating_textured_cube.js
 rotating_textured_cube.wasm
 rotating_textured_cube.data

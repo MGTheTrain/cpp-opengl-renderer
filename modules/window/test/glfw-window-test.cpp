@@ -99,5 +99,27 @@ TEST_F(GlfwWindowTest, WindowShouldClose) {
   EXPECT_FALSE(glfwWindow->WindowShouldClose());
 }
 
+TEST_F(GlfwWindowTest, DestroyAndRecreate) {
+  RecordProperty("Test Description",
+                 "Destroying and recreating GlfwWindow works correctly");
+  RecordProperty("Expected Result", "New window is non-null");
+
+  glfwWindow.reset();
+  glfwWindow =
+      std::make_unique<Mgtt::Window::GlfwWindow>("test-window", 800, 600);
+  EXPECT_NE(glfwWindow->GetWindow(), nullptr);
+}
+
+TEST_F(GlfwWindowTest, GetWindowSizeAfterResize) {
+  RecordProperty("Test Description",
+                 "GetWindowSize reflects SetWindowSize change");
+  RecordProperty("Expected Result", "width == 1024, height == 768");
+
+  glfwWindow->SetWindowSize(1024, 768);
+  auto [width, height] = glfwWindow->GetWindowSize();
+  EXPECT_EQ(width, 1024);
+  EXPECT_EQ(height, 768);
+}
+
 }  // namespace Mgtt::Window::Test
 #endif

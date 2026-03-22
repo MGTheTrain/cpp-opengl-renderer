@@ -45,7 +45,6 @@ class OpenGlShaderTest : public ::testing::Test {
   void SetUp() override {
     if (!glfwInit()) {
       GTEST_SKIP() << "glfwInit failed — skipping GL test";
-      return;
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -63,7 +62,6 @@ class OpenGlShaderTest : public ::testing::Test {
     if (!window) {
       glfwTerminate();
       GTEST_SKIP() << "glfwCreateWindow failed — skipping GL test";
-      return;
     }
 
     glfwMakeContextCurrent(window);
@@ -141,6 +139,100 @@ TEST_F(OpenGlShaderTest, Clear) {
 
   openGlShader->Clear();
   EXPECT_EQ(openGlShader->GetProgramId(), 0u);
+}
+
+TEST_F(OpenGlShaderTest, MoveConstruct) {
+  RecordProperty("Test Description", "Move constructor transfers program id");
+  RecordProperty("Expected Result", "source id is 0, destination id is > 0");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/coordinate.vert",
+      "assets/shader/core/coordinate.frag"};
+  ASSERT_TRUE(openGlShader->Compile(shaderPaths).ok());
+
+  const uint32_t kOriginalId = openGlShader->GetProgramId();
+  Mgtt::Rendering::OpenGlShader moved(std::move(*openGlShader));
+
+  EXPECT_EQ(openGlShader->GetProgramId(), 0u);
+  EXPECT_EQ(moved.GetProgramId(), kOriginalId);
+}
+
+TEST_F(OpenGlShaderTest, MoveAssign) {
+  RecordProperty("Test Description", "Move assignment transfers program id");
+  RecordProperty("Expected Result", "source id is 0, destination id is > 0");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/coordinate.vert",
+      "assets/shader/core/coordinate.frag"};
+  ASSERT_TRUE(openGlShader->Compile(shaderPaths).ok());
+
+  const uint32_t kOriginalId = openGlShader->GetProgramId();
+  Mgtt::Rendering::OpenGlShader other;
+  other = std::move(*openGlShader);
+
+  EXPECT_EQ(openGlShader->GetProgramId(), 0u);
+  EXPECT_EQ(other.GetProgramId(), kOriginalId);
+}
+
+TEST_F(OpenGlShaderTest, SetUniforms) {
+  RecordProperty("Test Description", "Set* methods execute without GL errors");
+  RecordProperty("Expected Result", "No assertion failures");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/coordinate.vert",
+      "assets/shader/core/coordinate.frag"};
+  ASSERT_TRUE(openGlShader->Compile(shaderPaths).ok());
+  openGlShader->Use();
+
+  openGlShader->SetBool("unused", true);
+  openGlShader->SetInt("textureMap", 0);
+  openGlShader->SetFloat("unused", 1.0f);
+  openGlShader->SetVec2("unused", glm::vec2(1.0f));
+  openGlShader->SetVec2("unused", 1.0f, 2.0f);
+  openGlShader->SetVec3("unused", glm::vec3(1.0f));
+  openGlShader->SetVec3("unused", 1.0f, 2.0f, 3.0f);
+  openGlShader->SetVec4("unused", glm::vec4(1.0f));
+  openGlShader->SetVec4("unused", 1.0f, 2.0f, 3.0f, 4.0f);
+  openGlShader->SetMat2("unused", glm::mat2(1.0f));
+  openGlShader->SetMat3("unused", glm::mat3(1.0f));
+  openGlShader->SetMat4("mvp", glm::mat4(1.0f));
+
+  EXPECT_GT(openGlShader->GetProgramId(), 0u);
+}
+
+TEST_F(OpenGlShaderTest, CompileEmptyPaths) {
+  RecordProperty("Test Description", "Compile returns Err for empty paths");
+  RecordProperty("Expected Result", "Result::err() is true");
+
+  const std::pair<std::string_view, std::string_view> emptyPaths{"", ""};
+  const auto result = openGlShader->Compile(emptyPaths);
+  EXPECT_TRUE(result.err());
+}
+
+TEST_F(OpenGlShaderTest, ConstructWithValidPaths) {
+  RecordProperty("Test Description",
+                 "Constructor with valid paths compiles the shader");
+  RecordProperty("Expected Result", "GetProgramId() > 0");
+
+  const std::pair<std::string_view, std::string_view> shaderPaths{
+      "assets/shader/core/coordinate.vert",
+      "assets/shader/core/coordinate.frag"};
+
+  Mgtt::Rendering::OpenGlShader shader(shaderPaths);
+  EXPECT_GT(shader.GetProgramId(), 0u);
+}
+
+TEST_F(OpenGlShaderTest, ConstructWithInvalidPaths) {
+  RecordProperty("Test Description",
+                 "Constructor with invalid paths results in id == 0");
+  RecordProperty("Expected Result", "GetProgramId() == 0");
+
+  const std::pair<std::string_view, std::string_view> badPaths{
+      "assets/shader/core/does-not-exist.vert",
+      "assets/shader/core/does-not-exist.frag"};
+
+  Mgtt::Rendering::OpenGlShader shader(badPaths);
+  EXPECT_EQ(shader.GetProgramId(), 0u);
 }
 
 }  // namespace Mgtt::Rendering::Test

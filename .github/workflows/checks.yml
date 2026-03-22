@@ -80,10 +80,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential cmake \
+            build-essential cmake python3-pip \
             libxmu-dev libxi-dev libgl-dev \
             libxinerama-dev libxcursor-dev xorg-dev \
             libglu1-mesa-dev pkg-config \
+            libglew-dev libglfw3-dev \
             autoconf autoconf-archive automake libtool libltdl-dev
 
       - name: Install vcpkg
@@ -101,17 +102,84 @@ jobs:
           unzip -q sonar-scanner.zip
           echo "${PWD}/sonar-scanner-${SONAR_VERSION}-linux-x64/bin" >> $GITHUB_PATH
 
-      - name: Configure and build
+      - name: Install gcovr
+        run: pip install gcovr
+
+      - name: Configure with coverage and compile commands
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DBUILD_LIB=ON -DBUILD_APP=ON -DBUILD_TEST=OFF \
+            -DBUILD_LIB=ON -DBUILD_APP=OFF -DBUILD_TEST=ON \
             -DCMAKE_TOOLCHAIN_FILE=/tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
-          cmake --build build
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Install Xvfb
+        run: sudo apt-get install -y xvfb
+
+      - name: Run tests
+        run: |
+          Xvfb :99 &
+          export DISPLAY=:99
+          cd build && ctest --output-on-failure
+
+      - name: Generate coverage report
+        run: |
+          mkdir -p coverage
+          gcovr \
+            --sonarqube coverage/sonarqube.xml \
+            --root . \
+            --filter 'modules/' \
+            --exclude '.*test.*' \
+            --exclude '.*vcpkg_installed.*' \
+            build
 
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner
+        run: |
+          sonar-scanner \
+            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
+            -Dsonar.coverageReportPaths=coverage/sonarqube.xml
+
+      - name: Wait for SonarCloud processing
+        run: sleep 5
+
+      - name: Check quality thresholds
+        run: |
+          RESPONSE=$(curl -s \
+            "https://sonarcloud.io/api/measures/component?component=MGTheTrain_cpp-opengl-renderer&metricKeys=coverage,reliability_rating,security_rating,sqale_rating")
+
+          python3 -c "
+          import sys, json
+
+          data = json.loads('''${RESPONSE}''')
+          measures = {m['metric']: m['value'] for m in data['component']['measures']}
+
+          coverage = float(measures['coverage'])
+          reliability = int(float(measures['reliability_rating']))
+          security = int(float(measures['security_rating']))
+          maintainability = int(float(measures['sqale_rating']))
+
+          # 1=A, 2=B, 3=C, 4=D, 5=E
+          failed = False
+          if coverage < 65.0:
+              print(f'FAIL: Coverage {coverage}% is below 65%')
+              failed = True
+          if reliability != 1:
+              print(f'FAIL: Reliability rating is not A (got {reliability})')
+              failed = True
+          if security != 1:
+              print(f'FAIL: Security rating is not A (got {security})')
+              failed = True
+          if maintainability != 1:
+              print(f'FAIL: Maintainability rating is not A (got {maintainability})')
+              failed = True
+
+          if failed:
+              sys.exit(1)
+          print(f'All checks passed — Coverage: {coverage}%, Reliability: A, Security: A, Maintainability: A')
+          "

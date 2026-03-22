@@ -1,3 +1,4 @@
+
 # The MIT License
 #
 # Copyright (c) 2026 MGTheTrain
@@ -31,7 +32,8 @@ if(NOT ${BUILD_WEB})
     set(RENDERING_TEST_SRC
         entrypoint.cpp
         opengl-shader-test.cpp
-        gltf-scene-importer-test.cpp)
+        gltf-scene-importer-test.cpp
+        texture-manager-test.cpp)
 
     add_executable(${TESTING_TARGET} ${RENDERING_TEST_SRC})
 
@@ -45,6 +47,13 @@ if(NOT ${BUILD_WEB})
         ${CMAKE_CURRENT_SOURCE_DIR}/../../common/include
         ${Stb_INCLUDE_DIR}
     )
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_options(${TESTING_TARGET} PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+        target_link_options(${TESTING_TARGET} PRIVATE --coverage)
+        target_compile_options(rendering PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+        target_link_options(rendering PRIVATE --coverage)
+    endif()
 
     target_link_libraries(${TESTING_TARGET} PRIVATE
         GTest::gtest
