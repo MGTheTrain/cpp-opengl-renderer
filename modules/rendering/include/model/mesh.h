@@ -47,12 +47,12 @@ struct MeshPrimitive;
  */
 struct Mesh {
   Mesh() = default;
-  ~Mesh();
+  ~Mesh() noexcept;
 
   Mesh(const Mesh&) = delete;
   Mesh& operator=(const Mesh&) = delete;
-  Mesh(Mesh&&) = default;
-  Mesh& operator=(Mesh&&) = default;
+  Mesh(Mesh&&) noexcept;
+  Mesh& operator=(Mesh&&) noexcept;
 
   void Clear();
 

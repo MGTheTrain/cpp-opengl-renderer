@@ -26,7 +26,42 @@
 
 namespace Mgtt::Rendering {
 
-Scene::~Scene() { Clear(); }
+Scene::~Scene() noexcept { Clear(); }
+
+Scene::Scene(Scene&& other) noexcept
+    : name(std::move(other.name)),
+      path(std::move(other.path)),
+      pos(other.pos),
+      rot(other.rot),
+      scale(other.scale),
+      mvp(other.mvp),
+      matrix(other.matrix),
+      textureMap(std::move(other.textureMap)),
+      nodes(std::move(other.nodes)),
+      linearNodes(std::move(other.linearNodes)),
+      materials(std::move(other.materials)),
+      aabb(other.aabb),
+      shader(std::move(other.shader)) {}
+
+Scene& Scene::operator=(Scene&& other) noexcept {
+  if (this != &other) {
+    Clear();
+    name = std::move(other.name);
+    path = std::move(other.path);
+    pos = other.pos;
+    rot = other.rot;
+    scale = other.scale;
+    mvp = other.mvp;
+    matrix = other.matrix;
+    textureMap = std::move(other.textureMap);
+    nodes = std::move(other.nodes);
+    linearNodes = std::move(other.linearNodes);
+    materials = std::move(other.materials);
+    aabb = other.aabb;
+    shader = std::move(other.shader);
+  }
+  return *this;
+}
 
 void Scene::Clear() {
   for (auto& node : nodes) {

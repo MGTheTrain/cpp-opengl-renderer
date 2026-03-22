@@ -55,12 +55,12 @@ struct PbrMaterial;
  */
 struct Scene {
   Scene() = default;
-  ~Scene();
+  ~Scene() noexcept;
 
   Scene(const Scene&) = delete;
   Scene& operator=(const Scene&) = delete;
-  Scene(Scene&&) = default;
-  Scene& operator=(Scene&&) = default;
+  Scene(Scene&&) noexcept;
+  Scene& operator=(Scene&&) noexcept;
 
   /**
    * @brief Release all RAM and VRAM resources held by the scene.

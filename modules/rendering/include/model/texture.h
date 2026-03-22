@@ -125,14 +125,12 @@ struct BaseColorTexture : public Texture {
  */
 struct RenderTexturesContainer {
   RenderTexturesContainer() = default;
-  ~RenderTexturesContainer();
-
-  // Move-only — OpenGlShader members are move-only
-  RenderTexturesContainer(RenderTexturesContainer&&) = default;
-  RenderTexturesContainer& operator=(RenderTexturesContainer&&) = default;
+  ~RenderTexturesContainer() noexcept;
 
   RenderTexturesContainer(const RenderTexturesContainer&) = delete;
   RenderTexturesContainer& operator=(const RenderTexturesContainer&) = delete;
+  RenderTexturesContainer(RenderTexturesContainer&&) noexcept;
+  RenderTexturesContainer& operator=(RenderTexturesContainer&&) noexcept;
 
   /**
    * @brief Construct and immediately compile shaders from std::string paths.

@@ -1,4 +1,4 @@
-name: Check
+name: Checks
 
 on:
   pull_request:
@@ -66,3 +66,52 @@ jobs:
           find modules apps -name '*.cpp' \
             | grep -v third-party \
             | xargs -P$(nproc) clang-tidy -p build --config-file=.clang-tidy
+
+  sonar:
+    name: SonarCloud analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake \
+            libxmu-dev libxi-dev libgl-dev \
+            libxinerama-dev libxcursor-dev xorg-dev \
+            libglu1-mesa-dev pkg-config \
+            autoconf autoconf-archive automake libtool libltdl-dev
+
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.sh
+        working-directory: /tmp/
+
+      - name: Install sonar-scanner
+        run: |
+          SONAR_VERSION=$(curl -s https://api.github.com/repos/SonarSource/sonar-scanner-cli/releases/latest \
+            | grep '"tag_name"' | cut -d'"' -f4)
+          curl -sSLo sonar-scanner.zip \
+            "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_VERSION}-linux-x64.zip"
+          unzip -q sonar-scanner.zip
+          echo "${PWD}/sonar-scanner-${SONAR_VERSION}-linux-x64/bin" >> $GITHUB_PATH
+
+      - name: Configure and build
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DBUILD_LIB=ON -DBUILD_APP=ON -DBUILD_TEST=OFF \
+            -DCMAKE_TOOLCHAIN_FILE=/tmp/vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake --build build
+
+      - name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: sonar-scanner

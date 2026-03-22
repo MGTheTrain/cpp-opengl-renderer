@@ -52,7 +52,46 @@ OcclusionTexture::OcclusionTexture(Texture&& texture, float strength)
 BaseColorTexture::BaseColorTexture(Texture&& texture, const glm::vec4& color)
     : Texture(std::move(texture)), color(color) {}
 
-RenderTexturesContainer::~RenderTexturesContainer() { Clear(); }
+RenderTexturesContainer::~RenderTexturesContainer() noexcept { Clear(); }
+
+RenderTexturesContainer::RenderTexturesContainer(
+    RenderTexturesContainer&& other) noexcept
+    : cubeMapTextureId(std::exchange(other.cubeMapTextureId, 0)),
+      irradianceMapTextureId(std::exchange(other.irradianceMapTextureId, 0)),
+      brdfLutTextureId(std::exchange(other.brdfLutTextureId, 0)),
+      hdrTextureId(std::exchange(other.hdrTextureId, 0)),
+      fboId(std::exchange(other.fboId, 0)),
+      rboId(std::exchange(other.rboId, 0)),
+      cubeVao(std::exchange(other.cubeVao, 0)),
+      cubeVbo(std::exchange(other.cubeVbo, 0)),
+      quadVao(std::exchange(other.quadVao, 0)),
+      quadVbo(std::exchange(other.quadVbo, 0)),
+      textures(std::move(other.textures)),
+      eq2CubeMapShader(std::move(other.eq2CubeMapShader)),
+      brdfLutShader(std::move(other.brdfLutShader)),
+      envMapShader(std::move(other.envMapShader)) {}
+
+RenderTexturesContainer& RenderTexturesContainer::operator=(
+    RenderTexturesContainer&& other) noexcept {
+  if (this != &other) {
+    Clear();
+    cubeMapTextureId = std::exchange(other.cubeMapTextureId, 0);
+    irradianceMapTextureId = std::exchange(other.irradianceMapTextureId, 0);
+    brdfLutTextureId = std::exchange(other.brdfLutTextureId, 0);
+    hdrTextureId = std::exchange(other.hdrTextureId, 0);
+    fboId = std::exchange(other.fboId, 0);
+    rboId = std::exchange(other.rboId, 0);
+    cubeVao = std::exchange(other.cubeVao, 0);
+    cubeVbo = std::exchange(other.cubeVbo, 0);
+    quadVao = std::exchange(other.quadVao, 0);
+    quadVbo = std::exchange(other.quadVbo, 0);
+    textures = std::move(other.textures);
+    eq2CubeMapShader = std::move(other.eq2CubeMapShader);
+    brdfLutShader = std::move(other.brdfLutShader);
+    envMapShader = std::move(other.envMapShader);
+  }
+  return *this;
+}
 
 RenderTexturesContainer::RenderTexturesContainer(
     const std::pair<std::string, std::string>& eq2CubeMapShaderPaths,

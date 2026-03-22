@@ -1,0 +1,7 @@
+organization=mgtt
+projectKey=MGTheTrain_cpp-opengl-renderer
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.83581
+dashboardUrl=https://sonarcloud.io/dashboard?id=MGTheTrain_cpp-opengl-renderer
+ceTaskId=AZ0ULrsHPDR2uPYmLoi-
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZ0ULrsHPDR2uPYmLoi-

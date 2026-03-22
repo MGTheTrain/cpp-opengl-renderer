@@ -24,7 +24,46 @@
 
 namespace Mgtt::Rendering {
 
-Mesh::~Mesh() { Clear(); }
+Mesh::~Mesh() noexcept { Clear(); }
+
+Mesh::Mesh(Mesh&& other) noexcept
+    : name(std::move(other.name)),
+      meshPrimitives(std::move(other.meshPrimitives)),
+      indices(std::move(other.indices)),
+      vertexPositionAttribs(std::move(other.vertexPositionAttribs)),
+      vertexNormalAttribs(std::move(other.vertexNormalAttribs)),
+      vertexTextureAttribs(std::move(other.vertexTextureAttribs)),
+      vertexJointAttribs(std::move(other.vertexJointAttribs)),
+      vertexWeightAttribs(std::move(other.vertexWeightAttribs)),
+      matrix(other.matrix),
+      vao(std::exchange(other.vao, 0)),
+      ebo(std::exchange(other.ebo, 0)),
+      pos(std::exchange(other.pos, 0)),
+      normal(std::exchange(other.normal, 0)),
+      tex(std::exchange(other.tex, 0)),
+      aabb(other.aabb) {}
+
+Mesh& Mesh::operator=(Mesh&& other) noexcept {
+  if (this != &other) {
+    Clear();
+    name = std::move(other.name);
+    meshPrimitives = std::move(other.meshPrimitives);
+    indices = std::move(other.indices);
+    vertexPositionAttribs = std::move(other.vertexPositionAttribs);
+    vertexNormalAttribs = std::move(other.vertexNormalAttribs);
+    vertexTextureAttribs = std::move(other.vertexTextureAttribs);
+    vertexJointAttribs = std::move(other.vertexJointAttribs);
+    vertexWeightAttribs = std::move(other.vertexWeightAttribs);
+    matrix = other.matrix;
+    vao = std::exchange(other.vao, 0);
+    ebo = std::exchange(other.ebo, 0);
+    pos = std::exchange(other.pos, 0);
+    normal = std::exchange(other.normal, 0);
+    tex = std::exchange(other.tex, 0);
+    aabb = other.aabb;
+  }
+  return *this;
+}
 
 void Mesh::Clear() {
   auto delBuf = [](uint32_t& bufId) {

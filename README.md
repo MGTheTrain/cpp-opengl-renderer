@@ -53,7 +53,18 @@ git diff --name-only HEAD | grep '\.cpp$' \
   | xargs clang-tidy -p build --config-file=.clang-tidy
 ```
 
-Both checks run automatically in CI on every pull request and push to main.
+**SonarCloud** (deep semantic and security analysis — requires a SonarCloud account):
+```sh
+# Prerequisites
+brew install sonar-scanner   # macOS
+export SONAR_TOKEN=<your-token>
+
+# Run locally
+./scripts/sonar-scan.sh
+```
+
+Results are published to [sonarcloud.io](https://sonarcloud.io/project/overview?id=MGTheTrain_cpp-opengl-renderer).
+All three checks run automatically in CI on every pull request and push to main.
 
 ## Getting Started
 
