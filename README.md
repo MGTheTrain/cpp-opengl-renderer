@@ -66,6 +66,20 @@ export SONAR_TOKEN=<your-token>
 Results are published to [sonarcloud.io](https://sonarcloud.io/project/overview?id=MGTheTrain_cpp-opengl-renderer).
 All three checks run automatically in CI on every pull request and push to main.
 
+**Doxygen** (API documentation with call graphs and source browsing):
+```sh
+# Prerequisites
+brew install doxygen graphviz   # macOS
+sudo apt-get install doxygen graphviz  # Linux
+
+# Generate from repo root
+doxygen Doxyfile
+
+# Open in browser
+open docs/doxygen/html/index.html        # macOS
+xdg-open docs/doxygen/html/index.html   # Linux
+```
+
 ## Getting Started
 
 ### macOS / Linux

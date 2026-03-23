@@ -8,7 +8,7 @@ apt-get install -y \
     libxinerama-dev libxcursor-dev xorg-dev \
     libglu1-mesa-dev pkg-config \
     autoconf autoconf-archive automake libtool libltdl-dev \
-    python3 python3-pip
+    python3 python3-pip doxygen graphviz
 
 pip3 install cpplint --break-system-packages
 
