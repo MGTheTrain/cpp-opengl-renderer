@@ -250,4 +250,7 @@ jobs:
         run: |
           Xvfb :99 &
           sleep 1
-          DISPLAY=:99 ASAN_OPTIONS=detect_leaks=1 ctest --test-dir build --output-on-failure
+          DISPLAY=:99 \
+          ASAN_OPTIONS=detect_leaks=1 \
+          LSAN_OPTIONS=suppressions=${{ github.workspace }}/asan-suppressions.txt \
+          ctest --test-dir build --output-on-failure
