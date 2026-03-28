@@ -36,13 +36,21 @@ jobs:
         ./vcpkg/bootstrap-vcpkg.sh
       working-directory: /tmp/
 
-    - name: Cache vcpkg installed
+    - name: Cache vcpkg installed (build)
       uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/build/vcpkg_installed
-        key: ${{ runner.os }}-vcpkg-installed-${{ hashFiles('**/vcpkg.json') }}
+        key: ${{ runner.os }}-vcpkg-installed-build-${{ hashFiles('**/vcpkg.json') }}
         restore-keys: |
-          ${{ runner.os }}-vcpkg-installed-
+          ${{ runner.os }}-vcpkg-installed-build-
+
+    - name: Cache vcpkg installed (build-test)
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build-test/vcpkg_installed
+        key: ${{ runner.os }}-vcpkg-installed-build-test-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-installed-build-test-
 
     - name: Install dependencies for test executables requiring a graphical environment
       run: sudo apt-get install -y xvfb
