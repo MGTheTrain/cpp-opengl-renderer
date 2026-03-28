@@ -199,3 +199,55 @@ jobs:
               sys.exit(1)
           print(f'All checks passed — Coverage: {coverage}%, Reliability: A, Security: A, Maintainability: A')
           "
+  asan:
+    name: Address Sanitizer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Checkout vcpkg submodule
+        run: git submodule update --init third-party/vcpkg
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake \
+            libxmu-dev libxi-dev libgl-dev \
+            libxinerama-dev libxcursor-dev xorg-dev \
+            libglu1-mesa-dev pkg-config \
+            autoconf autoconf-archive automake libtool libltdl-dev xvfb
+
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.sh
+        working-directory: /tmp/
+
+      - name: Cache vcpkg installed
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/build/vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-installed-build-${{ hashFiles('**/vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-installed-build-
+
+      - name: Build with ASAN
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_LIB=ON -DBUILD_APP=OFF -DBUILD_TEST=ON \
+            -DCMAKE_TOOLCHAIN_FILE=/tmp/vcpkg/scripts/buildsystems/vcpkg.cmake \
+            -DCMAKE_CXX_FLAGS="-fsanitize=address -fno-omit-frame-pointer" \
+            -DCMAKE_C_FLAGS="-fsanitize=address -fno-omit-frame-pointer" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address"
+          cmake --build build --parallel
+
+      - name: Run tests with ASAN
+        run: |
+          Xvfb :99 &
+          sleep 1
+          DISPLAY=:99 ASAN_OPTIONS=detect_leaks=1 ctest --test-dir build --output-on-failure
