@@ -66,6 +66,14 @@ export SONAR_TOKEN=<your-token>
 Results are published to [sonarcloud.io](https://sonarcloud.io/project/overview?id=MGTheTrain_cpp-opengl-renderer).
 All three checks run automatically in CI on every pull request and push to main.
 
+**CodeQL** (security analysis — runs automatically in CI):
+
+Results are published to the [GitHub Security tab](../../security/code-scanning). Runs automatically on every pull request and push to main.
+
+**ASAN** (memory error detection — runs automatically in CI):
+
+Detects memory leaks, use-after-free and undefined behavior in test binaries. Known third-party leaks, e.g. from GLFW are suppressed via `asan-suppressions.txt`.
+
 **Doxygen** (API documentation with call graphs and source browsing):
 ```sh
 # Prerequisites
