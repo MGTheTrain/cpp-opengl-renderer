@@ -1,0 +1,4 @@
+# Suppress known third-party memory leaks in GLFW
+leak:extensionSupportedGLX
+leak:_glfwInitGLX
+leak:_glfwCreateWindowX11
