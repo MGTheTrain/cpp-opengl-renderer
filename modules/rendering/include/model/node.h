@@ -82,7 +82,6 @@ struct Node {
   glm::vec3 pos{0.0f};
   glm::quat rot{1.0f, 0.0f, 0.0f, 0.0f};
   glm::vec3 scale{1.0f};
-  glm::mat4 mvp{1.0f};
   glm::mat4 matrix{1.0f};
   uint32_t index{0};
 };
