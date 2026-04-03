@@ -171,7 +171,8 @@ RotatingTexturedCube::RotatingTexturedCube() {
   shader_.Use();
   shader_.SetInt("textureMap", 0);
 
-  int fbWidth = 0, fbHeight = 0;
+  int fbWidth = 0;
+  int fbHeight = 0;
   glfwGetFramebufferSize(window_->GetWindow(), &fbWidth, &fbHeight);
   glViewport(0, 0, fbWidth, fbHeight);
 }

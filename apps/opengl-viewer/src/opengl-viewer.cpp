@@ -127,7 +127,8 @@ OpenGlViewer::OpenGlViewer()
   LoadDefaultScene();
   LoadDefaultIbl();
 
-  int fbW = 0, fbH = 0;
+  int fbW = 0;
+  int fbH = 0;
   glfwGetFramebufferSize(window_->GetWindow(), &fbW, &fbH);
   glViewport(0, 0, fbW, fbH);
 }
@@ -367,9 +368,9 @@ void OpenGlViewer::BindMeshTextures(
     const Mgtt::Rendering::PbrMaterial& mat) const {
   auto bind = [&](uint32_t texId, TextureSlot slot, GLint flagLoc,
                   GLint samplerLoc) {
-    const bool has = texId > 0;
-    glUniform1i(flagLoc, has ? 1 : 0);
-    if (!has) {
+    const bool kHas = texId > 0;
+    glUniform1i(flagLoc, kHas ? 1 : 0);
+    if (!kHas) {
       return;
     }
     glUniform1i(samplerLoc, static_cast<int>(slot));
