@@ -27,7 +27,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include <utility>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
@@ -36,28 +35,24 @@ EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
 EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
 #endif
 
+namespace Mgtt::Apps {
+
 // Construction / destruction
 
-Mgtt::Apps::RotatingTexturedCube::~RotatingTexturedCube() {
-  mesh.Clear();
-  for (auto& shader : openGlShaders) {
-    shader.Clear();
-  }
+RotatingTexturedCube::~RotatingTexturedCube() {
+  mesh_.Clear();
+  shader_.Clear();
 }
 
-Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
-    : glmMatrices(std::make_unique<GlmMatrices>()) {
-  const std::string kAppName = "rotating-textured-cube";
-  glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(kAppName, windowWidth,
-                                                          windowHeight);
-  glfwWindow->SetFramebufferSizeCallback(
-      Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback);
+RotatingTexturedCube::RotatingTexturedCube() {
+  window_ = std::make_unique<Mgtt::Window::GlfwWindow>(
+      "rotating-textured-cube", windowWidth_, windowHeight_);
+  window_->SetFramebufferSizeCallback(FramebufferSizeCallback);
 
 #ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
     throw std::runtime_error("GLEW could not be initialized");
   }
-
   const std::pair<std::string_view, std::string_view> kShaderPaths{
       "assets/shader/core/coordinate.vert",
       "assets/shader/core/coordinate.frag"};
@@ -68,14 +63,13 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
 
   glEnable(GL_DEPTH_TEST);
 
-  // OpenGlShader is move-only — emplace_back constructs in-place
-  openGlShaders.emplace_back(kShaderPaths);
-  if (openGlShaders[0].GetProgramId() == 0) {
+  shader_ = Mgtt::Rendering::OpenGlShader(kShaderPaths);
+  if (shader_.GetProgramId() == 0) {
     throw std::runtime_error("Coordinate shader failed to compile");
   }
 
-  // --- vertex data ---
-  mesh.vertexPositionAttribs = {
+  // Vertex data
+  mesh_.vertexPositionAttribs = {
       glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, -0.5f, -0.5f),
       glm::vec3(0.5f, 0.5f, -0.5f),   glm::vec3(0.5f, 0.5f, -0.5f),
       glm::vec3(-0.5f, 0.5f, -0.5f),  glm::vec3(-0.5f, -0.5f, -0.5f),
@@ -101,7 +95,7 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
       glm::vec3(-0.5f, 0.5f, 0.5f),   glm::vec3(-0.5f, 0.5f, -0.5f),
   };
 
-  mesh.vertexTextureAttribs = {
+  mesh_.vertexTextureAttribs = {
       glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f),
       glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f), glm::vec2(0.0f, 0.0f),
       glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f),
@@ -116,29 +110,29 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
       glm::vec2(1.0f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 1.0f),
   };
 
-  // --- GPU upload ---
-  const uint32_t kShaderId = openGlShaders[0].GetProgramId();
+  // GPU upload
+  const uint32_t kShaderId = shader_.GetProgramId();
 
-  glGenVertexArrays(1, &mesh.vao);
-  glBindVertexArray(mesh.vao);
+  glGenVertexArrays(1, &mesh_.vao);
+  glBindVertexArray(mesh_.vao);
 
-  glGenBuffers(1, &mesh.pos);
-  glBindBuffer(GL_ARRAY_BUFFER, mesh.pos);
+  glGenBuffers(1, &mesh_.pos);
+  glBindBuffer(GL_ARRAY_BUFFER, mesh_.pos);
   glBufferData(GL_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(mesh.vertexPositionAttribs.size() *
+               static_cast<GLsizeiptr>(mesh_.vertexPositionAttribs.size() *
                                        sizeof(glm::vec3)),
-               mesh.vertexPositionAttribs.data(), GL_STATIC_DRAW);
+               mesh_.vertexPositionAttribs.data(), GL_STATIC_DRAW);
   const uint32_t kPosLoc = glGetAttribLocation(kShaderId, "inVertexPosition");
   glEnableVertexAttribArray(kPosLoc);
   glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
                         nullptr);
 
-  glGenBuffers(1, &mesh.tex);
-  glBindBuffer(GL_ARRAY_BUFFER, mesh.tex);
+  glGenBuffers(1, &mesh_.tex);
+  glBindBuffer(GL_ARRAY_BUFFER, mesh_.tex);
   glBufferData(GL_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(mesh.vertexTextureAttribs.size() *
+               static_cast<GLsizeiptr>(mesh_.vertexTextureAttribs.size() *
                                        sizeof(glm::vec2)),
-               mesh.vertexTextureAttribs.data(), GL_STATIC_DRAW);
+               mesh_.vertexTextureAttribs.data(), GL_STATIC_DRAW);
   const uint32_t kTexLoc =
       glGetAttribLocation(kShaderId, "inVertexTextureCoordinates");
   glEnableVertexAttribArray(kTexLoc);
@@ -147,9 +141,9 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
 
   glBindVertexArray(0);
 
-  // --- texture ---
-  mesh.meshPrimitives.emplace_back();
-  auto& tex = mesh.meshPrimitives[0].pbrMaterial.baseColorTexture;
+  // Texture
+  mesh_.meshPrimitives.emplace_back();
+  auto& tex = mesh_.meshPrimitives[0].pbrMaterial.baseColorTexture;
 
   glGenTextures(1, &tex.id);
   glBindTexture(GL_TEXTURE_2D, tex.id);
@@ -174,24 +168,23 @@ Mgtt::Apps::RotatingTexturedCube::RotatingTexturedCube()
   stbi_image_free(tex.data);
   tex.data = nullptr;
 
-  openGlShaders[0].Use();
-  openGlShaders[0].SetInt("textureMap", 0);
+  shader_.Use();
+  shader_.SetInt("textureMap", 0);
 
-  int fbWidth = 0;
-  int fbHeight = 0;
-  glfwGetFramebufferSize(glfwWindow->GetWindow(), &fbWidth, &fbHeight);
+  int fbWidth = 0, fbHeight = 0;
+  glfwGetFramebufferSize(window_->GetWindow(), &fbWidth, &fbHeight);
   glViewport(0, 0, fbWidth, fbHeight);
 }
 
 // Render loop
 
-void Mgtt::Apps::RotatingTexturedCube::Render() {
+void RotatingTexturedCube::Render() {
 #ifndef __EMSCRIPTEN__
-  while (!glfwWindow->WindowShouldClose()) {
+  while (!window_->WindowShouldClose()) {
 #else
-  windowWidth = static_cast<float>(CanvasGetWidth());
-  windowHeight = static_cast<float>(CanvasGetHeight());
-  glfwWindow->SetWindowSize(windowWidth, windowHeight);
+  windowWidth_ = static_cast<float>(CanvasGetWidth());
+  windowHeight_ = static_cast<float>(CanvasGetHeight());
+  window_->SetWindowSize(windowWidth_, windowHeight_);
 #endif
     ProcessInput();
 
@@ -200,54 +193,54 @@ void Mgtt::Apps::RotatingTexturedCube::Render() {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,
-                  mesh.meshPrimitives[0].pbrMaterial.baseColorTexture.id);
+                  mesh_.meshPrimitives[0].pbrMaterial.baseColorTexture.id);
 
-    openGlShaders[0].Use();
+    shader_.Use();
 
-    auto [width, height] = glfwWindow->GetWindowSize();
-    glmMatrices->model =
+    auto [width, height] = window_->GetWindowSize();
+    matrices_.model =
         glm::rotate(glm::mat4(1.0f), static_cast<float>(glfwGetTime()),
                     glm::vec3(0.5f, 1.0f, 0.0f));
-    glmMatrices->view =
+    matrices_.view =
         glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-    glmMatrices->projection = glm::perspective(
+    matrices_.projection = glm::perspective(
         glm::radians(45.0f),
         static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
-    glmMatrices->mvp =
-        glmMatrices->projection * glmMatrices->view * glmMatrices->model;
+    matrices_.mvp = matrices_.projection * matrices_.view * matrices_.model;
 
-    openGlShaders[0].SetMat4("mvp", glmMatrices->mvp);
-    glBindVertexArray(mesh.vao);
+    shader_.SetMat4("mvp", matrices_.mvp);
+    glBindVertexArray(mesh_.vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 
-    glfwWindow->SwapBuffersAndPollEvents();
+    window_->SwapBuffersAndPollEvents();
 #ifndef __EMSCRIPTEN__
-  }  // end while
+  }
 #endif
 }
 
 // Input / callbacks
 
-void Mgtt::Apps::RotatingTexturedCube::ProcessInput() {
-  if (glfwGetKey(glfwWindow->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(glfwWindow->GetWindow(), 1);
+void RotatingTexturedCube::ProcessInput() {
+  if (glfwGetKey(window_->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window_->GetWindow(), 1);
   }
 }
 
-void Mgtt::Apps::RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow*,
-                                                               int32_t width,
-                                                               int32_t height) {
+void RotatingTexturedCube::FramebufferSizeCallback(GLFWwindow*, int32_t width,
+                                                   int32_t height) {
   glViewport(0, 0, width, height);
 }
+
+}  // namespace Mgtt::Apps
 
 // Entry point
 
 int main() {
   try {
 #ifndef __EMSCRIPTEN__
-    Mgtt::Apps::RotatingTexturedCube rotatingTexturedCube;
-    rotatingTexturedCube.Render();
+    Mgtt::Apps::RotatingTexturedCube cube;
+    cube.Render();
 #else
     static Mgtt::Apps::RotatingTexturedCube* instance =
         new Mgtt::Apps::RotatingTexturedCube();

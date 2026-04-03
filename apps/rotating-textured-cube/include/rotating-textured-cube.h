@@ -41,13 +41,11 @@ namespace Mgtt::Apps {
 /**
  * @brief GLM transformation matrices for a single draw call.
  */
-struct GlmMatrices {
-  GlmMatrices() : model(1.0f), view(1.0f), projection(1.0f), mvp(1.0f) {}
-
-  glm::mat4 model;
-  glm::mat4 view;
-  glm::mat4 projection;
-  glm::mat4 mvp;
+struct ViewMatrices {
+  glm::mat4 model{1.0f};
+  glm::mat4 view{1.0f};
+  glm::mat4 projection{1.0f};
+  glm::mat4 mvp{1.0f};
 };
 
 /**
@@ -67,15 +65,15 @@ class RotatingTexturedCube {
   void ProcessInput();
 
  private:
-  static void FramebufferSizeCallback(GLFWwindow* window, int32_t width,
+  static void FramebufferSizeCallback(GLFWwindow*, int32_t width,
                                       int32_t height);
 
-  std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
-  std::vector<Mgtt::Rendering::OpenGlShader> openGlShaders;
-  std::unique_ptr<GlmMatrices> glmMatrices;
-  Mgtt::Rendering::Mesh mesh;
-  float windowWidth{1000.0f};
-  float windowHeight{1000.0f};
+  std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
+  Mgtt::Rendering::OpenGlShader shader_;
+  ViewMatrices matrices_{};
+  Mgtt::Rendering::Mesh mesh_;
+  float windowWidth_{1000.0f};
+  float windowHeight_{1000.0f};
 };
 
 }  // namespace Mgtt::Apps
