@@ -87,8 +87,8 @@ void Scene::Clear() {
   std::cout << "Successfully cleared scene with all it's components " << path
             << '\n';
 
-  name = "";
-  path = "";
+  name.clear();
+  path.clear();
   pos = glm::vec3(0.0f);
   rot = glm::vec3(0.0f);
   scale = 1.0;

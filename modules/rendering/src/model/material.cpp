@@ -31,7 +31,7 @@ void PbrMaterial::Clear() {
   emissiveTexture.Clear();
   occlusionTexture.Clear();
 
-  name = "";
+  name.clear();
   alphaCutoff = 0.0f;
   doubleSided = false;
   alphaMode = AlphaMode::OPAQ;

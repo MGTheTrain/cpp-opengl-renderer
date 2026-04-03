@@ -26,7 +26,7 @@ namespace Mgtt::Rendering {
 
 void MeshPrimitive::Clear() {
   pbrMaterial.Clear();
-  name = "";
+  name.clear();
   hasSkin = false;
   hasIndices = false;
   firstIndex = 0;

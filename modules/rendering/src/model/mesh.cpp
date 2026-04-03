@@ -96,7 +96,7 @@ void Mesh::Clear() {
   vertexWeightAttribs.clear();
 
   matrix = glm::mat4(1.0f);
-  name = "";
+  name.clear();
 }
 
 }  // namespace Mgtt::Rendering
