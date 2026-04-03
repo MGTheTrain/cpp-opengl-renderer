@@ -68,7 +68,7 @@ All three checks run automatically in CI on every pull request and push to main.
 
 **CodeQL** (security analysis — runs automatically in CI):
 
-Results are published to the [GitHub Security tab](../../security/code-scanning). Runs automatically on every pull request and push to main.
+Results are published to the `GitHub Security tab`. Runs automatically on every pull request and push to main.
 
 **ASAN** (memory error detection — runs automatically in CI):
 
