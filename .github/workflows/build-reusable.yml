@@ -20,6 +20,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Checkout vcpkg submodule
+      run: git submodule update --init third-party/vcpkg
+
     - name: Install third-party apt dependencies
       run: |
         sudo apt-get update
@@ -29,12 +32,6 @@ jobs:
           libxinerama-dev libxcursor-dev xorg-dev \
           libglu1-mesa-dev pkg-config \
           autoconf autoconf-archive automake libtool libltdl-dev
-
-    - name: Install vcpkg
-      run: |
-        git clone https://github.com/Microsoft/vcpkg.git
-        ./vcpkg/bootstrap-vcpkg.sh
-      working-directory: /tmp/
 
     - name: Cache vcpkg installed (build)
       uses: actions/cache@v4
@@ -59,7 +56,7 @@ jobs:
       run: |
         Xvfb :99 &
         export DISPLAY=:99
-        FLAGS="-CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -Release"
+        FLAGS="-CMakeToolchainFile ./third-party/vcpkg/scripts/buildsystems/vcpkg.cmake -Release"
         if [ "${{ inputs.run_tests }}" = "true" ]; then
           FLAGS="$FLAGS -RunTests"
         fi
@@ -89,14 +86,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Checkout vcpkg submodule
+      run: git submodule update --init third-party/vcpkg
+
     - name: Install third-party choco dependencies
       run: choco install cmake
-
-    - name: Install vcpkg
-      run: |
-        cd $env:TEMP
-        git clone https://github.com/Microsoft/vcpkg.git
-        .\vcpkg\bootstrap-vcpkg.bat
 
     - name: Cache vcpkg installed
       uses: actions/cache@v4
@@ -110,7 +104,7 @@ jobs:
       shell: pwsh
       run: |
         $params = @{
-          CMakeToolchainFile = "$env:TEMP\vcpkg\scripts\buildsystems\vcpkg.cmake"
+          CMakeToolchainFile = ".\third-party\vcpkg\scripts\buildsystems\vcpkg.cmake"
           Release = $true
         }
         if ("${{ inputs.revision_number }}") {
@@ -138,14 +132,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Checkout vcpkg submodule
+      run: git submodule update --init third-party/vcpkg
+
     - name: Install third-party brew dependencies
       run: brew install pkg-config cmake
-
-    - name: Install vcpkg
-      run: |
-        git clone https://github.com/Microsoft/vcpkg.git
-        ./vcpkg/bootstrap-vcpkg.sh
-      working-directory: /tmp/
 
     - name: Cache vcpkg installed
       uses: actions/cache@v4
@@ -157,7 +148,7 @@ jobs:
 
     - name: Build on macOS
       run: |
-        FLAGS="-CMakeToolchainFile /tmp/vcpkg/scripts/buildsystems/vcpkg.cmake -Release"
+        FLAGS="-CMakeToolchainFile ./third-party/vcpkg/scripts/buildsystems/vcpkg.cmake -Release"
         if [ -n "${{ inputs.revision_number }}" ]; then
           FLAGS="$FLAGS -RevisionNumber ${{ inputs.revision_number }}"
         fi
