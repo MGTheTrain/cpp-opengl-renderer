@@ -32,7 +32,8 @@ option(BUILD_WEB "Compile to js and wasm" OFF)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(BUILD_TEST)
-    include(CTestConfig)
+    include(CTest)
+    enable_testing()
 endif()
 
 add_subdirectory(modules)
