@@ -1,4 +1,3 @@
-set(PROJECT_NAME ${PACKAGE_NAME} CACHE STRING "The project name")
 set(CPACK_PACKAGE_NAME ${PACKAGE_NAME} CACHE STRING "The resulting package name")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cross-platform C++ OpenGL renderer with PBR pipeline and glTF support"
