@@ -34,244 +34,325 @@ EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
 EM_JS(void, ResizeCanvas, (), { resizeCanvas(); });
 #endif
 
-// Construction / destruction
+namespace Mgtt::Apps {
 
-Mgtt::Apps::OpenGlViewer::~OpenGlViewer() { Clear(); }
-
-void Mgtt::Apps::OpenGlViewer::Clear() {
-  gltfSceneImporter->Clear(mgttScene);
-  textureManager->Clear(renderTextureContainer);
-  ClearImGui();
+// PbrUniforms::Cache
+void PbrUniforms::Cache(uint32_t id) noexcept {
+  auto loc = [id](const char* n) { return glGetUniformLocation(id, n); };
+  model = loc("model");
+  mvp = loc("mvp");
+  matrix = loc("matrix");
+  lightPosition = loc("lightPosition");
+  cameraPosition = loc("cameraPosition");
+  scaleIblAmbient = loc("scaleIblAmbient");
+  samplerEnvMap = loc("samplerEnvMap");
+  samplerIrradianceMap = loc("samplerIrradianceMap");
+  samplerBrdfLut = loc("samplerBrdfLut");
+  baseColorTextureSet = loc("baseColorTextureSet");
+  physicalDescriptorTextureSet = loc("physicalDescriptorTextureSet");
+  normalTextureSet = loc("normalTextureSet");
+  emissiveTextureSet = loc("emissiveTextureSet");
+  occlusionTextureSet = loc("occlusionTextureSet");
+  baseColorMap = loc("baseColorMap");
+  physicalDescriptorMap = loc("physicalDescriptorMap");
+  normalMap = loc("normalMap");
+  emissiveMap = loc("emissiveMap");
+  occlusionMap = loc("occlusionMap");
+  baseColorFactor = loc("baseColorFactor");
+  emissiveFactor = loc("emissiveFactor");
+  occlusionFactor = loc("occlusionFactor");
+  metallicFactor = loc("metallicFactor");
+  roughnessFactor = loc("roughnessFactor");
+  alphaMaskSet = loc("alphaMaskSet");
+  alphaMaskCutoff = loc("alphaMaskCutoff");
 }
 
-Mgtt::Apps::OpenGlViewer::OpenGlViewer()
-    : cameraPosition(0.0f, 0.0f, -3.0f),
-      windowWidth(1000.0f),
-      windowHeight(1000.0f),
-      scaleIblAmbient(1.0f),
-      showEnvMap(false),
-      glmMatrices(std::make_unique<GlmMatrices>()),
-      glmVectors(std::make_unique<GlmVectors>()),
-      gltfSceneImporter(std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
-      textureManager(std::make_unique<Mgtt::Rendering::TextureManager>()) {
-  const std::string kAppName = "opengl-viewer";
-  glfwWindow = std::make_unique<Mgtt::Window::GlfwWindow>(kAppName, windowWidth,
-                                                          windowHeight);
-  glfwWindow->SetFramebufferSizeCallback(
-      Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback);
+// Platform constants
+std::pair<std::string_view, std::string_view>
+OpenGlViewer::Platform::PbrShaderPaths() noexcept {
+#ifdef __EMSCRIPTEN__
+  return {"assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
+#else
+  return {"assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
+#endif
+}
 
+std::pair<std::string_view, std::string_view>
+OpenGlViewer::Platform::Eq2CubeMapPaths() noexcept {
+#ifdef __EMSCRIPTEN__
+  return {"assets/shader/es/eq2CubeMap.vert",
+          "assets/shader/es/eq2CubeMap.frag"};
+#else
+  return {"assets/shader/core/eq2CubeMap.vert",
+          "assets/shader/core/eq2CubeMap.frag"};
+#endif
+}
+
+std::pair<std::string_view, std::string_view>
+OpenGlViewer::Platform::BrdfLutPaths() noexcept {
+#ifdef __EMSCRIPTEN__
+  return {"assets/shader/es/genBrdf.vert", "assets/shader/es/genBrdf.frag"};
+#else
+  return {"assets/shader/core/genBrdf.vert", "assets/shader/core/genBrdf.frag"};
+#endif
+}
+
+std::pair<std::string_view, std::string_view>
+OpenGlViewer::Platform::EnvMapPaths() noexcept {
+#ifdef __EMSCRIPTEN__
+  return {"assets/shader/es/envMap.vert", "assets/shader/es/envMap.frag"};
+#else
+  return {"assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"};
+#endif
+}
+
+const char* OpenGlViewer::Platform::ImGuiGlslVersion() noexcept {
+#ifdef __EMSCRIPTEN__
+  return "#version 300 es";
+#else
+  return "#version 330 core";
+#endif
+}
+
+// Construction / destruction
+OpenGlViewer::OpenGlViewer()
+    : sceneImporter_(std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
+      textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>()) {
+  window_ = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer",
+                                                       windowW_, windowH_);
+  window_->SetFramebufferSizeCallback(FramebufferSizeCallback);
+
+  InitGl();
+  InitImGui();
+  LoadDefaultScene();
+  LoadDefaultIbl();
+
+  int fbW = 0, fbH = 0;
+  glfwGetFramebufferSize(window_->GetWindow(), &fbW, &fbH);
+  glViewport(0, 0, fbW, fbH);
+}
+
+OpenGlViewer::~OpenGlViewer() {
+  sceneImporter_->Clear(scene_);
+  textureManager_->Clear(ibl_);
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+}
+
+// Initialisation
+void OpenGlViewer::InitGl() {
 #ifndef __EMSCRIPTEN__
   if (glewInit() != GLEW_OK) {
-    throw std::runtime_error("GLEW could not be initialized");
+    throw std::runtime_error("GLEW init failed");
   }
-
-  const std::pair<std::string_view, std::string_view> kPbrShaderPaths{
-      "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-  if (auto r = mgttScene.shader.Compile(kPbrShaderPaths); r.err()) {
-    throw std::runtime_error("PBR shader compile failed: " + r.error());
-  }
-
-  // RenderTexturesContainer owns OpenGlShader members which are move-only,
-  // so construct in-place via the parameterised constructor and move-assign.
-  renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
-      std::pair<std::string_view, std::string_view>{
-          "assets/shader/core/eq2CubeMap.vert",
-          "assets/shader/core/eq2CubeMap.frag"},
-      std::pair<std::string_view, std::string_view>{
-          "assets/shader/core/genBrdf.vert", "assets/shader/core/genBrdf.frag"},
-      std::pair<std::string_view, std::string_view>{
-          "assets/shader/core/envMap.vert", "assets/shader/core/envMap.frag"});
-#else
-  const std::pair<std::string_view, std::string_view> kPbrShaderPaths{
-      "assets/shader/es/pbr.vert", "assets/shader/es/pbr.frag"};
-  if (auto r = mgttScene.shader.Compile(kPbrShaderPaths); r.err()) {
-    throw std::runtime_error("PBR shader compile failed: " + r.error());
-  }
-
-  renderTextureContainer = Mgtt::Rendering::RenderTexturesContainer(
-      std::pair<std::string_view, std::string_view>{
-          "assets/shader/es/eq2CubeMap.vert",
-          "assets/shader/es/eq2CubeMap.frag"},
-      std::pair<std::string_view, std::string_view>{
-          "assets/shader/es/genBrdf.vert", "assets/shader/es/genBrdf.frag"},
-      std::pair<std::string_view, std::string_view>{
-          "assets/shader/es/envMap.vert", "assets/shader/es/envMap.frag"});
 #endif
   glEnable(GL_DEPTH_TEST);
 
-  if (auto r = gltfSceneImporter->Load(
-          mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf");
-      r.err()) {
-    throw std::runtime_error("Scene load failed: " + r.error());
+  if (auto r = scene_.shader.Compile(Platform::PbrShaderPaths()); r.err()) {
+    throw std::runtime_error("PBR shader: " + r.error());
   }
+  uniforms_.Cache(scene_.shader.GetProgramId());
 
-  if (auto r = textureManager->LoadFromHdr(renderTextureContainer,
-                                           "assets/texture/surgery.jpg");
-      r.err()) {
-    throw std::runtime_error("HDR texture load failed: " + r.error());
-  }
-
-  if (auto r = textureManager->LoadBrdfLut(renderTextureContainer); r.err()) {
-    throw std::runtime_error("BRDF LUT generation failed: " + r.error());
-  }
-
-  int fbWidth = 0;
-  int fbHeight = 0;
-  glfwGetFramebufferSize(glfwWindow->GetWindow(), &fbWidth, &fbHeight);
-  glViewport(0, 0, fbWidth, fbHeight);
-  InitializeImGui();
+  ibl_ = Mgtt::Rendering::RenderTexturesContainer(Platform::Eq2CubeMapPaths(),
+                                                  Platform::BrdfLutPaths(),
+                                                  Platform::EnvMapPaths());
 }
 
-// Render loop
+void OpenGlViewer::InitImGui() {
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGui_ImplGlfw_InitForOpenGL(window_->GetWindow(), true);
+  ImGui_ImplOpenGL3_Init(Platform::ImGuiGlslVersion());
+#ifdef __EMSCRIPTEN__
+  ResizeCanvas();
+#endif
+}
 
-void Mgtt::Apps::OpenGlViewer::Render() {
+void OpenGlViewer::LoadDefaultScene() {
+  if (auto r = sceneImporter_->Load(
+          scene_, "assets/scenes/water-bottle/WaterBottle.gltf");
+      r.err()) {
+    throw std::runtime_error("Scene load: " + r.error());
+  }
+}
+
+void OpenGlViewer::LoadDefaultIbl() {
+  if (auto r = textureManager_->LoadFromHdr(ibl_, "assets/texture/surgery.jpg");
+      r.err()) {
+    throw std::runtime_error("HDR load: " + r.error());
+  }
+  if (auto r = textureManager_->LoadBrdfLut(ibl_); r.err()) {
+    throw std::runtime_error("BRDF LUT: " + r.error());
+  }
+}
+
+// Run loop
+void OpenGlViewer::Run() {
 #ifndef __EMSCRIPTEN__
-  while (!glfwWindow->WindowShouldClose()) {
+  while (!window_->WindowShouldClose()) {
+    RenderFrame();
+  }
 #else
-  windowWidth = static_cast<float>(CanvasGetWidth());
-  windowHeight = static_cast<float>(CanvasGetHeight());
-  glfwWindow->SetWindowSize(windowWidth, windowHeight);
+  // Emscripten: single-frame entry; caller sets up the loop.
+  RenderFrame();
+#endif
+}
+
+void OpenGlViewer::RenderFrame() {
+#ifdef __EMSCRIPTEN__
+  windowW_ = static_cast<float>(CanvasGetWidth());
+  windowH_ = static_cast<float>(CanvasGetHeight());
+  window_->SetWindowSize(windowW_, windowH_);
 #endif
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    auto [width, height] = glfwWindow->GetWindowSize();
-    glmMatrices->view = glm::mat4(1.0f);
-    glmMatrices->projection = glm::perspective(
-        glm::radians(45.0f),
-        static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
-    glmMatrices->view = glm::translate(glmMatrices->view, cameraPosition);
+  UpdateMatrices();
 
-    glmMatrices->model =
-        glm::scale(glm::mat4(1.0f), glm::vec3(1.0f / mgttScene.aabb.scale));
-    glmMatrices->model = glm::scale(glmMatrices->model, glmVectors->scale);
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
 
-    const glm::vec3 kOffset = -mgttScene.aabb.center + glmVectors->translation;
-    glmMatrices->model = glm::translate(glmMatrices->model, kOffset);
-    glmMatrices->model =
-        glm::rotate(glmMatrices->model, glm::radians(glmVectors->rotation.x),
-                    glm::vec3(1.0f, 0.0f, 0.0f));
-    glmMatrices->model =
-        glm::rotate(glmMatrices->model, glm::radians(glmVectors->rotation.y),
-                    glm::vec3(0.0f, 1.0f, 0.0f));
-    glmMatrices->model =
-        glm::rotate(glmMatrices->model, glm::radians(glmVectors->rotation.z),
-                    glm::vec3(0.0f, 0.0f, 1.0f));
-    glmMatrices->model = glm::translate(glmMatrices->model, -kOffset);
-    glmMatrices->model = glm::translate(glmMatrices->model, kOffset);
+  auto [scrW, scrH] = window_->GetWindowSize();
+  ImGui::SetNextWindowSize(
+      ImVec2(static_cast<float>(scrW) * 0.3f, static_cast<float>(scrH)));
+  ImGui::SetNextWindowPos(ImVec2(static_cast<float>(scrW) * 0.7f, 0.0f));
 
-    mgttScene.mvp =
-        glmMatrices->projection * glmMatrices->view * glmMatrices->model;
+  RenderScene();
+  RenderEnvMap();
+  RenderUi();
+  EndFrame();
+}
 
-    mgttScene.shader.Use();
-    mgttScene.shader.SetMat4("model", glmMatrices->model);
-    mgttScene.shader.SetMat4("mvp", mgttScene.mvp);
-    mgttScene.shader.SetVec3("lightPosition", cameraPosition);
-    mgttScene.shader.SetVec3("cameraPosition", cameraPosition);
+// Per-frame pipeline steps
+void OpenGlViewer::UpdateMatrices() {
+  auto [w, h] = window_->GetWindowSize();
 
-    mgttScene.shader.SetInt("samplerEnvMap", 7);
-    glActiveTexture(GL_TEXTURE7);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, renderTextureContainer.cubeMapTextureId);
+  matrices_.view = glm::translate(glm::mat4(1.0f), cameraPos_);
+  matrices_.projection = glm::perspective(
+      glm::radians(45.0f), static_cast<float>(w) / static_cast<float>(h), 0.1f,
+      1000.0f);
 
-    mgttScene.shader.SetInt("samplerIrradianceMap", 8);
-    glActiveTexture(GL_TEXTURE8);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, renderTextureContainer.cubeMapTextureId);
+  const glm::vec3 kOffset = -scene_.aabb.center + transform_.translation;
 
-    mgttScene.shader.SetInt("samplerBrdfLut", 9);
-    glActiveTexture(GL_TEXTURE9);
-    glBindTexture(GL_TEXTURE_2D, renderTextureContainer.brdfLutTextureId);
+  matrices_.model = glm::mat4(1.0f);
+  matrices_.model =
+      glm::scale(matrices_.model, glm::vec3(1.0f / scene_.aabb.scale));
+  matrices_.model = glm::scale(matrices_.model, transform_.scale);
+  matrices_.model = glm::translate(matrices_.model, kOffset);
+  matrices_.model = glm::rotate(
+      matrices_.model, glm::radians(transform_.rotation.x), glm::vec3(1, 0, 0));
+  matrices_.model = glm::rotate(
+      matrices_.model, glm::radians(transform_.rotation.y), glm::vec3(0, 1, 0));
+  matrices_.model = glm::rotate(
+      matrices_.model, glm::radians(transform_.rotation.z), glm::vec3(0, 0, 1));
+  matrices_.model = glm::translate(matrices_.model, -kOffset);
+  matrices_.model = glm::translate(matrices_.model, kOffset);
 
-    mgttScene.shader.SetFloat("scaleIblAmbient", scaleIblAmbient);
+  scene_.mvp = matrices_.projection * matrices_.view * matrices_.model;
+}
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+void OpenGlViewer::RenderScene() {
+  scene_.shader.Use();
 
-    auto [scrW, scrH] = glfwWindow->GetWindowSize();
-    ImGui::SetNextWindowSize(
-        ImVec2(static_cast<float>(scrW) * 0.3f, static_cast<float>(scrH)));
-    ImGui::SetNextWindowPos(ImVec2(static_cast<float>(scrW) * 0.7f, 0.0f));
-    UpdateSettings();
+  glUniformMatrix4fv(uniforms_.model, 1, GL_FALSE, &matrices_.model[0][0]);
+  glUniformMatrix4fv(uniforms_.mvp, 1, GL_FALSE, &scene_.mvp[0][0]);
+  glUniform3fv(uniforms_.lightPosition, 1, &cameraPos_[0]);
+  glUniform3fv(uniforms_.cameraPosition, 1, &cameraPos_[0]);
+  glUniform1f(uniforms_.scaleIblAmbient, scaleIblAmbient_);
 
-    for (auto& node : mgttScene.nodes) {
-      TraverseSceneNode(node);
-    }
+  glUniform1i(uniforms_.samplerEnvMap, static_cast<int>(TextureSlot::EnvMap));
+  glUniform1i(uniforms_.samplerIrradianceMap,
+              static_cast<int>(TextureSlot::IrradianceMap));
+  glUniform1i(uniforms_.samplerBrdfLut, static_cast<int>(TextureSlot::BrdfLut));
 
-    if (showEnvMap) {
-      glDepthFunc(GL_LEQUAL);
-      renderTextureContainer.envMapShader.Use();
-      renderTextureContainer.envMapShader.SetMat4("projection",
-                                                  glmMatrices->projection);
-      renderTextureContainer.envMapShader.SetMat4("view", glmMatrices->view);
-      renderTextureContainer.envMapShader.SetInt("envMap", 0);
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_CUBE_MAP,
-                    renderTextureContainer.cubeMapTextureId);
-      glBindVertexArray(renderTextureContainer.cubeVao);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
-      glBindVertexArray(0);
-      glDepthFunc(GL_LESS);
-    }
+  glActiveTexture(GL_TEXTURE0 + static_cast<int>(TextureSlot::EnvMap));
+  glBindTexture(GL_TEXTURE_CUBE_MAP, ibl_.cubeMapTextureId);
+  glActiveTexture(GL_TEXTURE0 + static_cast<int>(TextureSlot::IrradianceMap));
+  glBindTexture(GL_TEXTURE_CUBE_MAP, ibl_.cubeMapTextureId);
+  glActiveTexture(GL_TEXTURE0 + static_cast<int>(TextureSlot::BrdfLut));
+  glBindTexture(GL_TEXTURE_2D, ibl_.brdfLutTextureId);
 
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    glfwWindow->SwapBuffersAndPollEvents();
-#ifndef __EMSCRIPTEN__
-  }  // end while
-#endif
+  for (const auto& node : scene_.nodes) {
+    TraverseNode(node);
+  }
+}
+
+void OpenGlViewer::RenderEnvMap() {
+  if (!showEnvMap_) {
+    return;
+  }
+
+  glDepthFunc(GL_LEQUAL);
+  ibl_.envMapShader.Use();
+  glUniformMatrix4fv(
+      glGetUniformLocation(ibl_.envMapShader.GetProgramId(), "projection"), 1,
+      GL_FALSE, &matrices_.projection[0][0]);
+  glUniformMatrix4fv(
+      glGetUniformLocation(ibl_.envMapShader.GetProgramId(), "view"), 1,
+      GL_FALSE, &matrices_.view[0][0]);
+  glUniform1i(glGetUniformLocation(ibl_.envMapShader.GetProgramId(), "envMap"),
+              0);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, ibl_.cubeMapTextureId);
+  glBindVertexArray(ibl_.cubeVao);
+  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glBindVertexArray(0);
+  glDepthFunc(GL_LESS);
+}
+
+void OpenGlViewer::RenderUi() {
+  ImGui::Begin("Settings");
+  if (ImGui::BeginTabBar("Settings")) {
+    PanelScene();
+    PanelTransform();
+    PanelLight();
+    ImGui::EndTabBar();
+  }
+  ImGui::End();
+  ImGui::Render();
+}
+
+void OpenGlViewer::EndFrame() {
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+  window_->SwapBuffersAndPollEvents();
 }
 
 // Scene traversal
-
-void Mgtt::Apps::OpenGlViewer::TraverseSceneNode(
+void OpenGlViewer::TraverseNode(
     const std::shared_ptr<Mgtt::Rendering::Node>& node) const {
   RenderMesh(node);
   for (const auto& child : node->children) {
-    TraverseSceneNode(child);
+    TraverseNode(child);
   }
 }
 
-void Mgtt::Apps::OpenGlViewer::RenderMesh(
+void OpenGlViewer::RenderMesh(
     const std::shared_ptr<Mgtt::Rendering::Node>& node) const {
   if (node->mesh == nullptr) {
     return;
   }
 
-  glUniformMatrix4fv(
-      glGetUniformLocation(mgttScene.shader.GetProgramId(), "matrix"), 1,
-      GL_FALSE, &node->mesh->matrix[0][0]);
+  glUniformMatrix4fv(uniforms_.matrix, 1, GL_FALSE, &node->mesh->matrix[0][0]);
 
   for (const auto& prim : node->mesh->meshPrimitives) {
-    const auto& mat = prim.pbrMaterial;
+    BindMeshTextures(prim.pbrMaterial);
 
-    auto bindTex = [&](uint32_t id, int slot, std::string_view flag,
-                       std::string_view sampler) {
-      if (id > 0) {
-        mgttScene.shader.SetBool(flag, true);
-        mgttScene.shader.SetInt(sampler, slot);
-        glActiveTexture(GL_TEXTURE0 + slot);
-        glBindTexture(GL_TEXTURE_2D, id);
-      } else {
-        mgttScene.shader.SetBool(flag, false);
-      }
-    };
-
-    bindTex(mat.baseColorTexture.id, 0, "baseColorTextureSet", "baseColorMap");
-    bindTex(mat.metallicRoughnessTexture.id, 1, "physicalDescriptorTextureSet",
-            "physicalDescriptorMap");
-    bindTex(mat.normalTexture.id, 2, "normalTextureSet", "normalMap");
-    bindTex(mat.emissiveTexture.id, 3, "emissiveTextureSet", "emissiveMap");
-    bindTex(mat.occlusionTexture.id, 4, "occlusionTextureSet", "occlusionMap");
-
-    mgttScene.shader.SetVec4("baseColorFactor", mat.baseColorTexture.color);
-    mgttScene.shader.SetVec3("emissiveFactor", mat.emissiveTexture.color);
-    mgttScene.shader.SetFloat("occlusionFactor", mat.occlusionTexture.strength);
-    mgttScene.shader.SetFloat("metallicFactor",
-                              mat.metallicRoughnessTexture.metallicFactor);
-    mgttScene.shader.SetFloat("roughnessFactor",
-                              mat.metallicRoughnessTexture.roughnessFactor);
-    mgttScene.shader.SetBool("alphaMaskSet", true);
-    mgttScene.shader.SetFloat("alphaMaskCutoff", mat.alphaCutoff);
+    glUniform4fv(uniforms_.baseColorFactor, 1,
+                 &prim.pbrMaterial.baseColorTexture.color[0]);
+    glUniform3fv(uniforms_.emissiveFactor, 1,
+                 &prim.pbrMaterial.emissiveTexture.color[0]);
+    glUniform1f(uniforms_.occlusionFactor,
+                prim.pbrMaterial.occlusionTexture.strength);
+    glUniform1f(uniforms_.metallicFactor,
+                prim.pbrMaterial.metallicRoughnessTexture.metallicFactor);
+    glUniform1f(uniforms_.roughnessFactor,
+                prim.pbrMaterial.metallicRoughnessTexture.roughnessFactor);
+    glUniform1i(uniforms_.alphaMaskSet, 1);
+    glUniform1f(uniforms_.alphaMaskCutoff, prim.pbrMaterial.alphaCutoff);
 
     glBindVertexArray(node->mesh->vao);
     glDrawElements(
@@ -282,124 +363,122 @@ void Mgtt::Apps::OpenGlViewer::RenderMesh(
   }
 }
 
-// ImGui
+void OpenGlViewer::BindMeshTextures(
+    const Mgtt::Rendering::PbrMaterial& mat) const {
+  auto bind = [&](uint32_t texId, TextureSlot slot, GLint flagLoc,
+                  GLint samplerLoc) {
+    const bool has = texId > 0;
+    glUniform1i(flagLoc, has ? 1 : 0);
+    if (!has) {
+      return;
+    }
+    glUniform1i(samplerLoc, static_cast<int>(slot));
+    glActiveTexture(GL_TEXTURE0 + static_cast<int>(slot));
+    glBindTexture(GL_TEXTURE_2D, texId);
+  };
 
-void Mgtt::Apps::OpenGlViewer::FramebufferSizeCallback(GLFWwindow*,
-                                                       int32_t width,
-                                                       int32_t height) {
-  glViewport(0, 0, width, height);
+  bind(mat.baseColorTexture.id, TextureSlot::BaseColor,
+       uniforms_.baseColorTextureSet, uniforms_.baseColorMap);
+  bind(mat.metallicRoughnessTexture.id, TextureSlot::MetallicRoughness,
+       uniforms_.physicalDescriptorTextureSet, uniforms_.physicalDescriptorMap);
+  bind(mat.normalTexture.id, TextureSlot::Normal, uniforms_.normalTextureSet,
+       uniforms_.normalMap);
+  bind(mat.emissiveTexture.id, TextureSlot::Emissive,
+       uniforms_.emissiveTextureSet, uniforms_.emissiveMap);
+  bind(mat.occlusionTexture.id, TextureSlot::Occlusion,
+       uniforms_.occlusionTextureSet, uniforms_.occlusionMap);
 }
 
-void Mgtt::Apps::OpenGlViewer::InitializeImGui() {
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO();
-  (void)io;
-  ImGui_ImplGlfw_InitForOpenGL(glfwWindow->GetWindow(), true);
-#ifndef __EMSCRIPTEN__
-  ImGui_ImplOpenGL3_Init("#version 330 core");
-#else
-  ImGui_ImplOpenGL3_Init("#version 300 es");
-  ResizeCanvas();
-#endif
-}
-
-void Mgtt::Apps::OpenGlViewer::UpdateSettings() {
-  ImGui::Begin("Settings");
-  if (ImGui::BeginTabBar("Settings")) {
-    if (ImGui::BeginTabItem("Scene")) {
-      if (ImGui::Button("Select glTF scene")) {
-#ifndef __EMSCRIPTEN__
-        NFD_Init();
-        nfdu8filteritem_t filters[1] = {{"3D Models", "gltf"}};
-        nfdopendialogu8args_t args{};
-        args.filterList = filters;
-        args.filterCount = 1;
-        nfdu8char_t* selectedPath = nullptr;
-
-        if (NFD_OpenDialogU8_With(&selectedPath, &args) == NFD_OKAY) {
-          gltfSceneImporter->Clear(mgttScene);
-
-          const std::pair<std::string_view, std::string_view> kPaths{
-              "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
-          if (auto r = mgttScene.shader.Compile(kPaths); r.err()) {
-            std::cerr << "Shader recompile failed: " << r.error() << '\n';
-          } else {
-            const std::string kScenePath(selectedPath);
-            if (auto r = gltfSceneImporter->Load(mgttScene, kScenePath);
-                r.err()) {
-              std::cerr << "Scene load failed: " << r.error() << '\n';
-            }
-          }
-
-          scaleIblAmbient = 1.0f;
-          showEnvMap = false;
-          glmVectors->translation = glm::vec3(0.0f);
-          glmVectors->rotation = glm::vec3(0.0f);
-          glmVectors->scale = glm::vec3(1.0f);
-          NFD_FreePathU8(selectedPath);
-        } else if (const char* err = NFD_GetError(); err) {
-          std::cerr << err << '\n';
-        }
-        NFD_Quit();
-#endif
-      }
-      ImGui::EndTabItem();
-    }
-
-    if (ImGui::BeginTabItem("Model space transformation")) {
-      glmMatrices->model = glm::mat4(1.0f);
-      ImGui::SliderFloat3("Translation",
-                          reinterpret_cast<float*>(&glmVectors->translation),
-                          -mgttScene.aabb.scale, mgttScene.aabb.scale);
-      ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::SliderFloat3("Rotation",
-                          reinterpret_cast<float*>(&glmVectors->rotation), 0.0f,
-                          360.0f);
-      ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::SliderFloat3("Scale", reinterpret_cast<float*>(&glmVectors->scale),
-                          0.01f, 3.0f);
-      ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::EndTabItem();
-    }
-
-    if (ImGui::BeginTabItem("Light")) {
-      ImGui::Text("Image based lighting");
-      ImGui::SliderFloat("Scale ibl ambient", &scaleIblAmbient, 0.0f, 2.0f);
-      ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::Checkbox("Show env map", &showEnvMap);
-      ImGui::Dummy(ImVec2(0.0f, 5.0f));
-      ImGui::EndTabItem();
-    }
-
-    ImGui::EndTabBar();
+// ImGui panels
+void OpenGlViewer::PanelScene() {
+  if (!ImGui::BeginTabItem("Scene")) {
+    return;
   }
-  ImGui::End();
-  ImGui::Render();
+#ifndef __EMSCRIPTEN__
+  if (ImGui::Button("Select glTF scene")) {
+    NFD_Init();
+    nfdu8filteritem_t filters[1] = {{"3D Models", "gltf"}};
+    nfdopendialogu8args_t args{};
+    args.filterList = filters;
+    args.filterCount = 1;
+    nfdu8char_t* selectedPath = nullptr;
+    if (NFD_OpenDialogU8_With(&selectedPath, &args) == NFD_OKAY) {
+      ReloadScene(selectedPath);
+      NFD_FreePathU8(selectedPath);
+    } else if (const char* e = NFD_GetError(); e) {
+      std::cerr << e << '\n';
+    }
+    NFD_Quit();
+  }
+#endif
+  ImGui::EndTabItem();
 }
 
-void Mgtt::Apps::OpenGlViewer::ClearImGui() {
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui_ImplGlfw_Shutdown();
-  ImGui::DestroyContext();
+void OpenGlViewer::PanelTransform() {
+  if (!ImGui::BeginTabItem("Model space transformation")) {
+    return;
+  }
+  ImGui::SliderFloat3("Translation",
+                      reinterpret_cast<float*>(&transform_.translation),
+                      -scene_.aabb.scale, scene_.aabb.scale);
+  ImGui::Dummy(ImVec2(0, 5));
+  ImGui::SliderFloat3(
+      "Rotation", reinterpret_cast<float*>(&transform_.rotation), 0.0f, 360.0f);
+  ImGui::Dummy(ImVec2(0, 5));
+  ImGui::SliderFloat3("Scale", reinterpret_cast<float*>(&transform_.scale),
+                      0.01f, 3.0f);
+  ImGui::EndTabItem();
 }
+
+void OpenGlViewer::PanelLight() {
+  if (!ImGui::BeginTabItem("Light")) {
+    return;
+  }
+  ImGui::Text("Image based lighting");
+  ImGui::SliderFloat("Scale ibl ambient", &scaleIblAmbient_, 0.0f, 2.0f);
+  ImGui::Dummy(ImVec2(0, 5));
+  ImGui::Checkbox("Show env map", &showEnvMap_);
+  ImGui::EndTabItem();
+}
+
+// Helpers
+void OpenGlViewer::ReloadScene(std::string_view path) {
+  sceneImporter_->Clear(scene_);
+
+  if (auto r = scene_.shader.Compile(Platform::PbrShaderPaths()); r.err()) {
+    std::cerr << "Shader recompile: " << r.error() << '\n';
+    return;
+  }
+  uniforms_.Cache(scene_.shader.GetProgramId());
+
+  if (auto r = sceneImporter_->Load(scene_, path); r.err()) {
+    std::cerr << "Scene load: " << r.error() << '\n';
+    return;
+  }
+
+  scaleIblAmbient_ = 1.0f;
+  showEnvMap_ = false;
+  transform_ = {};
+}
+
+void OpenGlViewer::FramebufferSizeCallback(GLFWwindow*, int32_t w, int32_t h) {
+  glViewport(0, 0, w, h);
+}
+
+}  // namespace Mgtt::Apps
 
 // Entry point
-
 #ifdef __EMSCRIPTEN__
 static Mgtt::Apps::OpenGlViewer* gViewer = nullptr;
-void EmscriptenMainLoop() { gViewer->Render(); }
+void EmscriptenMainLoop() { gViewer->Run(); }
 #endif
 
 int main() {
   try {
 #ifndef __EMSCRIPTEN__
-    Mgtt::Apps::OpenGlViewer openGlViewer;
-    openGlViewer.Render();
+    Mgtt::Apps::OpenGlViewer viewer;
+    viewer.Run();
 #else
-    // Heap-allocate so the object survives main() returning.
-    // Emscripten manages the process lifetime; the OS reclaims
-    // memory when the page is closed.
     gViewer = new Mgtt::Apps::OpenGlViewer();
     emscripten_set_main_loop(&EmscriptenMainLoop, 0, 1);
 #endif

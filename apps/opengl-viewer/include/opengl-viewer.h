@@ -33,7 +33,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <imgui_internal.h>
 #include <opengl-shader.h>
 #include <texture-manager.h>
 
@@ -41,55 +40,138 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
-#include <vector>
+#include <string_view>
 
 namespace Mgtt::Apps {
 
-struct GlmMatrices {
-  GlmMatrices() : model(1.0f), view(1.0f), projection(1.0f) {}
-  glm::mat4 model;
-  glm::mat4 view;
-  glm::mat4 projection;
+// Texture slots
+enum class TextureSlot : int {
+  BaseColor = 0,
+  MetallicRoughness = 1,
+  Normal = 2,
+  Emissive = 3,
+  Occlusion = 4,
+  EnvMap = 7,
+  IrradianceMap = 8,
+  BrdfLut = 9,
 };
 
-struct GlmVectors {
-  GlmVectors() : translation(0.0f), rotation(0.0f), scale(1.0f) {}
-  glm::vec3 translation;
-  glm::vec3 rotation;
-  glm::vec3 scale;
+// Cached uniform locations
+struct PbrUniforms {
+  GLint model{-1};
+  GLint mvp{-1};
+  GLint matrix{-1};
+  GLint lightPosition{-1};
+  GLint cameraPosition{-1};
+  GLint scaleIblAmbient{-1};
+  GLint samplerEnvMap{-1};
+  GLint samplerIrradianceMap{-1};
+  GLint samplerBrdfLut{-1};
+  GLint baseColorTextureSet{-1};
+  GLint physicalDescriptorTextureSet{-1};
+  GLint normalTextureSet{-1};
+  GLint emissiveTextureSet{-1};
+  GLint occlusionTextureSet{-1};
+  GLint baseColorMap{-1};
+  GLint physicalDescriptorMap{-1};
+  GLint normalMap{-1};
+  GLint emissiveMap{-1};
+  GLint occlusionMap{-1};
+  GLint baseColorFactor{-1};
+  GLint emissiveFactor{-1};
+  GLint occlusionFactor{-1};
+  GLint metallicFactor{-1};
+  GLint roughnessFactor{-1};
+  GLint alphaMaskSet{-1};
+  GLint alphaMaskCutoff{-1};
+
+  void Cache(uint32_t programId) noexcept;
 };
 
+// Transform state (plain data, stack allocated)
+struct ViewMatrices {
+  glm::mat4 model{1.0f};
+  glm::mat4 view{1.0f};
+  glm::mat4 projection{1.0f};
+};
+
+struct TransformVectors {
+  glm::vec3 translation{0.0f};
+  glm::vec3 rotation{0.0f};
+  glm::vec3 scale{1.0f};
+};
+
+// Viewer
 class OpenGlViewer {
  public:
   OpenGlViewer();
   ~OpenGlViewer();
 
-  void Clear();
-  void Render();
+  OpenGlViewer(const OpenGlViewer&) = delete;
+  OpenGlViewer& operator=(const OpenGlViewer&) = delete;
+  OpenGlViewer(OpenGlViewer&&) = delete;
+  OpenGlViewer& operator=(OpenGlViewer&&) = delete;
+
+  void Run();
 
  private:
-  std::unique_ptr<GlmMatrices> glmMatrices;
-  std::unique_ptr<GlmVectors> glmVectors;
-  Mgtt::Rendering::Scene mgttScene;
-  Mgtt::Rendering::RenderTexturesContainer renderTextureContainer;
-  std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
-  std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager;
-  std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
-  glm::vec3 cameraPosition;
-  float scaleIblAmbient;
-  bool showEnvMap;
-  float windowWidth;
-  float windowHeight;
+  // Lifecycle
+  void InitGl();
+  void InitImGui();
+  void LoadDefaultScene();
+  void LoadDefaultIbl();
 
-  void TraverseSceneNode(
-      const std::shared_ptr<Mgtt::Rendering::Node>& node) const;
+  // Per-frame pipeline
+  void RenderFrame();
+  void UpdateMatrices();
+  void RenderScene();
+  void RenderEnvMap();
+  void RenderUi();
+  void EndFrame();
+
+  // Scene traversal
+  void TraverseNode(const std::shared_ptr<Mgtt::Rendering::Node>& node) const;
   void RenderMesh(const std::shared_ptr<Mgtt::Rendering::Node>& node) const;
+  void BindMeshTextures(const Mgtt::Rendering::PbrMaterial& mat) const;
 
-  static void FramebufferSizeCallback(GLFWwindow* window, int32_t width,
-                                      int32_t height);
-  void InitializeImGui();
-  void UpdateSettings();
-  void ClearImGui();
+  // ImGui panels
+  void PanelScene();
+  void PanelTransform();
+  void PanelLight();
+
+  // Helpers
+  void ReloadScene(std::string_view path);
+  static void FramebufferSizeCallback(GLFWwindow*, int32_t w, int32_t h);
+
+  // Platform constants
+  struct Platform {
+    static std::pair<std::string_view, std::string_view>
+    PbrShaderPaths() noexcept;
+    static std::pair<std::string_view, std::string_view>
+    Eq2CubeMapPaths() noexcept;
+    static std::pair<std::string_view, std::string_view>
+    BrdfLutPaths() noexcept;
+    static std::pair<std::string_view, std::string_view> EnvMapPaths() noexcept;
+    static const char* ImGuiGlslVersion() noexcept;
+  };
+
+  // State
+  std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
+  std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> sceneImporter_;
+  std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager_;
+
+  Mgtt::Rendering::Scene scene_;
+  Mgtt::Rendering::RenderTexturesContainer ibl_;
+
+  PbrUniforms uniforms_{};
+  ViewMatrices matrices_{};
+  TransformVectors transform_{};
+
+  glm::vec3 cameraPos_{0.0f, 0.0f, -3.0f};
+  float scaleIblAmbient_{1.0f};
+  bool showEnvMap_{false};
+  float windowW_{1000.0f};
+  float windowH_{1000.0f};
 };
 
 }  // namespace Mgtt::Apps
