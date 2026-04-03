@@ -48,7 +48,7 @@ namespace Mgtt::Rendering {
 
 struct TextureBase {
   TextureBase() = default;
-  virtual ~TextureBase() = default;
+  ~TextureBase() = default;
 
   std::string name;
   std::string path;
@@ -61,7 +61,7 @@ struct TextureBase {
 
 struct Texture : public TextureBase {
   Texture() = default;
-  virtual ~Texture() = default;
+  ~Texture() = default;
 
   Texture(const Texture&) = default;
   Texture& operator=(const Texture&) = default;

@@ -39,7 +39,7 @@ namespace Mgtt::Rendering {
  */
 struct Material {
   Material() = default;
-  virtual ~Material() = default;
+  ~Material() = default;
 
   std::string name;
 };
