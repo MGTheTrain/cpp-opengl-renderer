@@ -117,6 +117,7 @@ const char* OpenGlViewer::Platform::ImGuiGlslVersion() noexcept {
 // Construction / destruction
 OpenGlViewer::OpenGlViewer()
     : sceneImporter_(std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
+      sceneUploader_(std::make_unique<Mgtt::Rendering::SceneUploader>()),
       textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>()) {
   glfwContext_ = std::make_unique<Mgtt::Window::GlfwContext>();
   window_ = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer",
@@ -176,6 +177,9 @@ void OpenGlViewer::LoadDefaultScene() {
           scene_, "assets/scenes/water-bottle/WaterBottle.gltf");
       r.err()) {
     throw std::runtime_error("Scene load: " + r.error());
+  }
+  if (auto r = sceneUploader_->Upload(scene_); r.err()) {
+    throw std::runtime_error("Scene upload: " + r.error());
   }
 }
 
@@ -461,6 +465,10 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
 
   if (auto r = sceneImporter_->Load(scene_, path); r.err()) {
     std::cerr << "Scene load: " << r.error() << '\n';
+    return;
+  }
+  if (auto r = sceneUploader_->Upload(scene_); r.err()) {
+    std::cerr << "Scene upload: " << r.error() << '\n';
     return;
   }
 

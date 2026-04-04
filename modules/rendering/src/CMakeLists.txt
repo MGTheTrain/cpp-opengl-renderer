@@ -27,6 +27,7 @@ set(RENDERING_SRC
     external-tinygltf-impl.cpp
     opengl-shader.cpp
     gltf-scene-importer.cpp
+    scene-uploader.cpp
     texture-manager.cpp
     model/aabb.cpp
     model/material.cpp

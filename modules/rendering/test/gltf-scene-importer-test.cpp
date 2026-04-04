@@ -29,6 +29,7 @@
 #include <GLFW/glfw3.h>
 #include <gltf-scene-importer.h>
 #include <gtest/gtest.h>
+#include <scene-uploader.h>
 
 #include <iostream>
 #include <memory>
@@ -40,6 +41,7 @@ class GltfSceneImporterTest : public ::testing::Test {
   static Mgtt::Rendering::Scene mgttScene;
   static GLFWwindow* window;
   static std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter;
+  static std::unique_ptr<Mgtt::Rendering::SceneUploader> sceneUploader;
 
  protected:
   void SetUp() override {
@@ -56,7 +58,7 @@ class GltfSceneImporterTest : public ::testing::Test {
 #endif
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);  // headless — no window on screen
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
     window = glfwCreateWindow(800, 600, "test-window", nullptr, nullptr);
     if (!window) {
@@ -88,6 +90,9 @@ Mgtt::Rendering::Scene GltfSceneImporterTest::mgttScene;
 std::unique_ptr<Mgtt::Rendering::GltfSceneImporter>
     GltfSceneImporterTest::gltfSceneImporter =
         std::make_unique<Mgtt::Rendering::GltfSceneImporter>();
+std::unique_ptr<Mgtt::Rendering::SceneUploader>
+    GltfSceneImporterTest::sceneUploader =
+        std::make_unique<Mgtt::Rendering::SceneUploader>();
 
 TEST_F(GltfSceneImporterTest, LoadInvalidGltfFile) {
   RecordProperty("Test Description",
@@ -103,9 +108,9 @@ TEST_F(GltfSceneImporterTest, LoadInvalidGltfFile) {
 
 TEST_F(GltfSceneImporterTest, LoadValidGltfFile) {
   RecordProperty("Test Description",
-                 "Load populates the scene from a valid glTF file");
+                 "Load parses the scene on CPU, Upload transfers it to GPU");
   RecordProperty("Expected Result",
-                 "Result::ok() is true and scene data is valid");
+                 "Result::ok() for both, scene data and GL handles are valid");
 
   const std::pair<std::string_view, std::string_view> shaderPaths{
       "assets/shader/core/pbr.vert", "assets/shader/core/pbr.frag"};
@@ -116,6 +121,7 @@ TEST_F(GltfSceneImporterTest, LoadValidGltfFile) {
         << "Shader compile failed: " << compileResult.error();
   }
 
+  // CPU parse — no GL ids allocated yet
   const auto loadResult = gltfSceneImporter->Load(
       mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf");
   ASSERT_TRUE(loadResult.ok()) << "Load failed: " << loadResult.error();
@@ -124,19 +130,31 @@ TEST_F(GltfSceneImporterTest, LoadValidGltfFile) {
   EXPECT_EQ(mgttScene.textureMap.size(), 4u);
   ASSERT_EQ(mgttScene.nodes.size(), 1u);
 
-  const auto& mesh = mgttScene.nodes[0]->mesh;
-  ASSERT_NE(mesh, nullptr);
-  EXPECT_GT(mesh->pos, 0u);
-  EXPECT_GT(mesh->normal, 0u);
-  EXPECT_GT(mesh->tex, 0u);
-  EXPECT_GT(mesh->vao, 0u);
-  EXPECT_FALSE(mesh->indices.empty());
-  EXPECT_FALSE(mesh->vertexPositionAttribs.empty());
-  EXPECT_FALSE(mesh->vertexNormalAttribs.empty());
-  EXPECT_FALSE(mesh->vertexTextureAttribs.empty());
-  ASSERT_FALSE(mesh->meshPrimitives.empty());
+  const auto& meshAfterLoad = mgttScene.nodes[0]->mesh;
+  ASSERT_NE(meshAfterLoad, nullptr);
+  // CPU-side data is populated
+  EXPECT_FALSE(meshAfterLoad->indices.empty());
+  EXPECT_FALSE(meshAfterLoad->vertexPositionAttribs.empty());
+  EXPECT_FALSE(meshAfterLoad->vertexNormalAttribs.empty());
+  EXPECT_FALSE(meshAfterLoad->vertexTextureAttribs.empty());
+  ASSERT_FALSE(meshAfterLoad->meshPrimitives.empty());
+  // GL handles are not yet allocated
+  EXPECT_EQ(meshAfterLoad->vao, 0u);
+  EXPECT_EQ(meshAfterLoad->pos, 0u);
+  EXPECT_EQ(meshAfterLoad->normal, 0u);
+  EXPECT_EQ(meshAfterLoad->tex, 0u);
 
-  const auto& prim = mesh->meshPrimitives[0];
+  // GPU upload
+  const auto uploadResult = sceneUploader->Upload(mgttScene);
+  ASSERT_TRUE(uploadResult.ok()) << "Upload failed: " << uploadResult.error();
+
+  const auto& meshAfterUpload = mgttScene.nodes[0]->mesh;
+  EXPECT_GT(meshAfterUpload->pos, 0u);
+  EXPECT_GT(meshAfterUpload->normal, 0u);
+  EXPECT_GT(meshAfterUpload->tex, 0u);
+  EXPECT_GT(meshAfterUpload->vao, 0u);
+
+  const auto& prim = meshAfterUpload->meshPrimitives[0];
   EXPECT_EQ(prim.firstIndex, 0u);
   EXPECT_GT(prim.pbrMaterial.metallicRoughnessTexture.id, 0u);
   EXPECT_GT(prim.pbrMaterial.baseColorTexture.id, 0u);
@@ -180,6 +198,16 @@ TEST_F(GltfSceneImporterTest, LoadWithoutShader) {
   EXPECT_TRUE(result.err());
 }
 
+TEST_F(GltfSceneImporterTest, UploadWithoutLoad) {
+  RecordProperty("Test Description",
+                 "Upload on an empty scene returns Ok without crashing");
+  RecordProperty("Expected Result", "Result::ok() is true, no GL calls made");
+
+  Mgtt::Rendering::Scene emptyScene;
+  const auto result = sceneUploader->Upload(emptyScene);
+  EXPECT_TRUE(result.ok());
+}
+
 TEST_F(GltfSceneImporterTest, SceneMoveConstruct) {
   RecordProperty("Test Description",
                  "Scene move constructor transfers ownership");
@@ -193,6 +221,7 @@ TEST_F(GltfSceneImporterTest, SceneMoveConstruct) {
       gltfSceneImporter
           ->Load(mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf")
           .ok());
+  ASSERT_TRUE(sceneUploader->Upload(mgttScene).ok());
 
   Mgtt::Rendering::Scene moved(std::move(mgttScene));
 
@@ -215,6 +244,7 @@ TEST_F(GltfSceneImporterTest, SceneMoveAssign) {
       gltfSceneImporter
           ->Load(mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf")
           .ok());
+  ASSERT_TRUE(sceneUploader->Upload(mgttScene).ok());
 
   Mgtt::Rendering::Scene other;
   other = std::move(mgttScene);
@@ -237,6 +267,7 @@ TEST_F(GltfSceneImporterTest, MeshMoveConstruct) {
       gltfSceneImporter
           ->Load(mgttScene, "assets/scenes/water-bottle/WaterBottle.gltf")
           .ok());
+  ASSERT_TRUE(sceneUploader->Upload(mgttScene).ok());
   ASSERT_FALSE(mgttScene.nodes.empty());
   ASSERT_NE(mgttScene.nodes[0]->mesh, nullptr);
 

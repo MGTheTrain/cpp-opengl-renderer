@@ -148,47 +148,12 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadTextures(
                                              texture.path);
     }
 
-    SetupTexture(texture);
-    FreeTextureData(texture);
+    // GPU upload is deferred to SceneUploader::Upload()
     scene.textureMap[image.uri] = std::move(texture);
   }
 
-  std::cout << "All textures allocated for scene " << scene.path << '\n';
+  std::cout << "All textures loaded to RAM for scene " << scene.path << '\n';
   return Mgtt::Common::Result<void>::Ok();
-}
-
-void Mgtt::Rendering::GltfSceneImporter::SetupTexture(
-    Mgtt::Rendering::Texture& texture) {
-  if (texture.data == nullptr) {
-    std::cout << "SetupTexture: data is null, skipping\n";
-    return;
-  }
-
-  GLenum format = GL_RGBA;
-  switch (texture.nrComponents) {
-    case 1:
-      format = GL_RED;
-      break;
-    case 2:
-      format = GL_RG;
-      break;
-    case 3:
-      format = GL_RGB;
-      break;
-    default:
-      break;
-  }
-
-  glGenTextures(1, &texture.id);
-  glBindTexture(GL_TEXTURE_2D, texture.id);
-  glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format), texture.width,
-               texture.height, 0, format, GL_UNSIGNED_BYTE, texture.data);
-  glGenerateMipmap(GL_TEXTURE_2D);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                  GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
@@ -239,58 +204,6 @@ void Mgtt::Rendering::GltfSceneImporter::LoadMaterials(
     scene.materials.push_back(std::move(pbr));
   }
   std::cout << "Materials allocated from scene " << scene.path << '\n';
-}
-
-Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::SetupMesh(
-    std::shared_ptr<Mgtt::Rendering::Mesh>& mesh, uint32_t shaderId) {
-  if (mesh == nullptr) {
-    return Mgtt::Common::Result<void>::Ok();
-  }
-  if (HasValuesGreaterThanZero(
-          {mesh->ebo, mesh->pos, mesh->normal, mesh->tex})) {
-    return Mgtt::Common::Result<void>::Err(
-        "Mesh GL buffers must be 0 before SetupMesh (already uploaded?)");
-  }
-  if (mesh->vertexPositionAttribs.empty()) {
-    return Mgtt::Common::Result<void>::Err(
-        "Mesh has no vertex position attributes");
-  }
-
-  glGenVertexArrays(1, &mesh->vao);
-  glGenBuffers(1, &mesh->pos);
-  glGenBuffers(1, &mesh->normal);
-  glGenBuffers(1, &mesh->tex);
-  glGenBuffers(1, &mesh->ebo);
-
-  glBindVertexArray(mesh->vao);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(mesh->indices.size() * sizeof(uint32_t)),
-               mesh->indices.data(), GL_STATIC_DRAW);
-
-  auto uploadAttrib = [&](uint32_t buf, auto& attribs, const char* attrName,
-                          GLint components) {
-    using T = typename std::decay_t<decltype(attribs)>::value_type;
-    glBindBuffer(GL_ARRAY_BUFFER, buf);
-    glBufferData(GL_ARRAY_BUFFER,
-                 static_cast<GLsizeiptr>(attribs.size() * sizeof(T)),
-                 attribs.data(), GL_STATIC_DRAW);
-    const uint32_t kLoc = glGetAttribLocation(shaderId, attrName);
-    glEnableVertexAttribArray(kLoc);
-    glVertexAttribPointer(kLoc, components, GL_FLOAT, GL_FALSE, sizeof(T),
-                          nullptr);
-  };
-
-  uploadAttrib(mesh->pos, mesh->vertexPositionAttribs, "inVertexPosition", 3);
-  uploadAttrib(mesh->normal, mesh->vertexNormalAttribs, "inVertexNormal", 3);
-  uploadAttrib(mesh->tex, mesh->vertexTextureAttribs,
-               "inVertexTextureCoordinates", 2);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-  glBindVertexArray(0);
-
-  return Mgtt::Common::Result<void>::Ok();
 }
 
 Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
@@ -451,10 +364,7 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::LoadNode(
       newMesh->aabb.max = glm::max(newMesh->aabb.max, meshPrim.aabb.max);
     }
 
-    if (auto result = SetupMesh(newMesh, scene.shader.GetProgramId());
-        result.err()) {
-      return result;
-    }
+    // GPU upload deferred to SceneUploader::Upload()
     newNode->mesh = std::move(newMesh);
   }
 

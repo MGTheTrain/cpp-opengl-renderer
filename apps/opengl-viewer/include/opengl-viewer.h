@@ -35,6 +35,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <opengl-shader.h>
+#include <scene-uploader.h>
 #include <texture-manager.h>
 
 #include <glm/glm.hpp>
@@ -160,6 +161,7 @@ class OpenGlViewer {
   std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext_;
   std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
   std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> sceneImporter_;
+  std::unique_ptr<Mgtt::Rendering::SceneUploader> sceneUploader_;
   std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager_;
 
   Mgtt::Rendering::Scene scene_;
