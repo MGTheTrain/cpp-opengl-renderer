@@ -87,7 +87,7 @@ struct Material {
 
 - Types and classes: `PascalCase`
 - Member functions: `PascalCase`
-- Private member variables: `trailing_underscore_` (e.g. `window_`)
+- Private member variables: `camelCase_` (e.g. `window_`)
 - Local variables and parameters: `camelCase`
 - Constants: `kPascalCase`
 

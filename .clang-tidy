@@ -28,6 +28,8 @@ CheckOptions:
     value: CamelCase
   - key: readability-identifier-naming.MethodCase
     value: CamelCase
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: camelBack
   - key: readability-identifier-naming.PrivateMemberSuffix
     value: "_"
   - key: readability-identifier-naming.LocalVariableCase
