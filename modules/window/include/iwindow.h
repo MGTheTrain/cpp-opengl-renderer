@@ -32,8 +32,8 @@ class IWindow {
   IWindow() = default;
   IWindow(const IWindow&) = delete;
   IWindow& operator=(const IWindow&) = delete;
-  IWindow(IWindow&&) = delete;
-  IWindow& operator=(IWindow&&) = delete;
+  IWindow(IWindow&&) noexcept = default;
+  IWindow& operator=(IWindow&&) noexcept = default;
 };
 
 }  // namespace Mgtt::Window

@@ -53,7 +53,7 @@ class OpenGlShader final : public IShader {
   OpenGlShader() noexcept = default;
   explicit OpenGlShader(
       const std::pair<std::string_view, std::string_view>& shaderPaths);
-  ~OpenGlShader() override;
+  ~OpenGlShader() noexcept override;
 
   OpenGlShader(const OpenGlShader&) = delete;
   OpenGlShader& operator=(const OpenGlShader&) = delete;
@@ -65,7 +65,7 @@ class OpenGlShader final : public IShader {
       const std::pair<std::string_view, std::string_view>& shaderPaths)
       override;
 
-  void Clear() override;
+  void Clear() noexcept override;
 
   [[nodiscard]] uint32_t GetProgramId() const noexcept;
 

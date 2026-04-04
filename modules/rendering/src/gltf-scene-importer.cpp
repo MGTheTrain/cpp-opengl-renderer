@@ -107,7 +107,8 @@ Mgtt::Common::Result<void> Mgtt::Rendering::GltfSceneImporter::Load(
   return Mgtt::Common::Result<void>::Ok();
 }
 
-void Mgtt::Rendering::GltfSceneImporter::Clear(Mgtt::Rendering::Scene& scene) {
+void Mgtt::Rendering::GltfSceneImporter::Clear(
+    Mgtt::Rendering::Scene& scene) noexcept {
   scene.Clear();
 }
 

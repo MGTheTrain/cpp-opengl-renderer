@@ -34,13 +34,13 @@ namespace Mgtt::Rendering {
  */
 class IShader {
  public:
-  virtual ~IShader() = default;
+  virtual ~IShader() noexcept = default;
 
   IShader() = default;
   IShader(const IShader&) = delete;
   IShader& operator=(const IShader&) = delete;
-  IShader(IShader&&) = delete;
-  IShader& operator=(IShader&&) = delete;
+  IShader(IShader&&) noexcept = default;
+  IShader& operator=(IShader&&) noexcept = default;
 
   /**
    * @brief Compile the shader program from vertex and fragment shader files.
@@ -54,7 +54,7 @@ class IShader {
   /**
    * @brief Delete the shader program and reset state.
    */
-  virtual void Clear() = 0;
+  virtual void Clear() noexcept = 0;
 };
 
 }  // namespace Mgtt::Rendering

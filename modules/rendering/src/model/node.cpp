@@ -41,10 +41,10 @@ glm::mat4 Node::LocalMatrix() const {
 
 glm::mat4 Node::GetGlobalMatrix() const {
   glm::mat4 globalMatrix = LocalMatrix();
-  std::shared_ptr<Mgtt::Rendering::Node> currentParent = parent;
+  auto currentParent = parent.lock();
   while (currentParent != nullptr) {
     globalMatrix = currentParent->LocalMatrix() * globalMatrix;
-    currentParent = currentParent->parent;
+    currentParent = currentParent->parent.lock();
   }
   return globalMatrix;
 }

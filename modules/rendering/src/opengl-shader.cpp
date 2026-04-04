@@ -23,18 +23,17 @@
 #include <opengl-shader.h>
 
 #include <iostream>
-#include <string>
 
 namespace Mgtt::Rendering {
 
 OpenGlShader::OpenGlShader(
     const std::pair<std::string_view, std::string_view>& shaderPaths) {
   if (auto result = Compile(shaderPaths); result.err()) {
-    std::cerr << result.error() << '\n';
+    throw std::runtime_error("Failed to compile shader: " + result.error());
   }
 }
 
-OpenGlShader::~OpenGlShader() { Clear(); }
+OpenGlShader::~OpenGlShader() noexcept { Clear(); }
 
 OpenGlShader::OpenGlShader(OpenGlShader&& other) noexcept
     : id_(std::exchange(other.id_, 0)) {}
@@ -60,7 +59,7 @@ Mgtt::Common::Result<void> OpenGlShader::Compile(
     return Mgtt::Common::Result<void>::Err("Empty fragment shader path");
   }
 
-  // --- read source files ---
+  // read source files
   auto readFile =
       [](std::string_view path) -> Mgtt::Common::Result<std::string> {
     std::ifstream file{std::string(path)};
@@ -88,7 +87,7 @@ Mgtt::Common::Result<void> OpenGlShader::Compile(
   const char* vsSrc = vsCode.c_str();
   const char* fsSrc = fsCode.c_str();
 
-  // --- compile vertex shader ---
+  // compile vertex shader
   GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertex, 1, &vsSrc, nullptr);
   glCompileShader(vertex);
@@ -97,7 +96,7 @@ Mgtt::Common::Result<void> OpenGlShader::Compile(
     return result;
   }
 
-  // --- compile fragment shader ---
+  // compile fragment shader
   GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragment, 1, &fsSrc, nullptr);
   glCompileShader(fragment);
@@ -107,7 +106,7 @@ Mgtt::Common::Result<void> OpenGlShader::Compile(
     return result;
   }
 
-  // --- link program ---
+  // link program
   id_ = glCreateProgram();
   glAttachShader(id_, vertex);
   glAttachShader(id_, fragment);
@@ -125,7 +124,7 @@ Mgtt::Common::Result<void> OpenGlShader::Compile(
   return Mgtt::Common::Result<void>::Ok();
 }
 
-void OpenGlShader::Clear() {
+void OpenGlShader::Clear() noexcept {
   if (id_ > 0) {
     glDeleteProgram(id_);
     std::cout << "Deleted shader program " << id_ << '\n';
@@ -136,46 +135,52 @@ void OpenGlShader::Clear() {
 void OpenGlShader::Use() const noexcept { glUseProgram(id_); }
 
 void OpenGlShader::SetBool(std::string_view name, bool value) const {
-  glUniform1i(glGetUniformLocation(id_, name.data()), static_cast<int>(value));
+  glUniform1i(glGetUniformLocation(id_, std::string{name}.c_str()),
+              static_cast<int>(value));
 }
 void OpenGlShader::SetInt(std::string_view name, int32_t value) const {
-  glUniform1i(glGetUniformLocation(id_, name.data()), value);
+  glUniform1i(glGetUniformLocation(id_, std::string{name}.c_str()), value);
 }
 void OpenGlShader::SetFloat(std::string_view name, float value) const {
-  glUniform1f(glGetUniformLocation(id_, name.data()), value);
+  glUniform1f(glGetUniformLocation(id_, std::string{name}.c_str()), value);
 }
 void OpenGlShader::SetVec2(std::string_view name, const glm::vec2& vec) const {
-  glUniform2fv(glGetUniformLocation(id_, name.data()), 1, &vec[0]);
+  glUniform2fv(glGetUniformLocation(id_, std::string{name}.c_str()), 1,
+               &vec[0]);
 }
 void OpenGlShader::SetVec2(std::string_view name, float xVal,
                            float yVal) const {
-  glUniform2f(glGetUniformLocation(id_, name.data()), xVal, yVal);
+  glUniform2f(glGetUniformLocation(id_, std::string{name}.c_str()), xVal, yVal);
 }
 void OpenGlShader::SetVec3(std::string_view name, const glm::vec3& vec) const {
-  glUniform3fv(glGetUniformLocation(id_, name.data()), 1, &vec[0]);
+  glUniform3fv(glGetUniformLocation(id_, std::string{name}.c_str()), 1,
+               &vec[0]);
 }
 void OpenGlShader::SetVec3(std::string_view name, float xVal, float yVal,
                            float zVal) const {
-  glUniform3f(glGetUniformLocation(id_, name.data()), xVal, yVal, zVal);
+  glUniform3f(glGetUniformLocation(id_, std::string{name}.c_str()), xVal, yVal,
+              zVal);
 }
 void OpenGlShader::SetVec4(std::string_view name, const glm::vec4& vec) const {
-  glUniform4fv(glGetUniformLocation(id_, name.data()), 1, &vec[0]);
+  glUniform4fv(glGetUniformLocation(id_, std::string{name}.c_str()), 1,
+               &vec[0]);
 }
 void OpenGlShader::SetVec4(std::string_view name, float xVal, float yVal,
                            float zVal, float wVal) const {
-  glUniform4f(glGetUniformLocation(id_, name.data()), xVal, yVal, zVal, wVal);
+  glUniform4f(glGetUniformLocation(id_, std::string{name}.c_str()), xVal, yVal,
+              zVal, wVal);
 }
 void OpenGlShader::SetMat2(std::string_view name, const glm::mat2& mat) const {
-  glUniformMatrix2fv(glGetUniformLocation(id_, name.data()), 1, GL_FALSE,
-                     &mat[0][0]);
+  glUniformMatrix2fv(glGetUniformLocation(id_, std::string{name}.c_str()), 1,
+                     GL_FALSE, &mat[0][0]);
 }
 void OpenGlShader::SetMat3(std::string_view name, const glm::mat3& mat) const {
-  glUniformMatrix3fv(glGetUniformLocation(id_, name.data()), 1, GL_FALSE,
-                     &mat[0][0]);
+  glUniformMatrix3fv(glGetUniformLocation(id_, std::string{name}.c_str()), 1,
+                     GL_FALSE, &mat[0][0]);
 }
 void OpenGlShader::SetMat4(std::string_view name, const glm::mat4& mat) const {
-  glUniformMatrix4fv(glGetUniformLocation(id_, name.data()), 1, GL_FALSE,
-                     &mat[0][0]);
+  glUniformMatrix4fv(glGetUniformLocation(id_, std::string{name}.c_str()), 1,
+                     GL_FALSE, &mat[0][0]);
 }
 
 Mgtt::Common::Result<void> OpenGlShader::CheckCompileErrors(GLuint object,

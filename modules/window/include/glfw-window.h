@@ -36,12 +36,12 @@ namespace Mgtt::Window {
 class GlfwWindow : public IWindow {
  public:
   GlfwWindow(std::string_view name, uint32_t width, uint32_t height);
-  ~GlfwWindow() override;
+  ~GlfwWindow() noexcept override;
 
   GlfwWindow(const GlfwWindow&) = delete;
   GlfwWindow& operator=(const GlfwWindow&) = delete;
-  GlfwWindow(GlfwWindow&&) = delete;
-  GlfwWindow& operator=(GlfwWindow&&) = delete;
+  GlfwWindow(GlfwWindow&&) noexcept;
+  GlfwWindow& operator=(GlfwWindow&&) noexcept;
 
   [[nodiscard]] GLFWwindow* GetWindow() const noexcept;
 

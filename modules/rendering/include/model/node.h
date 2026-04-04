@@ -75,7 +75,7 @@ struct Node {
   void InitialTransform();
 
   std::string name;
-  std::shared_ptr<Mgtt::Rendering::Node> parent;
+  std::weak_ptr<Mgtt::Rendering::Node> parent;
   std::shared_ptr<Mgtt::Rendering::Mesh> mesh;
   std::vector<std::shared_ptr<Mgtt::Rendering::Node>> children;
 

@@ -45,8 +45,8 @@ namespace Mgtt::Rendering {
  */
 class TextureManager {
  public:
-  TextureManager() = default;
-  ~TextureManager() = default;
+  TextureManager() noexcept = default;
+  ~TextureManager() noexcept = default;
   TextureManager(const TextureManager&) = delete;
   TextureManager& operator=(const TextureManager&) = delete;
   TextureManager(TextureManager&&) = delete;
@@ -90,7 +90,7 @@ class TextureManager {
    *
    * @param container Container to clear.
    */
-  void Clear(Mgtt::Rendering::RenderTexturesContainer& container);
+  void Clear(Mgtt::Rendering::RenderTexturesContainer& container) noexcept;
 
  private:
   /**

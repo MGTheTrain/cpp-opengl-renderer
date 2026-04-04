@@ -39,15 +39,15 @@ class ISceneImporter {
   /**
    * @brief Virtual destructor.
    */
-  virtual ~ISceneImporter() = default;
+  virtual ~ISceneImporter() noexcept = default;
 
   // Non-copyable, non-movable interface. Concrete types decide their own
   // ownership semantics.
   ISceneImporter() = default;
   ISceneImporter(const ISceneImporter&) = delete;
   ISceneImporter& operator=(const ISceneImporter&) = delete;
-  ISceneImporter(ISceneImporter&&) = delete;
-  ISceneImporter& operator=(ISceneImporter&&) = delete;
+  ISceneImporter(ISceneImporter&&) noexcept = default;
+  ISceneImporter& operator=(ISceneImporter&&) noexcept = default;
 
   /**
    * @brief Load the scene from a specified file path.
@@ -64,7 +64,7 @@ class ISceneImporter {
    *
    * @param scene Reference to the 3D scene to clear.
    */
-  virtual void Clear(Mgtt::Rendering::Scene& scene) = 0;
+  virtual void Clear(Mgtt::Rendering::Scene& scene) noexcept = 0;
 };
 
 }  // namespace Mgtt::Rendering

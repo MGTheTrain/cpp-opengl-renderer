@@ -179,7 +179,7 @@ Mgtt::Common::Result<void> TextureManager::LoadBrdfLut(
 }
 
 void TextureManager::Clear(
-    Mgtt::Rendering::RenderTexturesContainer& container) {
+    Mgtt::Rendering::RenderTexturesContainer& container) noexcept {
   container.Clear();
 }
 

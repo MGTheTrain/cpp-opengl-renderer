@@ -52,11 +52,26 @@ GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
   glfwMakeContextCurrent(window_);
 }
 
-GlfwWindow::~GlfwWindow() {
+GlfwWindow::~GlfwWindow() noexcept {
   if (window_ != nullptr) {
     glfwDestroyWindow(window_);
     glfwTerminate();
   }
+}
+
+GlfwWindow::GlfwWindow(GlfwWindow&& other) noexcept : window_(other.window_) {
+  other.window_ = nullptr;
+}
+
+GlfwWindow& GlfwWindow::operator=(GlfwWindow&& other) noexcept {
+  if (this != &other) {
+    if (window_ != nullptr) {
+      glfwDestroyWindow(window_);
+    }
+    window_ = other.window_;
+    other.window_ = nullptr;
+  }
+  return *this;
 }
 
 GLFWwindow* GlfwWindow::GetWindow() const noexcept { return window_; }

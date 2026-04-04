@@ -58,12 +58,12 @@ enum class GLTFParameterType {
 class GltfSceneImporter : public ISceneImporter {
  public:
   GltfSceneImporter() = default;
-  ~GltfSceneImporter() = default;
+  ~GltfSceneImporter() noexcept = default;
 
   GltfSceneImporter(const GltfSceneImporter&) = delete;
   GltfSceneImporter& operator=(const GltfSceneImporter&) = delete;
-  GltfSceneImporter(GltfSceneImporter&&) = delete;
-  GltfSceneImporter& operator=(GltfSceneImporter&&) = delete;
+  GltfSceneImporter(GltfSceneImporter&&) noexcept = default;
+  GltfSceneImporter& operator=(GltfSceneImporter&&) noexcept = default;
 
   /**
    * @brief Load a glTF or glb scene from disk.
@@ -80,7 +80,7 @@ class GltfSceneImporter : public ISceneImporter {
    *
    * @param scene Reference to the 3D scene to clear.
    */
-  void Clear(Mgtt::Rendering::Scene& scene) override;
+  void Clear(Mgtt::Rendering::Scene& scene) noexcept override;
 
  private:
   /**
