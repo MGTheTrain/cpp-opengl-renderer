@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #ifdef MGTT_WINDOW_TEST
+#include <glfw-context.h>
 #include <glfw-window.h>
 #include <gtest/gtest.h>
 
@@ -30,10 +31,14 @@ namespace Mgtt::Window::Test {
 
 class GlfwWindowTest : public ::testing::Test {
  public:
+  static std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext;
   static std::unique_ptr<Mgtt::Window::GlfwWindow> glfwWindow;
 
  protected:
   void SetUp() override {
+    if (!glfwContext) {
+      GTEST_SKIP() << "GlfwContext failed to initialise — skipping";
+    }
     if (!glfwWindow) {
       GTEST_SKIP() << "GlfwWindow failed to initialise — skipping";
     }
@@ -44,6 +49,8 @@ class GlfwWindowTest : public ::testing::Test {
   static void KeyCallback(GLFWwindow*, int32_t, int32_t, int32_t, int32_t) {}
 };
 
+std::unique_ptr<Mgtt::Window::GlfwContext> GlfwWindowTest::glfwContext =
+    std::make_unique<Mgtt::Window::GlfwContext>();
 std::unique_ptr<Mgtt::Window::GlfwWindow> GlfwWindowTest::glfwWindow =
     std::make_unique<Mgtt::Window::GlfwWindow>("test-window", 800, 600);
 
@@ -119,6 +126,16 @@ TEST_F(GlfwWindowTest, GetWindowSizeAfterResize) {
   auto [width, height] = glfwWindow->GetWindowSize();
   EXPECT_EQ(width, 1024);
   EXPECT_EQ(height, 768);
+}
+
+TEST_F(GlfwWindowTest, MultipleWindows) {
+  RecordProperty("Test Description", "Multiple windows can coexist");
+  RecordProperty("Expected Result", "Both windows are non-null");
+
+  auto window2 =
+      std::make_unique<Mgtt::Window::GlfwWindow>("second-window", 400, 400);
+  EXPECT_NE(glfwWindow->GetWindow(), nullptr);
+  EXPECT_NE(window2->GetWindow(), nullptr);
 }
 
 }  // namespace Mgtt::Window::Test

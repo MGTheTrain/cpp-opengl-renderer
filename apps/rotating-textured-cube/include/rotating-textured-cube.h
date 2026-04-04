@@ -27,6 +27,7 @@
 #else
 #include <GL/glew.h>
 #endif
+#include <glfw-context.h>
 #include <glfw-window.h>
 #include <mesh.h>
 #include <opengl-shader.h>
@@ -68,6 +69,7 @@ class RotatingTexturedCube {
   static void FramebufferSizeCallback(GLFWwindow*, int32_t width,
                                       int32_t height);
 
+  std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext_;
   std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
   Mgtt::Rendering::OpenGlShader shader_;
   ViewMatrices matrices_{};

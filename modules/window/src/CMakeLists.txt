@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 3.10)
 set(TARGET window)
 project(${TARGET})
 
-set(WINDOW_SRC glfw-window.cpp)
+set(WINDOW_SRC glfw-context.cpp glfw-window.cpp)
 
 add_library(${TARGET} STATIC ${WINDOW_SRC})
 

@@ -45,6 +45,7 @@ RotatingTexturedCube::~RotatingTexturedCube() {
 }
 
 RotatingTexturedCube::RotatingTexturedCube() {
+  glfwContext_ = std::make_unique<Mgtt::Window::GlfwContext>();
   window_ = std::make_unique<Mgtt::Window::GlfwWindow>(
       "rotating-textured-cube", windowWidth_, windowHeight_);
   window_->SetFramebufferSizeCallback(FramebufferSizeCallback);

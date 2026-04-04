@@ -118,6 +118,7 @@ const char* OpenGlViewer::Platform::ImGuiGlslVersion() noexcept {
 OpenGlViewer::OpenGlViewer()
     : sceneImporter_(std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
       textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>()) {
+  glfwContext_ = std::make_unique<Mgtt::Window::GlfwContext>();
   window_ = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer",
                                                        windowW_, windowH_);
   window_->SetFramebufferSizeCallback(FramebufferSizeCallback);

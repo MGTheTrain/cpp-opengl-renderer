@@ -28,6 +28,7 @@
 #include <GL/glew.h>
 #include <nfd.h>
 #endif
+#include <glfw-context.h>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
 #include <imgui.h>
@@ -156,6 +157,7 @@ class OpenGlViewer {
   };
 
   // State
+  std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext_;
   std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
   std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> sceneImporter_;
   std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager_;

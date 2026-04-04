@@ -27,10 +27,7 @@
 namespace Mgtt::Window {
 
 GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
-  if (glfwInit() == 0) {
-    throw std::runtime_error("Failed to initialize GLFW");
-  }
-
+  // NOTE: Assume GlfwContext already exists
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 #ifdef __APPLE__
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -45,7 +42,6 @@ GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
                              std::string(name).c_str(), nullptr, nullptr);
 
   if (window_ == nullptr) {
-    glfwTerminate();
     throw std::runtime_error("Failed to create GLFW window");
   }
 
@@ -55,7 +51,6 @@ GlfwWindow::GlfwWindow(std::string_view name, uint32_t width, uint32_t height) {
 GlfwWindow::~GlfwWindow() noexcept {
   if (window_ != nullptr) {
     glfwDestroyWindow(window_);
-    glfwTerminate();
   }
 }
 
