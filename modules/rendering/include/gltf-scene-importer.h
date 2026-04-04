@@ -37,6 +37,12 @@
 #include <string_view>
 #include <vector>
 
+/**
+ * @note Currently, GltfSceneImporter mixes CPU-side parsing and GPU uploads.
+ *       Consider splitting GPU uploads (SetupMesh, SetupTexture) into a
+ * separate SceneUploader class for cleaner separation in the future.
+ */
+
 namespace Mgtt::Rendering {
 
 /**
