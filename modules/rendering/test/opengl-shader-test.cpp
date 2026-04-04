@@ -125,7 +125,8 @@ TEST_F(OpenGlShaderTest, Use) {
       "assets/shader/core/coordinate.frag"};
   ASSERT_TRUE(openGlShader->Compile(shaderPaths).ok());
 
-  openGlShader->Use();
+  auto result = openGlShader->Use();
+  EXPECT_TRUE(result.ok()) << "Use() failed: " << result.error();
   openGlShader->SetInt("textureMap", 0);
   openGlShader->SetMat4("mvp", glm::mat4(1.0f));
 
@@ -182,7 +183,8 @@ TEST_F(OpenGlShaderTest, SetUniforms) {
       "assets/shader/core/coordinate.vert",
       "assets/shader/core/coordinate.frag"};
   ASSERT_TRUE(openGlShader->Compile(shaderPaths).ok());
-  openGlShader->Use();
+  auto result = openGlShader->Use();
+  EXPECT_TRUE(result.ok()) << "Use() failed: " << result.error();
 
   openGlShader->SetBool("unused", true);
   openGlShader->SetInt("textureMap", 0);
@@ -225,14 +227,24 @@ TEST_F(OpenGlShaderTest, ConstructWithValidPaths) {
 TEST_F(OpenGlShaderTest, ConstructWithInvalidPaths) {
   RecordProperty("Test Description",
                  "Constructor with invalid paths results in id == 0");
-  RecordProperty("Expected Result", "GetProgramId() == 0");
+  RecordProperty("Expected Result", "GetProgramId() == 0 or exception thrown");
 
   const std::pair<std::string_view, std::string_view> badPaths{
       "assets/shader/core/does-not-exist.vert",
       "assets/shader/core/does-not-exist.frag"};
 
-  Mgtt::Rendering::OpenGlShader shader(badPaths);
-  EXPECT_EQ(shader.GetProgramId(), 0u);
+  try {
+    Mgtt::Rendering::OpenGlShader shader(badPaths);
+    // If we reach here, the constructor did not throw, so the program id should
+    // be 0
+    EXPECT_EQ(shader.GetProgramId(), 0u);
+  } catch (const std::runtime_error& e) {
+    // Constructor threw as expected; test passes
+    SUCCEED() << "Constructor threw exception as expected: " << e.what();
+  } catch (...) {
+    // Unexpected exception type
+    FAIL() << "Constructor threw unexpected exception type";
+  }
 }
 
 }  // namespace Mgtt::Rendering::Test

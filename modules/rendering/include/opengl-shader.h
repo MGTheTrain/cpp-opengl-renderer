@@ -69,7 +69,7 @@ class OpenGlShader final : public IShader {
 
   [[nodiscard]] uint32_t GetProgramId() const noexcept;
 
-  void Use() const noexcept;
+  Mgtt::Common::Result<void> Use() const noexcept;
 
   void SetBool(std::string_view name, bool value) const;
   void SetInt(std::string_view name, int32_t value) const;

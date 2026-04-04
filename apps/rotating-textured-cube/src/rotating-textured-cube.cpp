@@ -168,7 +168,10 @@ RotatingTexturedCube::RotatingTexturedCube() {
   stbi_image_free(tex.data);
   tex.data = nullptr;
 
-  shader_.Use();
+  if (auto result = shader_.Use(); result.err()) {
+    std::cerr << "Shader not ready: " << result.error() << "\n";
+    return;
+  }
   shader_.SetInt("textureMap", 0);
 
   int fbWidth = 0;
@@ -196,7 +199,10 @@ void RotatingTexturedCube::Render() {
     glBindTexture(GL_TEXTURE_2D,
                   mesh_.meshPrimitives[0].pbrMaterial.baseColorTexture.id);
 
-    shader_.Use();
+    if (auto result = shader_.Use(); result.err()) {
+      std::cerr << "Shader not ready: " << result.error() << "\n";
+      return;
+    }
 
     auto [width, height] = window_->GetWindowSize();
     matrices_.model =

@@ -256,7 +256,10 @@ void OpenGlViewer::UpdateMatrices() {
 }
 
 void OpenGlViewer::RenderScene() {
-  scene_.shader.Use();
+  if (auto result = scene_.shader.Use(); result.err()) {
+    std::cerr << "Shader not ready: " << result.error() << "\n";
+    return;
+  }
 
   glUniformMatrix4fv(uniforms_.model, 1, GL_FALSE, &matrices_.model[0][0]);
   glUniformMatrix4fv(uniforms_.mvp, 1, GL_FALSE, &scene_.mvp[0][0]);
@@ -287,7 +290,10 @@ void OpenGlViewer::RenderEnvMap() {
   }
 
   glDepthFunc(GL_LEQUAL);
-  ibl_.envMapShader.Use();
+  if (auto result = ibl_.envMapShader.Use(); result.err()) {
+    std::cerr << "Shader not ready: " << result.error() << "\n";
+    return;
+  }
   glUniformMatrix4fv(
       glGetUniformLocation(ibl_.envMapShader.GetProgramId(), "projection"), 1,
       GL_FALSE, &matrices_.projection[0][0]);

@@ -132,7 +132,13 @@ void OpenGlShader::Clear() noexcept {
   }
 }
 
-void OpenGlShader::Use() const noexcept { glUseProgram(id_); }
+[[nodiscard]] Mgtt::Common::Result<void> OpenGlShader::Use() const noexcept {
+  if (id_ == 0) {
+    return Mgtt::Common::Result<void>::Err("Shader program not compiled");
+  }
+  glUseProgram(id_);
+  return Mgtt::Common::Result<void>::Ok();
+}
 
 void OpenGlShader::SetBool(std::string_view name, bool value) const {
   glUniform1i(glGetUniformLocation(id_, std::string{name}.c_str()),
