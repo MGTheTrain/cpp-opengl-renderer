@@ -116,9 +116,15 @@ const char* OpenGlViewer::Platform::ImGuiGlslVersion() noexcept {
 
 // Construction / destruction
 OpenGlViewer::OpenGlViewer()
-    : sceneImporter_(std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
+    : gltfSceneImporter_(
+          std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
       sceneUploader_(std::make_unique<Mgtt::Rendering::SceneUploader>()),
-      textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>()) {
+      textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>())
+#ifdef MGTT_USD_SUPPORT
+      ,
+      usdSceneImporter_(std::make_unique<Mgtt::Rendering::UsdSceneImporter>())
+#endif
+{
   glfwContext_ = std::make_unique<Mgtt::Window::GlfwContext>();
   window_ = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer",
                                                        windowW_, windowH_);
@@ -136,7 +142,7 @@ OpenGlViewer::OpenGlViewer()
 }
 
 OpenGlViewer::~OpenGlViewer() {
-  sceneImporter_->Clear(scene_);
+  gltfSceneImporter_->Clear(scene_);
   textureManager_->Clear(ibl_);
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
@@ -173,13 +179,33 @@ void OpenGlViewer::InitImGui() {
 }
 
 void OpenGlViewer::LoadDefaultScene() {
-  if (auto r = sceneImporter_->Load(
-          scene_, "assets/scenes/water-bottle/WaterBottle.gltf");
-      r.err()) {
-    throw std::runtime_error("Scene load: " + r.error());
+  const std::string_view kPath = "assets/scenes/water-bottle/WaterBottle.gltf";
+
+#ifdef MGTT_USD_SUPPORT
+  auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
+    return s.size() >= suffix.size() &&
+           s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
+  };
+  const bool kIsUsd = hasSuffix(kPath, ".usd") || hasSuffix(kPath, ".USD") ||
+                      hasSuffix(kPath, ".usda") || hasSuffix(kPath, ".USDA") ||
+                      hasSuffix(kPath, ".usdc") || hasSuffix(kPath, ".USDC") ||
+                      hasSuffix(kPath, ".usdz") || hasSuffix(kPath, ".USDZ");
+  if (kIsUsd) {
+    if (auto r = usdSceneImporter_->Load(scene_, kPath); r.err()) {
+      std::cerr << "USD load failed: " << r.error() << '\n';
+      return;
+    }
+  } else
+#endif
+  {
+    if (auto r = gltfSceneImporter_->Load(scene_, kPath); r.err()) {
+      std::cerr << "glTF load failed: " << r.error() << '\n';
+      return;
+    }
   }
+
   if (auto r = sceneUploader_->Upload(scene_); r.err()) {
-    throw std::runtime_error("Scene upload: " + r.error());
+    std::cerr << "Upload failed: " << r.error() << '\n';
   }
 }
 
@@ -409,7 +435,7 @@ void OpenGlViewer::PanelScene() {
 #ifndef __EMSCRIPTEN__
   if (ImGui::Button("Select glTF scene")) {
     NFD_Init();
-    nfdu8filteritem_t filters[1] = {{"3D Models", "gltf"}};
+    nfdu8filteritem_t filters[2] = {{"3D Models", "gltf,usd,usda,usdc,usdz"}};
     nfdopendialogu8args_t args{};
     args.filterList = filters;
     args.filterCount = 1;
@@ -455,7 +481,7 @@ void OpenGlViewer::PanelLight() {
 
 // Helpers
 void OpenGlViewer::ReloadScene(std::string_view path) {
-  sceneImporter_->Clear(scene_);
+  gltfSceneImporter_->Clear(scene_);
 
   if (auto r = scene_.shader.Compile(Platform::PbrShaderPaths()); r.err()) {
     std::cerr << "Shader recompile: " << r.error() << '\n';
@@ -463,13 +489,31 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
   }
   uniforms_.Cache(scene_.shader.GetProgramId());
 
-  if (auto r = sceneImporter_->Load(scene_, path); r.err()) {
-    std::cerr << "Scene load: " << r.error() << '\n';
-    return;
+#ifdef MGTT_USD_SUPPORT
+  auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
+    return s.size() >= suffix.size() &&
+           s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
+  };
+  const bool kIsUsd = hasSuffix(path, ".usd") || hasSuffix(path, ".USD") ||
+                      hasSuffix(path, ".usda") || hasSuffix(path, ".USDA") ||
+                      hasSuffix(path, ".usdc") || hasSuffix(path, ".USDC") ||
+                      hasSuffix(path, ".usdz") || hasSuffix(path, ".USDZ");
+  if (kIsUsd) {
+    if (auto r = usdSceneImporter_->Load(scene_, path); r.err()) {
+      std::cerr << "USD load failed: " << r.error() << '\n';
+      return;
+    }
+  } else
+#endif
+  {
+    if (auto r = gltfSceneImporter_->Load(scene_, path); r.err()) {
+      std::cerr << "glTF load failed: " << r.error() << '\n';
+      return;
+    }
   }
+
   if (auto r = sceneUploader_->Upload(scene_); r.err()) {
-    std::cerr << "Scene upload: " << r.error() << '\n';
-    return;
+    std::cerr << "Upload failed: " << r.error() << '\n';
   }
 
   scaleIblAmbient_ = 1.0f;

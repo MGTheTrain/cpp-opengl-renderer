@@ -17,7 +17,7 @@ A cross-platform C++ OpenGL renderer supporting glTF scene loading with a PBR me
 - [x] CPack packaging for Linux (DEB, TGZ, ZIP), macOS (TGZ, ZIP), Windows (ZIP) and Web (TGZ)
 - [x] Web port via Emscripten
 - [ ] PBR fragment shader with switchable `fragmentColor` for inspecting intermediate outputs *(optional)*
-- [ ] USD scene loading *(optional)*
+- [x] USD scene loading *(optional)*
 - [ ] Skeletal animation *(optional)*
 - [ ] Mobile support via JNI (Kotlin) and Swift native interface *(optional)*
 

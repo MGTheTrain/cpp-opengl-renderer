@@ -31,6 +31,9 @@
 #include <glfw-context.h>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
+#ifdef MGTT_USD_SUPPORT
+#include <usd-scene-importer.h>
+#endif
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -160,7 +163,10 @@ class OpenGlViewer {
   // State
   std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext_;
   std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
-  std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> sceneImporter_;
+  std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter_;
+#ifdef MGTT_USD_SUPPORT
+  std::unique_ptr<Mgtt::Rendering::UsdSceneImporter> usdSceneImporter_;
+#endif
   std::unique_ptr<Mgtt::Rendering::SceneUploader> sceneUploader_;
   std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager_;
 

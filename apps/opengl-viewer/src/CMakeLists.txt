@@ -92,12 +92,15 @@ else()
     endif()
 endif()
 
+set(TINYUSDZ_PATH )
+
 target_include_directories(${TARGET} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/common/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/rendering/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/rendering/include/model
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/window/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../third-party/tinyusdz/src
 )
 
 install(TARGETS ${TARGET})

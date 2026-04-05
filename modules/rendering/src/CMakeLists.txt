@@ -38,11 +38,32 @@ set(RENDERING_SRC
     model/texture.cpp
 )
 
+# TinyUSDZ is optional — desktop only, not supported under Emscripten
+set(TINYUSDZ_PATH ${CMAKE_SOURCE_DIR}/third-party/tinyusdz)
+
+if(NOT BUILD_WEB AND EXISTS ${TINYUSDZ_PATH}/CMakeLists.txt)
+    set(TINYUSDZ_BUILD_TESTS     OFF CACHE BOOL "" FORCE)
+    set(TINYUSDZ_BUILD_EXAMPLES  OFF CACHE BOOL "" FORCE)
+    set(TINYUSDZ_WITH_OPENSUBDIV OFF CACHE BOOL "" FORCE)
+    set(TINYUSDZ_WITH_AUDIO      OFF CACHE BOOL "" FORCE)
+    set(TINYUSDZ_WITH_EXR        OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${TINYUSDZ_PATH}
+                    ${CMAKE_BINARY_DIR}/third-party/tinyusdz)
+    list(APPEND RENDERING_SRC usd-scene-importer.cpp)
+    set(HAS_TINYUSDZ ON  CACHE BOOL "" FORCE)
+else()
+    set(HAS_TINYUSDZ OFF CACHE BOOL "" FORCE)
+endif()
+
 add_library(${TARGET} STATIC ${RENDERING_SRC})
 
-if(${BUILD_WEB})
-    # Emscripten -s flags must be passed as a single string, not as list items
-    # in target_compile_options, otherwise clang treats each value as a filename
+if(HAS_TINYUSDZ)
+    target_compile_definitions(${TARGET} PUBLIC MGTT_USD_SUPPORT)
+    target_include_directories(${TARGET} PRIVATE ${TINYUSDZ_PATH}/src)
+    target_link_libraries(${TARGET} PRIVATE tinyusdz::tinyusdz_static)
+endif()
+
+if(BUILD_WEB)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -s WASM=1 -s FULL_ES3=1 \
         -fwasm-exceptions -s ASSERTIONS=2 -s SAFE_HEAP=1 \
         -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
