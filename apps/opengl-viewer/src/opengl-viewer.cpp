@@ -180,6 +180,8 @@ void OpenGlViewer::InitImGui() {
 
 void OpenGlViewer::LoadDefaultScene() {
   const std::string_view kPath = "assets/scenes/water-bottle/WaterBottle.gltf";
+
+#ifdef MGTT_USD_SUPPORT
   auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
     return s.size() >= suffix.size() &&
            s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -188,8 +190,6 @@ void OpenGlViewer::LoadDefaultScene() {
                       hasSuffix(kPath, ".usda") || hasSuffix(kPath, ".USDA") ||
                       hasSuffix(kPath, ".usdc") || hasSuffix(kPath, ".USDC") ||
                       hasSuffix(kPath, ".usdz") || hasSuffix(kPath, ".USDZ");
-
-#ifdef MGTT_USD_SUPPORT
   if (kIsUsd) {
     if (auto r = usdSceneImporter_->Load(scene_, kPath); r.err()) {
       std::cerr << "USD load failed: " << r.error() << '\n';
@@ -489,6 +489,7 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
   }
   uniforms_.Cache(scene_.shader.GetProgramId());
 
+#ifdef MGTT_USD_SUPPORT
   auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
     return s.size() >= suffix.size() &&
            s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -497,8 +498,6 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
                       hasSuffix(path, ".usda") || hasSuffix(path, ".USDA") ||
                       hasSuffix(path, ".usdc") || hasSuffix(path, ".USDC") ||
                       hasSuffix(path, ".usdz") || hasSuffix(path, ".USDZ");
-
-#ifdef MGTT_USD_SUPPORT
   if (kIsUsd) {
     if (auto r = usdSceneImporter_->Load(scene_, path); r.err()) {
       std::cerr << "USD load failed: " << r.error() << '\n';
