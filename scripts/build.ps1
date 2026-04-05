@@ -19,29 +19,31 @@ if (-not $CMakeToolchainFile) {
     $CMakeToolchainFile = Read-Host "Enter the path to CMakeToolchainFile"
 }
 
-$revisionArg = if ($RevisionNumber) { @("-DREVISION_NUMBER=$RevisionNumber") } else { @() }
+$revisionArg = if ($RevisionNumber) { "-DREVISION_NUMBER=$RevisionNumber" } else { $null }
 
 if ($RunTests) {
-    Write-Host "INFO: Configuring combined test + app build (Debug)"
-    cmake -B build `
-        -DBUILD_LIB=ON -DBUILD_TEST=ON -DBUILD_APP=ON -DBUILD_PACKAGE=ON `
-        -DCMAKE_BUILD_TYPE="$BuildType" `
-        -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" `
-        @revisionArg `
-        .
+    $cmakeArgs = @(
+        "-B", "build",
+        "-DBUILD_LIB=ON", "-DBUILD_TEST=ON", "-DBUILD_APP=ON", "-DBUILD_PACKAGE=ON",
+        "-DCMAKE_BUILD_TYPE=$BuildType",
+        "-DCMAKE_TOOLCHAIN_FILE=$CMakeToolchainFile"
+    )
+    if ($revisionArg) { $cmakeArgs += $revisionArg }
+    cmake @cmakeArgs .
     cmake --build build --parallel --config "$BuildType"
     Write-Host "INFO: Running tests"
     Set-Location -Path build
     ctest -C "$BuildType" --verbose
     Set-Location -Path "$PSScriptRoot/.."
 } else {
-    Write-Host "INFO: Configuring app-only build ($BuildType)"
-    cmake -B build `
-        -DBUILD_LIB=ON -DBUILD_TEST=OFF -DBUILD_APP=ON -DBUILD_PACKAGE=ON `
-        -DCMAKE_BUILD_TYPE="$BuildType" `
-        -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" `
-        @revisionArg `
-        .
+    $cmakeArgs = @(
+        "-B", "build",
+        "-DBUILD_LIB=ON", "-DBUILD_TEST=OFF", "-DBUILD_APP=ON", "-DBUILD_PACKAGE=ON",
+        "-DCMAKE_BUILD_TYPE=$BuildType",
+        "-DCMAKE_TOOLCHAIN_FILE=$CMakeToolchainFile"
+    )
+    if ($revisionArg) { $cmakeArgs += $revisionArg }
+    cmake @cmakeArgs .
     cmake --build build --parallel --config "$BuildType"
 }
 
