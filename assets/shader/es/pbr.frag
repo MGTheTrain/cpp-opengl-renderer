@@ -172,6 +172,7 @@ void main() {
     if (physicalDescriptorTextureSet) {
         vec4 mrSample = texture(physicalDescriptorMap, outVertexTextureCoordinates);
         perceptualRoughness = mrSample.g * perceptualRoughness;
+		metallic = mrSample.b * metallic;
     }
 
     if (baseColorTextureSet) {

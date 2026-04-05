@@ -32,3 +32,5 @@ opengl_viewer.data
 
 # Generated documentation
 docs/doxygen/
+
+.DS_Store
