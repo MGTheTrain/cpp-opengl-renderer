@@ -119,12 +119,8 @@ OpenGlViewer::OpenGlViewer()
     : gltfSceneImporter_(
           std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
       sceneUploader_(std::make_unique<Mgtt::Rendering::SceneUploader>()),
-      textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>())
-#ifndef __EMSCRIPTEN__
-      ,
-      usdSceneImporter_(std::make_unique<Mgtt::Rendering::UsdSceneImporter>())
-#endif
-{
+      textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>()),
+      usdSceneImporter_(std::make_unique<Mgtt::Rendering::UsdSceneImporter>()) {
   glfwContext_ = std::make_unique<Mgtt::Window::GlfwContext>();
   window_ = std::make_unique<Mgtt::Window::GlfwWindow>("opengl-viewer",
                                                        windowW_, windowH_);
@@ -179,9 +175,11 @@ void OpenGlViewer::InitImGui() {
 }
 
 void OpenGlViewer::LoadDefaultScene() {
-  const std::string_view kPath = "assets/scenes/water-bottle/WaterBottle.gltf";
+  // const std::string_view kPath =
+  // "assets/scenes/water-bottle/WaterBottle.gltf";
+  const std::string_view kPath =
+      "assets/scenes/texture-cat/texture-cat-plane.usda";
 
-#ifndef __EMSCRIPTEN__
   auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
     return s.size() >= suffix.size() &&
            s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -195,9 +193,7 @@ void OpenGlViewer::LoadDefaultScene() {
       std::cerr << "USD load failed: " << r.error() << '\n';
       return;
     }
-  } else
-#endif
-  {
+  } else {
     if (auto r = gltfSceneImporter_->Load(scene_, kPath); r.err()) {
       std::cerr << "glTF load failed: " << r.error() << '\n';
       return;
@@ -489,7 +485,6 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
   }
   uniforms_.Cache(scene_.shader.GetProgramId());
 
-#ifndef __EMSCRIPTEN__
   auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
     return s.size() >= suffix.size() &&
            s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -503,9 +498,7 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
       std::cerr << "USD load failed: " << r.error() << '\n';
       return;
     }
-  } else
-#endif
-  {
+  } else {
     if (auto r = gltfSceneImporter_->Load(scene_, path); r.err()) {
       std::cerr << "glTF load failed: " << r.error() << '\n';
       return;

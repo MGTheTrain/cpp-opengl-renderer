@@ -42,7 +42,7 @@ target_include_directories(${TARGET} PUBLIC
     ${PROJECT_SOURCE_DIR}/../include
 )
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_compile_options(${TARGET} PRIVATE
         --coverage -fprofile-arcs -ftest-coverage)
 endif()

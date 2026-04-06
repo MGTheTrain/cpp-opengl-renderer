@@ -47,9 +47,10 @@ if(${BUILD_WEB})
     # in target_compile_options, otherwise clang treats each value as a filename
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -s WASM=1 -s USE_GLFW=3 \
         -s FULL_ES3=1 -fwasm-exceptions -s ASSERTIONS=2 -s SAFE_HEAP=1 \
-        --preload-file ../../../../assets \
-        --exclude-file ../../../../assets/web \
-        --exclude-file ../../../../assets/scenes/glTF-Sample-Models \
+        --preload-file ../../../../assets/scenes/water-bottle \
+        --preload-file ../../../../assets/scenes/texture-cat \
+        --preload-file ../../../../assets/shader \
+        --preload-file ../../../../assets/texture \
         -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
 
     target_include_directories(${TARGET} PRIVATE

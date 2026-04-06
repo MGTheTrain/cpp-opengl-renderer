@@ -37,9 +37,7 @@
 #include <opengl-shader.h>
 #include <scene-uploader.h>
 #include <texture-manager.h>
-#ifndef __EMSCRIPTEN__
 #include <usd-scene-importer.h>
-#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -164,9 +162,7 @@ class OpenGlViewer {
   std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext_;
   std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
   std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter_;
-#ifndef __EMSCRIPTEN__
   std::unique_ptr<Mgtt::Rendering::UsdSceneImporter> usdSceneImporter_;
-#endif
   std::unique_ptr<Mgtt::Rendering::SceneUploader> sceneUploader_;
   std::unique_ptr<Mgtt::Rendering::TextureManager> textureManager_;
 

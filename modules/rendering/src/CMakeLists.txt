@@ -53,11 +53,32 @@ if(BUILD_WEB)
         -fwasm-exceptions -s ASSERTIONS=2 -s SAFE_HEAP=1 \
         -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=1024MB -O3")
 
-    set(WEB_THIRD_PARTY_FOLDER ../../../assets/web/third-party)
+    set(WEB_THIRD_PARTY_FOLDER ${PROJECT_SOURCE_DIR}/../../../assets/web/third-party)
+
     target_include_directories(${TARGET} PRIVATE
         ${WEB_THIRD_PARTY_FOLDER}/glm
         ${WEB_THIRD_PARTY_FOLDER}/tinygltf
     )
+
+    if(DEFINED TINYUSDZ_INSTALL_PREFIX)
+        message(STATUS "TINYUSDZ_INSTALL_PREFIX = ${TINYUSDZ_INSTALL_PREFIX}")
+        # Manually create the imported target since the generated config
+        # uses vcpkg-relative paths that don't resolve in a standalone build
+        if(EXISTS "${TINYUSDZ_INSTALL_PREFIX}/lib/libtinyusdz_static.a")
+            add_library(tinyusdz::tinyusdz_static STATIC IMPORTED)
+            set_target_properties(tinyusdz::tinyusdz_static PROPERTIES
+                IMPORTED_LOCATION "${TINYUSDZ_INSTALL_PREFIX}/lib/libtinyusdz_static.a"
+                INTERFACE_INCLUDE_DIRECTORIES "${TINYUSDZ_INSTALL_PREFIX}/include/tinyusdz"
+            )
+            # PUBLIC so consumers inherit headers and lib transitively
+            target_link_libraries(${TARGET} PUBLIC tinyusdz::tinyusdz_static)
+            message(STATUS "Using tinyusdz pre-built install for web build")
+        else()
+            message(STATUS "tinyusdz static lib not found at ${TINYUSDZ_INSTALL_PREFIX} — USD support disabled for web build")
+        endif()
+    else()
+        message(STATUS "TINYUSDZ_INSTALL_PREFIX not set — USD support disabled for web build")
+    endif()
 else()
     find_package(OpenGL REQUIRED)
     find_package(GLEW   CONFIG REQUIRED)
@@ -77,18 +98,19 @@ else()
         GLEW::GLEW
         glm::glm-header-only
     )
+
+    if(tinyusdz_FOUND)
+        # PUBLIC so that consumers of the rendering static lib (e.g. opengl_viewer,
+        # rendering_test) inherit both the tinyusdz headers and the library
+        # transitively, without needing to link tinyusdz::tinyusdz_static themselves.
+        target_link_libraries(${TARGET} PUBLIC tinyusdz::tinyusdz_static)
+        message(STATUS "Using tinyusdz via vcpkg")
+    else()
+        message(STATUS "tinyusdz not found — USD support disabled")
+    endif()
 endif()
 
-if(tinyusdz_FOUND AND NOT BUILD_WEB)
-    # PUBLIC so that consumers of the rendering static lib (e.g. opengl_viewer,
-    # rendering_test) inherit both the tinyusdz headers and the library
-    # transitively, without needing to link tinyusdz::tinyusdz_static themselves.
-    target_link_libraries(${TARGET} PUBLIC tinyusdz::tinyusdz_static)
-elseif(NOT BUILD_WEB)
-    message(STATUS "tinyusdz not found — USD support disabled")
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_compile_options(${TARGET} PRIVATE
         --coverage -fprofile-arcs -ftest-coverage)
 endif()

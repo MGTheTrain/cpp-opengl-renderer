@@ -189,6 +189,13 @@ jobs:
         /tmp/emsdk/emsdk install latest
         /tmp/emsdk/emsdk activate latest
 
+    - name: Cache tinyusdz Emscripten build
+      id: cache-tinyusdz-wasm
+      uses: actions/cache@v4
+      with:
+        path: assets/web/third-party/tinyusdz-install
+        key: ${{ runner.os }}-tinyusdz-wasm-${{ hashFiles('assets/web/third-party/tinyusdz/CMakeLists.txt') }}
+
     - name: Build for web
       run: |
         source /tmp/emsdk/emsdk_env.sh

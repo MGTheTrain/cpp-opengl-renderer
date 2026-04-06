@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef __EMSCRIPTEN__
 #include <stb_image.h>
 #include <usd-scene-importer.h>
 
@@ -348,4 +347,3 @@ Mgtt::Common::Result<void> UsdSceneImporter::LoadMeshes(
 }
 
 }  // namespace Mgtt::Rendering
-#endif
