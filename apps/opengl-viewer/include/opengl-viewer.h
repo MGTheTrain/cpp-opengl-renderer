@@ -31,15 +31,15 @@
 #include <glfw-context.h>
 #include <glfw-window.h>
 #include <gltf-scene-importer.h>
-#ifdef MGTT_USD_SUPPORT
-#include <usd-scene-importer.h>
-#endif
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <opengl-shader.h>
 #include <scene-uploader.h>
 #include <texture-manager.h>
+#ifndef __EMSCRIPTEN__
+#include <usd-scene-importer.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -164,7 +164,7 @@ class OpenGlViewer {
   std::unique_ptr<Mgtt::Window::GlfwContext> glfwContext_;
   std::unique_ptr<Mgtt::Window::GlfwWindow> window_;
   std::unique_ptr<Mgtt::Rendering::GltfSceneImporter> gltfSceneImporter_;
-#ifdef MGTT_USD_SUPPORT
+#ifndef __EMSCRIPTEN__
   std::unique_ptr<Mgtt::Rendering::UsdSceneImporter> usdSceneImporter_;
 #endif
   std::unique_ptr<Mgtt::Rendering::SceneUploader> sceneUploader_;

@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #ifdef MGTT_RENDERING_TEST
-#ifdef MGTT_USD_SUPPORT
+#ifndef __EMSCRIPTEN__
 
 #ifdef __EMSCRIPTEN__
 #include <GLES3/gl3.h>
@@ -190,5 +190,5 @@ TEST_F(UsdSceneImporterTest, ClearScene) {
 
 }  // namespace Mgtt::Rendering::Test
 
-#endif  // MGTT_USD_SUPPORT
 #endif  // MGTT_RENDERING_TEST
+#endif

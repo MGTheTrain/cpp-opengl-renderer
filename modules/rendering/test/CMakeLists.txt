@@ -28,28 +28,19 @@ if(NOT BUILD_WEB)
     enable_testing()
     find_package(GTest CONFIG REQUIRED)
     find_package(glfw3 CONFIG REQUIRED)
+    find_package(tinyusdz CONFIG QUIET)
 
     set(RENDERING_TEST_SRC
         entrypoint.cpp
         opengl-shader-test.cpp
         gltf-scene-importer-test.cpp
+        usd-scene-importer-test.cpp
         texture-manager-test.cpp
     )
-
-    if(HAS_TINYUSDZ)
-        list(APPEND RENDERING_TEST_SRC usd-scene-importer-test.cpp)
-    endif()
 
     add_executable(${TESTING_TARGET} ${RENDERING_TEST_SRC})
 
     target_compile_definitions(${TESTING_TARGET} PRIVATE MGTT_RENDERING_TEST)
-
-    if(HAS_TINYUSDZ)
-        target_compile_definitions(${TESTING_TARGET} PRIVATE MGTT_USD_SUPPORT)
-        # TINYUSDZ_PATH is a cache variable set in src/CMakeLists.txt
-        target_include_directories(${TESTING_TARGET} PRIVATE
-            ${CMAKE_SOURCE_DIR}/third-party/tinyusdz/src)
-    endif()
 
     target_include_directories(${TESTING_TARGET} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/../include
@@ -58,13 +49,14 @@ if(NOT BUILD_WEB)
         ${Stb_INCLUDE_DIR}
     )
 
+    if(tinyusdz_FOUND)
+        target_include_directories(${TESTING_TARGET} PRIVATE ${TINYUSDZ_INCLUDE_DIR})
+    endif()
+
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         target_compile_options(${TESTING_TARGET} PRIVATE
             --coverage -fprofile-arcs -ftest-coverage)
         target_link_options(${TESTING_TARGET} PRIVATE --coverage)
-        target_compile_options(rendering PRIVATE
-            --coverage -fprofile-arcs -ftest-coverage)
-        target_link_options(rendering PRIVATE --coverage)
     endif()
 
     target_link_libraries(${TESTING_TARGET} PRIVATE

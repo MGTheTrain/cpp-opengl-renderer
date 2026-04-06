@@ -20,10 +20,9 @@ if(NOT ${BUILD_WEB})
     )
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_options(${TESTING_TARGET} PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+        target_compile_options(${TESTING_TARGET} PRIVATE
+            --coverage -fprofile-arcs -ftest-coverage)
         target_link_options(${TESTING_TARGET} PRIVATE --coverage)
-        target_compile_options(window PRIVATE --coverage -fprofile-arcs -ftest-coverage)
-        target_link_options(window PRIVATE --coverage)
     endif()
 
     target_link_libraries(${TESTING_TARGET} PRIVATE

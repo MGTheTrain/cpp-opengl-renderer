@@ -27,6 +27,7 @@ set(RENDERING_SRC
     external-tinygltf-impl.cpp
     opengl-shader.cpp
     gltf-scene-importer.cpp
+    usd-scene-importer.cpp
     scene-uploader.cpp
     texture-manager.cpp
     model/aabb.cpp
@@ -38,30 +39,15 @@ set(RENDERING_SRC
     model/texture.cpp
 )
 
-# TinyUSDZ is optional — desktop only, not supported under Emscripten
-set(TINYUSDZ_PATH ${CMAKE_SOURCE_DIR}/third-party/tinyusdz)
-
-if(NOT BUILD_WEB AND EXISTS ${TINYUSDZ_PATH}/CMakeLists.txt)
-    set(TINYUSDZ_BUILD_TESTS     OFF CACHE BOOL "" FORCE)
-    set(TINYUSDZ_BUILD_EXAMPLES  OFF CACHE BOOL "" FORCE)
-    set(TINYUSDZ_WITH_OPENSUBDIV OFF CACHE BOOL "" FORCE)
-    set(TINYUSDZ_WITH_AUDIO      OFF CACHE BOOL "" FORCE)
-    set(TINYUSDZ_WITH_EXR        OFF CACHE BOOL "" FORCE)
-    add_subdirectory(${TINYUSDZ_PATH}
-                    ${CMAKE_BINARY_DIR}/third-party/tinyusdz)
-    list(APPEND RENDERING_SRC usd-scene-importer.cpp)
-    set(HAS_TINYUSDZ ON  CACHE BOOL "" FORCE)
-else()
-    set(HAS_TINYUSDZ OFF CACHE BOOL "" FORCE)
-endif()
+find_package(tinyusdz CONFIG QUIET)
 
 add_library(${TARGET} STATIC ${RENDERING_SRC})
 
-if(HAS_TINYUSDZ)
-    target_compile_definitions(${TARGET} PUBLIC MGTT_USD_SUPPORT)
-    target_include_directories(${TARGET} PRIVATE ${TINYUSDZ_PATH}/src)
-    target_link_libraries(${TARGET} PRIVATE tinyusdz::tinyusdz_static)
-endif()
+target_include_directories(${TARGET} PRIVATE
+    ${PROJECT_SOURCE_DIR}/../include
+    ${PROJECT_SOURCE_DIR}/../include/model
+    ${PROJECT_SOURCE_DIR}/../../common/include
+)
 
 if(BUILD_WEB)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -s WASM=1 -s FULL_ES3=1 \
@@ -93,11 +79,19 @@ else()
     )
 endif()
 
-target_include_directories(${TARGET} PRIVATE
-    ${PROJECT_SOURCE_DIR}/../include
-    ${PROJECT_SOURCE_DIR}/../include/model
-    ${PROJECT_SOURCE_DIR}/../../common/include
-)
+if(tinyusdz_FOUND AND NOT BUILD_WEB)
+message(STATUS "Using tinyusdz via vcpkg")
+target_include_directories(${TARGET} PRIVATE ${TINYUSDZ_INCLUDE_DIR})
+target_link_libraries(${TARGET} PRIVATE tinyusdz::tinyusdz_static)
+else()
+message(STATUS "tinyusdz not found — USD support disabled")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${TARGET} PRIVATE
+        --coverage -fprofile-arcs -ftest-coverage)
+    # No target_link_options here
+endif()
 
 install(TARGETS ${TARGET})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/

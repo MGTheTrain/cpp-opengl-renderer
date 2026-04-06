@@ -21,8 +21,7 @@
 // SOFTWARE.
 
 #pragma once
-
-#ifdef MGTT_USD_SUPPORT
+#ifndef __EMSCRIPTEN__
 
 #include <iscene-importer.h>
 
@@ -70,5 +69,4 @@ class UsdSceneImporter : public ISceneImporter {
 };
 
 }  // namespace Mgtt::Rendering
-
-#endif  // MGTT_USD_SUPPORT
+#endif

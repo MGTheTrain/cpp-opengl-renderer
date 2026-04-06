@@ -20,11 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <usd-scene-importer.h>
-
-#ifdef MGTT_USD_SUPPORT
-
+#ifndef __EMSCRIPTEN__
 #include <stb_image.h>
+#include <usd-scene-importer.h>
 
 #include <cfloat>
 #include <glm/glm.hpp>
@@ -350,5 +348,4 @@ Mgtt::Common::Result<void> UsdSceneImporter::LoadMeshes(
 }
 
 }  // namespace Mgtt::Rendering
-
-#endif  // MGTT_USD_SUPPORT
+#endif

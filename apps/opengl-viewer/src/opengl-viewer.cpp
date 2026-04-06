@@ -120,7 +120,7 @@ OpenGlViewer::OpenGlViewer()
           std::make_unique<Mgtt::Rendering::GltfSceneImporter>()),
       sceneUploader_(std::make_unique<Mgtt::Rendering::SceneUploader>()),
       textureManager_(std::make_unique<Mgtt::Rendering::TextureManager>())
-#ifdef MGTT_USD_SUPPORT
+#ifndef __EMSCRIPTEN__
       ,
       usdSceneImporter_(std::make_unique<Mgtt::Rendering::UsdSceneImporter>())
 #endif
@@ -181,7 +181,7 @@ void OpenGlViewer::InitImGui() {
 void OpenGlViewer::LoadDefaultScene() {
   const std::string_view kPath = "assets/scenes/water-bottle/WaterBottle.gltf";
 
-#ifdef MGTT_USD_SUPPORT
+#ifndef __EMSCRIPTEN__
   auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
     return s.size() >= suffix.size() &&
            s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -433,7 +433,7 @@ void OpenGlViewer::PanelScene() {
     return;
   }
 #ifndef __EMSCRIPTEN__
-  if (ImGui::Button("Select glTF scene")) {
+  if (ImGui::Button("Select glTF or USD scene")) {
     NFD_Init();
     nfdu8filteritem_t filters[2] = {{"3D Models", "gltf,usd,usda,usdc,usdz"}};
     nfdopendialogu8args_t args{};
@@ -489,7 +489,7 @@ void OpenGlViewer::ReloadScene(std::string_view path) {
   }
   uniforms_.Cache(scene_.shader.GetProgramId());
 
-#ifdef MGTT_USD_SUPPORT
+#ifndef __EMSCRIPTEN__
   auto hasSuffix = [](std::string_view s, std::string_view suffix) -> bool {
     return s.size() >= suffix.size() &&
            s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;

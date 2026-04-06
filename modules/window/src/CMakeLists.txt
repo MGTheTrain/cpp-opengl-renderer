@@ -42,6 +42,12 @@ target_include_directories(${TARGET} PUBLIC
     ${PROJECT_SOURCE_DIR}/../include
 )
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${TARGET} PRIVATE
+        --coverage -fprofile-arcs -ftest-coverage)
+    # No target_link_options here
+endif()
+
 install(TARGETS ${TARGET})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/
     DESTINATION include/window

@@ -10,9 +10,9 @@
 [submodule "assets/web/third-party/imgui"]
 	path = assets/web/third-party/imgui
 	url = git@github.com:ocornut/imgui.git
-[submodule "third-party/vcpkg"]
-	path = third-party/vcpkg
-	url = https://github.com/microsoft/vcpkg.git
 [submodule "third-party/tinyusdz"]
 	path = third-party/tinyusdz
 	url = git@github.com:lighttransport/tinyusdz.git
+[submodule "third-party/vcpkg"]
+	path = third-party/vcpkg
+	url = https://github.com/MGTheTrain/vcpkg.git

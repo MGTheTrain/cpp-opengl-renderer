@@ -63,6 +63,11 @@ if(${BUILD_WEB})
 else()
     find_package(IMGUI CONFIG REQUIRED)
     find_package(nfd   CONFIG REQUIRED)
+    find_package(tinyusdz CONFIG QUIET)
+
+    if(tinyusdz_FOUND)
+        target_include_directories(${TARGET} PRIVATE ${TINYUSDZ_INCLUDE_DIR})
+    endif()
 
     # Resolve nfd.h include path from the imported target's properties
     get_target_property(NFD_INCLUDE_DIRS nfd::nfd INTERFACE_INCLUDE_DIRECTORIES)
@@ -92,15 +97,12 @@ else()
     endif()
 endif()
 
-set(TINYUSDZ_PATH )
-
 target_include_directories(${TARGET} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/common/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/rendering/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/rendering/include/model
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules/window/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../third-party/tinyusdz/src
 )
 
 install(TARGETS ${TARGET})

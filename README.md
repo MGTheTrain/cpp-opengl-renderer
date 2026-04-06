@@ -2,7 +2,7 @@
 
 ## Summary
 
-A cross-platform C++ OpenGL renderer supporting glTF scene loading with a PBR metal-roughness shader pipeline.
+A cross-platform C++ OpenGL renderer supporting glTF and USD scene loading with a PBR metal-roughness shader pipeline.
 
 ## Features
 
