@@ -39,7 +39,6 @@ set(RENDERING_SRC
     model/texture.cpp
 )
 
-find_package(tinyusdz CONFIG QUIET)
 
 add_library(${TARGET} STATIC ${RENDERING_SRC})
 
@@ -65,6 +64,7 @@ else()
     find_package(glm    CONFIG REQUIRED)
     find_package(Stb    REQUIRED)
     find_path(TINYGLTF_INCLUDE_DIR "tiny_gltf.h" REQUIRED)
+    find_package(tinyusdz CONFIG QUIET)
 
     target_include_directories(${TARGET} PRIVATE
         ${Stb_INCLUDE_DIR}
@@ -80,17 +80,17 @@ else()
 endif()
 
 if(tinyusdz_FOUND AND NOT BUILD_WEB)
-message(STATUS "Using tinyusdz via vcpkg")
-target_include_directories(${TARGET} PRIVATE ${TINYUSDZ_INCLUDE_DIR})
-target_link_libraries(${TARGET} PRIVATE tinyusdz::tinyusdz_static)
-else()
-message(STATUS "tinyusdz not found — USD support disabled")
+    # PUBLIC so that consumers of the rendering static lib (e.g. opengl_viewer,
+    # rendering_test) inherit both the tinyusdz headers and the library
+    # transitively, without needing to link tinyusdz::tinyusdz_static themselves.
+    target_link_libraries(${TARGET} PUBLIC tinyusdz::tinyusdz_static)
+elseif(NOT BUILD_WEB)
+    message(STATUS "tinyusdz not found — USD support disabled")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(${TARGET} PRIVATE
         --coverage -fprofile-arcs -ftest-coverage)
-    # No target_link_options here
 endif()
 
 install(TARGETS ${TARGET})

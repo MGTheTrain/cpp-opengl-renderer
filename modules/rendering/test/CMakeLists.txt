@@ -28,7 +28,6 @@ if(NOT BUILD_WEB)
     enable_testing()
     find_package(GTest CONFIG REQUIRED)
     find_package(glfw3 CONFIG REQUIRED)
-    find_package(tinyusdz CONFIG QUIET)
 
     set(RENDERING_TEST_SRC
         entrypoint.cpp
@@ -48,10 +47,6 @@ if(NOT BUILD_WEB)
         ${CMAKE_CURRENT_SOURCE_DIR}/../../common/include
         ${Stb_INCLUDE_DIR}
     )
-
-    if(tinyusdz_FOUND)
-        target_include_directories(${TESTING_TARGET} PRIVATE ${TINYUSDZ_INCLUDE_DIR})
-    endif()
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         target_compile_options(${TESTING_TARGET} PRIVATE
